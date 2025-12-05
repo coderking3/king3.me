@@ -13,5 +13,9 @@
   /* Prettier */
   "prettier.enable": true,
   // Optional: specify your custom Prettier config file path
-  "prettier.configPath": "prettier.config.js"
+  "prettier.configPath": "prettier.config.js",
+  "[svg]": {
+    "editor.defaultFormatter": "jock.svg"
+  },
+  "cSpell.words": ["shiki"]
 }

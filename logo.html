@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+      a {
+        text-decoration: none;
+      }
+
+      .container {
+        padding: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* 箭头从左边绘制的动画 */
+      @keyframes drawArrowUp {
+        0% {
+          clip-path: inset(0 100% 0 0);
+        }
+        25% {
+          clip-path: inset(0 0 0 0);
+        }
+        50% {
+          clip-path: inset(0 100% 0 0);
+        }
+        75% {
+          clip-path: inset(0 0 0 0);
+        }
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+        /* from {
+          clip-path: inset(0 100% 0 0);
+        }
+        to {
+          clip-path: inset(0 0 0 0);
+        } */
+      }
+
+      /* 箭头从右边绘制的动画 */
+      @keyframes drawArrowDown {
+        0% {
+          clip-path: inset(0 0 0 100%);
+        }
+        25% {
+          clip-path: inset(0 0 0 0);
+        }
+        50% {
+          clip-path: inset(0 0 0 100%);
+        }
+        75% {
+          clip-path: inset(0 0 0 0);
+        }
+        100% {
+          clip-path: inset(0 0 0 0);
+        }
+        /* from {
+          clip-path: inset(0 0 0 100%);
+        }
+        to {
+          clip-path: inset(0 0 0 0);
+        } */
+      }
+
+      /* 分割线从中间向两边扩展的动画 */
+      @keyframes drawDividerLine {
+        0% {
+          clip-path: inset(0 50% 0 50%);
+        }
+        25% {
+          clip-path: inset(0 0 0 0);
+        }
+        50% {
+          clip-path: inset(0 50% 0 50%);
+        }
+        75% {
+          clip-path: inset(0 0 0 0);
+        }
+        100% {
+          clip-path: inset(0 50% 0 50%);
+        }
+        /* from {
+          clip-path: inset(0 50% 0 50%);
+        }
+        to {
+          clip-path: inset(0 0 0 0);
+        } */
+      }
+
+      .divider-line {
+        animation: drawDividerLine 8s ease-out infinite;
+        clip-path: inset(0 50% 0 50%);
+      }
+      .arrow-up {
+        animation: drawArrowUp 8s ease-out infinite;
+      }
+      .arrow-down {
+        animation: drawArrowDown 8s ease-out infinite;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <svg
+        width="100"
+        height="100"
+        viewBox="0 0 24 24"
+        fill="none"
+        class="logo-animate"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M8 12H17"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          class="divider-line"
+        />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M11.2882 3.25L2.59238 19.6487L2.00836 20.7501H3.25499H3.66804L11.3418 6.27864L12.0044 5.02909L12.667 6.27864L20.3408 20.7501H20.754H22.0006L21.4166 19.6487L12.7208 3.25H11.2882Z"
+          fill="currentColor"
+          class="arrow-up"
+        />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M3.25499 3.25H3.66807L11.3418 17.7214L12.0044 18.9709L12.667 17.7214L20.3408 3.25H20.754H22.0006L21.4166 4.35136L12.7208 20.75H11.2881L2.59238 4.35136L2.00836 3.25H3.25499Z"
+          fill="currentColor"
+          class="arrow-down"
+        />
+      </svg>
+    </div>
+    <script></script>
+  </body>
+</html>

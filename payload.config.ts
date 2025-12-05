@@ -17,8 +17,12 @@ const dirname = path.dirname(filename)
 export default buildConfig({
   admin: {
     user: Users.slug,
+    autoRefresh: true,
     importMap: {
       baseDir: path.resolve(dirname)
+    },
+    avatar: {
+      Component: './components/admin/index.ts#AdminAvatar'
     }
   },
   collections: [Users, Projects],
@@ -32,8 +36,5 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || ''
     }
   }),
-  sharp,
-  plugins: [
-    // storage-adapter-placeholder
-  ]
+  sharp
 })

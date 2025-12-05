@@ -41,6 +41,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma generated
-/generated
-# /lib/generated/prisma
+# payload generated
+payload-types.ts
+
+/generated/prisma
