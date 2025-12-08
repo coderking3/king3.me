@@ -1,0 +1,26 @@
+{
+  /* Editor - General */
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  /* Editor - Code Actions */
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "never"
+  },
+
+  /* Prettier */
+  "prettier.enable": true,
+  // Optional: specify your custom Prettier config file path
+  "prettier.configPath": "prettier.config.js",
+
+  /* Next.js TypeScript Support */
+  "WillLuke.nextjs.addTypesOnSave": true,
+  "WillLuke.nextjs.hasPrompted": true,
+
+  /* File Associations */
+  "files.associations": {
+    "*.css": "tailwindcss" // 改为 postcss
+  }
+}
