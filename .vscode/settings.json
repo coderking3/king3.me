@@ -21,6 +21,6 @@
 
   /* File Associations */
   "files.associations": {
-    "*.css": "tailwindcss" // 改为 postcss
+    "*.css": "tailwindcss" // 改为 tailwindcss
   }
 }

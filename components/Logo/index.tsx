@@ -1,6 +1,6 @@
 'use client'
 
-import style from './logo.module.css'
+import style from './style.module.css'
 
 interface LogoProps {
   size?: number

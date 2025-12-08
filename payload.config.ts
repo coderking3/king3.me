@@ -22,7 +22,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname)
     },
     avatar: {
-      Component: './components/admin/index.ts#AdminAvatar'
+      Component: './components/index.ts#Avatar'
     }
   },
   collections: [Users, Projects],

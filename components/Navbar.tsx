@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 'use client'
 
 interface NavbarProps {
@@ -6,8 +5,7 @@ interface NavbarProps {
 }
 
 function Navbar({ page }: NavbarProps) {
-  console.log(`🚀 ~ page:`, page)
-  return <div>Navbar</div>
+  return <div>Navbar: {page}</div>
 }
 
 export default Navbar

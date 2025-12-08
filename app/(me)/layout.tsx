@@ -5,30 +5,30 @@ import { Geist, Geist_Mono } from 'next/font/google' // 1. 引入 Geist 字体
 import React from 'react'
 import { Toaster } from 'sonner'
 
-import { Footer, Header, MainWrapper } from '@/components/layout'
+import { Footer, Header, MainWrapper } from '@/components/index'
 import { cn } from '@/lib/utils'
 
-import '../../styles/globals.css'
+import '@/styles/globals.css'
 
-// 2. 配置字体实例
+/* 配置字体实例 */
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin']
 })
-
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin']
 })
 
+/* 配置元数据 */
 export const metadata: Metadata = {
   title: {
     default: 'King3.me',
     template: '%s | King3.me'
   },
-  description: 'Frontend Developer & UI Design Enthusiast',
+  description: 'Frontend Developer & Music Enthusiast',
   icons: {
-    icon: '/favicon.ico'
+    icon: '/icons/favicon.svg'
   }
 }
 
@@ -38,14 +38,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          geistSans.variable,
-          geistMono.variable,
-          'bg-background min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black'
-        )}
-      >
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(geistSans.variable, geistMono.variable)}
+    >
+      <body className="bg-background min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

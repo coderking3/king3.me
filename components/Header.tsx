@@ -3,7 +3,7 @@
 import { Camera } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
-import Logo from './logo/Logo'
+import Logo from './Logo'
 import Navbar from './Navbar'
 
 function Header() {
