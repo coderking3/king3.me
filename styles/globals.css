@@ -39,7 +39,7 @@
 /* 定义颜色系统 (Zinc Base) */
 :root {
   /* Light Mode: Zinc-50 背景 */
-  --background: 0 0% 100%; /* zinc-50 左右 */
+  --background: 0 0% 98%; /* zinc-50 左右 */
   --foreground: 240 10% 3.9%; /* zinc-950 */
 
   /* Card: 纯白，用于 Bento 卡片 */
