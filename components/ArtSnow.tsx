@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 // 使用纯白，依靠 Opacity 实现灰度变化
-const color = '#d4d4d8'
+const color = '#d4d4d4'
 // 设置雪花总数
 const SNOWFLAKE_COUNT = 120
 
