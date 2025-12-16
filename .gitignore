@@ -44,4 +44,8 @@ next-env.d.ts
 # payload generated
 payload-types.ts
 
+# prisma generation
 /generated/prisma
+
+# file-kit crypto
+!*.crypto.json
