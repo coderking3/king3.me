@@ -14,7 +14,6 @@
   /* Stylelint 配置优化 */
   "stylelint.enable": true,
   "stylelint.packageManager": "pnpm",
-  "stylelint.configFile": "../stylelint.config.mjs",
   "stylelint.validate": ["css", "postcss"],
   "stylelint.snippet": ["css", "postcss"],
 
@@ -25,5 +24,10 @@
 
   /* Next.js TypeScript Support */
   "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true
+  "WillLuke.nextjs.hasPrompted": true,
+
+  /* File Associations */
+  "files.associations": {
+    "*.css": "postcss"
+  }
 }

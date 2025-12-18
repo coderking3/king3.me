@@ -103,7 +103,7 @@
   body {
     @apply text-foreground font-sans antialiased;
 
-    /* 让字体看起来更清晰 (Geist 风格关键) */
+    /* 让字体看起来更清晰 (Geist 风格) */
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
