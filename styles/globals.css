@@ -1,5 +1,4 @@
 @import url('tailwindcss');
-@import url('./shiki.css');
 
 @plugin 'tailwindcss-animate';
 @plugin '@tailwindcss/typography';

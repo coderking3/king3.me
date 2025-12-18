@@ -53,7 +53,8 @@ export default {
           'variant',
           'apply',
           'layer',
-          'config'
+          'config',
+          'reference'
         ]
       }
     ],

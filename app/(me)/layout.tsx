@@ -9,6 +9,7 @@ import { Background, Footer, Header } from '@/components'
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
+import '@/styles/shiki.css'
 
 /* 配置字体实例 */
 const geistSans = Geist({

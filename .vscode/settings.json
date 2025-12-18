@@ -22,6 +22,11 @@
   "less.validate": false,
   "scss.validate": false,
 
+  "postcss.validate": false,
+  "emmet.includeLanguages": {
+    "postcss": "css"
+  },
+
   /* Next.js TypeScript Support */
   "WillLuke.nextjs.addTypesOnSave": true,
   "WillLuke.nextjs.hasPrompted": true
