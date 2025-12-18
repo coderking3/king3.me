@@ -24,10 +24,5 @@
 
   /* Next.js TypeScript Support */
   "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true,
-
-  /* File Associations */
-  "files.associations": {
-    "*.css": "postcss"
-  }
+  "WillLuke.nextjs.hasPrompted": true
 }
