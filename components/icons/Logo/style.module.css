@@ -3,18 +3,22 @@
   0% {
     clip-path: inset(0 100% 0 0);
   }
+
   /* 正向播放完成 (1.2s) */
   22.22% {
     clip-path: inset(0 0 0 0);
   }
+
   /* 暂停3秒 (总共4.2s) */
   77.77% {
     clip-path: inset(0 0 0 0);
   }
+
   /* 倒放完成 (总共5.4s) */
   99.07% {
     clip-path: inset(0 100% 0 0);
   }
+
   /* 0.05s间隔后循环 (总共5.45s) */
   100% {
     clip-path: inset(0 100% 0 0);
@@ -26,18 +30,22 @@
   0% {
     clip-path: inset(0 0 0 100%);
   }
+
   /* 正向播放完成 (1.2s) */
   22.22% {
     clip-path: inset(0 0 0 0);
   }
+
   /* 暂停3秒 (总共4.2s) */
   77.77% {
     clip-path: inset(0 0 0 0);
   }
+
   /* 倒放完成 (总共5.4s) */
   99.07% {
     clip-path: inset(0 0 0 100%);
   }
+
   /* 0.05s间隔后循环 (总共5.45s) */
   100% {
     clip-path: inset(0 0 0 100%);
@@ -49,18 +57,22 @@
   0% {
     clip-path: inset(0 50% 0 50%);
   }
+
   /* 正向播放完成 (1.2s) */
   22.22% {
     clip-path: inset(0 0 0 0);
   }
+
   /* 暂停3秒 (总共4.2s) */
   77.77% {
     clip-path: inset(0 0 0 0);
   }
+
   /* 倒放完成 (总共5.4s) */
   99.07% {
     clip-path: inset(0 50% 0 50%);
   }
+
   /* 0.05s间隔后循环 (总共5.45s) */
   100% {
     clip-path: inset(0 50% 0 50%);
@@ -69,16 +81,16 @@
 
 /* Logo 容器动画 */
 .logo-animate .arrow-up {
-  animation: drawArrowUp 5.45s ease-out infinite;
   clip-path: inset(0 100% 0 0);
+  animation: drawArrowUp 5.45s ease-out infinite;
 }
 
 .logo-animate .arrow-down {
-  animation: drawArrowDown 5.45s ease-out infinite;
   clip-path: inset(0 0 0 100%);
+  animation: drawArrowDown 5.45s ease-out infinite;
 }
 
 .logo-animate .divider-line {
-  animation: drawDividerLine 5.45s ease-out infinite;
   clip-path: inset(0 50% 0 50%);
+  animation: drawDividerLine 5.45s ease-out infinite;
 }

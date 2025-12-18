@@ -7,20 +7,23 @@
   "editor.codeActionsOnSave": {
     "source.fixAll": "never",
     "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
     "source.organizeImports": "never"
   },
 
-  /* Prettier */
-  "prettier.enable": true,
-  // Optional: specify your custom Prettier config file path
-  "prettier.configPath": "prettier.config.js",
+  /* Stylelint 配置优化 */
+  "stylelint.enable": true,
+  "stylelint.packageManager": "pnpm",
+  "stylelint.configFile": "../stylelint.config.mjs",
+  "stylelint.validate": ["css", "postcss"],
+  "stylelint.snippet": ["css", "postcss"],
+
+  // 禁用原生校验
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
 
   /* Next.js TypeScript Support */
   "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true,
-
-  /* File Associations */
-  "files.associations": {
-    "*.css": "tailwindcss" // 改为 tailwindcss
-  }
+  "WillLuke.nextjs.hasPrompted": true
 }
