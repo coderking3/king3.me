@@ -1,29 +1,58 @@
-'use client'
+import type { Variants } from 'framer-motion'
 
-import type { Icon } from '@/types'
+import type { SvgIcon } from '@/types'
+
+import { motion } from 'framer-motion'
+
+import { cn } from '@/lib/utils'
 
 import style from './style.module.css'
+interface LogoProps extends SvgIcon {
+  whileHover?: string
+  whileTap?: string
+}
 
-interface LogoProps extends Icon {}
+function Logo({
+  size = '1.25rem',
+  color = 'currentColor',
+  strokeWidth = 1.5,
+  className,
+  whileHover,
+  whileTap
+}: LogoProps) {
+  const hoverVariant = whileHover ?? 'hover'
+  const tapVariant = whileTap ?? 'tap'
 
-function Logo(props: LogoProps) {
-  const { size = 24, color = 'currentColor', strokeWidth = 1.5 } = props
+  const motionProps = {
+    ...(whileHover === undefined && { whileHover: hoverVariant }),
+    ...(whileTap === undefined && { whileTap: tapVariant })
+  }
+
+  const containerVariants: Variants = {
+    initial: {},
+    [hoverVariant]: {
+      scale: 1.05
+    },
+    [tapVariant]: {}
+  }
 
   return (
-    <svg
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
       width={size}
       height={size}
       viewBox="0 0 24 24"
       fill="none"
-      className={style['logo-animate']}
-      xmlns="http://www.w3.org/2000/svg"
+      className={cn(className, style['logo-animate'])}
+      variants={containerVariants}
+      strokeWidth={strokeWidth}
+      transition={{
+        scale: { type: 'spring', stiffness: 400, damping: 17 },
+        default: { duration: 0.3 }
+      }}
+      {...motionProps}
     >
-      <path
-        d="M8 12H17"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        className={style['divider-line']}
-      />
+      <path d="M8 12H17" stroke={color} className={style['divider-line']} />
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -38,7 +67,7 @@ function Logo(props: LogoProps) {
         fill={color}
         className={style['arrow-down']}
       />
-    </svg>
+    </motion.svg>
   )
 }
 

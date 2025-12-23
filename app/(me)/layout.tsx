@@ -5,11 +5,10 @@ import { Geist, Geist_Mono } from 'next/font/google' // 1. 引入 Geist 字体
 import React from 'react'
 import { Toaster } from 'sonner'
 
-import { Background, Footer, Header } from '@/components'
+import { Background, Footer, Header, Main } from '@/components/index'
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
-import '@/styles/shiki.css'
 
 /* 配置字体实例 */
 const geistSans = Geist({
@@ -44,7 +43,8 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(geistSans.variable, geistMono.variable)}
     >
-      <body className="bg-background min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black">
+      <body className="min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black">
+        {/* <body className="bg-background min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black"> */}
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -56,11 +56,7 @@ export default function RootLayout({
           {/* container */}
           <div className="relative flex min-h-screen flex-col">
             <Header />
-            <main className="flex-1">
-              <div className="container mx-auto max-w-7xl px-4 sm:px-8">
-                {children}
-              </div>
-            </main>
+            <Main>{children}</Main>
             <Footer />
           </div>
 

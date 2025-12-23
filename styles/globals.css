@@ -1,114 +1,170 @@
-@import url('tailwindcss');
+/* =========================================================
+ * Global Styles Entry
+ * Tailwind + shadcn + animation + code highlight
+ * ========================================================= */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import './shiki.css';
 
-@plugin 'tailwindcss-animate';
-@plugin '@tailwindcss/typography';
+/* =========================================================
+ * Dark Mode Variant
+ * Enable `.dark` class to activate dark theme
+ * ========================================================= */
+@custom-variant dark (&:is(.dark *));
 
-/* Tailwind 主题变量 */
-@theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, sfmono-regular, monospace;
+/* =========================================================
+ * Theme Token Mapping (Tailwind Layer)
+ * Map design tokens to Tailwind-recognizable variables
+ * ========================================================= */
+@theme inline {
+  /* ---------- Fonts ---------- */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
 
-  /* 扩展边框颜色，使其支持 opacity 修改 (如 border-border/40) */
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
+  /* ---------- Base Colors ---------- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* ---------- Containers ---------- */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* ---------- Semantic Colors ---------- */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+
+  /* ---------- Form & Interaction ---------- */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* ---------- Radius System ---------- */
   --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  /* ---------- Charts ---------- */
+
+  /* --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5); */
 }
 
-/* 定义颜色系统 (Zinc Base) */
+/* =========================================================
+ * Light Theme (Default)
+ * OKLCH color space for perceptual consistency
+ * ========================================================= */
 :root {
-  /* Light Mode: Zinc-50 背景 */
-  --background: 0 0% 98%; /* zinc-50 左右 */
-  --foreground: 240 10% 3.9%; /* zinc-950 */
+  /* ---------- Base ---------- */
+  --background: oklch(100% 0 0deg);
+  --foreground: oklch(14.1% 0.005 285.823deg);
 
-  /* Card: 纯白，用于 Bento 卡片 */
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  /* ---------- Containers ---------- */
+  --card: oklch(100% 0 0deg);
+  --card-foreground: oklch(14.1% 0.005 285.823deg);
+  --popover: oklch(100% 0 0deg);
+  --popover-foreground: oklch(14.1% 0.005 285.823deg);
 
-  /* Border: Zinc-200 */
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
+  /* ---------- Semantic ---------- */
+  --primary: oklch(21% 0.006 285.885deg);
+  --primary-foreground: oklch(98.5% 0 0deg);
+  --secondary: oklch(96.7% 0.001 286.375deg);
+  --secondary-foreground: oklch(21% 0.006 285.885deg);
+  --muted: oklch(96.7% 0.001 286.375deg);
+  --muted-foreground: oklch(55.2% 0.016 285.938deg);
+  --accent: oklch(96.7% 0.001 286.375deg);
+  --accent-foreground: oklch(21% 0.006 285.885deg);
+  --destructive: oklch(57.7% 0.245 27.325deg);
 
-  /* Primary: 极简主义，用纯黑作为强调色 */
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
+  /* ---------- Form ---------- */
+  --border: oklch(92% 0.004 286.32deg);
+  --input: oklch(92% 0.004 286.32deg);
+  --ring: oklch(70.5% 0.015 286.067deg);
 
-  /* Secondary: 用于 Badge 或次要按钮 */
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
+  /* ---------- Radius Base ---------- */
+  --radius: 0.625rem;
 
-  /* Muted: 用于辅助文字 */
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
+  /* ---------- Charts ---------- */
 
-  /* Accent: 用于 Hover 状态 */
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --ring: 240 5% 64.9%;
-  --radius: 0.75rem; /* 圆角稍微大一点，符合 Bento 风格 */
+  /* --chart-1: oklch(64.6% 0.222 41.116deg);
+    --chart-2: oklch(60% 0.118 184.704deg);
+    --chart-3: oklch(39.8% 0.07 227.392deg);
+    --chart-4: oklch(82.8% 0.189 84.429deg);
+    --chart-5: oklch(76.9% 0.188 70.08deg); */
 }
 
+/* =========================================================
+ * Dark Theme
+ * Overrides only color values, structure remains identical
+ * ========================================================= */
 .dark {
-  /* Dark Mode: Zinc-950 (不是纯黑 #000) */
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
+  /* ---------- Base ---------- */
+  --background: oklch(14.1% 0.005 285.823deg);
+  --foreground: oklch(98.5% 0 0deg);
 
-  /* Card: Zinc-950 或稍微亮一点 */
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
+  /* ---------- Containers ---------- */
+  --card: oklch(21% 0.006 285.885deg);
+  --card-foreground: oklch(98.5% 0 0deg);
+  --popover: oklch(21% 0.006 285.885deg);
+  --popover-foreground: oklch(98.5% 0 0deg);
 
-  /* Border: Zinc-800 */
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
+  /* ---------- Semantic ---------- */
+  --primary: oklch(92% 0.004 286.32deg);
+  --primary-foreground: oklch(21% 0.006 285.885deg);
+  --secondary: oklch(27.4% 0.006 286.033deg);
+  --secondary-foreground: oklch(98.5% 0 0deg);
+  --muted: oklch(27.4% 0.006 286.033deg);
+  --muted-foreground: oklch(70.5% 0.015 286.067deg);
+  --accent: oklch(27.4% 0.006 286.033deg);
+  --accent-foreground: oklch(98.5% 0 0deg);
+  --destructive: oklch(70.4% 0.191 22.216deg);
 
-  /* Primary: 纯白 */
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
+  /* ---------- Form ---------- */
+  --border: oklch(100% 0 0deg / 10%);
+  --input: oklch(100% 0 0deg / 15%);
+  --ring: oklch(55.2% 0.016 285.938deg);
 
-  /* Secondary */
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
+  /* ---------- Charts ---------- */
 
-  /* Muted */
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-
-  /* Accent */
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --ring: 240 4.9% 83.9%;
+  /* --chart-1: oklch(48.8% 0.243 264.376deg);
+  --chart-2: oklch(69.6% 0.17 162.48deg);
+  --chart-3: oklch(76.9% 0.188 70.08deg);
+  --chart-4: oklch(62.7% 0.265 303.9deg);
+  --chart-5: oklch(64.5% 0.246 16.439deg); */
 }
 
-/* 全局基础样式 */
+/* =========================================================
+ * Base Layer
+ * ========================================================= */
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border outline-ring/50;
   }
 
   body {
-    @apply text-foreground font-sans antialiased;
-
-    /* 让字体看起来更清晰 (Geist 风格) */
-    font-feature-settings:
-      'rlig' 1,
-      'calt' 1;
+    @apply bg-background text-foreground;
   }
 }
 
+/* =========================================================
+ * Utilities Layer
+ * ========================================================= */
 @layer utilities {
   .size-screen {
     @apply h-screen w-screen;

@@ -1,6 +1,0 @@
-@media (hover: hover) {
-  abbr:hover {
-    color: limegreen;
-    transition-duration: 1s;
-  }
-}

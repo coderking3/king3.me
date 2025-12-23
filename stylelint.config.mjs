@@ -52,9 +52,10 @@ export default {
           'utility',
           'variant',
           'apply',
+          'reference',
           'layer',
-          'config',
-          'reference'
+          'custom-variant',
+          'config'
         ]
       }
     ],

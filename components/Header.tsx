@@ -1,25 +1,77 @@
 'use client'
 
-import { Camera } from 'lucide-react'
+import type { LinkProps } from 'next/link'
+
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Logo } from './icons'
+import { Camera, Logo } from './icons'
 import Navbar from './Navbar'
+
+interface ActionLinkProps extends LinkProps {
+  children: React.ReactNode
+  href: string
+  type?: 'internal' | 'external'
+}
+
+function ActionLink({ children, type = 'internal', href }: ActionLinkProps) {
+  const isExternal = type === 'external'
+
+  return (
+    <Link
+      href={href}
+      className="flex size-8 items-center justify-center"
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noopener noreferrer' : undefined}
+    >
+      {children}
+    </Link>
+  )
+}
 
 function Header() {
   const pathname = usePathname()
   const page = pathname.split('/').slice(0, 2).join('/')
 
   return (
-    <header className="flex items-center justify-between px-4 py-6 sm:px-6 lg:px-8">
-      {/* <header className="border-b-border/50 bg-background/50 flex items-center justify-between border-b px-4 py-2 backdrop-blur-sm transition-colors duration-300 sm:px-6 lg:px-8"> */}
-      <Logo size={36}></Logo>
-      {/* <Avatar page={page}></Avatar> */}
+    <header className="sticky top-0 right-0 left-0 z-10 h-16 w-full pt-6">
+      <div className="mx-auto h-full max-w-7xl px-2">
+        <div className="flex h-full items-center justify-between">
+          <div className="flex flex-1 justify-start">
+            <Link href="/">
+              <Logo className="size-10"></Logo>
+            </Link>
+          </div>
 
-      <Navbar page={page}></Navbar>
+          <div className="flex flex-1 items-center justify-center">
+            <Navbar page={page}></Navbar>
+          </div>
 
-      <div className="flex items-center justify-end gap-2">
-        <Camera></Camera>
+          <div className="header-actions flex flex-1 items-center justify-end gap-2">
+            <ActionLink href="/photos">
+              <Camera className="size-7" />
+            </ActionLink>
+
+            {/* <ActionLink
+              href="https://www.github.com/coderking3/king3.me"
+              type="external"
+            >
+              <Github className="" />
+            </ActionLink> */}
+            {/* <ActionLink
+              href="https://www.github.com/coderking3/king3.me"
+              type="external"
+            >
+              <ThemeToggle className="" />
+            </ActionLink> */}
+            {/* <Button
+              variant="outline"
+              size="icon"
+              className="size-8 border-transparent hover:bg-transparent"
+            >
+            </Button> */}
+          </div>
+        </div>
       </div>
     </header>
   )

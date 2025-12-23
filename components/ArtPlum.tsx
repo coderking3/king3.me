@@ -139,7 +139,7 @@ export default function ArtPlum() {
   return (
     <div
       id="art-plum"
-      className="pointer-events-none fixed inset-0 -z-1 print:hidden"
+      className="pointer-events-none fixed inset-0 -z-1 dark:invert print:hidden"
       style={{
         maskImage: 'radial-gradient(circle, transparent, black)',
         WebkitMaskImage: 'radial-gradient(circle, transparent, black)'

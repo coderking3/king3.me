@@ -155,7 +155,7 @@ export default function ArtSnow() {
   return (
     <div
       id="art-snow"
-      className="pointer-events-none fixed inset-0 -z-1 print:hidden"
+      className="pointer-events-none fixed inset-0 -z-1 dark:invert print:hidden"
     >
       <canvas ref={canvasRef} className="size-full" />
     </div>

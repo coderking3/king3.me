@@ -1,17 +1,18 @@
+@reference "tailwindcss";
+
+/* 当网站处于暗黑模式时 */
 html.dark pre[data-theme='light'] {
-  display: none;
+  display: none; /* 隐藏亮色代码块 */
 }
 
 /* 当网站处于亮色模式时 */
 html.light pre[data-theme='dark'] {
-  display: none;
+  display: none; /* 隐藏暗色代码块 */
 }
 
 /* 代码块容器 */
 pre {
   @apply my-6 overflow-x-auto rounded-lg p-4;
-
-  /* margin-block: 1.5rem; */
 }
 
 /* 代码块内部 */
