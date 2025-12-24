@@ -1,14 +1,12 @@
 'use client'
 
-import type { LinkProps } from 'next/link'
-
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Camera, Logo } from './icons'
+import { Camera, Github, Logo } from './icons'
 import Navbar from './Navbar'
 
-interface ActionLinkProps extends LinkProps {
+interface ActionLinkProps {
   children: React.ReactNode
   href: string
   type?: 'internal' | 'external'
@@ -17,12 +15,18 @@ interface ActionLinkProps extends LinkProps {
 function ActionLink({ children, type = 'internal', href }: ActionLinkProps) {
   const isExternal = type === 'external'
 
+  const externalProps = {
+    ...(isExternal && {
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    })
+  }
+
   return (
     <Link
       href={href}
       className="flex size-8 items-center justify-center"
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noopener noreferrer' : undefined}
+      {...externalProps}
     >
       {children}
     </Link>
@@ -52,23 +56,19 @@ function Header() {
               <Camera className="size-7" />
             </ActionLink>
 
-            {/* <ActionLink
+            <ActionLink
               href="https://www.github.com/coderking3/king3.me"
               type="external"
             >
-              <Github className="" />
-            </ActionLink> */}
-            {/* <ActionLink
-              href="https://www.github.com/coderking3/king3.me"
-              type="external"
-            >
-              <ThemeToggle className="" />
-            </ActionLink> */}
+              <Github className="size-7" />
+            </ActionLink>
+
             {/* <Button
               variant="outline"
               size="icon"
               className="size-8 border-transparent hover:bg-transparent"
             >
+              <SunAndMoon className="size-7"></SunAndMoon>
             </Button> */}
           </div>
         </div>

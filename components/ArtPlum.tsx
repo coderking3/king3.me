@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 
 type Fn = () => void
 
@@ -23,6 +23,7 @@ export default function ArtPlum() {
   const stepsRef = useRef<Fn[]>([])
   const prevStepsRef = useRef<Fn[]>([])
   const rafIdRef = useRef<number | null>(null)
+  const plumId = useId()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -138,7 +139,7 @@ export default function ArtPlum() {
 
   return (
     <div
-      id="art-plum"
+      id={plumId}
       className="pointer-events-none fixed inset-0 -z-1 dark:invert print:hidden"
       style={{
         maskImage: 'radial-gradient(circle, transparent, black)',

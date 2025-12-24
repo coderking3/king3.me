@@ -29,8 +29,5 @@
 
   "emmet.includeLanguages": {
     "postcss": "css"
-  },
-  "[svg]": {
-    "editor.defaultFormatter": "jock.svg"
   }
 }

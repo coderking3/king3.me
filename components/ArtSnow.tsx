@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 
 // 使用纯白，依靠 Opacity 实现灰度变化
 const color = '#d4d4d4'
@@ -56,6 +56,7 @@ const createSnowflake = (w: number, h: number): Snowflake => {
 
 export default function ArtSnow() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const snowId = useId()
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -154,7 +155,7 @@ export default function ArtSnow() {
   // 移除 dark:invert，确保雪花在深色模式下仍为亮色
   return (
     <div
-      id="art-snow"
+      id={snowId}
       className="pointer-events-none fixed inset-0 -z-1 dark:invert print:hidden"
     >
       <canvas ref={canvasRef} className="size-full" />

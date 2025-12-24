@@ -23,19 +23,22 @@ export function Camera({
 }: CameraProps) {
   const hoverVariant = whileHover ?? 'hover'
   const tapVariant = whileTap ?? 'tap'
-
-  // 只在没有外部传入时才添加 whileHover 和 whileTap
   const motionProps = {
     ...(whileHover === undefined && { whileHover: hoverVariant }),
     ...(whileTap === undefined && { whileTap: tapVariant })
   }
 
-  const containerVariants: Variants = {
+  const iconVariants: Variants = {
     initial: {},
     [hoverVariant]: {
-      scale: 1.05,
-      rotate: 3
+      scale: [1, 1.08, 1],
+      rotate: [0, 3, 0],
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut'
+      }
     },
+
     [tapVariant]: {
       scale: 0.97,
       rotate: 0
@@ -44,7 +47,13 @@ export function Camera({
 
   const bodyVariants: Variants = {
     initial: {},
-    [hoverVariant]: { scale: 1.05 },
+    [hoverVariant]: {
+      scale: [1, 1.05, 1],
+      transition: {
+        duration: 0.4,
+        ease: 'easeInOut'
+      }
+    },
     [tapVariant]: { scale: 0.95 }
   }
 
@@ -60,7 +69,11 @@ export function Camera({
     },
     [hoverVariant]: {
       opacity: [1, 0.1, 1],
-      scale: [1, 1.2, 1]
+      scale: [1, 1.2, 1],
+      transition: {
+        duration: 0.6,
+        ease: 'easeInOut'
+      }
     }
   }
 
@@ -73,11 +86,7 @@ export function Camera({
       className={cn(className)}
       strokeWidth={strokeWidth}
       initial="initial"
-      variants={containerVariants}
-      transition={{
-        type: 'spring',
-        stiffness: 300
-      }}
+      variants={iconVariants}
       {...motionProps}
     >
       {/* 相机机身 */}
@@ -86,10 +95,6 @@ export function Camera({
         fill={color}
         d="M4 21q-.825 0-1.412-.587Q2 19.825 2 19V7q0-.825.588-1.412Q3.175 5 4 5h3.15L8.7 3.325q.15-.15.337-.238Q9.225 3 9.425 3h5.15q.2 0 .388.087q.187.088.337.238L16.85 5H20q.825 0 1.413.588Q22 6.175 22 7v12q0 .825-.587 1.413Q20.825 21 20 21Zm16-2V7h-4.05l-1.825-2h-4.25L8.05 7H4v12Z"
         variants={bodyVariants}
-        transition={{
-          scale: { type: 'spring', stiffness: 400, damping: 17 },
-          default: { duration: 0.3 }
-        }}
         style={{ originX: '50%', originY: '50%' }}
       />
 
@@ -100,10 +105,7 @@ export function Camera({
         fillRule="evenodd"
         d="M12 18q2.075 0 3.538-1.462Q17 15.075 17 13q0-2.075-1.462-3.538Q14.075 8 12 8Q9.925 8 8.463 9.462Q7 10.925 7 13q0 2.075 1.463 3.538Q9.925 18 12 18Zm0-2q-1.25 0-2.125-.875T9 13q0-1.25.875-2.125T12 10q1.25 0 2.125.875T15 13q0 1.25-.875 2.125T12 16Z"
         variants={lensVariants}
-        transition={{
-          scale: { type: 'spring', stiffness: 400, damping: 17 },
-          default: { duration: 0.3 }
-        }}
+        style={{ originX: '50%', originY: '50%' }}
       />
 
       {/* 闪光灯 */}
@@ -114,6 +116,7 @@ export function Camera({
         r="1"
         fill={color}
         variants={flashVariants}
+        style={{ originX: '50%', originY: '50%' }}
       />
     </motion.svg>
   )

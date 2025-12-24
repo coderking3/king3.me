@@ -1,7 +1,8 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
+import { useState } from 'react'
 
 import { navigationItems } from '@/config/nav'
 import { cn } from '@/lib/utils'
@@ -12,11 +13,12 @@ interface NavbarProps {
 }
 
 function Navbar({ page, className }: NavbarProps) {
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
   return (
     <nav
       className={cn(
-        // 玻璃拟态基础
-        'relative h-11 rounded-full shadow-xl/5',
+        'relative h-11 overflow-hidden rounded-full shadow-xl/5',
         'bg-accent/30 bg-linear-to-b backdrop-blur-xs backdrop-saturate-150',
         'ring-ring/10 ring-1',
         className
@@ -26,18 +28,98 @@ function Navbar({ page, className }: NavbarProps) {
         {navigationItems.map(({ href, name }) => {
           const isActive =
             (page.includes(href) && href !== '/') || page === href
+          const isHovered = hoveredItem === href
+
           return (
-            <motion.li key={name} className="relative px-3 py-2.5">
-              <Link href={href}>
+            <motion.li
+              key={name}
+              className="relative select-none"
+              initial="initial"
+              whileHover="hover"
+              whileTap="tap"
+              onHoverStart={() => setHoveredItem(href)}
+              onHoverEnd={() => setHoveredItem(null)}
+            >
+              {/* Active 底部指示器 */}
+              <AnimatePresence>
                 {isActive && (
                   <motion.div
-                    className="border-primary/15 absolute bottom-1 left-1/4 z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
-                    layoutId="underline"
-                  ></motion.div>
+                    className="border-primary/20 absolute bottom-1 left-1/4 -z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
+                    layoutId="activeIndicator"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 380,
+                      damping: 30
+                    }}
+                  />
                 )}
-                <motion.div className={`rounded-full text-sm font-bold`}>
+              </AnimatePresence>
+
+              {/* Active 光晕 */}
+              <AnimatePresence>
+                {isActive && (
+                  <motion.div
+                    className="bg-primary/20 absolute top-1/2 left-1/2 -z-20 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 380,
+                      damping: 30
+                    }}
+                  />
+                )}
+              </AnimatePresence>
+
+              {/* Hover 药丸 */}
+              <AnimatePresence>
+                {isHovered && (
+                  <motion.div
+                    className="absolute top-1.5 -z-30 h-8 w-full rounded-full"
+                    layoutId="hoverPill"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    style={{
+                      // bg-primary/10
+                      backgroundColor:
+                        'color-mix(in oklab, var(--primary) 10%, transparent)'
+                    }}
+                    transition={{
+                      layout: {
+                        type: 'spring',
+                        stiffness: 380,
+                        damping: 30
+                      },
+                      opacity: { duration: 0.2 }
+                    }}
+                  />
+                )}
+              </AnimatePresence>
+
+              <Link href={href} className="block px-3 py-2.5">
+                <motion.span
+                  className={cn(
+                    'text-primary/75 relative text-sm font-bold',
+                    isActive && 'text-primary'
+                  )}
+                  variants={{
+                    initial: { scale: 1 },
+                    hover: { scale: 1.05 },
+                    tap: { scale: 0.96 }
+                  }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 400,
+                    damping: 17
+                  }}
+                >
                   {name}
-                </motion.div>
+                </motion.span>
               </Link>
             </motion.li>
           )
