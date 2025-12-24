@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 
 import { Camera, Github, Logo } from './icons'
 import Navbar from './Navbar'
+import ThemeToggle from './ThemeToggle'
 
 interface ActionLinkProps {
   children: React.ReactNode
@@ -51,7 +52,7 @@ function Header() {
             <Navbar page={page}></Navbar>
           </div>
 
-          <div className="header-actions flex flex-1 items-center justify-end gap-2">
+          <div className="text-foreground header-actions flex flex-1 items-center justify-end gap-2">
             <ActionLink href="/photos">
               <Camera className="size-6" />
             </ActionLink>
@@ -63,6 +64,7 @@ function Header() {
               <Github className="size-6" />
             </ActionLink>
 
+            <ThemeToggle />
             {/* <Button
               variant="outline"
               size="icon"

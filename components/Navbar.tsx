@@ -20,7 +20,7 @@ function Navbar({ page, className }: NavbarProps) {
       className={cn(
         'relative overflow-hidden',
         'bg-accent/30 shadow-primary/5 h-11 rounded-full shadow-xl',
-        'backdrop-blur-xs backdrop-saturate-150',
+        'dark:bg-accent backdrop-blur-xs backdrop-saturate-150',
         'ring-ring/10 ring-1',
         className
       )}
@@ -106,6 +106,7 @@ function Navbar({ page, className }: NavbarProps) {
                 <motion.span
                   className={cn(
                     'text-primary/75 relative text-sm font-bold',
+                    // 'text-primary/75 relative text-sm font-bold',
                     isActive && 'text-primary'
                   )}
                   variants={{
