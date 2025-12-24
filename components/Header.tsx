@@ -53,14 +53,14 @@ function Header() {
 
           <div className="header-actions flex flex-1 items-center justify-end gap-2">
             <ActionLink href="/photos">
-              <Camera className="size-7" />
+              <Camera className="size-6" />
             </ActionLink>
 
             <ActionLink
               href="https://www.github.com/coderking3/king3.me"
               type="external"
             >
-              <Github className="size-7" />
+              <Github className="size-6" />
             </ActionLink>
 
             {/* <Button

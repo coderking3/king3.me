@@ -23,11 +23,13 @@ function Github({
   }
 
   const iconVariants: Variants = {
-    initial: {},
+    initial: {
+      rotate: 0
+    },
     [hoverVariant]: {
-      scale: [1, 1.08, 1],
+      rotate: [0, 5.5, -2, 1, 0],
       transition: {
-        duration: 0.4,
+        duration: 0.6,
         ease: 'easeInOut'
       }
     }
@@ -40,7 +42,9 @@ function Github({
       height={size}
       variants={iconVariants}
       viewBox="0 0 24 24"
+      initial="initial"
       className={cn(className)}
+      style={{ originX: 0.5, originY: 1 }}
       {...motionProps}
     >
       <g
