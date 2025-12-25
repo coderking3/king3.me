@@ -1,0 +1,232 @@
+/* global.css */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import './shiki.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* ---------- Fonts ---------- */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* ---------- Base Colors ---------- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* ---------- Containers ---------- */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* ---------- Semantic Colors ---------- */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+
+  /* ---------- Form & Interaction ---------- */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* ---------- Radius System ---------- */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+/* ============================================
+   ROOT: Light Mode 
+   设计语言：干净、高雅、柔和
+   白色系 + 极简灰阶
+   ============================================ */
+:root {
+  /* ===== 统一背景层 ===== */
+
+  /* 背景：纯白无杂质，极淡暖调 */
+  --background: oklch(100% 0 0deg);
+
+  /* 卡片/弹窗：与背景完全统一，通过边框区分 */
+  --card: var(--background);
+  --popover: var(--background);
+
+  /* ===== 文字层级 ===== */
+
+  /* 主文字：深度足够，但不过于严厉 */
+  --foreground: oklch(20% 0.005 240deg);
+  --card-foreground: var(--foreground);
+  --popover-foreground: var(--foreground);
+
+  /* 次级文字：中等灰度 */
+  --muted-foreground: oklch(48% 0.01 240deg);
+
+  /* ===== 交互层 ===== */
+
+  /* Primary：深炭灰，专业稳重 */
+  --primary: oklch(18% 0.008 240deg);
+  --primary-foreground: oklch(99% 0 0deg);
+
+  /* Secondary：极浅灰，用于次要按钮 */
+  --secondary: oklch(97% 0.002 240deg);
+  --secondary-foreground: var(--foreground);
+
+  /* Muted：辅助区域背景 */
+  --muted: oklch(97.5% 0.002 240deg);
+
+  /* Accent：hover 状态，略深于 secondary */
+  --accent: oklch(96% 0.004 240deg);
+  --accent-foreground: var(--foreground);
+
+  /* ===== 边框 & 输入 ===== */
+
+  /* Border：细腻的浅灰，清晰但不突兀 */
+  --border: oklch(89% 0.003 240deg);
+  --input: oklch(89% 0.003 240deg);
+
+  /* Ring：聚焦时的轮廓色 */
+  --ring: oklch(35% 0.04 240deg);
+
+  /* ===== 状态色 ===== */
+
+  /* Destructive：柔和的红色 */
+  --destructive: oklch(55% 0.18 25deg);
+  --destructive-foreground: oklch(99% 0 0deg);
+  --radius: 0.75rem;
+}
+
+/* ============================================
+   DARK: Dark Mode 
+   设计语言：深空、沉浸、护眼
+   黑色系 + 极简灰阶
+   ============================================ */
+.dark {
+  /* ===== 统一背景层 ===== */
+
+  /* 背景：接近纯黑，微带冷调 */
+  --background: oklch(9% 0.01 270deg);
+
+  /* 卡片/弹窗：与背景完全统一，通过边框区分 */
+  --card: var(--background);
+  --popover: var(--background);
+
+  /* ===== 文字层级 ===== */
+
+  /* 主文字：柔和的浅灰白 */
+  --foreground: oklch(93% 0.005 270deg);
+  --card-foreground: var(--foreground);
+  --popover-foreground: var(--foreground);
+
+  /* 次级文字：中等灰度 */
+  --muted-foreground: oklch(62% 0.012 270deg);
+
+  /* ===== 交互层 ===== */
+
+  /* Primary：亮灰白，深色背景上的主要动作 */
+  --primary: oklch(95% 0.005 270deg);
+  --primary-foreground: oklch(9% 0.01 270deg);
+
+  /* Secondary：深灰，用于次要按钮 */
+  --secondary: oklch(16% 0.015 270deg);
+  --secondary-foreground: oklch(90% 0.008 270deg);
+
+  /* Muted：辅助区域背景 */
+  --muted: oklch(14% 0.012 270deg);
+
+  /* Accent：hover 状态，略亮于 secondary */
+  --accent: oklch(19% 0.018 270deg);
+  --accent-foreground: oklch(92% 0.008 270deg);
+
+  /* ===== 边框 & 输入 ===== */
+
+  /* Border：极淡的深灰，若隐若现 */
+  --border: oklch(18% 0.015 270deg);
+  --input: oklch(18% 0.015 270deg);
+
+  /* Ring：聚焦时的轮廓色 */
+  --ring: oklch(75% 0.05 270deg);
+
+  /* ===== 状态色 ===== */
+
+  /* Destructive：柔和的橙红 */
+  --destructive: oklch(52% 0.2 30deg);
+  --destructive-foreground: oklch(98% 0 0deg);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /* ===== 选中效果 ===== */
+  ::selection {
+    color: oklch(10% 0.005 240deg);
+    background-color: oklch(85% 0.05 80deg / 50%);
+  }
+
+  .dark ::selection {
+    color: oklch(98% 0.005 270deg);
+    background-color: oklch(45% 0.1 270deg / 45%);
+  }
+
+  /* ===== 滚动条 ===== */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(70% 0.015 240deg);
+    border-radius: 5px;
+    transition: background 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: oklch(55% 0.025 240deg);
+  }
+
+  .dark ::-webkit-scrollbar-track {
+    background: var(--muted);
+  }
+
+  .dark ::-webkit-scrollbar-thumb {
+    background: oklch(28% 0.025 270deg);
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    background: oklch(40% 0.04 270deg);
+  }
+
+  /* ===== 全局过渡 ===== */
+
+  /* * {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    transition-property:
+      background-color, border-color, color, fill, stroke, box-shadow;
+  } */
+
+  /* ===== 聚焦样式优化 ===== */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}

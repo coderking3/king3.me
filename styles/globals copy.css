@@ -1,0 +1,140 @@
+/* global.css */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import './shiki.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius: 0.8rem; /* 保持你想要的 0.8rem */
+}
+
+/* ROOT: Light Mode (极简铁灰)
+   去掉了 250deg 的明显蓝光，改为 220deg + 极低饱和度。
+   看起来是白色的，但比纯白更有质感。
+*/
+:root {
+  /* 背景：Ice Milk (冰白) 
+     Hue 220, Chroma 0.002 (极低，几乎是灰白) */
+  --background: oklch(100% 0 0deg);
+
+  /* 文字：Ink Grey (墨灰)
+     不黑，而是深灰，减少对比度刺眼感 */
+  --foreground: oklch(20% 0.01 220deg);
+
+  /* Bento 风格：卡片背景与大背景一致，靠边框区分 */
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+
+  /* Primary: 交互色
+     深铁灰色，沉稳，不偏色 */
+  --primary: oklch(20% 0.02 220deg);
+  --primary-foreground: oklch(98% 0.002 220deg);
+
+  /* Secondary: 极其轻微的灰色块 */
+  --secondary: oklch(96% 0.002 220deg);
+  --secondary-foreground: var(--foreground);
+
+  /* Muted: 辅助信息 */
+  --muted: oklch(96% 0.002 220deg);
+  --muted-foreground: oklch(55% 0.015 220deg);
+
+  /* Accent: Hover 状态 */
+  --accent: oklch(95% 0.005 220deg);
+  --accent-foreground: var(--foreground);
+
+  /* Destructive */
+  --destructive: oklch(60% 0.15 25deg);
+  --destructive-foreground: oklch(98% 0 0deg);
+
+  /* Border: 关键！
+     L=92%，非常干净的浅灰线条。
+     这是 Bento 风格的核心：白底+浅灰线。 */
+  --border: oklch(92% 0.005 220deg);
+  --input: var(--border);
+  --ring: oklch(20% 0.02 220deg);
+}
+
+/* DARK: Dark Mode (深空灰)
+   不是蓝黑，也不是纯黑。
+   Hue 220deg 是最“正”的深空灰，像 Macbook 深空灰的颜色。
+*/
+.dark {
+  /* 背景：Deep Space (深空灰)
+     L=13% (保证暗度)，Chroma 降到 0.01 (去蓝味) */
+  --background: oklch(13% 0.01 220deg);
+
+  /* 文字：Platinum (铂金白) */
+  --foreground: oklch(94% 0.005 220deg);
+
+  /* 卡片：保持一致 */
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+
+  /* Primary: 反转为亮色 */
+  --primary: oklch(94% 0.005 220deg);
+  --primary-foreground: oklch(13% 0.01 220deg);
+
+  /* Secondary: 深灰块 */
+  --secondary: oklch(20% 0.015 220deg);
+  --secondary-foreground: var(--foreground);
+
+  /* Muted */
+  --muted: oklch(20% 0.015 220deg);
+  --muted-foreground: oklch(65% 0.01 220deg);
+
+  /* Accent */
+  --accent: oklch(22% 0.015 220deg);
+  --accent-foreground: var(--foreground);
+
+  /* Destructive */
+  --destructive: oklch(50% 0.15 25deg);
+  --destructive-foreground: oklch(98% 0 0deg);
+
+  /* Border: 稍微明显的灰线
+     L=24%，比背景亮，形成优雅的分割 */
+  --border: oklch(24% 0.015 220deg);
+  --input: var(--border);
+  --ring: oklch(80% 0.05 220deg);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* 既然不要冷也不要暖，选中色就用中性的反转色 */
+  ::selection {
+    color: var(--background);
+    background-color: var(--foreground);
+  }
+}

@@ -3,8 +3,6 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { cn } from '@/lib/utils'
-
 import { Camera, Github, Logo } from './icons'
 import Navbar from './Navbar'
 import ThemeToggle from './ThemeToggle'
@@ -47,11 +45,11 @@ function Header() {
           <div className="flex flex-1 justify-start">
             <Link
               href="/"
-              className={cn(
-                'flex items-center justify-center',
-                'bg-primary/15 ring-border size-10 rounded-xl p-0.5 shadow-lg ring-2',
-                'backdrop-blur-[3px] backdrop-saturate-150'
-              )}
+              // className={cn(
+              //   'flex items-center justify-center',
+              //   'bg-primary/15 ring-border size-10 rounded-xl p-0.5 shadow-lg ring-2',
+              //   'backdrop-blur-[3px] backdrop-saturate-150'
+              // )}
             >
               {/* 
                'relative h-11 overflow-hidden rounded-full',

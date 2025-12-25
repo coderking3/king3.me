@@ -48,7 +48,7 @@
 }
 
 /* ROOT: Light Mode 
-  设计语言：干净、高雅
+  设计语言：干净、高雅、柔和
 
   Background: #ffffff
   Foreground: #27272a
@@ -113,6 +113,8 @@
 
 /* DARK: Dark Mode 
   设计语言：深空、沉浸、护眼
+
+
 */
 .dark {
   /* 背景：#0d0f12 转换值 -> L=14%, Hue=255 (深蓝调) */

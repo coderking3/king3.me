@@ -1,0 +1,131 @@
+/* global.css globals-冷色调 */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius: 0.8rem;
+}
+
+/* ------------------------------
+  ROOT: Light Mode (高级冷白)
+  参考 Antfu 的通透感，背景和卡片颜色一致，靠边框切割
+  ------------------------------
+*/
+:root {
+  /* 背景：Alabaster White (雪花石膏)
+     99.5% 的亮度，带有一点点冷色调，比纯白更护眼，更高级 */
+  --background: oklch(99.5% 0.005 250deg);
+
+  /* 文字：Carbon Black (炭黑) */
+  --foreground: oklch(20% 0.01 250deg);
+
+  /* Bento 风格复用：背景与卡片同色 */
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+
+  /* Primary: 纯粹的深色，作为交互焦点 */
+  --primary: oklch(15% 0.01 250deg);
+  --primary-foreground: oklch(99.5% 0.005 250deg);
+
+  /* Secondary: 浅灰色，用于内部小区块的分隔 */
+  --secondary: oklch(96% 0.005 250deg);
+  --secondary-foreground: var(--primary);
+
+  /* Muted: 用于非强调文本 */
+  --muted: oklch(96% 0.005 250deg);
+  --muted-foreground: oklch(55% 0.01 250deg);
+
+  /* Accent: Hover 时的微妙变化 */
+  --accent: oklch(94% 0.01 250deg);
+  --accent-foreground: var(--primary);
+
+  /* Border: 关键！
+     Bento 风格需要略明显的边框，L=92% 的冷灰色 */
+  --border: oklch(92% 0.01 250deg);
+  --input: var(--border);
+  --ring: oklch(80% 0.01 250deg);
+}
+
+/* ------------------------------
+  DARK: Dark Mode (深邃炭黑)
+  参考 Josh Comeau 的沉浸感，强化边框可见度
+  ------------------------------
+*/
+.dark {
+  /* 背景：Onyx Black (玛瑙黑)
+     L=10% 左右，比纯黑略亮，能承载阴影和模糊效果 */
+  --background: oklch(10% 0.01 250deg);
+
+  /* 文字：Soft Silver (软银)
+     90% 亮度，不刺眼 */
+  --foreground: oklch(90% 0.01 250deg);
+
+  /* Bento 风格复用：背景与卡片同色 */
+  --card: var(--background);
+  --card-foreground: var(--foreground);
+  --popover: var(--background);
+  --popover-foreground: var(--foreground);
+
+  /* Primary: 在暗色中反转为亮色 */
+  --primary: oklch(90% 0.01 250deg);
+  --primary-foreground: oklch(10% 0.01 250deg);
+
+  /* Secondary: 暗灰色块 */
+  --secondary: oklch(18% 0.01 250deg);
+  --secondary-foreground: var(--foreground);
+
+  /* Muted: 辅助信息的颜色 */
+  --muted: oklch(18% 0.01 250deg);
+  --muted-foreground: oklch(60% 0.01 250deg);
+
+  /* Accent */
+  --accent: oklch(20% 0.02 250deg);
+  --accent-foreground: var(--primary);
+
+  /* Border: 关键优化！
+     将亮度提升到 28%，这样在 10% 亮度的背景下，
+     边框会像发光的细线一样勾勒出 Bento 形状。 */
+  --border: oklch(28% 0.01 250deg);
+  --input: var(--border);
+  --ring: oklch(40% 0.01 250deg);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* 针对 Bento 卡片和模糊组件的特殊处理 */
+  ::selection {
+    background-color: oklch(80% 0.01 250deg / 30%);
+  }
+}

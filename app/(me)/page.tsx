@@ -110,7 +110,7 @@ export default async function Page() {
                 {posts.map((post) => (
                   <article
                     key={post.id}
-                    className="group bg-background/0 rounded-lg border p-6 transition-all duration-300"
+                    className="group rounded-lg border p-6 transition-all duration-300"
                   >
                     <div className="space-y-3">
                       <div className="text-muted-foreground flex items-center gap-3 text-sm">
