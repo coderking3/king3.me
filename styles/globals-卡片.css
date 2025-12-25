@@ -1,0 +1,144 @@
+/* global.css */
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  /* ---------- Fonts ---------- */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* ---------- Base Colors ---------- */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* ---------- Containers ---------- */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* ---------- Semantic Colors ---------- */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+
+  /* ---------- Form & Interaction ---------- */
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* ---------- Radius System ---------- */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+
+/* LIGHT MODE 
+   Mood: 干净、透气、纸张感
+*/
+:root {
+  /* 背景：极浅灰白 (非纯白) */
+  --background: oklch(98.5% 0 0deg); /* #fbfbfb */
+
+  /* 文字：深炭灰，微冷调 (非纯黑) */
+  --foreground: oklch(20% 0.01 250deg); /* #2b2d31 */
+
+  /* 卡片：纯白，Bento 格子 */
+  --card: oklch(100% 0 0deg); /* #ffffff */
+  --card-foreground: var(--foreground); /* #2b2d31 */
+
+  /* 悬浮层 */
+  --popover: oklch(100% 0 0deg); /* #ffffff */
+  --popover-foreground: var(--foreground); /* #2b2d31 */
+
+  /* Primary: 极致深色按钮 */
+  --primary: oklch(20% 0.01 250deg); /* #2b2d31 */
+  --primary-foreground: oklch(98% 0 0deg); /* #f9f9f9 */
+
+  /* Secondary: 浅灰按钮 */
+  --secondary: oklch(96% 0 0deg); /* #f4f4f4 */
+  --secondary-foreground: var(--foreground);
+
+  /* Muted: 辅助信息 */
+  --muted: oklch(96% 0 0deg); /* #f4f4f4 */
+  --muted-foreground: oklch(55% 0.02 250deg); /* #71757e */
+
+  /* Accent: Hover 状态 */
+  --accent: oklch(96% 0 0deg); /* #f4f4f4 */
+  --accent-foreground: var(--foreground);
+
+  /* Destructive: 柔和红 */
+  --destructive: oklch(60% 0.18 25deg); /* #e84c4c */
+  --destructive-foreground: oklch(98% 0 0deg);
+
+  /* Borders: 浅灰分割线 */
+  --border: oklch(92% 0 0deg); /* #e8e8e8 */
+  --input: oklch(92% 0 0deg);
+  --ring: oklch(20% 0.01 250deg); /* #2b2d31 */
+  --radius: 0.625rem;
+}
+
+/* DARK MODE 
+   Mood: 深空、午夜、沉浸
+*/
+.dark {
+  /* 背景：午夜深蓝黑 (对应 copy-dark 的质感) */
+  --background: oklch(14% 0.015 255deg); /* #17191e */
+
+  /* 文字：柔和的灰白，护眼 */
+  --foreground: oklch(95% 0.01 255deg); /* #eef0f4 */
+
+  /* 卡片：比背景微亮，形成层级 */
+  --card: oklch(17% 0.015 255deg); /* #1e2026 */
+  --card-foreground: var(--foreground);
+  --popover: oklch(17% 0.015 255deg); /* #1e2026 */
+  --popover-foreground: var(--foreground);
+
+  /* Primary: 按钮反转为亮色 */
+  --primary: oklch(95% 0.01 255deg); /* #eef0f4 */
+  --primary-foreground: oklch(14% 0.015 255deg); /* #17191e */
+
+  /* Secondary: 深灰按钮 */
+  --secondary: oklch(25% 0.02 255deg); /* #32353e */
+  --secondary-foreground: var(--foreground);
+
+  /* Muted */
+  --muted: oklch(25% 0.02 255deg); /* #32353e */
+  --muted-foreground: oklch(70% 0.02 255deg); /* #a3a6b0 */
+
+  /* Accent */
+  --accent: oklch(25% 0.02 255deg); /* #32353e */
+  --accent-foreground: var(--foreground);
+
+  /* Destructive */
+  --destructive: oklch(50% 0.18 25deg); /* #bf3838 */
+  --destructive-foreground: oklch(98% 0 0deg);
+
+  /* Borders: 深色边框，尽量低调 */
+  --border: oklch(25% 0.02 255deg); /* #32353e */
+  --input: oklch(25% 0.02 255deg);
+  --ring: oklch(80% 0.05 255deg); /* #c4c8d4 */
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

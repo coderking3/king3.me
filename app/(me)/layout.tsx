@@ -43,7 +43,12 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(geistSans.variable, geistMono.variable)}
     >
-      <body className="min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black">
+      <body
+        className={cn(
+          'bg-background text-foreground min-h-screen scroll-smooth font-sans antialiased',
+          'selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black'
+        )}
+      >
         {/* <body className="bg-background min-h-screen font-sans antialiased selection:bg-zinc-800 selection:text-white dark:selection:bg-zinc-200 dark:selection:text-black"> */}
         <ThemeProvider
           attribute="class"

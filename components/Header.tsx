@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+import { cn } from '@/lib/utils'
+
 import { Camera, Github, Logo } from './icons'
 import Navbar from './Navbar'
 import ThemeToggle from './ThemeToggle'
@@ -40,11 +42,24 @@ function Header() {
 
   return (
     <header className="sticky top-0 right-0 left-0 z-10 h-16 w-full pt-6">
-      <div className="mx-auto h-full max-w-7xl px-2">
+      <div className="mx-auto h-full max-w-6xl px-6">
         <div className="flex h-full items-center justify-between">
           <div className="flex flex-1 justify-start">
-            <Link href="/">
-              <Logo className="size-10"></Logo>
+            <Link
+              href="/"
+              className={cn(
+                'flex items-center justify-center',
+                'bg-primary/15 ring-border size-10 rounded-xl p-0.5 shadow-lg ring-2',
+                'backdrop-blur-[3px] backdrop-saturate-150'
+              )}
+            >
+              {/* 
+               'relative h-11 overflow-hidden rounded-full',
+        'bg-accent/30 dark:bg-accent/80 shadow-primary/5 dark:shadow-primary/0 shadow-xl',
+        'backdrop-blur-[3px] backdrop-saturate-150',
+        'ring-ring/10 dark:ring-ring/30 ring-1',
+              */}
+              <Logo className="size-8"></Logo>
             </Link>
           </div>
 

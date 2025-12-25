@@ -1,4 +1,3 @@
-/* global.css */
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
@@ -37,6 +36,9 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
+  /* ---------- Syntax Highlighting (Mapped) ---------- */
+  --color-syntax-bg: var(--syntax-bg);
+
   /* ---------- Radius System ---------- */
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -47,41 +49,21 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
-/* ROOT: Light Mode 
-  设计语言：干净、高雅
-
-  Background: #ffffff
-  Foreground: #27272a
-
-  Card: #ffffff
-  CardForeground: #27272a
-  Popover: #ffffff
-  PopoverForeground: #27272a
-
-  Primary: #27272a
-  PrimaryForeground: #f8f8f8
-
-  Secondary: #f2f2f2
-  SecondaryForeground: #27272a
-
-  Muted: #f2f2f2
-  MutedForeground: #69737d
-
-  Accent: #f2f2f2
-  AccentForeground: #27272a
-
+/* 
+  ROOT: Light Mode 
+  设计语言：干净、高雅、柔和
 */
 :root {
-  /* 背景：#ffffff，最通用的选择 */
-  --background: oklch(100% 0 0deg);
+  /* 背景：#fafafa 柔和的浅灰，比纯白更柔和 */
+  --background: oklch(98.51% 0 0deg);
 
-  /* 文字：#27272a 深炭灰，带微弱蓝调 */
+  /* 前景：#27272a 深炭灰，带微弱蓝调 */
   --foreground: oklch(27.39% 0.0055 286.03deg);
 
-  /* 卡片：与背景同色，依靠边框区分层次 */
-  --card: oklch(100% 0 0deg);
+  /* 卡片：与背景同色，依靠边框和阴影区分层次 */
+  --card: oklch(98.51% 0 0deg);
   --card-foreground: var(--foreground);
-  --popover: oklch(100% 0 0deg);
+  --popover: oklch(98.51% 0 0deg);
   --popover-foreground: var(--foreground);
 
   /* Primary: 模仿 "黑白" 风格，按钮是深黑色，文字纯白 */
@@ -109,6 +91,13 @@
   --input: oklch(92% 0 0deg);
   --ring: oklch(20% 0.01 250deg); /* Focus ring 跟随主色 */
   --radius: 0.75rem;
+
+  /* --- 移植过来的 Syntax (Light) --- */
+  --syntax-bg: oklch(98% 0.01 250deg); /* 极浅的蓝灰色背景 */
+  --syntax-txt: #292929;
+  --syntax-comment: #5b637b;
+  --syntax-keyword: #db0079;
+  --syntax-fn: #4242fa;
 }
 
 /* DARK: Dark Mode 

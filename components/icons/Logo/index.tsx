@@ -43,8 +43,8 @@ function Logo({
       }
     },
     [tapVariant]: {
-      scaleX: 0.9,
-      scaleY: 1.05,
+      scaleX: 0.85,
+      scaleY: 1.08,
       transition: {
         type: 'spring',
         stiffness: 500,

@@ -18,10 +18,10 @@ function Navbar({ page, className }: NavbarProps) {
   return (
     <nav
       className={cn(
-        'relative overflow-hidden',
-        'bg-accent/30 shadow-primary/5 h-11 rounded-full shadow-xl',
-        'dark:bg-accent backdrop-blur-xs backdrop-saturate-150',
-        'ring-ring/10 ring-1',
+        'relative h-11 overflow-hidden rounded-full',
+        'bg-accent/30 dark:bg-accent/80 shadow-primary/5 dark:shadow-primary/0 shadow-xl',
+        'backdrop-blur-[3px] backdrop-saturate-150',
+        'ring-ring/10 dark:ring-ring/30 ring-1',
         className
       )}
     >
