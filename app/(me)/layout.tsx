@@ -3,9 +3,9 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { Geist, Geist_Mono } from 'next/font/google' // 1. 引入 Geist 字体
 import React from 'react'
-import { Toaster } from 'sonner'
 
 import { Background, Footer, Header, Main } from '@/components/index'
+import { Toaster } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 import '@/styles/globals.css'
@@ -61,7 +61,7 @@ export default function RootLayout({
             <Footer />
           </div>
 
-          <Toaster />
+          <Toaster position="top-right" />
         </ThemeProvider>
       </body>
     </html>
