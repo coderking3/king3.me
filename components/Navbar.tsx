@@ -18,10 +18,10 @@ function Navbar({ page, className }: NavbarProps) {
   return (
     <nav
       className={cn(
+        // 'relative h-11 overflow-hidden bg-transparent',
         'relative h-11 overflow-hidden rounded-full',
-        /* 改动：将 bg-accent 换为 bg-background，ring 换为 border */
         'bg-background/50 dark:bg-background/70 shadow-primary/5 dark:shadow-primary/0 shadow-xl',
-        'backdrop-blur-xs backdrop-saturate-150',
+        'backdrop-blur-[3px] backdrop-saturate-150',
         'border-border border',
         className
       )}
@@ -47,7 +47,7 @@ function Navbar({ page, className }: NavbarProps) {
                 {isActive && (
                   <motion.div
                     /* 改动：使用 border-primary 增加视觉权重 */
-                    className="border-accent/20 absolute bottom-1 left-1/4 -z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
+                    className="border-accent-foreground/15 dark:border-primary/30 absolute bottom-1 left-1/4 -z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
                     layoutId="activeIndicator"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -66,7 +66,7 @@ function Navbar({ page, className }: NavbarProps) {
                 {isActive && (
                   <motion.div
                     /* 改动：颜色调淡到 10%，避免在 Bento 风格下干扰视线 */
-                    className="bg-primary/10 absolute top-1/2 left-1/2 -z-20 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
+                    className="bg-primary/10 dark:bg-primary/20 absolute top-1/2 left-1/2 -z-20 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
@@ -83,16 +83,16 @@ function Navbar({ page, className }: NavbarProps) {
               <AnimatePresence>
                 {isHovered && (
                   <motion.div
-                    className="absolute top-1.5 -z-30 h-8 w-full rounded-full"
+                    className="bg-primary/5 dark:bg-primary/10 absolute top-1.5 -z-20 h-8 w-full rounded-full"
                     layoutId="hoverPill"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
-                    style={{
-                      /* 改动：10% 改为更细腻的 5% */
-                      backgroundColor:
-                        'color-mix(in oklab, var(--primary) 5%, transparent)'
-                    }}
+                    // style={{
+                    //   /* 改动：10% 改为更细腻的 5% */
+                    //   backgroundColor:
+                    //     'color-mix(in oklab, var(--primary) 5%, transparent)'
+                    // }}
                     transition={{
                       layout: {
                         type: 'spring',
@@ -110,7 +110,7 @@ function Navbar({ page, className }: NavbarProps) {
                   className={cn(
                     /* 改动：非激活态用 muted-foreground，激活态用 primary，对比更清晰 */
                     'text-muted-foreground relative text-sm font-bold transition-colors',
-                    isActive && 'text-primary'
+                    isActive && 'text-accent-foreground'
                   )}
                   variants={{
                     initial: { scale: 1 },
