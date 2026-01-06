@@ -1,12 +1,11 @@
 import type { MotionNodeAnimationOptions } from 'framer-motion'
 
-type Animate = MotionNodeAnimationOptions['animate']
+type MotionOptions = MotionNodeAnimationOptions
 
 interface SvgIcon {
-  size?: number | string
+  size?: number
   color?: string
   strokeWidth?: number
-  className?: string
 }
 
-export type { Animate, SvgIcon }
+export type { MotionOptions, SvgIcon }

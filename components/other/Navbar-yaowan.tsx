@@ -16,8 +16,17 @@ function Navbar({ page, className }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   return (
-    <nav className={cn('relative h-11 overflow-hidden', className)}>
-      <ul className="flex items-center justify-center text-sm">
+    <nav
+      className={cn(
+        // 'relative h-11 overflow-hidden bg-transparent',
+        'relative h-11 overflow-hidden rounded-full',
+        'bg-background/50 dark:bg-background/70 shadow-primary/5 shadow-xl dark:shadow-lg',
+        'backdrop-blur-[3px] backdrop-saturate-150',
+        'border-border border',
+        className
+      )}
+    >
+      <ul className="text-primary flex items-center justify-center bg-transparent px-3 text-sm font-medium">
         {navigationItems.map(({ href, name }) => {
           const isActive =
             (page.includes(href) && href !== '/') || page === href
@@ -37,7 +46,8 @@ function Navbar({ page, className }: NavbarProps) {
               <AnimatePresence>
                 {isActive && (
                   <motion.div
-                    className="border-muted-foreground/20 dark:border-primary/25 absolute bottom-1 left-1/4 -z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
+                    /* 改动：使用 border-primary 增加视觉权重 */
+                    className="border-accent-foreground/15 dark:border-primary/30 absolute bottom-1 left-1/4 -z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
                     layoutId="activeIndicator"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -55,7 +65,8 @@ function Navbar({ page, className }: NavbarProps) {
               <AnimatePresence>
                 {isActive && (
                   <motion.div
-                    className="bg-muted-foreground/20 dark:bg-muted-foreground/40 absolute top-1/2 left-1/2 -z-20 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
+                    /* 改动：颜色调淡到 10%，避免在 Bento 风格下干扰视线 */
+                    className="bg-primary/15 dark:bg-primary/20 absolute top-1/2 left-1/2 -z-20 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
@@ -77,6 +88,11 @@ function Navbar({ page, className }: NavbarProps) {
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
+                    // style={{
+                    //   /* 改动：10% 改为更细腻的 5% */
+                    //   backgroundColor:
+                    //     'color-mix(in oklab, var(--primary) 5%, transparent)'
+                    // }}
                     transition={{
                       layout: {
                         type: 'spring',
@@ -93,7 +109,7 @@ function Navbar({ page, className }: NavbarProps) {
                 <motion.span
                   className={cn(
                     /* 改动：非激活态用 muted-foreground，激活态用 primary，对比更清晰 */
-                    'text-muted-foreground relative font-bold transition-colors',
+                    'text-muted-foreground relative text-sm font-bold transition-colors',
                     isActive && 'text-accent-foreground'
                   )}
                   variants={{

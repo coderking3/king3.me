@@ -1,94 +1,12 @@
 'use client'
 
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 
-import { Camera, Github, Logo } from './icons'
+import { Camera, Github, Logo, ThemeMode } from './icons'
 import Navbar from './Navbar'
-import ThemeToggle from './ThemeToggle'
-
-interface ActionLinkProps {
-  children: React.ReactNode
-  href: string
-  type?: 'internal' | 'external'
-}
-
-function ActionLink({ children, type = 'internal', href }: ActionLinkProps) {
-  const isExternal = type === 'external'
-
-  const externalProps = {
-    ...(isExternal && {
-      target: '_blank',
-      rel: 'noopener noreferrer'
-    })
-  }
-
-  return (
-    <Link
-      href={href}
-      className="flex size-8 items-center justify-center"
-      {...externalProps}
-    >
-      {children}
-    </Link>
-  )
-}
-
-interface HeaderBackgroundProps {
-  isTop: boolean
-}
-function HeaderBackground({ isTop }: HeaderBackgroundProps) {
-  return (
-    <motion.div
-      className={cn(
-        'absolute top-1/2 -z-20 h-11 -translate-y-1/2 rounded-full',
-        'bg-background/50 dark:bg-background/70 shadow-primary/5 dark:shadow-primary/0 shadow-xl',
-        'backdrop-blur-[3px] backdrop-saturate-150',
-        'border-border border'
-      )}
-      animate={{
-        left: !isTop ? '0' : '33.33%',
-        right: !isTop ? '0' : '33.33%'
-      }}
-      transition={{
-        type: 'spring',
-        stiffness: 300,
-        damping: 30
-      }}
-
-      // style={{
-
-      // }}
-    />
-
-    //  <motion.div
-    //     className="absolute top-1/2 -translate-y-1/2 -z-10 h-11 rounded-full"
-    //     animate={{
-    //       // 顶部时：只覆盖中间 33.33%
-    //       left: isScrolled ? '0' : '33.33%',
-    //       right: isScrolled ? '0' : '33.33%',
-    //       // 或者用 width + left 的方式
-    //       // left: isScrolled ? '0' : '50%',
-    //       // width: isScrolled ? '100%' : 'auto',
-    //       // transform: isScrolled ? 'translateY(-50%)' : 'translate(-50%, -50%)',
-    //     }}
-    //     style={{
-    //       backgroundColor: 'hsl(var(--background) / 0.5)',
-    //       backdropFilter: 'blur(3px) saturate(150%)',
-    //       border: '1px solid hsl(var(--border))',
-    //       boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-    //     }}
-    // transition={{
-    //   type: 'spring',
-    //   stiffness: 300,
-    //   damping: 30,
-    // }}
-    //   />
-  )
-}
 
 function Header() {
   const pathname = usePathname()
@@ -96,38 +14,63 @@ function Header() {
   // const isTop = useIsTop(100)
 
   return (
-    <header className="sticky top-0 right-0 left-0 z-10 h-16 w-full pt-6">
-      <div className="mx-auto h-full max-w-6xl px-2">
-        <div className="relative flex h-full items-center justify-between px-4">
-          {/* 玻璃态背景层 */}
-          {/* <HeaderBackground isTop={isTop} /> */}
+    <header className="sticky top-0 right-0 left-0 z-50 h-16 w-full pt-4">
+      <div className="mx-auto h-full max-w-6xl px-6">
+        <div className="flex h-full items-center justify-between">
+          {/* Header Left */}
+          <div className="bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border flex items-center rounded-full border pl-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 dark:shadow-lg">
+            {/* Logo */}
+            <div className="text-accent-foreground/85 hover:text-accent-foreground mx-1 flex items-center transition-colors duration-200">
+              <Link
+                href="/"
+                className={cn('flex size-8.5 items-center justify-center')}
+              >
+                <Logo variant="bold" className="box-border size-full p-[3px]" />
+              </Link>
 
-          {/* Logo - 左 */}
-          <div className="flex flex-1 justify-start">
-            <Link href="/">
-              <Logo className="size-8"></Logo>
-            </Link>
+              <span className="ml-1 font-(family-name:--font-google-art) text-xl font-normal">
+                King3
+              </span>
+            </div>
+
+            {/* Divider */}
+            <div className="bg-border ml-3 h-6 w-[1.5px]" />
+
+            {/* Navbar */}
+            <div className="flex flex-1 items-center justify-center">
+              <Navbar page={page} className="pr-3 pl-1.5"></Navbar>
+            </div>
           </div>
 
-          {/* Navbar - 中 */}
-          <div className="flex flex-1 items-center justify-center">
-            <Navbar page={page}></Navbar>
-          </div>
-
-          {/* Actions - 右 */}
-          <div className="text-foreground header-actions flex flex-1 items-center justify-end gap-2">
-            <ActionLink href="/photos">
-              <Camera className="size-6" />
-            </ActionLink>
-
-            <ActionLink
-              href="https://www.github.com/coderking3/king3.me"
-              type="external"
+          {/* Actions */}
+          <div
+            className={cn(
+              'header-actions flex flex-1 items-center justify-end'
+            )}
+          >
+            <div
+              className={cn(
+                'bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border text-accent-foreground/85 flex h-10.5 w-auto items-center rounded-full border px-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 transition-all dark:shadow-lg'
+              )}
             >
-              <Github className="size-6" />
-            </ActionLink>
+              <Link
+                href="/photos"
+                className="hover:text-accent-foreground transition-colors duration-200"
+              >
+                <Camera className="h-10.5 w-8.5 px-1.5" />
+              </Link>
 
-            <ThemeToggle />
+              <Link
+                href="https://www.github.com/coderking3/king3.me"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-accent-foreground transition-colors duration-200"
+              >
+                <Github className="h-10.5 w-8.5 px-1.5" />
+              </Link>
+
+              <ThemeMode />
+            </div>
           </div>
         </div>
       </div>

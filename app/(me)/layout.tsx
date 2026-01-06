@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { ThemeProvider } from 'next-themes'
-import { Geist, Geist_Mono } from 'next/font/google' // 1. 引入 Geist 字体
+import { Audiowide, Geist, Geist_Mono } from 'next/font/google' // 1. 引入 Geist 字体
 import React from 'react'
 
 import { Background, Footer, Header, Main } from '@/components/index'
@@ -17,6 +17,11 @@ const geistSans = Geist({
 })
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
+  subsets: ['latin']
+})
+const GoogleArt = Audiowide({
+  weight: '400',
+  variable: '--font-google-art',
   subsets: ['latin']
 })
 
@@ -41,7 +46,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(geistSans.variable, geistMono.variable)}
+      className={cn(geistSans.variable, geistMono.variable, GoogleArt.variable)}
     >
       <body
         className={cn('min-h-screen scroll-smooth font-sans antialiased', '')}
