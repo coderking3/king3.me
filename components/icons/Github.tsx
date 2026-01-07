@@ -1,57 +1,27 @@
-import type { Variants } from 'framer-motion'
+import type { IconInteractiveProps } from './Interactive'
 
 import type { MotionOptions, SvgIcon } from '@/types'
 
 import { motion } from 'framer-motion'
 
-interface GithubProps extends SvgIcon {
-  isBooped: boolean
+import Interactive from './Interactive'
+
+interface GithubIconProps extends SvgIcon {
+  isBooped?: boolean
 }
 
-const githubVariants: Record<'container', Variants> = {
-  container: {
-    initial: {
-      rotate: 0
-    },
-    hover: {
-      rotate: [0, 5.5, -2, 1, 0],
-      transition: {
-        duration: 0.6,
-        ease: 'easeInOut'
-      }
-    }
-  }
-}
-
-export function Github({
+export function GithubIcon({
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
   isBooped = false
-}: GithubProps) {
+}: GithubIconProps) {
   const iconMotion: MotionOptions = {
-    // animate: { rotate: rotation },
-    // transition: isTransitioning
-    //   ? MOTION_SPRINGS.default
-    //   : MOTION_SPRINGS.springy
+    animate: { rotate: isBooped ? 5 : 0 },
+    transition: { type: 'spring', stiffness: 300, damping: 10 }
   }
 
   return (
-    // <motion.span
-    //   className={cn(
-    //     `inline-flex items-center justify-center`,
-    //     { 'size-5': isDefaultSize },
-    //     className
-    //   )}
-    // style={{
-    //   originX: 0.5,
-    //   originY: 1,
-    //   ...(!isDefaultSize && { width: size, height: size })
-    // }}
-    //   initial="initial"
-    //   variants={githubVariants.container}
-    //   whileHover="hover"
-    // >
     <motion.svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
@@ -63,6 +33,7 @@ export function Github({
         originX: 0.5,
         originY: 1
       }}
+      {...iconMotion}
     >
       <g
         fill="none"
@@ -74,6 +45,22 @@ export function Github({
         <path d="M9 18c-4.51 2-5-2-7-2" />
       </g>
     </motion.svg>
-    // </motion.span>
+  )
+}
+
+export function Github({
+  // Icon props
+  size,
+  color,
+  strokeWidth,
+  // Interactive props
+  ...restProps
+}: IconInteractiveProps) {
+  return (
+    <Interactive {...restProps} boopOn="hover">
+      {({ isBooped }) => (
+        <GithubIcon {...{ size, color, strokeWidth, isBooped }} />
+      )}
+    </Interactive>
   )
 }

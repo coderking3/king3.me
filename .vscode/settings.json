@@ -33,5 +33,6 @@
   "cSpell.words": ["Booped", "hypothenuse", "Linaria", "oklch", "transitio"],
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
-  }
+  },
+  "git.ignoreLimitWarning": true
 }

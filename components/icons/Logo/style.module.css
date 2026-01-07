@@ -64,17 +64,17 @@
   }
 }
 
-.logo-animate .arrow-up {
+.arrow-up {
   clip-path: inset(0 100% 0 0);
   animation: draw-arrow-up 5.45s ease-out infinite;
 }
 
-.logo-animate .arrow-down {
+.arrow-down {
   clip-path: inset(0 0 0 100%);
   animation: draw-arrow-down 5.45s ease-out infinite;
 }
 
-.logo-animate .divider-line {
+.divider-line {
   clip-path: inset(0 50% 0 50%);
   animation: draw-divider-line 5.45s ease-out infinite;
 }

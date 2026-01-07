@@ -1,28 +1,31 @@
-import type { Variants } from 'framer-motion'
 import type { JSX } from 'react'
 
-import type { SvgIcon } from '@/types'
+import type { IconInteractiveProps } from '../Interactive'
+
+import type { MotionOptions, SvgIcon } from '@/types'
 
 import { motion } from 'framer-motion'
 
-import { cn } from '@/lib/utils'
+import Interactive from '../Interactive'
 
 import style from './style.module.css'
 
 type LogoVariant = 'regular' | 'bold'
-interface LogoProps extends SvgIcon {
+
+interface LogoProps extends Omit<SvgIcon, 'strokeWidth'> {
   variant?: LogoVariant
+  isHoverBooped?: boolean
+  isClickBooped?: boolean
 }
 
 const renderRegular = (color: string) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-full w-full"
-    strokeWidth="1.5"
-  >
-    <path d="M8 12H17" stroke={color} className={style['divider-line']} />
+  <>
+    <path
+      strokeWidth={1.5}
+      d="M8 12H17"
+      stroke={color}
+      className={style['divider-line']}
+    />
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -37,18 +40,14 @@ const renderRegular = (color: string) => (
       fill={color}
       className={style['arrow-down']}
     />
-  </svg>
+  </>
 )
+
 const renderBold = (color: string) => (
-  <svg
-    viewBox="0 0 24 26"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    className="w-full"
-  >
+  <>
     <path
       d="M7.5 12.72H16.5"
-      strokeWidth="2"
+      strokeWidth={2}
       stroke={color}
       className={style['divider-line']}
     />
@@ -68,68 +67,64 @@ const renderBold = (color: string) => (
       fill={color}
       className={style['arrow-down']}
     />
-  </svg>
+  </>
 )
 
-const SVG_MAP: Record<LogoVariant, (color: string) => JSX.Element> = {
+const SVG_CONTENT_MAP: Record<LogoVariant, (color: string) => JSX.Element> = {
   regular: renderRegular,
   bold: renderBold
 }
 
-const logoVariants: Record<'container', Variants> = {
-  container: {
-    initial: {
-      scale: 1,
-      scaleX: 1,
-      scaleY: 1
-    },
-    hover: {
-      scale: [1, 1.08, 1],
-      transition: {
-        duration: 0.4,
-        ease: 'easeInOut'
-      }
-    },
-    tap: {
-      scaleX: 0.85,
-      scaleY: 1.08,
-      transition: {
-        type: 'spring',
-        stiffness: 500,
-        damping: 15
-      }
-    }
-  }
-}
-
-function Logo({
-  size = '1.25rem',
+function LogoIcon({
+  size = 20,
   color = 'currentColor',
   variant = 'regular',
-  className
+  isHoverBooped = false,
+  isClickBooped = false
+  // className
 }: LogoProps) {
-  const isDefaultSize = size === '1.25rem'
-  const Svg = SVG_MAP[variant]
+  const content = SVG_CONTENT_MAP[variant]
+  const viewBox = variant === 'regular' ? '0 0 24 24' : '0 0 24 26'
+
+  const iconMotion: MotionOptions = {
+    animate: {
+      scale: isHoverBooped ? 1.08 : 1,
+      scaleX: isClickBooped ? 0.85 : 1,
+      scaleY: isClickBooped ? 1.08 : 1
+    },
+    transition: { type: 'spring', stiffness: 300, damping: 15 }
+  }
 
   return (
-    <motion.span
-      className={cn(
-        style['logo-animate'],
-        `inline-flex items-center justify-center`,
-        { 'size-5': isDefaultSize },
-        className
-      )}
-      style={{
-        ...(!isDefaultSize && { width: size, height: size })
-      }}
-      initial="initial"
-      variants={logoVariants.container}
-      whileHover="hover"
-      whileTap="tap"
+    <motion.svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={viewBox}
+      fill="none"
+      className="block overflow-visible"
+      width={`${size / 16}rem`}
+      height={`${size / 16}rem`}
+      {...iconMotion}
     >
-      {Svg(color)}
-    </motion.span>
+      {content(color)}
+    </motion.svg>
   )
 }
 
-export { Logo }
+export function Logo({
+  // Icon props
+  size,
+  color,
+  variant,
+  // Interactive props
+  ...restProps
+}: IconInteractiveProps & {
+  variant?: LogoVariant
+}) {
+  return (
+    <Interactive {...restProps} boopOn={['hover', 'click']}>
+      {({ isHoverBooped, isClickBooped }) => (
+        <LogoIcon {...{ size, color, variant, isHoverBooped, isClickBooped }} />
+      )}
+    </Interactive>
+  )
+}

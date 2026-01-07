@@ -1,5 +1,7 @@
 export * from './Camera'
 export * from './Github'
-export * from './IconWrapper'
 export * from './Logo'
 export * from './ThemeMode'
+
+// Part: Interactive
+export { default as IconInteractive } from './Interactive'

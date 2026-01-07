@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 
-export function useBoopMinimal(isHovering: boolean, timing = 150) {
+export function useBoop(isHovering: boolean, timing = 150) {
   const [isBooped, setIsBooped] = React.useState(false)
 
   React.useEffect(() => {

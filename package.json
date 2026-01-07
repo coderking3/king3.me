@@ -1,6 +1,6 @@
 {
   "name": "king3.me",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -31,6 +31,7 @@
     "better-auth": "^1.4.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "feed": "^5.1.0",
     "framer-motion": "^12.23.25",
     "graphql": "^16.12.0",
     "gray-matter": "^4.0.3",

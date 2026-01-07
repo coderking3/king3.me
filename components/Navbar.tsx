@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useState } from 'react'
 
-import { navigationItems } from '@/config/nav'
+import { NAVIGATION_ITEMS } from '@/constants'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {
@@ -18,7 +18,7 @@ function Navbar({ page, className }: NavbarProps) {
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
       <ul className="flex items-center justify-center text-sm">
-        {navigationItems.map(({ href, name }) => {
+        {NAVIGATION_ITEMS.map(({ href, name }) => {
           const isActive =
             (page.includes(href) && href !== '/') || page === href
           const isHovered = hoveredItem === href

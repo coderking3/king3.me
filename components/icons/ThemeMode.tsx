@@ -2,6 +2,8 @@
 
 import type { Transition } from 'framer-motion'
 
+import type { IconInteractiveProps } from './Interactive'
+
 import type { MotionOptions, SvgIcon } from '@/types'
 
 import { motion } from 'framer-motion'
@@ -9,9 +11,10 @@ import { useTheme } from 'next-themes'
 import * as React from 'react'
 import { useRef, useState } from 'react'
 
+import { MOTION_SPRINGS } from '@/constants'
 import { range, roundTo } from '@/lib/utils'
 
-import { IconWrapper } from './IconWrapper'
+import Interactive from './Interactive'
 
 const SUN_RADIUS = 6
 const MOON_RADIUS = 9.5
@@ -21,27 +24,27 @@ const NUM_OF_DOTS = 8
 const SUN_DOTS_DELAY = 0.15
 const SUN_DOTS_STAGGER = 0.08
 
-const MOTION_SPRINGS: Record<'default' | 'springy' | 'boop', Transition> = {
-  default: { type: 'spring', stiffness: 160, damping: 30 },
-  springy: { type: 'spring', stiffness: 300, damping: 10 },
-  boop: { type: 'spring', stiffness: 300, damping: 20 }
-}
-
-interface SunMoonProps extends SvgIcon {
+interface SunMoonIconProps extends SvgIcon {
   isDark: boolean
   isBooped?: boolean
   isTransitioning?: boolean
 }
 
-export function SunMoon({
+export function SunMoonIcon({
   isDark,
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
   isBooped = false,
   isTransitioning = false
-}: SunMoonProps) {
+}: SunMoonIconProps) {
   const id = React.useId().replace(/:/g, '')
+
+  const defaultSpring: Transition = {
+    type: 'spring',
+    stiffness: 160,
+    damping: 30
+  }
 
   /* Derived */
 
@@ -76,27 +79,25 @@ export function SunMoon({
 
   const iconMotion: MotionOptions = {
     animate: { rotate: rotation },
-    transition: isTransitioning
-      ? MOTION_SPRINGS.default
-      : MOTION_SPRINGS.springy
+    transition: isTransitioning ? defaultSpring : MOTION_SPRINGS.springy
   }
 
   const sunMoonCircleMotion: MotionOptions = {
     animate: { r: sunMoonRadius },
     transition:
       isBooped && !isTransitioning
-        ? MOTION_SPRINGS.boop
-        : MOTION_SPRINGS.default
+        ? { type: 'spring', stiffness: 300, damping: 20 }
+        : defaultSpring
   }
 
   const moonCrescentMotion: MotionOptions = {
     animate: { cy: isDark ? 4 : -4 },
-    transition: MOTION_SPRINGS.default
+    transition: defaultSpring
   }
 
   const moonCrescentMaskMotion: MotionOptions = {
     animate: { r: sunMaskRadius },
-    transition: MOTION_SPRINGS.default
+    transition: defaultSpring
   }
 
   const sunDotMotion = ({
@@ -202,7 +203,14 @@ export function SunMoon({
   )
 }
 
-export function ThemeMode(props: SvgIcon) {
+export function ThemeMode({
+  // Icon props
+  size,
+  color,
+  strokeWidth,
+  // Interactive props
+  ...restProps
+}: IconInteractiveProps) {
   const { theme, setTheme } = useTheme()
   const [isTransitioning, setIsTransitioning] = useState(false)
 
@@ -222,18 +230,23 @@ export function ThemeMode(props: SvgIcon) {
   }
 
   return (
-    <IconWrapper
+    <Interactive
+      {...restProps}
       alt={`Activate ${theme === 'dark' ? 'light' : 'dark'} mode`}
       onClick={onTrigger}
     >
       {({ isBooped }) => (
-        <SunMoon
+        <SunMoonIcon
           isDark={theme === 'dark'}
-          isBooped={isBooped}
-          isTransitioning={isTransitioning}
-          {...props}
+          {...{
+            size,
+            color,
+            strokeWidth,
+            isBooped,
+            isTransitioning
+          }}
         />
       )}
-    </IconWrapper>
+    </Interactive>
   )
 }

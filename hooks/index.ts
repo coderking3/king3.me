@@ -1,2 +1,2 @@
-export * from './useBoopMinimal'
+export * from './useBoop'
 export * from './useIsTop'

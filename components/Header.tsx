@@ -1,12 +1,18 @@
 'use client'
 
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 
 import { Camera, Github, Logo, ThemeMode } from './icons'
 import Navbar from './Navbar'
+
+// const ICON_MAP = {
+//   github: Github,
+//   photos: Camera
+// }
+
+// function LinkIcon() {}
 
 function Header() {
   const pathname = usePathname()
@@ -21,12 +27,7 @@ function Header() {
           <div className="bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border flex items-center rounded-full border pl-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 dark:shadow-lg">
             {/* Logo */}
             <div className="text-accent-foreground/85 hover:text-accent-foreground mx-1 flex items-center transition-colors duration-200">
-              <Link
-                href="/"
-                className={cn('flex size-8.5 items-center justify-center')}
-              >
-                <Logo variant="bold" className="box-border size-full p-[3px]" />
-              </Link>
+              <Logo href="/" variant="bold" size={30} />
 
               <span className="ml-1 font-(family-name:--font-google-art) text-xl font-normal">
                 King3
@@ -53,22 +54,12 @@ function Header() {
                 'bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border text-accent-foreground/85 flex h-10.5 w-auto items-center rounded-full border px-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 transition-all dark:shadow-lg'
               )}
             >
-              <Link
-                href="/photos"
-                className="hover:text-accent-foreground transition-colors duration-200"
-              >
-                <Camera className="h-10.5 w-8.5 px-1.5" />
-              </Link>
-
-              <Link
+              <Camera href="/photos" />
+              <Github
                 href="https://www.github.com/coderking3/king3.me"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-accent-foreground transition-colors duration-200"
-              >
-                <Github className="h-10.5 w-8.5 px-1.5" />
-              </Link>
-
+              />
               <ThemeMode />
             </div>
           </div>
