@@ -58,8 +58,8 @@ export function Github({
 }: IconInteractiveProps) {
   return (
     <Interactive {...restProps} boopOn="hover">
-      {({ isBooped }) => (
-        <GithubIcon {...{ size, color, strokeWidth, isBooped }} />
+      {({ isHoverBoop }) => (
+        <GithubIcon {...{ size, color, strokeWidth, isBooped: isHoverBoop }} />
       )}
     </Interactive>
   )

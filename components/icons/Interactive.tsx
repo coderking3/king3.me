@@ -9,9 +9,8 @@ import { useBoop } from '@/hooks'
 import { cn } from '@/lib/utils'
 
 interface RenderData {
-  isBooped: boolean
-  isHoverBooped?: boolean
-  isClickBooped?: boolean
+  isHoverBoop?: boolean
+  isClickBoop?: boolean
 }
 
 type BoopTrigger = 'hover' | 'click'
@@ -55,11 +54,8 @@ function Interactive({
   const [isHoverEngaged, setIsHoverEngaged] = React.useState(false)
   const [isClickEngaged, setIsClickEngaged] = React.useState(false)
 
-  // 任意一个触发器激活时，就显示 boop 效果
-  const isEngaged = isHoverEngaged || isClickEngaged
-  const isBooped = useBoop(isEngaged, boopTiming)
-  const isHoverBooped = useBoop(isHoverEngaged, boopTiming)
-  const isClickBooped = useBoop(isClickEngaged, boopTiming)
+  const isHoverBoop = useBoop(isHoverEngaged, boopTiming)
+  const isClickBoop = useBoop(isClickEngaged, boopTiming)
 
   const isLink = !!href
   const Component = isLink ? Link : 'button'
@@ -75,7 +71,9 @@ function Interactive({
   const hasClick = triggers.includes('click')
 
   const eventHandlers = {
-    onClick: delegated.onClick,
+    onClick: (ev: any) => {
+      delegated.onClick?.(ev)
+    },
     onMouseEnter: (ev: any) => {
       delegated.onMouseEnter?.(ev)
       if (hasHover) setIsHoverEngaged(true)
@@ -119,7 +117,7 @@ function Interactive({
       {...eventHandlers}
       {...delegated}
     >
-      {children({ isBooped, isHoverBooped, isClickBooped })}
+      {children({ isHoverBoop, isClickBoop })}
       {alt && <span className="sr-only">{alt}</span>}
     </Component>
   )

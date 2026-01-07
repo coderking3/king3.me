@@ -7,11 +7,11 @@ import type { IconInteractiveProps } from './Interactive'
 import type { MotionOptions, SvgIcon } from '@/types'
 
 import { motion } from 'framer-motion'
-import { useTheme } from 'next-themes'
 import * as React from 'react'
 import { useRef, useState } from 'react'
 
 import { MOTION_SPRINGS } from '@/constants'
+import { useThemeToggle } from '@/hooks'
 import { range, roundTo } from '@/lib/utils'
 
 import Interactive from './Interactive'
@@ -211,16 +211,15 @@ export function ThemeMode({
   // Interactive props
   ...restProps
 }: IconInteractiveProps) {
-  const { theme, setTheme } = useTheme()
+  const { theme, toggleTheme } = useThemeToggle()
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   const timeoutId = useRef<number | undefined>(undefined)
 
   const onTrigger = (event: React.MouseEvent<any>) => {
     event.preventDefault()
-    const isDark = theme === 'dark'
 
-    setTheme(isDark ? 'light' : 'dark')
+    toggleTheme(event)
     setIsTransitioning(true)
 
     window.clearTimeout(timeoutId.current)
@@ -233,16 +232,17 @@ export function ThemeMode({
     <Interactive
       {...restProps}
       alt={`Activate ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      boopOn="hover"
       onClick={onTrigger}
     >
-      {({ isBooped }) => (
+      {({ isHoverBoop }) => (
         <SunMoonIcon
           isDark={theme === 'dark'}
           {...{
             size,
             color,
             strokeWidth,
-            isBooped,
+            isBooped: isHoverBoop,
             isTransitioning
           }}
         />

@@ -48,14 +48,14 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(geistSans.variable, geistMono.variable, GoogleArt.variable)}
     >
-      <body
-        className={cn('min-h-screen scroll-smooth font-sans antialiased', '')}
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+        <body
+          className={cn('min-h-screen scroll-smooth font-sans antialiased', '')}
         >
           <Background art="random" />
 
@@ -67,8 +67,8 @@ export default function RootLayout({
           </div>
 
           <Toaster position="top-right" />
-        </ThemeProvider>
-      </body>
+        </body>
+      </ThemeProvider>
     </html>
   )
 }

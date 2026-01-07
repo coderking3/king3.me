@@ -6,16 +6,16 @@
 
 import * as React from 'react'
 
-export function useBoop(isHovering: boolean, timing = 150) {
+export function useBoop(isEngaged: boolean, timing = 150) {
   const [isBooped, setIsBooped] = React.useState(false)
 
   React.useEffect(() => {
-    if (!isHovering) {
+    if (!isEngaged) {
       return
     }
 
     setIsBooped(true)
-  }, [isHovering])
+  }, [isEngaged])
 
   React.useEffect(() => {
     if (!isBooped) {

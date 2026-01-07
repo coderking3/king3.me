@@ -11,30 +11,30 @@ import { MOTION_SPRINGS } from '@/constants'
 import Interactive from './Interactive'
 
 interface CameraIconProps extends SvgIcon {
-  isHoverBooped?: boolean
-  isClickBooped?: boolean
+  isHoverBoop?: boolean
+  isClickBoop?: boolean
 }
 
 export function CameraIcon({
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
-  isHoverBooped = false,
-  isClickBooped = false
+  isHoverBoop = false,
+  isClickBoop = false
 }: CameraIconProps) {
   const iconMotion: MotionOptions = {
     animate: {
-      scale: isHoverBooped ? 1.08 : 1,
-      rotate: isHoverBooped ? 2 : 0
+      scale: isHoverBoop ? 1.08 : 1,
+      rotate: isHoverBoop ? 2 : 0
     },
     transition: MOTION_SPRINGS.springy
   }
   const lensMotion: MotionOptions = {
-    animate: { scale: isClickBooped ? 0.85 : isHoverBooped ? 1.1 : 1 },
+    animate: { scale: isClickBoop ? 0.85 : isHoverBoop ? 1.1 : 1 },
     transition: MOTION_SPRINGS.springy
   }
   const flashMotion: MotionOptions = {
-    animate: { opacity: isClickBooped ? 0.1 : 1 },
+    animate: { opacity: isClickBoop ? 0.1 : 1 },
     transition: MOTION_SPRINGS.springy
   }
 
@@ -78,9 +78,9 @@ export function Camera({
 }: IconInteractiveProps) {
   return (
     <Interactive {...restProps} boopOn={['hover', 'click']}>
-      {({ isHoverBooped, isClickBooped }) => (
+      {({ isHoverBoop, isClickBoop }) => (
         <CameraIcon
-          {...{ size, color, strokeWidth, isHoverBooped, isClickBooped }}
+          {...{ size, color, strokeWidth, isHoverBoop, isClickBoop }}
         />
       )}
     </Interactive>
