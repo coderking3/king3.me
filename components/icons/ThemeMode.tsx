@@ -219,7 +219,7 @@ export function ThemeMode({
   const onTrigger = (event: React.MouseEvent<any>) => {
     event.preventDefault()
 
-    toggleTheme(event)
+    toggleTheme()
     setIsTransitioning(true)
 
     window.clearTimeout(timeoutId.current)

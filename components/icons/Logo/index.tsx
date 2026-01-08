@@ -14,8 +14,8 @@ type LogoVariant = 'regular' | 'bold'
 
 interface LogoProps extends Omit<SvgIcon, 'strokeWidth'> {
   variant?: LogoVariant
-  isHoverBooped?: boolean
-  isClickBooped?: boolean
+  isHoverBoop?: boolean
+  isClickBoop?: boolean
 }
 
 const renderRegular = (color: string) => (
@@ -79,8 +79,8 @@ function LogoIcon({
   size = 20,
   color = 'currentColor',
   variant = 'regular',
-  isHoverBooped = false,
-  isClickBooped = false
+  isHoverBoop = false,
+  isClickBoop = false
   // className
 }: LogoProps) {
   const content = SVG_CONTENT_MAP[variant]
@@ -88,9 +88,9 @@ function LogoIcon({
 
   const iconMotion: MotionOptions = {
     animate: {
-      scale: isHoverBooped ? 1.08 : 1,
-      scaleX: isClickBooped ? 0.85 : 1,
-      scaleY: isClickBooped ? 1.08 : 1
+      scale: isHoverBoop ? 1.08 : 1,
+      scaleX: isClickBoop ? 0.85 : 1,
+      scaleY: isClickBoop ? 1.08 : 1
     },
     transition: { type: 'spring', stiffness: 300, damping: 15 }
   }
@@ -122,8 +122,8 @@ export function Logo({
 }) {
   return (
     <Interactive {...restProps} boopOn={['hover', 'click']}>
-      {({ isHoverBooped, isClickBooped }) => (
-        <LogoIcon {...{ size, color, variant, isHoverBooped, isClickBooped }} />
+      {({ isHoverBoop, isClickBoop }) => (
+        <LogoIcon {...{ size, color, variant, isHoverBoop, isClickBoop }} />
       )}
     </Interactive>
   )

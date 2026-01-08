@@ -7,10 +7,10 @@ interface AvatarProps {
   style?: React.CSSProperties
 }
 
-const AVATAR_SRC = '/images/king3.me.jpg'
+const AVATAR_SRC = '/avatar.png'
 const AVATAR_ALT = 'King3'
 
-function Avatar({ size = 25, rounded = 99, style }: AvatarProps) {
+function Avatar({ size = 25, rounded = 999, style }: AvatarProps) {
   return (
     <img
       src={AVATAR_SRC}

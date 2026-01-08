@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   description: 'Frontend Developer & Music Enthusiast',
   icons: {
-    icon: '/icons/favicon.svg'
+    icon: '/favicon.svg'
   }
 }
 
@@ -48,14 +48,14 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(geistSans.variable, geistMono.variable, GoogleArt.variable)}
     >
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="system"
-        enableSystem
-        disableTransitionOnChange
+      <body
+        className={cn('min-h-screen scroll-smooth font-sans antialiased', '')}
       >
-        <body
-          className={cn('min-h-screen scroll-smooth font-sans antialiased', '')}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
         >
           <Background art="random" />
 
@@ -67,8 +67,8 @@ export default function RootLayout({
           </div>
 
           <Toaster position="top-right" />
-        </body>
-      </ThemeProvider>
+        </ThemeProvider>
+      </body>
     </html>
   )
 }

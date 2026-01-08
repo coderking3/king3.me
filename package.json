@@ -24,6 +24,7 @@
     "@payloadcms/db-postgres": "^3.67.0",
     "@payloadcms/next": "^3.67.0",
     "@payloadcms/richtext-lexical": "^3.67.0",
+    "@react-spring/web": "^10.0.3",
     "better-auth": "^1.4.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

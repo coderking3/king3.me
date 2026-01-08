@@ -20,19 +20,11 @@ export async function GET() {
       rss: `${DOMAIN}/feed.xml`
     },
     author: AUTHOR,
-    image: `${DOMAIN}/`
-    // options.author = AUTHOR
-    // options.image = 'https://antfu.me/avatar.png'
-    // options.favicon = 'https://antfu.me/logo.png'
+    image: `${DOMAIN}/avatar.png`,
+    favicon: '/favicon.svg',
+    docs: 'https://validator.w3.org/feed/docs/rss2.html',
+    generator: 'https://github.com/jpmonette/feed'
   })
-  /* 
-  <title>Anthony Fu</title>
-<link>https://antfu.me/</link>
-<description>Anthony Fu' Blog</description>
-<lastBuildDate>Mon, 22 Dec 2025 01:06:45 GMT</lastBuildDate>
-<docs>https://validator.w3.org/feed/docs/rss2.html</docs>
-<generator>https://github.com/jpmonette/feed</generator>
-  */
 
   return new Response(feed.rss2(), {
     headers: {

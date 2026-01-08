@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 import { Camera, Github, Logo, ThemeMode } from './icons'
+import { Feed } from './icons/Feed'
 import Navbar from './Navbar'
 
 // const ICON_MAP = {
@@ -61,6 +62,7 @@ function Header() {
                 rel="noopener noreferrer"
               />
               <ThemeMode />
+              <Feed></Feed>
             </div>
           </div>
         </div>
