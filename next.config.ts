@@ -1,19 +1,29 @@
 import type { NextConfig } from 'next'
+import type { LinariaTransformLoaderOptions } from 'next-with-linaria/lib/types'
 
 import createMDX from '@next/mdx'
 import { withPayload } from '@payloadcms/next/withPayload'
+import withLinaria from 'next-with-linaria'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
-const nextConfig: NextConfig = {
+interface WithLinariaConfig {
+  linaria: LinariaTransformLoaderOptions
+}
+
+const nextConfig: NextConfig & WithLinariaConfig = {
   // Turn off React's strict mode
   reactStrictMode: false,
   // Enable React Compiler in Next.js.
   reactCompiler: true,
   // Configure `pageExtensions` to include markdown and MDX files
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx']
+  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  // With Linaria Config
+  linaria: {
+    fastCheck: true
+  }
 }
 
 const withMDX = createMDX({
@@ -68,4 +78,4 @@ const withConfig =
   (config: NextConfig) =>
     fns.reduce((cfg, fn) => fn(cfg), config)
 
-export default withConfig(withMDX, withPayload)(nextConfig)
+export default withConfig(withMDX, withPayload, withLinaria)(nextConfig)

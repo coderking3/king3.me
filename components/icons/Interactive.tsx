@@ -37,9 +37,15 @@ type ButtonProps = BaseProps &
 
 export type InteractiveProps = LinkProps | ButtonProps
 
-export type IconInteractiveProps =
-  | (SvgIcon & Omit<LinkProps, 'children' | 'boopOn'>)
-  | (SvgIcon & Omit<ButtonProps, 'children' | 'boopOn'>)
+export type IconInteractiveProps<T extends SvgIcon = SvgIcon> =
+  | ({
+      href: string
+    } & T &
+      Omit<LinkProps, 'children' | 'href'>)
+  | ({
+      href?: never
+    } & T &
+      Omit<ButtonProps, 'children' | 'boopOn'>)
 
 function Interactive({
   ref,

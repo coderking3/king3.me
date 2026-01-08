@@ -13,7 +13,8 @@ export default defineConfig(
       'typescript/no-use-before-define': [
         'error',
         { classes: false, functions: false, variables: false }
-      ]
+      ],
+      'react-hooks-extra/no-direct-set-state-in-use-effect': 'off'
     }
   },
 

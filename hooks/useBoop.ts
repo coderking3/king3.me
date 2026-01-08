@@ -1,21 +1,18 @@
-/* eslint-disable react-hooks-extra/no-direct-set-state-in-use-effect */
-/*
-这个钩子类似于 `useBoop`，但更底层。它没有用于设置样式的 API。
-相反，它会根据 `isHovering` 状态返回一个 `isBooped` 值。
-*/
-
 import * as React from 'react'
+
+import { usePrefersReducedMotion } from './usePrefersReducedMotion'
 
 export function useBoop(isEngaged: boolean, timing = 150) {
   const [isBooped, setIsBooped] = React.useState(false)
+  const prefersReducedMotion = usePrefersReducedMotion()
 
   React.useEffect(() => {
-    if (!isEngaged) {
+    if (!isEngaged || prefersReducedMotion) {
       return
     }
 
     setIsBooped(true)
-  }, [isEngaged])
+  }, [isEngaged, prefersReducedMotion])
 
   React.useEffect(() => {
     if (!isBooped) {

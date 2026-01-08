@@ -61,7 +61,7 @@ function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
               />
-              <ThemeMode />
+              <ThemeMode enterAnimationDelay={200} />
               <Feed></Feed>
             </div>
           </div>
