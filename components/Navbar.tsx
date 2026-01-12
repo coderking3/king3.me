@@ -1,5 +1,7 @@
 'use client'
 
+import type { MotionOptions } from '@/types'
+
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -14,6 +16,30 @@ interface NavbarProps {
 
 function Navbar({ page, className }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+
+  const commonMotion: MotionOptions = {
+    initial: { opacity: 0, scale: 0.8 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.8 },
+    transition: {
+      type: 'spring',
+      stiffness: 380,
+      damping: 30
+    }
+  }
+
+  const navTextMotion: MotionOptions = {
+    variants: {
+      initial: { scale: 1 },
+      hover: { scale: 1.05 },
+      tap: { scale: 0.96 }
+    },
+    transition: {
+      type: 'spring',
+      stiffness: 400,
+      damping: 17
+    }
+  }
 
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
@@ -39,14 +65,7 @@ function Navbar({ page, className }: NavbarProps) {
                   <motion.div
                     className="border-muted-foreground/20 dark:border-primary/25 absolute bottom-1 left-1/4 -z-10 mx-auto w-1/2 rounded-full border-b-[3px]"
                     layoutId="activeIndicator"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 380,
-                      damping: 30
-                    }}
+                    {...commonMotion}
                   />
                 )}
               </AnimatePresence>
@@ -56,14 +75,7 @@ function Navbar({ page, className }: NavbarProps) {
                 {isActive && (
                   <motion.div
                     className="bg-muted-foreground/20 dark:bg-muted-foreground/40 absolute top-1/2 left-1/2 -z-20 h-8 w-8 -translate-x-1/2 -translate-y-1/2 rounded-full blur-md"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 380,
-                      damping: 30
-                    }}
+                    {...commonMotion}
                   />
                 )}
               </AnimatePresence>
@@ -74,17 +86,7 @@ function Navbar({ page, className }: NavbarProps) {
                   <motion.div
                     className="bg-primary/5 dark:bg-primary/10 absolute top-1.5 -z-20 h-8 w-full rounded-full"
                     layoutId="hoverPill"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{
-                      layout: {
-                        type: 'spring',
-                        stiffness: 380,
-                        damping: 30
-                      },
-                      opacity: { duration: 0.2 }
-                    }}
+                    {...commonMotion}
                   />
                 )}
               </AnimatePresence>
@@ -96,16 +98,7 @@ function Navbar({ page, className }: NavbarProps) {
                     'text-muted-foreground relative font-bold transition-colors',
                     isActive && 'text-accent-foreground'
                   )}
-                  variants={{
-                    initial: { scale: 1 },
-                    hover: { scale: 1.05 },
-                    tap: { scale: 0.96 }
-                  }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 400,
-                    damping: 17
-                  }}
+                  {...navTextMotion}
                 >
                   {name}
                 </motion.span>
