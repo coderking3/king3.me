@@ -40,11 +40,11 @@ export function CameraIcon({
     <animated.svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className="block overflow-visible"
+      className="block origin-center overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
       strokeWidth={strokeWidth}
-      {...iconSpring}
+      style={iconSpring}
     >
       {/* 相机机身 */}
       <animated.path
@@ -57,11 +57,19 @@ export function CameraIcon({
         fill={color}
         fillRule="evenodd"
         d="M12 18q2.075 0 3.538-1.462Q17 15.075 17 13q0-2.075-1.462-3.538Q14.075 8 12 8Q9.925 8 8.463 9.462Q7 10.925 7 13q0 2.075 1.463 3.538Q9.925 18 12 18Zm0-2q-1.25 0-2.125-.875T9 13q0-1.25.875-2.125T12 10q1.25 0 2.125.875T15 13q0 1.25-.875 2.125T12 16Z"
-        {...lensSpring}
+        className="origin-center"
+        style={lensSpring}
       />
 
       {/* 闪光灯 */}
-      <animated.circle cx="18" cy="9" r="1" fill={color} {...flashSpring} />
+      <animated.circle
+        cx="18"
+        cy="9"
+        r="1"
+        fill={color}
+        className="origin-center"
+        style={flashSpring}
+      />
     </animated.svg>
   )
 }
