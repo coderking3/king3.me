@@ -1,12 +1,8 @@
 import type { JSX } from 'react'
 
-import type { IconInteractiveProps } from '../Interactive'
-
 import type { MotionOptions, SvgIcon } from '@/types'
 
 import { motion } from 'framer-motion'
-
-import Interactive from '../Interactive'
 
 import style from './style.module.css'
 
@@ -14,8 +10,8 @@ type LogoVariant = 'regular' | 'bold'
 
 interface LogoProps extends Omit<SvgIcon, 'strokeWidth'> {
   variant?: LogoVariant
-  isHoverBoop?: boolean
-  isClickBoop?: boolean
+  isHovered?: boolean
+  isClicked?: boolean
 }
 
 const renderRegular = (color: string) => (
@@ -75,12 +71,12 @@ const SVG_CONTENT_MAP: Record<LogoVariant, (color: string) => JSX.Element> = {
   bold: renderBold
 }
 
-function LogoIcon({
+export function LogoIcon({
   size = 20,
   color = 'currentColor',
   variant = 'regular',
-  isHoverBoop = false,
-  isClickBoop = false
+  isHovered = false,
+  isClicked = false
   // className
 }: LogoProps) {
   const content = SVG_CONTENT_MAP[variant]
@@ -88,9 +84,9 @@ function LogoIcon({
 
   const iconMotion: MotionOptions = {
     animate: {
-      scale: isHoverBoop ? 1.08 : 1,
-      scaleX: isClickBoop ? 0.85 : 1,
-      scaleY: isClickBoop ? 1.08 : 1
+      scale: isHovered ? 1.08 : 1,
+      scaleX: isClicked ? 0.85 : 1,
+      scaleY: isClicked ? 1.08 : 1
     },
     transition: { type: 'spring', stiffness: 300, damping: 15 }
   }
@@ -110,21 +106,21 @@ function LogoIcon({
   )
 }
 
-export function Logo({
-  // Icon props
-  size,
-  color,
-  variant,
-  // Interactive props
-  ...restProps
-}: IconInteractiveProps & {
-  variant?: LogoVariant
-}) {
-  return (
-    <Interactive {...restProps} boopOn={['hover', 'click']}>
-      {({ isHoverBoop, isClickBoop }) => (
-        <LogoIcon {...{ size, color, variant, isHoverBoop, isClickBoop }} />
-      )}
-    </Interactive>
-  )
-}
+// export function Logo({
+//   // Icon props
+//   size,
+//   color,
+//   variant,
+//   // Interactive props
+//   ...delegated
+// }: IconInteractiveProps & {
+//   variant?: LogoVariant
+// }) {
+//   return (
+//     <Interactive {...delegated} trigger={['hover', 'click']}>
+//       {({ isHovered, isClicked }) => (
+//         <LogoIcon {...{ size, color, variant, isHovered, isClicked }} />
+//       )}
+//     </Interactive>
+//   )
+// }

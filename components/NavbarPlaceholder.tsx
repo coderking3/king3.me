@@ -41,9 +41,57 @@ function Navbar({ page, className }: NavbarProps) {
     }
   }
 
+  // const placeholderMotions: Record<'wrapper' | 'flowing', MotionOptions> = {
+  //   wrapper: {
+  //     initial: { opacity: 0 },
+  //     animate: { opacity: 1 },
+  //     exit: { opacity: 0 }
+  //   },
+  //   flowing: {
+  //     animate: {
+  //       x: ['-100%', '300%']
+  //     },
+  //     transition: {
+  //       duration: 2,
+  //       repeat: Infinity,
+  //       ease: 'linear'
+  //     }
+  //   }
+  // }
+
+  // const showPlaceholder = useMemo(
+  //   () =>
+  //     !NAVIGATION_ITEMS.some(({ href }) => {
+  //       const isActive = (page.includes(href) && href !== '/') || page === href
+  //       const isHovered = hoveredItem === href
+  //       return isActive || isHovered
+  //     }),
+  //   [page, hoveredItem]
+  // )
+
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
       <ul className="flex items-center justify-center text-sm">
+        {/* 占位符 - 渐变流光 */}
+        {/* <AnimatePresence>
+          {showPlaceholder && (
+            // Placeholder: {
+            //   className: "via-muted-foreground/20 dark:via-primary/25 bg-linear-to-r from-transparent to-transparent",
+            //   layoutId: "activeIndicator"
+            // }
+
+            <Placeholder
+              className="absolute bottom-2 left-[calc(50%-3px)] -z-10 h-[1.5px] w-[90%] -translate-x-1/2 overflow-hidden rounded-full bg-transparent"
+              {...placeholderMotions.wrapper}
+            >
+              <motion.div
+                className="via-primary/25 dark:via-primary/35 h-full w-1/3 bg-linear-to-r from-transparent to-transparent"
+                {...placeholderMotions.flowing}
+              />
+            </Placeholder>
+          )}
+        </AnimatePresence> */}
+
         {NAVIGATION_ITEMS.map(({ href, name }) => {
           const isActive =
             (page.includes(href) && href !== '/') || page === href
@@ -110,5 +158,15 @@ function Navbar({ page, className }: NavbarProps) {
     </nav>
   )
 }
+
+// const Placeholder = styled(motion.div)`
+//   mask-image: linear-gradient(
+//     to right,
+//     transparent 0%,
+//     black 10%,
+//     black 90%,
+//     transparent 100%
+//   );
+// `
 
 export default Navbar

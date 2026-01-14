@@ -7,17 +7,17 @@ import { animated, useSpring } from '@react-spring/web'
 import Interactive from './Interactive'
 
 interface FeedIconProps extends SvgIcon {
-  isBooped?: boolean
+  isHovered?: boolean
 }
 
 export function FeedIcon({
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
-  isBooped = false
+  isHovered = false
 }: FeedIconProps) {
   const circleSpring = useSpring({
-    r: isBooped ? 2 : 1,
+    r: isHovered ? 2 : 1,
     config: {
       tension: 300,
       friction: 22
@@ -26,7 +26,7 @@ export function FeedIcon({
 
   const i = 2
   const innerRingSpring = useSpring({
-    d: isBooped
+    d: isHovered
       ? `M4 ${11 - i} a ${9 + i} ${9 + i} 0 0 1 ${9 + i} ${9 + i}`
       : 'M4 11 a 9 9 0 0 1 9 9',
     config: {
@@ -37,7 +37,7 @@ export function FeedIcon({
   })
   const o = 2
   const outerRingSpring = useSpring({
-    d: isBooped
+    d: isHovered
       ? `M4 ${4 - o} a ${16 + o} ${16 + o} 0 0 1 ${16 + o} ${16 + o}`
       : 'M4 4 a 16 16 0 0 1 16 16',
     config: {
@@ -74,12 +74,12 @@ export function Feed({
   color,
   strokeWidth,
   // Interactive props
-  ...restProps
+  ...delegated
 }: IconInteractiveProps) {
   return (
-    <Interactive {...restProps} boopOn="hover">
-      {({ isHoverBoop }) => (
-        <FeedIcon {...{ size, color, strokeWidth, isBooped: isHoverBoop }} />
+    <Interactive {...delegated} trigger="hover">
+      {({ isHovered }) => (
+        <FeedIcon {...{ size, color, strokeWidth, isHovered }} />
       )}
     </Interactive>
   )

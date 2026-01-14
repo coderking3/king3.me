@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 const QUERY = '(prefers-reduced-motion: no-preference)'
 
@@ -8,7 +8,7 @@ interface Options {
 }
 
 export function usePrefersReducedMotion({ clientOnly }: Options = {}) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = React.useState(() => {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
     if (!clientOnly) {
       return false
     }
@@ -16,7 +16,8 @@ export function usePrefersReducedMotion({ clientOnly }: Options = {}) {
     return !window.matchMedia(QUERY).matches
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setPrefersReducedMotion(!window.matchMedia(QUERY).matches)
 
     const mediaQueryList = window.matchMedia(QUERY)

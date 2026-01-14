@@ -1,4 +1,5 @@
 export * from './useBoop'
+export * from './useInteractive'
 export * from './useIsTop'
 export * from './usePrefersReducedMotion'
 export * from './useThemeToggle'

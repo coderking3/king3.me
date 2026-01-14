@@ -31,11 +31,13 @@ function Background({ art = 'random' }: BackgroundProps) {
     return ART_KEYS[idx]
   })
 
-  const BgComponent = ART_COMPONENTS[selectedArt]
+  const Content = ART_COMPONENTS[selectedArt]
 
   return (
     <Suspense fallback={null}>
-      <BgComponent />
+      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw dark:invert">
+        <Content />
+      </div>
     </Suspense>
   )
 }

@@ -11,28 +11,28 @@ import { SPRINGS } from '@/constants'
 import Interactive from './Interactive'
 
 interface CameraIconProps extends SvgIcon {
-  isHoverBoop?: boolean
-  isClickBoop?: boolean
+  isHovered?: boolean
+  isClicked?: boolean
 }
 
 export function CameraIcon({
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
-  isHoverBoop = false,
-  isClickBoop = false
+  isHovered = false,
+  isClicked = false
 }: CameraIconProps) {
   const iconSpring = useSpring({
-    scale: isHoverBoop ? 1.08 : 1,
-    rotate: isHoverBoop ? 2 : 0,
+    scale: isHovered ? 1.08 : 1,
+    rotate: isHovered ? 2 : 0,
     config: SPRINGS.springy
   })
   const lensSpring = useSpring({
-    scale: isClickBoop ? 0.85 : isHoverBoop ? 1.1 : 1,
+    scale: isClicked ? 0.85 : isHovered ? 1.1 : 1,
     config: SPRINGS.springy
   })
   const flashSpring = useSpring({
-    opacity: isClickBoop ? 0.1 : 1,
+    opacity: isClicked ? 0.1 : 1,
     config: SPRINGS.springy
   })
 
@@ -80,14 +80,12 @@ export function Camera({
   color,
   strokeWidth,
   // Interactive props
-  ...restProps
+  ...delegated
 }: IconInteractiveProps) {
   return (
-    <Interactive {...restProps} boopOn={['hover', 'click']}>
-      {({ isHoverBoop, isClickBoop }) => (
-        <CameraIcon
-          {...{ size, color, strokeWidth, isHoverBoop, isClickBoop }}
-        />
+    <Interactive {...delegated} trigger={['hover', 'click']}>
+      {({ isHovered, isClicked }) => (
+        <CameraIcon {...{ size, color, strokeWidth, isHovered, isClicked }} />
       )}
     </Interactive>
   )

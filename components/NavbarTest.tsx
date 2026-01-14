@@ -1,20 +1,45 @@
 'use client'
 
-import type { MotionOptions } from '@/types'
+import type { ClassValue } from 'clsx'
+import type { MotionNodeAnimationOptions } from 'framer-motion'
 
+import { clsx } from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 
-import { NAVIGATION_ITEMS } from '@/constants'
-import { cn } from '@/lib/utils'
+type MotionOptions = MotionNodeAnimationOptions
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 interface NavbarProps {
   page: string
   className?: string
 }
 
-function Navbar({ page, className }: NavbarProps) {
+export const NAVIGATION_ITEMS = [
+  {
+    name: 'Blog',
+    href: '/blog'
+  },
+  {
+    name: 'Project',
+    href: '/project'
+  },
+  {
+    name: 'Message',
+    href: '/message'
+  },
+  {
+    name: 'About',
+    href: '/about'
+  }
+]
+
+export function NavbarTest({ page, className }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
 
   const commonMotion: MotionOptions = {
@@ -40,22 +65,53 @@ function Navbar({ page, className }: NavbarProps) {
       damping: 17
     }
   }
+  // 1. 实时计算当前的 activeIndex
+  const activeIndex = NAVIGATION_ITEMS.findIndex(
+    (item) =>
+      (page.includes(item.href) && item.href !== '/') || page === item.href
+  )
+
+  // 2. 记录上一个有效的索引。当 activeIndex 变成 -1 时，这个 state 依然保留旧值
+  const [lastValidIndex, setLastValidIndex] = useState(0)
+
+  // 3. 使用 useEffect 在渲染完成后更新，避免直接在 render 中访问 ref 或修改 state
+  useEffect(() => {
+    if (activeIndex !== -1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setLastValidIndex(activeIndex)
+    }
+  }, [activeIndex])
+
+  // 4. 动画起点：如果有激活项，就以它为中心；如果没有，就以最后一次激活的项为中心
+  const originIndex = activeIndex !== -1 ? activeIndex : lastValidIndex
 
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
-      <ul className="flex items-center justify-center text-sm">
-        {NAVIGATION_ITEMS.map(({ href, name }) => {
-          const isActive =
-            (page.includes(href) && href !== '/') || page === href
+      <ul className="flex h-full items-center justify-center text-sm">
+        {NAVIGATION_ITEMS.map(({ href, name }, i) => {
+          const isActive = activeIndex === i
           const isHovered = hoveredItem === href
+
+          // 计算到“震源”的距离
+          const distance = Math.abs(i - originIndex)
 
           return (
             <motion.li
               key={name}
               className="relative select-none"
-              initial="initial"
-              whileHover="hover"
-              whileTap="tap"
+              // 4. 动画状态：全局是否处于 active 状态决定 y 的目标值
+              animate={{
+                y: activeIndex === -1 ? 0 : -2
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 420,
+                damping: 32,
+                mass: 0.8
+              }}
+              // initial="initial"
+              // whileHover="hover"
+              // whileTap="tap"
               onHoverStart={() => setHoveredItem(href)}
               onHoverEnd={() => setHoveredItem(null)}
             >
@@ -110,5 +166,3 @@ function Navbar({ page, className }: NavbarProps) {
     </nav>
   )
 }
-
-export default Navbar

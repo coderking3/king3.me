@@ -1,32 +1,33 @@
-import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import { usePrefersReducedMotion } from './usePrefersReducedMotion'
 
-export function useBoop(isEngaged: boolean, timing = 150) {
-  const [isBooped, setIsBooped] = React.useState(false)
+export function useBoop(isTriggered: boolean, duration = 150) {
+  const [isBooped, setIsBooped] = useState(false)
   const prefersReducedMotion = usePrefersReducedMotion()
 
-  React.useEffect(() => {
-    if (!isEngaged || prefersReducedMotion) {
+  useEffect(() => {
+    if (!isTriggered || prefersReducedMotion) {
       return
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsBooped(true)
-  }, [isEngaged, prefersReducedMotion])
+  }, [isTriggered, prefersReducedMotion])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!isBooped) {
       return
     }
 
     const timeoutId = window.setTimeout(() => {
       setIsBooped(false)
-    }, timing)
+    }, duration)
 
     return () => {
       window.clearTimeout(timeoutId)
     }
-  }, [isBooped, timing])
+  }, [isBooped, duration])
 
   return isBooped
 }

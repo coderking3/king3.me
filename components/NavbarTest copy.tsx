@@ -1,18 +1,43 @@
 'use client'
 
-import type { MotionOptions } from '@/types'
+import type { ClassValue } from 'clsx'
+import type { MotionNodeAnimationOptions } from 'framer-motion'
 
+import { clsx } from 'clsx'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useState } from 'react'
+import { twMerge } from 'tailwind-merge'
 
-import { NAVIGATION_ITEMS } from '@/constants'
-import { cn } from '@/lib/utils'
+type MotionOptions = MotionNodeAnimationOptions
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
 
 interface NavbarProps {
   page: string
   className?: string
 }
+
+export const NAVIGATION_ITEMS = [
+  {
+    name: 'Blog',
+    href: '/blog'
+  },
+  {
+    name: 'Project',
+    href: '/project'
+  },
+  {
+    name: 'Message',
+    href: '/message'
+  },
+  {
+    name: 'About',
+    href: '/about'
+  }
+]
 
 function Navbar({ page, className }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
@@ -43,7 +68,7 @@ function Navbar({ page, className }: NavbarProps) {
 
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
-      <ul className="flex items-center justify-center text-sm">
+      <ul className="flex h-full items-center justify-center text-sm">
         {NAVIGATION_ITEMS.map(({ href, name }) => {
           const isActive =
             (page.includes(href) && href !== '/') || page === href

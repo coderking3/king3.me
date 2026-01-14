@@ -1,3 +1,3 @@
 export default function Page() {
-  return <div>message</div>
+  return <div>blog</div>
 }

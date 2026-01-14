@@ -8,7 +8,7 @@ import { Background, Footer, Header, Main } from '@/components/index'
 import { Toaster } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-import '@/styles/globals.css'
+import './globals.css'
 
 /* 配置字体实例 */
 const geistSans = Geist({

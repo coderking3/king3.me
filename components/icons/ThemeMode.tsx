@@ -34,7 +34,7 @@ interface BaseProps extends SvgIcon {
 
 interface SunMoonIconProps extends BaseProps {
   isDark: boolean
-  isBooped?: boolean
+  isHovered?: boolean
   isTransitioning?: boolean
   includeEnterAnimation: boolean
 }
@@ -44,7 +44,7 @@ export function SunMoonIcon({
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
-  isBooped = false,
+  isHovered = false,
   isTransitioning = false,
   includeEnterAnimation,
   enterAnimationDelay = 0
@@ -52,7 +52,7 @@ export function SunMoonIcon({
   const prefersReducedMotion = usePrefersReducedMotion()
   const id = useId().replace(/:/g, '')
 
-  const rotation = isDark ? (isBooped ? 28 : 40) : 90
+  const rotation = isDark ? (isHovered ? 28 : 40) : 90
 
   const svgSpring = useSpring({
     transform: `rotate(${rotation}deg)`,
@@ -69,12 +69,12 @@ export function SunMoonIcon({
     // prettier-ignore
     r: isDark
        ? MOON_RADIUS
-       : isBooped
+       : isHovered
          ? SUN_RADIUS - 2
          : SUN_RADIUS,
     immediate: prefersReducedMotion,
     config:
-      isBooped && !isTransitioning
+      isHovered && !isTransitioning
         ? { tension: 300, friction: 20 }
         : DEFAULT_CONFIG
   })
@@ -99,7 +99,7 @@ export function SunMoonIcon({
     }
   })
   const sunDotSpring = useSpring({
-    hypothenuse: isBooped ? 9 : 10,
+    hypothenuse: isHovered ? 9 : 10,
     config: SPRINGS.springy
   })
 
@@ -224,17 +224,17 @@ export function ThemeMode({
     <Interactive
       {...delegated}
       alt={`Activate ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      boopOn="hover"
+      trigger="hover"
       onClick={onTrigger}
     >
-      {({ isHoverBoop }) => (
+      {({ isHovered }) => (
         <SunMoonIcon
           isDark={theme === 'dark'}
           {...{
             size,
             color,
             strokeWidth,
-            isBooped: isHoverBoop,
+            isHovered,
             isTransitioning,
             includeEnterAnimation: true,
             enterAnimationDelay

@@ -1,26 +1,24 @@
 'use client'
 
+import type {
+  BoopDuration,
+  InteractionTrigger,
+  InteractiveState
+} from '@/hooks/useInteractive'
 import type { SvgIcon } from '@/types'
 
 import Link from 'next/link'
 import React from 'react'
 
-import { useBoop } from '@/hooks'
+import { useInteractive } from '@/hooks/useInteractive'
 import { cn } from '@/lib/utils'
-
-interface RenderData {
-  isHoverBoop?: boolean
-  isClickBoop?: boolean
-}
-
-type BoopTrigger = 'hover' | 'click'
 
 interface BaseProps {
   alt?: string
   size?: number
-  boopOn?: BoopTrigger | BoopTrigger[]
-  boopTiming?: number
-  children: (data: RenderData) => React.ReactNode
+  trigger?: InteractionTrigger | InteractionTrigger[]
+  duration?: number | BoopDuration
+  children: (state: InteractiveState) => React.ReactNode
   ref?: React.RefObject<HTMLAnchorElement | HTMLButtonElement | null>
 }
 
@@ -45,66 +43,26 @@ export type IconInteractiveProps<T extends SvgIcon = SvgIcon> =
   | ({
       href?: never
     } & T &
-      Omit<ButtonProps, 'children' | 'boopOn'>)
+      Omit<ButtonProps, 'children' | 'trigger'>)
 
 function Interactive({
   ref,
   alt,
-  boopOn = 'hover',
+  trigger = 'hover',
   children,
-  boopTiming,
+  duration,
   className,
   href,
   ...delegated
 }: InteractiveProps) {
-  const [isHoverEngaged, setIsHoverEngaged] = React.useState(false)
-  const [isClickEngaged, setIsClickEngaged] = React.useState(false)
-
-  const isHoverBoop = useBoop(isHoverEngaged, boopTiming)
-  const isClickBoop = useBoop(isClickEngaged, boopTiming)
+  const { isHovered, isClicked, handlers } = useInteractive({
+    trigger,
+    duration,
+    onHandlers: delegated
+  })
 
   const isLink = !!href
   const Component = isLink ? Link : 'button'
-
-  // 将 boopOn 标准化为数组
-  const triggers = React.useMemo(
-    () => (Array.isArray(boopOn) ? boopOn : [boopOn]),
-    [boopOn]
-  )
-
-  // 检查是否包含某个触发器
-  const hasHover = triggers.includes('hover')
-  const hasClick = triggers.includes('click')
-
-  const eventHandlers = {
-    onClick: (ev: any) => {
-      delegated.onClick?.(ev)
-    },
-    onMouseEnter: (ev: any) => {
-      delegated.onMouseEnter?.(ev)
-      if (hasHover) setIsHoverEngaged(true)
-    },
-    onMouseLeave: (ev: any) => {
-      delegated.onMouseLeave?.(ev)
-      if (hasHover) setIsHoverEngaged(false)
-    },
-    onMouseDown: (ev: any) => {
-      delegated.onMouseDown?.(ev)
-      if (hasClick) setIsClickEngaged(true)
-    },
-    onMouseUp: (ev: any) => {
-      delegated.onMouseUp?.(ev)
-      if (hasClick) setIsClickEngaged(false)
-    },
-    onTouchStart: (ev: any) => {
-      delegated.onTouchStart?.(ev)
-      if (hasClick) setIsClickEngaged(true)
-    },
-    onTouchEnd: (ev: any) => {
-      delegated.onTouchEnd?.(ev)
-      if (hasClick) setIsClickEngaged(false)
-    }
-  }
 
   return (
     <Component
@@ -116,14 +74,14 @@ function Interactive({
         'transition-colors duration-200',
         'text-inherit',
         'hover:text-accent-foreground',
-        'before:absolute before:inset-[-4px] before:content-[""]',
+        'before:absolute before:-inset-1 before:content-[""]',
         className
       )}
       {...((isLink ? { href } : { type: 'button' }) as any)}
-      {...eventHandlers}
+      {...handlers}
       {...delegated}
     >
-      {children({ isHoverBoop, isClickBoop })}
+      {children({ isHovered, isClicked })}
       {alt && <span className="sr-only">{alt}</span>}
     </Component>
   )

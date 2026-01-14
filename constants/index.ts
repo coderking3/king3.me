@@ -2,21 +2,25 @@ import type { SpringConfig } from '@react-spring/web'
 import type { Transition } from 'framer-motion'
 
 export const NAVIGATION_ITEMS = [
+  // {
+  //   name: 'Home',
+  //   href: '/'
+  // },
   {
-    name: 'Home',
-    href: '/'
+    name: 'Blog',
+    href: '/blog'
   },
   {
-    name: 'Posts',
-    href: '/posts'
-  },
-  {
-    name: 'Projects',
-    href: '/projects'
+    name: 'Project',
+    href: '/project'
   },
   {
     name: 'Message',
     href: '/message'
+  },
+  {
+    name: 'About',
+    href: '/about'
   }
 ]
 

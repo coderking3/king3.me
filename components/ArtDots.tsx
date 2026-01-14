@@ -3,7 +3,7 @@
 import type { Texture } from 'pixi.js'
 
 import { Application, Graphics, Particle, ParticleContainer } from 'pixi.js'
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { createNoise3D } from 'simplex-noise'
 
 const SCALE = 200
@@ -19,7 +19,6 @@ interface Point {
 
 export default function ArtDots() {
   const mountRef = useRef<HTMLDivElement>(null)
-  const dotsId = useId()
 
   useEffect(() => {
     let app: Application | null = null
@@ -133,11 +132,5 @@ export default function ArtDots() {
     }
   }, [])
 
-  return (
-    <div
-      id={dotsId}
-      ref={mountRef}
-      className="size-screen pointer-events-none fixed inset-0 -z-1 dark:invert"
-    />
-  )
+  return <div ref={mountRef} className="size-full" />
 }

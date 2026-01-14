@@ -1,34 +1,21 @@
-import { Feed } from 'feed'
+import { generateFeed } from '@/lib/rss'
 
-const DOMAIN = 'https://king3-me.vercel.app'
-const AUTHOR = {
-  name: 'Anthony Fu',
-  email: 'hi@antfu.me',
-  link: DOMAIN
-}
+// ISR: 每小时重新验证一次
+export const revalidate = 60 * 60
 
+// RSS 2.0 格式
 export async function GET() {
-  const feed = new Feed({
-    title: 'King3',
-    description: "King3' Blog",
-    id: DOMAIN,
-    link: DOMAIN,
-    copyright: 'CC BY-NC-SA 4.0 2026 © King3',
-    feedLinks: {
-      json: `${DOMAIN}/feed.json`,
-      atom: `${DOMAIN}/feed.atom`,
-      rss: `${DOMAIN}/feed.xml`
-    },
-    author: AUTHOR,
-    image: `${DOMAIN}/avatar.png`,
-    favicon: '/favicon.svg',
-    docs: 'https://validator.w3.org/feed/docs/rss2.html',
-    generator: 'https://github.com/jpmonette/feed'
-  })
+  try {
+    const feed = await generateFeed()
 
-  return new Response(feed.rss2(), {
-    headers: {
-      'content-type': 'application/xml'
-    }
-  })
+    return new Response(feed.rss2(), {
+      headers: {
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': `public, max-age=${revalidate}, s-maxage=${revalidate}, stale-while-revalidate=86400`
+      }
+    })
+  } catch (error) {
+    console.error('Error generating RSS feed:', error)
+    return new Response('Error generating RSS feed', { status: 500 })
+  }
 }
