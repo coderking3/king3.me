@@ -48,44 +48,43 @@ export default async function Page() {
   ]
 
   return (
-    <div>
+    <div className="mx-auto max-w-6xl px-8 py-4">
       {/* Hero Section - 个人简介 */}
       <section className="py-20">
         {/* <div className="mx-auto max-w-4xl"> */}
-        <div>
-          <div className="space-y-6">
-            <h1 className="text-primary text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-              Hi, I'm <span>King3</span>
-            </h1>
-            <p className="max-w-2xl text-xl leading-relaxed md:text-2xl">
-              A full-stack developer passionate about building beautiful,
-              performant web applications. I write about modern web development,
-              design systems, and everything in between.
-            </p>
-            <div className="flex flex-wrap gap-4 pt-4">
-              <a
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                GitHub
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Twitter
-              </a>
-              <a
-                href="mailto:hello@example.com"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Email
-              </a>
-            </div>
+
+        <div className="space-y-6">
+          <h1 className="text-primary text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+            Hi, I'm <span>King3</span>
+          </h1>
+          <p className="max-w-2xl text-xl leading-relaxed md:text-2xl">
+            A full-stack developer passionate about building beautiful,
+            performant web applications. I write about modern web development,
+            design systems, and everything in between.
+          </p>
+          <div className="flex flex-wrap gap-4 pt-4">
+            <a
+              href="https://github.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Twitter
+            </a>
+            <a
+              href="mailto:hello@example.com"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Email
+            </a>
           </div>
         </div>
       </section>

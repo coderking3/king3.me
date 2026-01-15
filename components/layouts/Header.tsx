@@ -3,13 +3,11 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
+import { Feed, Github, LogoIcon, Search, ThemeMode } from '@/components/icons'
 import { useInteractive } from '@/hooks'
 import { cn } from '@/lib/utils'
 
-import { Github, LogoIcon, ThemeMode } from './icons'
-import { Feed } from './icons/Feed'
-import { Search } from './icons/Search'
-import { NavbarTest } from './NavbarTest'
+import Navbar from './Navbar'
 
 function Logo() {
   const { isHovered, isClicked, handlers } = useInteractive({
@@ -30,7 +28,7 @@ function Logo() {
         ></LogoIcon>
       </span>
 
-      <span className="ml-1 font-(family-name:--font-google-art) text-xl font-normal">
+      <span className="ml-1 font-(family-name:--font-google-audiowide) text-xl font-normal">
         King3
       </span>
     </Link>
@@ -56,9 +54,7 @@ function Header() {
 
             {/* Navbar */}
             <div className="flex flex-1 items-center justify-center">
-              {/* <Navbar page={page} className="pr-3 pl-1.5" /> */}
-
-              <NavbarTest page={page} className="pr-3 pl-1.5"></NavbarTest>
+              <Navbar page={page} className="pr-3 pl-1.5" />
             </div>
           </div>
 
@@ -70,16 +66,11 @@ function Header() {
           >
             <div
               className={cn(
-                'bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border text-accent-foreground/85 flex h-10.5 w-auto items-center rounded-full border px-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 transition-all dark:shadow-lg'
+                'bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border text-accent-foreground/85 flex h-11.5 w-auto items-center gap-0.5 rounded-full border px-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 transition-all dark:shadow-lg'
               )}
             >
-              {/* Photo album */}
-              {/* <Camera href="/photos" /> */}
-
               {/* Search */}
               <Search />
-
-              {/* <Feather></Feather> */}
 
               {/* Github link */}
               <Github
@@ -106,21 +97,3 @@ function Header() {
 }
 
 export default Header
-
-/* 
-
-  Header Menus
-    - home
-    - /posts
-    - /projects
-    - /message
-
-  Header Actions
-    - /photos
-    - /github
-    - theme toggle
-    - /feed.xml
-    - /poems
-    - /use
-
-*/

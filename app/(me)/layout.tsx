@@ -4,24 +4,25 @@ import { ThemeProvider } from 'next-themes'
 import { Audiowide, Geist, Geist_Mono } from 'next/font/google' // 1. 引入 Geist 字体
 import React from 'react'
 
-import { Background, Footer, Header, Main } from '@/components/index'
+import { Background, Footer, Header } from '@/components/layouts'
 import { Toaster } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 import './globals.css'
 
-/* 配置字体实例 */
+const audioWide = Audiowide({
+  weight: '400',
+  variable: '--font-google-audiowide',
+  subsets: ['latin']
+})
+
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin']
 })
+
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
-  subsets: ['latin']
-})
-const GoogleArt = Audiowide({
-  weight: '400',
-  variable: '--font-google-art',
   subsets: ['latin']
 })
 
@@ -46,7 +47,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(geistSans.variable, geistMono.variable, GoogleArt.variable)}
+      className={cn(geistSans.variable, geistMono.variable, audioWide.variable)}
     >
       <body
         className={cn('min-h-screen scroll-smooth font-sans antialiased', '')}
@@ -62,7 +63,7 @@ export default function RootLayout({
           {/* container */}
           <div className="relative flex min-h-screen flex-col">
             <Header />
-            <Main>{children}</Main>
+            <main className="flex-1">{children}</main>
             <Footer />
           </div>
 

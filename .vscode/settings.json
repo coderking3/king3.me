@@ -30,7 +30,14 @@
   "emmet.includeLanguages": {
     "postcss": "css"
   },
-  "cSpell.words": ["Booped", "hypothenuse", "Linaria", "oklch", "transitio"],
+  "cSpell.words": [
+    "audiowide",
+    "Booped",
+    "hypothenuse",
+    "Linaria",
+    "oklch",
+    "transitio"
+  ],
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
   },

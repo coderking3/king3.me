@@ -1,10 +1,11 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 'use client'
 
 import type { MotionOptions } from '@/types'
 
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { NAVIGATION_ITEMS } from '@/constants'
 import { cn } from '@/lib/utils'
@@ -16,6 +17,7 @@ interface NavbarProps {
 
 function Navbar({ page, className }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
+  const [prevActiveIndex, setPrevActiveIndex] = useState<number>(-1)
 
   const commonMotion: MotionOptions = {
     initial: { opacity: 0, scale: 0.8 },
@@ -41,60 +43,54 @@ function Navbar({ page, className }: NavbarProps) {
     }
   }
 
-  // const placeholderMotions: Record<'wrapper' | 'flowing', MotionOptions> = {
-  //   wrapper: {
-  //     initial: { opacity: 0 },
-  //     animate: { opacity: 1 },
-  //     exit: { opacity: 0 }
-  //   },
-  //   flowing: {
-  //     animate: {
-  //       x: ['-100%', '300%']
-  //     },
-  //     transition: {
-  //       duration: 2,
-  //       repeat: Infinity,
-  //       ease: 'linear'
-  //     }
-  //   }
-  // }
+  // 找到当前 active 项的索引
+  const activeIndex = NAVIGATION_ITEMS.findIndex(
+    ({ href }) => (page.includes(href) && href !== '/') || page === href
+  )
 
-  // const showPlaceholder = useMemo(
-  //   () =>
-  //     !NAVIGATION_ITEMS.some(({ href }) => {
-  //       const isActive = (page.includes(href) && href !== '/') || page === href
-  //       const isHovered = hoveredItem === href
-  //       return isActive || isHovered
-  //     }),
-  //   [page, hoveredItem]
-  // )
+  // 记录上一次的 active 索引
+  useEffect(() => {
+    if (activeIndex !== -1) {
+      setPrevActiveIndex(activeIndex)
+    }
+  }, [activeIndex])
+
+  // 计算每个项的动画延迟（波浪效果）
+  const getNavItemDelay = (index: number) => {
+    const animateDelay = 0.04 // 4ms
+
+    // 如果有 active 项，从 active 项开始波浪扩散
+    if (activeIndex !== -1) {
+      return Math.abs(index - activeIndex) * animateDelay
+    }
+
+    // 如果没有 active 项但有之前的 active，从之前的位置开始波浪还原
+    if (prevActiveIndex !== -1) {
+      return Math.abs(index - prevActiveIndex) * animateDelay
+    }
+
+    return 0
+  }
+
+  const navItemMotion: (i: number) => MotionOptions = (i) => ({
+    initial: { y: 0 },
+    animate: {
+      y: activeIndex === -1 ? 0 : -2
+    },
+
+    transition: {
+      type: 'spring',
+      stiffness: 300,
+      damping: 12,
+      delay: getNavItemDelay(i)
+    }
+  })
 
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
-      <ul className="flex items-center justify-center text-sm">
-        {/* 占位符 - 渐变流光 */}
-        {/* <AnimatePresence>
-          {showPlaceholder && (
-            // Placeholder: {
-            //   className: "via-muted-foreground/20 dark:via-primary/25 bg-linear-to-r from-transparent to-transparent",
-            //   layoutId: "activeIndicator"
-            // }
-
-            <Placeholder
-              className="absolute bottom-2 left-[calc(50%-3px)] -z-10 h-[1.5px] w-[90%] -translate-x-1/2 overflow-hidden rounded-full bg-transparent"
-              {...placeholderMotions.wrapper}
-            >
-              <motion.div
-                className="via-primary/25 dark:via-primary/35 h-full w-1/3 bg-linear-to-r from-transparent to-transparent"
-                {...placeholderMotions.flowing}
-              />
-            </Placeholder>
-          )}
-        </AnimatePresence> */}
-
-        {NAVIGATION_ITEMS.map(({ href, name }) => {
-          const isActive =
-            (page.includes(href) && href !== '/') || page === href
+      <ul className="flex h-full items-center justify-center text-sm">
+        {NAVIGATION_ITEMS.map(({ href, name }, i) => {
+          const isActive = activeIndex === i
           const isHovered = hoveredItem === href
 
           return (
@@ -106,6 +102,7 @@ function Navbar({ page, className }: NavbarProps) {
               whileTap="tap"
               onHoverStart={() => setHoveredItem(href)}
               onHoverEnd={() => setHoveredItem(null)}
+              {...navItemMotion(i)}
             >
               {/* Active 底部指示器 */}
               <AnimatePresence>
@@ -131,7 +128,10 @@ function Navbar({ page, className }: NavbarProps) {
               <AnimatePresence>
                 {isHovered && (
                   <motion.div
-                    className="bg-primary/5 dark:bg-primary/10 absolute top-1.5 -z-20 h-8 w-full rounded-full"
+                    className={cn(
+                      'bg-primary/5 dark:bg-primary/10 absolute -z-20 h-8 w-full rounded-full',
+                      activeIndex !== -1 ? 'top-1.5' : 'top-1'
+                    )}
                     layoutId="hoverPill"
                     {...commonMotion}
                   />
@@ -158,15 +158,5 @@ function Navbar({ page, className }: NavbarProps) {
     </nav>
   )
 }
-
-// const Placeholder = styled(motion.div)`
-//   mask-image: linear-gradient(
-//     to right,
-//     transparent 0%,
-//     black 10%,
-//     black 90%,
-//     transparent 100%
-//   );
-// `
 
 export default Navbar
