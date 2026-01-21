@@ -1,10 +1,10 @@
-import type { IconInteractiveProps } from './Interactive'
+'use client'
 
-import type { SvgIcon } from '@/types'
+import type { SvgIcon } from './_internal/types'
 
 import { animated, useSpring } from '@react-spring/web'
 
-import Interactive from './Interactive'
+import { createInteractiveIcon } from './_internal/utils'
 
 interface FeedIconProps extends SvgIcon {
   isHovered?: boolean
@@ -68,19 +68,4 @@ export function FeedIcon({
   )
 }
 
-export function Feed({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps) {
-  return (
-    <Interactive {...delegated} trigger="hover">
-      {({ isHovered }) => (
-        <FeedIcon {...{ size, color, strokeWidth, isHovered }} />
-      )}
-    </Interactive>
-  )
-}
+export const Feed = createInteractiveIcon(FeedIcon)

@@ -2,19 +2,17 @@
 
 import type { TimeoutHandle } from '@/types'
 
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-interface HeroAnimationProps {
+interface TypewriterProps {
   text1: string
   text2: string
   speed?: number
 }
 
-export default function HeroAnimation({
-  text1,
-  text2,
-  speed = 100
-}: HeroAnimationProps) {
+function Typewriter(props: TypewriterProps) {
+  const { text1, text2, speed = 100 } = props
+
   const [displayText, setDisplayText] = useState(text1)
   const [currentIndex, setCurrentIndex] = useState(text1.length)
   const [typeStatus, setTypeStatus] = useState('typing') // To track typing vs deleting
@@ -73,10 +71,8 @@ export default function HeroAnimation({
   }, [typeStatus])
 
   return (
-    <p className="text-3xl sm:text-[42px]">
-      <span className="to-foreground from-muted-foreground bg-linear-to-t to-70% bg-clip-text font-semibold text-transparent sm:bg-linear-to-r">
-        {displayText}
-      </span>
+    <p className="text-5xl">
+      <span className="text-primary font-medium">{displayText}</span>
 
       <span className={`${showCursor ? 'text-muted-foreground' : 'hidden'}`}>
         |
@@ -84,3 +80,5 @@ export default function HeroAnimation({
     </p>
   )
 }
+
+export default Typewriter

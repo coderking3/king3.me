@@ -1,17 +1,19 @@
 import type { JSX } from 'react'
 
-import type { MotionOptions, SvgIcon } from '@/types'
+import type { InteractiveState, SvgIcon } from '../_internal/types'
+
+import type { MotionOptions } from '@/types'
 
 import { motion } from 'framer-motion'
+
+import { createInteractiveIcon } from '../_internal/utils'
 
 import style from './style.module.css'
 
 type LogoVariant = 'regular' | 'bold'
 
-interface LogoProps extends Omit<SvgIcon, 'strokeWidth'> {
+interface LogoProps extends InteractiveState, Omit<SvgIcon, 'strokeWidth'> {
   variant?: LogoVariant
-  isHovered?: boolean
-  isClicked?: boolean
 }
 
 const renderRegular = (color: string) => (
@@ -106,21 +108,26 @@ export function LogoIcon({
   )
 }
 
-// export function Logo({
-//   // Icon props
-//   size,
-//   color,
-//   variant,
-//   // Interactive props
-//   ...delegated
-// }: IconInteractiveProps & {
-//   variant?: LogoVariant
-// }) {
-//   return (
-//     <Interactive {...delegated} trigger={['hover', 'click']}>
-//       {({ isHovered, isClicked }) => (
-//         <LogoIcon {...{ size, color, variant, isHovered, isClicked }} />
-//       )}
-//     </Interactive>
-//   )
-// }
+export const Logo = createInteractiveIcon(LogoIcon, ['hover', 'click'], {
+  exclude: ['strokeWidth']
+})
+
+/* 
+export function Github({
+  // Icon props
+  size,
+  color,
+  strokeWidth,
+  // Interactive props
+  ...delegated
+}: IconInteractiveProps) {
+  return (
+    <Interactive {...delegated} trigger="hover">
+      {({ isHovered }) => (
+        <GithubIcon {...{ size, color, strokeWidth, isHovered }} />
+      )}
+    </Interactive>
+  )
+}
+
+*/

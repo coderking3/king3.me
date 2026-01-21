@@ -47,7 +47,7 @@ type NonNullable<T> = T extends null | undefined ? never : T
 /**
  * 字符串类型对象
  */
-type Recordable<T> = Record<string, T>
+type Recordable<T = any> = Record<string, T>
 
 /**
  * 字符串类型对象（只读）

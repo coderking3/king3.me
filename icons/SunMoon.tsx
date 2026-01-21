@@ -2,19 +2,15 @@
 
 import type { SpringConfig } from '@react-spring/web'
 
-import type { IconInteractiveProps } from './Interactive'
-
-import type { SvgIcon } from '@/types'
+import type { SvgIcon } from './_internal/types'
 
 import { styled } from '@linaria/react'
 import { animated, useSpring, useTrail } from '@react-spring/web'
-import { useId, useRef, useState } from 'react'
+import { useId } from 'react'
 
 import { SPRINGS } from '@/constants'
-import { usePrefersReducedMotion, useThemeToggle } from '@/hooks'
+import { usePrefersReducedMotion } from '@/hooks'
 import { range, roundTo } from '@/lib/utils'
-
-import Interactive from './Interactive'
 
 const SUN_RADIUS = 6
 const MOON_RADIUS = 9.5
@@ -28,15 +24,12 @@ const DEFAULT_CONFIG: SpringConfig = {
   friction: 30
 }
 
-interface BaseProps extends SvgIcon {
-  enterAnimationDelay?: number
-}
-
-interface SunMoonIconProps extends BaseProps {
+interface SunMoonIconProps extends SvgIcon {
   isDark: boolean
   isHovered?: boolean
   isTransitioning?: boolean
   includeEnterAnimation: boolean
+  enterAnimationDelay?: number
 }
 
 export function SunMoonIcon({
@@ -191,57 +184,6 @@ export function SunMoonIcon({
         />
       </g>
     </animated.svg>
-  )
-}
-
-export function ThemeMode({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  enterAnimationDelay = 0,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps<BaseProps>) {
-  const { theme, toggleTheme } = useThemeToggle()
-  const [isTransitioning, setIsTransitioning] = useState(false)
-
-  const timeoutId = useRef<number | undefined>(undefined)
-
-  const onTrigger = (event: React.MouseEvent<any>) => {
-    event.preventDefault()
-
-    toggleTheme()
-    setIsTransitioning(true)
-
-    window.clearTimeout(timeoutId.current)
-    timeoutId.current = window.setTimeout(() => {
-      setIsTransitioning(false)
-    }, 500)
-  }
-
-  return (
-    <Interactive
-      {...delegated}
-      alt={`Activate ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      trigger="hover"
-      onClick={onTrigger}
-    >
-      {({ isHovered }) => (
-        <SunMoonIcon
-          isDark={theme === 'dark'}
-          {...{
-            size,
-            color,
-            strokeWidth,
-            isHovered,
-            isTransitioning,
-            includeEnterAnimation: true,
-            enterAnimationDelay
-          }}
-        />
-      )}
-    </Interactive>
   )
 }
 

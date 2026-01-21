@@ -1,14 +1,13 @@
+import type {
+  BoopDuration,
+  InteractionTrigger,
+  InteractiveState
+} from './types'
+
 import { isObject } from 'kedash'
 import { useMemo, useState } from 'react'
 
-import { useBoop } from './useBoop'
-
-export type InteractionTrigger = 'hover' | 'click'
-
-export interface BoopDuration {
-  hover?: number
-  click?: number
-}
+import { useBoop } from '@/hooks/useBoop'
 
 interface InteractionHandlers {
   onMouseEnter: (e: any) => void
@@ -19,20 +18,13 @@ interface InteractionHandlers {
   onTouchEnd: (e: any) => void
 }
 
-export interface UseInteractiveOptions {
+interface UseInteractiveOptions {
   /** 触发 boop 的交互类型 */
   trigger?: InteractionTrigger | InteractionTrigger[]
   /** Boop 持续时间（毫秒）- 可以是统一值或分别设置 */
   duration?: number | BoopDuration
   /** 自定义事件处理器 */
   onHandlers?: Partial<InteractionHandlers>
-}
-
-export interface InteractiveState {
-  /** Hover 时是否处于 booped 状态 */
-  isHovered: boolean
-  /** Click 时是否处于 booped 状态 */
-  isClicked: boolean
 }
 
 interface UseInteractiveReturn extends InteractiveState {

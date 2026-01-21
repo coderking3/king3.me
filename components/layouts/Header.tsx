@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { Feed, Github, LogoIcon, Search, ThemeMode } from '@/components/icons'
-import { useInteractive } from '@/hooks'
+import { Feed, Github, LogoIcon, Search, useInteractive } from '@/icons'
+// import { useInteractive } from '@/hooks'
 import { cn } from '@/lib/utils'
 
+import { ThemeMode } from '../ThemeMode'
 import Navbar from './Navbar'
 
 function Logo() {
@@ -17,7 +18,7 @@ function Logo() {
   return (
     <Link
       href="/"
-      className="text-accent-foreground/85 hover:text-accent-foreground mx-1 flex items-center transition-colors duration-200"
+      className="text-accent-foreground/85 hover:text-accent-foreground mx-1 flex items-center transition-colors duration-200 select-none"
       {...handlers}
     >
       <span className='relative inline-flex size-8 min-w-8 items-center justify-center rounded-full outline-offset-2 before:absolute before:-inset-1 before:content-[""]'>
@@ -28,7 +29,7 @@ function Logo() {
         ></LogoIcon>
       </span>
 
-      <span className="ml-1 font-(family-name:--font-google-audiowide) text-xl font-normal">
+      <span className="ml-1 font-(family-name:--font-audiowide) text-xl font-normal">
         King3
       </span>
     </Link>

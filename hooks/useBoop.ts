@@ -11,7 +11,6 @@ export function useBoop(isTriggered: boolean, duration = 150) {
       return
     }
 
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsBooped(true)
   }, [isTriggered, prefersReducedMotion])
 

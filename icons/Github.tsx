@@ -1,13 +1,13 @@
-import type { IconInteractiveProps } from './Interactive'
+'use client'
 
-import type { SvgIcon } from '@/types'
+import type { SvgIcon } from './_internal/types'
 
 import { styled } from '@linaria/react'
 import { animated, useSpring } from '@react-spring/web'
 
 import { SPRINGS } from '@/constants'
 
-import Interactive from './Interactive'
+import { createInteractiveIcon } from './_internal/utils'
 
 interface GithubIconProps extends SvgIcon {
   isHovered?: boolean
@@ -47,22 +47,7 @@ export function GithubIcon({
   )
 }
 
-export function Github({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps) {
-  return (
-    <Interactive {...delegated} trigger="hover">
-      {({ isHovered }) => (
-        <GithubIcon {...{ size, color, strokeWidth, isHovered }} />
-      )}
-    </Interactive>
-  )
-}
+export const Github = createInteractiveIcon(GithubIcon)
 
 const Svg = styled(animated.svg)`
   transform-origin: 50% 85%;

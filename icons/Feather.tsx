@@ -1,13 +1,13 @@
-import type { IconInteractiveProps } from './Interactive'
+'use client'
 
-import type { SvgIcon } from '@/types'
+import type { SvgIcon } from './_internal/types'
 
 import { styled } from '@linaria/react'
 import { animated, useSpring } from '@react-spring/web'
 
 import { SPRINGS } from '@/constants'
 
-import Interactive from './Interactive'
+import { createInteractiveIcon } from './_internal/utils'
 
 interface GithubIconProps extends SvgIcon {
   isHovered?: boolean
@@ -20,8 +20,6 @@ export function FeatherIcon({
   isHovered = false
 }: GithubIconProps) {
   const svgSpring = useSpring({
-    // rotate: isHovered ? 5 : 0,
-
     // 在 X 和 Y 轴上产生微小的不对称位移
     to: isHovered
       ? [
@@ -55,22 +53,7 @@ export function FeatherIcon({
   )
 }
 
-export function Feather({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps) {
-  return (
-    <Interactive {...delegated} trigger="hover">
-      {({ isHovered }) => (
-        <FeatherIcon {...{ size, color, strokeWidth, isHovered }} />
-      )}
-    </Interactive>
-  )
-}
+export const Feather = createInteractiveIcon(FeatherIcon)
 
 const Svg = styled(animated.svg)`
   transform-origin: 50% 85%;

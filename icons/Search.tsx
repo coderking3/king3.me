@@ -1,11 +1,11 @@
-import type { IconInteractiveProps } from './Interactive'
+'use client'
 
-import type { SvgIcon } from '@/types'
+import type { SvgIcon } from './_internal/types'
 
 import { styled } from '@linaria/react'
 import { animated, useSpring } from '@react-spring/web'
 
-import Interactive from './Interactive'
+import { createInteractiveIcon } from './_internal/utils'
 
 interface GithubIconProps extends SvgIcon {
   isHovered?: boolean
@@ -17,14 +17,14 @@ export function SearchIcon({
   strokeWidth = 2,
   isHovered = false
 }: GithubIconProps) {
-  const iconStyle = useSpring({
+  const svgSpring = useSpring({
     transform: isHovered ? 'scale(1.1) rotate(8deg)' : 'scale(1) rotate(0deg)',
     config: {
       tension: 300,
       friction: 10
     }
   })
-  const shimmerStyle = useSpring({
+  const shimmerSpring = useSpring({
     transform: isHovered
       ? 'rotate(-20deg) translateX(-40%)'
       : 'rotate(-20deg) translateX(50%)',
@@ -37,7 +37,7 @@ export function SearchIcon({
   return (
     <Wrapper>
       <ShimmerWrapper>
-        <Shimmer style={shimmerStyle} />
+        <Shimmer style={shimmerSpring} />
       </ShimmerWrapper>
       <Svg
         xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ export function SearchIcon({
         strokeWidth={strokeWidth}
         strokeLinecap="round"
         strokeLinejoin="round"
-        style={iconStyle}
+        style={svgSpring}
       >
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
@@ -60,22 +60,7 @@ export function SearchIcon({
   )
 }
 
-export function Search({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps) {
-  return (
-    <Interactive {...delegated} trigger="hover">
-      {({ isHovered }) => (
-        <SearchIcon {...{ size, color, strokeWidth, isHovered }} />
-      )}
-    </Interactive>
-  )
-}
+export const Search = createInteractiveIcon(SearchIcon)
 
 const Wrapper = styled.span`
   position: relative;

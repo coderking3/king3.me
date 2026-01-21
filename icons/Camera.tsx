@@ -1,19 +1,14 @@
 'use client'
 
-import type { IconInteractiveProps } from './Interactive'
-
-import type { SvgIcon } from '@/types'
+import type { InteractiveState, SvgIcon } from './_internal/types'
 
 import { animated, useSpring } from '@react-spring/web'
 
 import { SPRINGS } from '@/constants'
 
-import Interactive from './Interactive'
+import { createInteractiveIcon } from './_internal/utils'
 
-interface CameraIconProps extends SvgIcon {
-  isHovered?: boolean
-  isClicked?: boolean
-}
+interface CameraIconProps extends SvgIcon, InteractiveState {}
 
 export function CameraIcon({
   size = 20,
@@ -22,7 +17,7 @@ export function CameraIcon({
   isHovered = false,
   isClicked = false
 }: CameraIconProps) {
-  const iconSpring = useSpring({
+  const svgSpring = useSpring({
     scale: isHovered ? 1.08 : 1,
     rotate: isHovered ? 2 : 0,
     config: SPRINGS.springy
@@ -44,7 +39,7 @@ export function CameraIcon({
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
       strokeWidth={strokeWidth}
-      style={iconSpring}
+      style={svgSpring}
     >
       {/* 相机机身 */}
       <animated.path
@@ -74,19 +69,4 @@ export function CameraIcon({
   )
 }
 
-export function Camera({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps) {
-  return (
-    <Interactive {...delegated} trigger={['hover', 'click']}>
-      {({ isHovered, isClicked }) => (
-        <CameraIcon {...{ size, color, strokeWidth, isHovered, isClicked }} />
-      )}
-    </Interactive>
-  )
-}
+export const Camera = createInteractiveIcon(CameraIcon, ['hover', 'click'])

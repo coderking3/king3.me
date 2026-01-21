@@ -3,15 +3,16 @@
 import type {
   BoopDuration,
   InteractionTrigger,
-  InteractiveState
-} from '@/hooks/useInteractive'
-import type { SvgIcon } from '@/types'
+  InteractiveState,
+  SvgIcon
+} from './types'
 
 import Link from 'next/link'
 import React from 'react'
 
-import { useInteractive } from '@/hooks/useInteractive'
 import { cn } from '@/lib/utils'
+
+import { useInteractive } from './hooks'
 
 interface BaseProps {
   alt?: string
@@ -35,15 +36,11 @@ type ButtonProps = BaseProps &
 
 export type InteractiveProps = LinkProps | ButtonProps
 
-export type IconInteractiveProps<T extends SvgIcon = SvgIcon> =
-  | ({
-      href: string
-    } & T &
-      Omit<LinkProps, 'children' | 'href'>)
-  | ({
-      href?: never
-    } & T &
-      Omit<ButtonProps, 'children' | 'trigger'>)
+export type InteractiveIconProps<T extends SvgIcon = SvgIcon> =
+  | ({ href: string } & T &
+      Omit<LinkProps, 'href' | 'children' | keyof InteractiveState | 'trigger'>)
+  | ({ href?: never } & T &
+      Omit<ButtonProps, 'children' | keyof InteractiveState | 'trigger'>)
 
 function Interactive({
   ref,

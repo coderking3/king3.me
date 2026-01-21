@@ -4,12 +4,6 @@ import type { MotionNodeAnimationOptions } from 'framer-motion'
 
 type MotionOptions = MotionNodeAnimationOptions
 
-interface SvgIcon {
-  size?: number
-  color?: string
-  strokeWidth?: number
-}
-
 /* Other Types */
 
 interface PostFrontmatter {
@@ -22,4 +16,4 @@ interface PostFrontmatter {
   published?: boolean
 }
 
-export type { MotionOptions, PostFrontmatter, SvgIcon }
+export type { MotionOptions, PostFrontmatter }

@@ -6,8 +6,8 @@
 
 @theme inline {
   /* ---------- Fonts ---------- */
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-roboto), var(--font-noto-sans);
+  --font-mono: var(--font-roboto-mono);
 
   /* ---------- Base Colors ---------- */
   --color-background: var(--background);
@@ -63,7 +63,7 @@
   --primary-foreground: oklch(97.91% 0 0deg); /* #f8f8f8 */
 
   /* Brand: 品牌主色调，用于强调和关键交互 */
-  --brand: oklch(55.98% 0.1882 266.4deg); /* #4169e1 */
+  --brand: oklch(55.98% 0.1882 266.4deg); /* #4169e1  */
   --brand-foreground: oklch(97.91% 0 0deg); /* #f8f8f8 */
 
   /* Secondary: 次要背景和辅助区域 */
@@ -114,7 +114,7 @@
   --primary-foreground: oklch(15% 0.01 248.15deg); /* #080c0f */
 
   /* Brand: 品牌主色调，用于强调和关键交互 */
-  --brand: oklch(63.68% 0.1939 264.75deg); /* #4f82ff */
+  --brand: oklch(72.11% 0.1441 268.6798deg); /* #809fff */
   --brand-foreground: oklch(98% 0 0deg); /* #f8f8f8 */
 
   /* Secondary: 次要背景和辅助区域 */
@@ -147,13 +147,13 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground font-sans antialiased;
   }
 
   /* 既然不要冷也不要暖，选中色就用中性的反转色 */
   ::selection {
     color: var(--background);
-    background-color: var(--foreground);
+    background-color: var(--brand);
   }
 }
 
