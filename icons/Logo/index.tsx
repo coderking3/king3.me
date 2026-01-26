@@ -12,7 +12,8 @@ import style from './style.module.css'
 
 type LogoVariant = 'regular' | 'bold'
 
-interface LogoProps extends InteractiveState, Omit<SvgIcon, 'strokeWidth'> {
+interface LogoProps
+  extends Partial<InteractiveState>, Omit<SvgIcon, 'strokeWidth'> {
   variant?: LogoVariant
 }
 
@@ -79,7 +80,6 @@ export function LogoIcon({
   variant = 'regular',
   isHovered = false,
   isClicked = false
-  // className
 }: LogoProps) {
   const content = SVG_CONTENT_MAP[variant]
   const viewBox = variant === 'regular' ? '0 0 24 24' : '0 0 24 26'
@@ -108,26 +108,4 @@ export function LogoIcon({
   )
 }
 
-export const Logo = createInteractiveIcon(LogoIcon, ['hover', 'click'], {
-  exclude: ['strokeWidth']
-})
-
-/* 
-export function Github({
-  // Icon props
-  size,
-  color,
-  strokeWidth,
-  // Interactive props
-  ...delegated
-}: IconInteractiveProps) {
-  return (
-    <Interactive {...delegated} trigger="hover">
-      {({ isHovered }) => (
-        <GithubIcon {...{ size, color, strokeWidth, isHovered }} />
-      )}
-    </Interactive>
-  )
-}
-
-*/
+export const Logo = createInteractiveIcon(LogoIcon, ['hover', 'click'])

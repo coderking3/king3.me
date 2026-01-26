@@ -8,7 +8,7 @@ import { SPRINGS } from '@/constants'
 
 import { createInteractiveIcon } from './_internal/utils'
 
-interface CameraIconProps extends SvgIcon, InteractiveState {}
+interface CameraIconProps extends SvgIcon, Partial<InteractiveState> {}
 
 export function CameraIcon({
   size = 20,

@@ -1,6 +1,31 @@
+import { BiliBili, Email, GithubCircle, X, Youtube } from '@/icons'
+
 import Typewriter from './Typewriter'
 
 const TOPICS: string[] = ['#CoderLife', '#OpenSource', '#Photography']
+
+const SOCIALS = [
+  {
+    icon: GithubCircle,
+    href: 'https://www.github.com/coderking3'
+  },
+  {
+    icon: Youtube,
+    href: 'https://www.youtube.com/@KingCoder-mp1hd'
+  },
+  {
+    icon: BiliBili,
+    href: 'https://space.bilibili.com/627872080'
+  },
+  {
+    icon: X,
+    href: 'https://x.com/coderking_3'
+  },
+  {
+    icon: Email,
+    href: 'mailto:king3.em@gmail.com'
+  }
+]
 
 function SelectedText({ text }: { text: string }) {
   return (
@@ -16,15 +41,6 @@ function SelectedText({ text }: { text: string }) {
   )
 }
 
-const ICON_MAP = {
-  github: '',
-  youtube: '',
-  instagram: '',
-  bilibili: '',
-  x: '',
-  email: ''
-}
-
 function Hero() {
   return (
     <section className="font-mono">
@@ -33,23 +49,33 @@ function Hero() {
         <span>Hi, I&apos;m </span>
         <SelectedText text="King3" />
       </h1>
-      <div className="mb-10 flex h-16 items-center">
+      <div className="mb-8 flex h-16 items-center">
         <Typewriter text1={'<Developer/>'} text2="<Storyteller/>" />
       </div>
       {/* Tags */}
-      <p className="text-brand/90 mb-6 w-fit text-2xl font-medium">
+      <p className="text-brand/90 mb-8 w-fit text-2xl font-medium">
         {TOPICS.map((tag) => (
           <span key={tag}>{tag}&nbsp;</span>
         ))}
       </p>
       {/* Description */}
-      <p className="text-primary max-w-3xl text-lg leading-relaxed">
+      <p className="text-primary/90 max-w-3xl text-lg leading-relaxed">
         I’m a frontend developer passionate about open source and crafting my
         own projects. When not coding, I’m capturing moments 📷, traveling ✈️,
         or lost in music 🎵.
       </p>
       {/* Socials */}
-      <div className="mt-5"></div>
+      <div className="mt-5 flex gap-4">
+        {SOCIALS.map(({ icon: Icon, href }) => (
+          <Icon
+            key={href}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground/80 hover:text-foreground"
+          />
+        ))}
+      </div>
     </section>
   )
 }

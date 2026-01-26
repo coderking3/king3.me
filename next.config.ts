@@ -13,16 +13,16 @@ const nextConfig: NextConfig = {
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 
-  // images: {
-  //   remotePatterns: [
-  //     {
-  //       protocol: 'https',
-  //       hostname: 'bilibili',
-  //       port: '',
-  //       pathname: `/images/**`
-  //     }
-  //   ]
-  // },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i0.hdslb.com',
+        port: '',
+        pathname: `/bfs/openplatform/**`
+      }
+    ]
+  },
 
   // redirects() {
   //   return [

@@ -9,15 +9,15 @@ import { SPRINGS } from '@/constants'
 
 import { createInteractiveIcon } from './_internal/utils'
 
-interface BiliBiliIconProps extends SvgIcon {
+interface EmailIconProps extends SvgIcon {
   isHovered?: boolean
 }
-export function BiliBiliIcon({
+export function EmailIcon({
   size = 20,
   color = 'currentColor',
   strokeWidth = 2,
   isHovered = false
-}: BiliBiliIconProps) {
+}: EmailIconProps) {
   const svgSpring = useSpring({
     rotate: isHovered ? 5 : 0,
     config: SPRINGS.springy
@@ -30,7 +30,6 @@ export function BiliBiliIcon({
       className="block overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
-      // fill={color}
       style={svgSpring}
     >
       <g
@@ -40,14 +39,14 @@ export function BiliBiliIcon({
         strokeLinejoin="round"
         strokeWidth={strokeWidth}
       >
-        <rect width="20" height="16" x="2" y="5" rx="4" />
-        <path d="m7 2l3 3m7-3l-3 3m-5 9v-2m6 0v2" />
+        <path d="m22 7l-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
+        <rect width="20" height="16" x="2" y="4" rx="2" />
       </g>
     </Svg>
   )
 }
 
-export const BiliBili = createInteractiveIcon(BiliBiliIcon)
+export const Email = createInteractiveIcon(EmailIcon)
 
 const Svg = styled(animated.svg)`
   transform-origin: 50% 85%;

@@ -46,7 +46,7 @@ function Header() {
       <div className="mx-auto h-full max-w-6xl px-6">
         <div className="flex h-full items-center justify-between">
           {/* Menus */}
-          <div className="bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border flex items-center rounded-full border pl-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 dark:shadow-lg">
+          <div className="bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border flex items-center rounded-full border pl-3 shadow-xl backdrop-blur-xs backdrop-saturate-150 dark:shadow-lg">
             {/* Logo */}
             <Logo></Logo>
 
@@ -67,7 +67,7 @@ function Header() {
           >
             <div
               className={cn(
-                'bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border text-accent-foreground/85 flex h-11.5 w-auto items-center gap-0.5 rounded-full border px-3 shadow-xl backdrop-blur-[3px] backdrop-saturate-150 transition-all dark:shadow-lg'
+                'bg-background/50 dark:bg-background/70 shadow-muted-foreground/10 border-border text-accent-foreground/85 flex h-11.5 w-auto items-center gap-0.5 rounded-full border px-3 shadow-xl backdrop-blur-xs backdrop-saturate-150 transition-all dark:shadow-lg'
               )}
             >
               {/* Search */}

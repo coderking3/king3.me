@@ -34,9 +34,11 @@
     "audiowide",
     "Booped",
     "hypothenuse",
+    "intunnel",
     "Linaria",
     "oklch",
-    "transitio"
+    "transitio",
+    "Veloxa"
   ],
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"

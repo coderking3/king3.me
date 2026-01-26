@@ -6,31 +6,20 @@ import type { Recordable } from '@/types'
 import Interactive from './Interactive'
 
 const DEFAULT_ICON_PARAMS = ['size', 'color', 'strokeWidth'] as const
-type DefaultIconParam = (typeof DEFAULT_ICON_PARAMS)[number]
-
-interface IconParamsOptions<T> {
-  include?: (keyof T)[]
-  exclude?: DefaultIconParam[]
-}
 
 export function createInteractiveIcon<T extends SvgIcon>(
   IconComponent: (props: T) => React.ReactNode,
   trigger: InteractionTrigger | InteractionTrigger[] = 'hover',
-  { include = [], exclude = [] }: IconParamsOptions<T> = {}
+  additionalParams: string[] = []
 ) {
-  const initialParams: string[] = [...DEFAULT_ICON_PARAMS]
-  const finalParamsSet = new Set<string>(
-    initialParams
-      .filter((p) => !exclude.includes(p as DefaultIconParam))
-      .concat(include as string[])
-  )
+  const allIconParams = [...DEFAULT_ICON_PARAMS, ...additionalParams]
 
   return function InteractiveIcon(props: InteractiveIconProps<T>) {
     const iconProps = {} as Recordable
     const delegated = {} as Recordable
 
     Object.entries(props).forEach(([key, value]) => {
-      if (finalParamsSet.has(key)) {
+      if (allIconParams.includes(key)) {
         iconProps[key] = value
       } else {
         delegated[key] = value
