@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-import { NAVIGATION_ITEMS } from '@/constants'
+import { NAVIGATION_ITEMS } from '@/config'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {

@@ -8,7 +8,7 @@ import { styled } from '@linaria/react'
 import { animated, useSpring, useTrail } from '@react-spring/web'
 import { useId } from 'react'
 
-import { SPRINGS } from '@/constants'
+import { SPRINGS } from '@/config'
 import { usePrefersReducedMotion } from '@/hooks'
 import { range, roundTo } from '@/lib/utils'
 

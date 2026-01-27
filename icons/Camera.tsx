@@ -4,7 +4,7 @@ import type { InteractiveState, SvgIcon } from './_internal/types'
 
 import { animated, useSpring } from '@react-spring/web'
 
-import { SPRINGS } from '@/constants'
+import { SPRINGS } from '@/config'
 
 import { createInteractiveIcon } from './_internal/utils'
 

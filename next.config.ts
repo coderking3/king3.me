@@ -1,6 +1,5 @@
 import type { NextConfig } from 'next'
 
-import { withPayload } from '@payloadcms/next/withPayload'
 import withLinaria from 'next-with-linaria'
 
 import { withMDX, withNextConfig } from './lib/config'
@@ -67,4 +66,4 @@ const nextConfig: NextConfig = {
   }
 }
 
-export default withNextConfig(withMDX, withPayload, withLinaria)(nextConfig)
+export default withNextConfig(withMDX, withLinaria)(nextConfig)
