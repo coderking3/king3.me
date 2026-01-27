@@ -1,7 +1,7 @@
 import { generateFeed } from '@/lib/rss'
 
 // ISR: 每小时重新验证一次
-export const revalidate = 60 * 60
+export const revalidate = 3600
 
 // RSS 2.0 格式
 export async function GET() {
