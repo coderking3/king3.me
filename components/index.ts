@@ -1,6 +1,3 @@
 export { default as Avatar } from './Avatar'
-export { default as Footer } from './Footer'
-export { default as Header } from './Header'
-export { default as Logo } from './Logo'
-export { default as MainWrapper } from './MainWrapper'
-export { default as Navbar } from './Navbar'
+export { default as Gallery } from './Gallery'
+export { default as Hero } from './Hero'

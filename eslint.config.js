@@ -9,13 +9,20 @@ export default defineConfig(
   {
     name: 'custom-rules',
     rules: {
-      'react-refresh/only-export-components': 'off'
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',
+      'react-refresh/only-export-components': 'off',
+      'typescript/no-use-before-define': [
+        'error',
+        { classes: false, functions: false, variables: false }
+      ]
     }
   },
 
+  // 忽略对payload自动生成类型文件的进行校验
   {
     files: ['./payload-types.ts'],
-    name: 'payload-rules',
+    name: 'payload-type-rule',
     rules: {
       'eslint-comments/no-unlimited-disable': 'off'
     }

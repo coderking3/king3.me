@@ -326,7 +326,7 @@ export default function RootLayout({ children }) {
       lang="zh-CN"
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
-      <body className="font-sans">{children}</body>
+      <body className="font-mono">{children}</body>
     </html>
   )
 }

@@ -1,0 +1,92 @@
+interface Project {
+  name: string
+  description: string
+  link: string
+  icon: string
+  image: string
+}
+
+const projects: Project[] = [
+  {
+    name: 'Kedash',
+    description:
+      'Functional utility library - modern, simple, typed, powerful ',
+    link: 'https://github.com/OpenKnights/kedash',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'Veloxa',
+    description: 'Fast, native HTTP client built on Fetch API',
+    link: 'https://github.com/OpenKnights/veloxa',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'Storadapt',
+    description:
+      'Flexible storage adapter with deep path access and auto-serialization',
+    link: 'https://github.com/OpenKnights/storadapt',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'Evenex',
+    description: 'Lightweight, type-safe event emitter / event bus library',
+    link: 'https://github.com/OpenKnights/evenex',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'Better Mock Server',
+    description: 'Lightweight and fast mock server library built on unjs/h3',
+    link: 'https://github.com/OpenKnights/better-mock-server',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'VS Code Profile',
+    description: "king3's VS Code configuration preset",
+    link: 'https://github.com/coderking3/vscode-profile',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'Eslint Config',
+    description: "king3's ESLint config preset",
+    link: 'https://github.com/coderking3/eslint-config',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'Prettier config',
+    description: "king3's Prettier config preset",
+    link: 'https://github.com/coderking3/prettier-config',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'File Kit',
+    description: '多功能文件工具箱 — Base64 转换 · 视频转音频 · 加密/解密',
+    link: 'https://github.com/coderking3/file-kit',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'King Images',
+    description:
+      'Powerful image upload and management tool with multi-format support',
+    link: 'https://github.com/coderking3/king-images',
+    icon: 'icon',
+    image: 'image'
+  },
+  {
+    name: 'vite-plugin-intunnel',
+    description: 'Vite plugin for securely exposing local servers via Ngrok',
+    link: 'https://github.com/coderking3/vite-plugin-intunnel',
+    icon: 'icon',
+    image: 'image'
+  }
+]
+
+export default projects
