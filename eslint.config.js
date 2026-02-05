@@ -3,8 +3,7 @@ import { defineConfig } from '@king-3/eslint-config'
 export default defineConfig(
   {
     typescript: true,
-    nextjs: true,
-    ignores: ['**/(payload)/**/importMap.js']
+    nextjs: true
   },
   {
     name: 'custom-rules',
@@ -18,13 +17,56 @@ export default defineConfig(
       ]
     }
   },
-
-  // 忽略对payload自动生成类型文件的进行校验
   {
-    files: ['./payload-types.ts'],
-    name: 'payload-type-rule',
+    files: ['./king-images.ts'],
     rules: {
-      'eslint-comments/no-unlimited-disable': 'off'
+      'perfectionist/sort-objects': [
+        'warn',
+        {
+          type: 'alphabetical',
+          order: 'asc',
+          groups: [
+            'id',
+            'name',
+            'url',
+            'type',
+            'width',
+            'height',
+            'date',
+            'unknown'
+          ],
+          customGroups: [
+            {
+              groupName: 'id',
+              elementNamePattern: '^id$'
+            },
+            {
+              groupName: 'name',
+              elementNamePattern: '^name$'
+            },
+            {
+              groupName: 'url',
+              elementNamePattern: '^url$'
+            },
+            {
+              groupName: 'type',
+              elementNamePattern: '^type$'
+            },
+            {
+              groupName: 'width',
+              elementNamePattern: '^width$'
+            },
+            {
+              groupName: 'height',
+              elementNamePattern: '^height$'
+            },
+            {
+              groupName: 'date',
+              elementNamePattern: '^date$'
+            }
+          ]
+        }
+      ]
     }
   }
 )

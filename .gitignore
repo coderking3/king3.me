@@ -41,11 +41,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# payload generated
-payload-types.ts
-
 # prisma generation
-/generated/prisma
+prisma/generated
 
 # file-kit crypto
 !*.crypto.json

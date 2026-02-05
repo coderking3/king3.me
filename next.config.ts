@@ -2,8 +2,6 @@ import type { NextConfig } from 'next'
 
 import withLinaria from 'next-with-linaria'
 
-import { withMDX, withNextConfig } from './lib/config'
-
 const nextConfig: NextConfig = {
   // Turn off React's strict mode
   reactStrictMode: false,
@@ -14,39 +12,35 @@ const nextConfig: NextConfig = {
 
   images: {
     remotePatterns: [
+      // BiliBili
+      {
+        protocol: 'http',
+        hostname: 'i0.hdslb.com',
+        port: '',
+        pathname: `/**/*`
+      },
       {
         protocol: 'https',
         hostname: 'i0.hdslb.com',
         port: '',
-        pathname: `/bfs/openplatform/**`
+        pathname: `/**/*`
+      },
+      // NeteaseCloudMusic (p3)
+      {
+        protocol: 'https',
+        hostname: 'p3.music.126.net',
+        port: '',
+        pathname: `/**/*`
+      },
+      // NeteaseCloudMusic (p4)
+      {
+        protocol: 'https',
+        hostname: 'p4.music.126.net',
+        port: '',
+        pathname: `/**/*`
       }
     ]
   },
-
-  // redirects() {
-  //   return [
-  //     {
-  //       source: '/x',
-  //       destination: 'https://x.com/king3',
-  //       permanent: true
-  //     },
-  //     {
-  //       source: '/youtube',
-  //       destination: 'https://youtube.com/@king3',
-  //       permanent: true
-  //     },
-  //     {
-  //       source: '/github',
-  //       destination: 'https://github.com/king3',
-  //       permanent: true
-  //     },
-  //     {
-  //       source: '/bilibili',
-  //       destination: 'https://space.bilibili.com/king3',
-  //       permanent: true
-  //     }
-  //   ]
-  // },
 
   rewrites() {
     return [
@@ -66,4 +60,4 @@ const nextConfig: NextConfig = {
   }
 }
 
-export default withNextConfig(withMDX, withLinaria)(nextConfig)
+export default withLinaria(nextConfig)

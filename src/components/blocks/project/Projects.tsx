@@ -1,0 +1,18 @@
+import { projects } from '@/data'
+
+import ProjectCard from './ProjectCard'
+
+async function Projects() {
+  return (
+    <ul
+      role="list"
+      className="grid grid-cols-1 gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3"
+    >
+      {projects.map((project) => (
+        <ProjectCard key={project.link} project={project}></ProjectCard>
+      ))}
+    </ul>
+  )
+}
+
+export default Projects

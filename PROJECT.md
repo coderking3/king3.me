@@ -1,6 +1,6 @@
 # PROJECT.md
 
-> 个人网站项目技术文档 - 完整版
+> 个人网站项目技术文档 - 完整版 (参考版本)
 
 ---
 
@@ -1082,3 +1082,57 @@ jobs:
 - [ ] 持续优化
 
 ---
+
+You are a professional icon designer and frontend-friendly illustrator.
+
+I will provide you with a list of GitHub projects.
+Each project includes:
+
+- Repository name
+- Short functional description
+
+Your task:
+
+1. Design a clean, modern, minimal icon for EACH project
+2. The icon should be suitable for:
+   - Open-source GitHub repositories
+   - Frontend libraries / developer tools
+   - Personal portfolio or documentation websites
+
+Design requirements:
+
+- Style: modern, minimal, geometric, developer-oriented
+- Avoid text or letters inside the icon
+- High contrast, simple shapes, scalable
+- Prefer flat or subtle gradient design
+- Should look good at 24px, 32px, and 64px
+- Tech / utility vibe, not cartoonish
+
+Output requirements:
+
+- Generate ONE icon per project
+- Provide the icon in:
+  - SVG (preferred)
+  - PNG (1024x1024) if SVG is not possible
+- Icons should be visually distinct from each other
+
+VERY IMPORTANT:
+
+- After generating the icons, explain the design concept of EACH icon IN CHINESE
+- Explain how the icon reflects the library’s functionality or philosophy
+
+Here are the projects:
+
+## 🚀 Projects
+
+- **[kedash](https://github.com/OpenKnights/kedash)** - Functional utility library - modern, simple, typed, powerful
+- **[veloxa](https://github.com/OpenKnights/veloxa)** - Fast, native HTTP client built on Fetch API
+- **[better-mock-server](https://github.com/OpenKnights/better-mock-server)** - Lightweight and fast mock server library built on unjs/h3
+- **[evenex](https://github.com/OpenKnights/evenex)** - Lightweight, type-safe event emitter / event bus library
+- **[storadapt](https://github.com/OpenKnights/storadapt)** - Flexible storage adapter with deep path access and auto-serialization
+- **[vscode-profile](https://github.com/coderking3/vscode-profile)** - king3's VS Code configuration preset
+- **[eslint-config](https://github.com/coderking3/eslint-config)** - king3's ESLint config preset
+- **[prettier-config](https://github.com/coderking3/prettier-config)** - king3's Prettier config preset
+- **[file-kit](https://github.com/coderking3/file-kit)** - 多功能文件工具箱 — Base64 转换 · 视频转音频 · 加密/解密
+- **[king-images](https://github.com/coderking3/king-images)** - Powerful image upload and management tool with multi-format support
+- **[vite-plugin-intunnel](https://github.com/coderking3/vite-plugin-intunnel)** - Vite plugin for securely exposing local servers via Ngrok
