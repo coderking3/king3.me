@@ -26,4 +26,12 @@ export const SPRINGS: Record<'springy', SpringConfig> = {
     /* 反作用力的大小。如果设置为 0，弹簧将无限振荡。默认值为 10。 */
     friction: 10
   }
-} as const
+}
+
+export const AUTHOR_INFO = {
+  name: 'king3',
+  email: 'king3.wm@gmail.com',
+  link: 'https://github.com/coderking3'
+}
+
+export const COPYRIGHT = '© 2025-present King3. All Rights Reserved.'

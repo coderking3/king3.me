@@ -11,17 +11,17 @@ const playlist: Songs[] = [
     type=webp 格式
   */
   {
-    cover:
-      'https://p4.music.126.net/kAKoBg1AOVrgvO4WEOywoA==/109951169594708968.jpg',
     name: '十面埋伏',
     author: ['陈奕迅'],
+    cover:
+      'https://p4.music.126.net/kAKoBg1AOVrgvO4WEOywoA==/109951169594708968.jpg',
     url: ''
   },
   {
-    cover:
-      'https://p3.music.126.net/W9imJx0w_JeCGGs43dfjFg==/109951171529987110.jpg',
     name: '葡萄成熟时',
     author: ['陈奕迅'],
+    cover:
+      'https://p3.music.126.net/W9imJx0w_JeCGGs43dfjFg==/109951171529987110.jpg',
     url: ''
   },
   {

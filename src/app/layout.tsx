@@ -1,36 +1,29 @@
 import type { Metadata } from 'next'
 
 import { ThemeProvider } from 'next-themes'
-import { Audiowide, Noto_Sans_SC, Roboto, Roboto_Mono } from 'next/font/google' // 1. 引入 Geist 字体
+import { Roboto_Mono } from 'next/font/google' // 引入 字体
+import localFont from 'next/font/local'
 import React from 'react'
 
 import { Background, Footer, Header } from '@/components/layouts'
 import { Toaster } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-import './globals.css'
+import '@/styles/global.css'
 
-const audioWide = Audiowide({
-  weight: '400',
+// Audiowide 使用本地子集字体
+const audioWide = localFont({
+  src: '../../public/fonts/Audiowide-King3.woff2',
   variable: '--font-audiowide',
-  subsets: ['latin']
-})
-
-const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto'
+  weight: '400',
+  display: 'swap',
+  preload: true // 文件很小,可以预加载
 })
 
 const robotoMono = Roboto_Mono({
   subsets: ['latin'],
   weight: ['400', '500'],
   variable: '--font-roboto-mono'
-})
-const notoSansSC = Noto_Sans_SC({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-noto-sans'
 })
 
 /* 配置元数据 */
@@ -41,7 +34,7 @@ export const metadata: Metadata = {
   },
   description: 'Frontend Developer & Music Enthusiast',
   icons: {
-    icon: '/favicon.svg'
+    icon: '/icons/favicon.svg'
   }
 }
 
@@ -54,12 +47,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={cn(
-        roboto.variable,
-        robotoMono.variable,
-        notoSansSC.variable,
-        audioWide.variable
-      )}
+      className={cn(robotoMono.variable, audioWide.variable)}
     >
       <body className={cn('min-h-screen scroll-smooth antialiased', '')}>
         <ThemeProvider

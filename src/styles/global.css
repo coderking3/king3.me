@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@import './highlight.css';
 @import 'shadcn/tailwind.css';
 
 @plugin '@tailwindcss/typography';
@@ -37,51 +38,70 @@
   font-family: Wotfard;
   font-style: normal;
   font-weight: 600;
-  src: url('https://www.joshwcomeau.com/fonts/wotfard/wotfard-semibold-webfont.woff2')
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-semibold.woff2')
     format('woff2');
-  font-display: fallback;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Wotfard;
   font-style: normal;
   font-weight: 500;
-  src: url('https://www.joshwcomeau.com/fonts/wotfard/wotfard-medium-webfont.woff2')
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-medium.woff2')
     format('woff2');
-  font-display: fallback;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Wotfard;
   font-style: normal;
   font-weight: 400;
-  src: url('https://www.joshwcomeau.com/fonts/wotfard/wotfard-regular-webfont.woff2')
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-regular.woff2')
     format('woff2');
-  font-display: fallback;
+  font-display: swap;
 }
 
 @font-face {
   font-family: Wotfard;
   font-style: italic;
   font-weight: 400;
-  src: url('https://www.joshwcomeau.com/fonts/wotfard/wotfard-regular-italic-webfont.woff2')
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-regular-italic.woff2')
     format('woff2');
-  font-display: fallback;
+  font-display: swap;
 }
+
+@font-face {
+  font-family: FiraCode;
+  font-style: normal;
+  font-weight: 400;
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/FiraCodeNerdFont-Regular.ttf')
+    format('truetype');
+  font-display: swap;
+}
+
+/* @font-face {
+  font-family: FiraCode;
+  font-style: normal;
+  font-weight: 500;
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/FiraCodeNerdFont-Medium.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: FiraCode;
+  font-style: italic;
+  font-weight: 500;
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/FiraCodeNerdFont-Medium-Italic.ttf')
+    format('truetype');
+  font-display: swap;
+} */
 
 @theme inline {
   /* ---------- Fonts ---------- */
   --font-sans: 'Wotfard', 'PingFang SC';
-
-  /* --font-sans: var(--font-roboto), 'PingFang SC'; */
-
-  /* --font-mono: 'Wotfard', 'Wotfard-fallback', sans-serif, 'PingFang SC'; */
-
   --font-mono: var(--font-roboto-mono), 'PingFang SC';
-
-  /* 
-  --font-family: "Wotfard", "Wotfard-fallback", sans-serif;
-    --font-family-mono: "Cartograph CF", monospace; */
+  --font-logo: var(--font-audiowide);
+  --font-code: 'FiraCode', 'PingFang SC';
 
   /* ---------- Base Colors ---------- */
   --color-background: var(--background);
@@ -188,6 +208,7 @@
   --primary-foreground: oklch(15% 0.01 248.15deg); /* #080c0f */
 
   /* Brand: 品牌主色调，用于强调和关键交互 */
+
   --brand: oklch(72.11% 0.1441 268.6798deg); /* #809fff */
   --brand-foreground: oklch(98% 0 0deg); /* #f8f8f8 */
 
@@ -228,55 +249,8 @@
     color: var(--background);
     background-color: var(--brand);
   }
-}
 
-/* 
-  Shiki Highlight
-*/
-
-/* 当网站处于暗黑模式时 */
-html.dark pre[data-theme='light'] {
-  display: none; /* 隐藏亮色代码块 */
-}
-
-/* 当网站处于亮色模式时 */
-html.light pre[data-theme='dark'] {
-  display: none; /* 隐藏暗色代码块 */
-}
-
-/* 代码块容器 */
-pre {
-  @apply my-6 overflow-x-auto rounded-lg p-4;
-}
-
-/* 代码块内部 */
-pre > code {
-  @apply grid;
-}
-
-/* 行号 */
-code[data-line-numbers] {
-  counter-reset: line;
-}
-
-code[data-line-numbers] > [data-line]::before {
-  @apply mr-4 inline-block w-4 text-right text-gray-500;
-
-  content: counter(line);
-  counter-increment: line;
-}
-
-/* 高亮行 */
-.highlighted {
-  @apply -ml-4 border-l-4 border-blue-500 bg-gray-700/50 pl-3;
-}
-
-/* 高亮字符 */
-.word {
-  @apply rounded border-b-2 border-blue-500 bg-blue-500/20 px-1;
-}
-
-/* 内联代码 */
-:not(pre) > code {
-  @apply rounded bg-gray-100 px-2 py-1 font-mono text-sm dark:bg-gray-800;
+  .prose a {
+    @apply text-brand! no-underline! hover:underline!;
+  }
 }

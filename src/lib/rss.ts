@@ -2,13 +2,14 @@ import process from 'node:process'
 
 import { Feed } from 'feed'
 
+import { AUTHOR_INFO, COPYRIGHT } from '@/constants'
+
 import { getAllPosts } from './posts'
 
 const DOMAIN = process.env.SITE_URL || 'https://king3-me.vercel.app'
 const AUTHOR = {
-  name: 'King3',
-  email: 'king3.wm@gmail.com',
-  link: DOMAIN
+  ...AUTHOR_INFO,
+  link: process.env.SITE_URL || AUTHOR_INFO.link
 }
 
 // 生成 Feed
@@ -20,10 +21,10 @@ export async function generateFeed() {
     description: "King3's Blog",
     id: DOMAIN,
     link: DOMAIN,
-    copyright: `CC BY-NC-SA 4.0 ${new Date().getFullYear()} © King3`,
+    copyright: COPYRIGHT,
     author: AUTHOR,
-    image: `${DOMAIN}/avatar.png`,
-    favicon: `${DOMAIN}/favicon.svg`,
+    image: `${DOMAIN}/images/avatar.png`,
+    favicon: `${DOMAIN}/icons/favicon.svg`,
     feedLinks: {
       rss2: `${DOMAIN}/feed.xml`,
       json: `${DOMAIN}/feed.json`,
@@ -35,10 +36,9 @@ export async function generateFeed() {
   const recentPosts = posts.slice(0, 20)
 
   recentPosts.forEach((post) => {
-    const { title, description, date, slug } = post
+    const { title, description, date, slug, author } = post
     const postUrl = `${DOMAIN}/posts/${slug}`
 
-    // 构建 content: description + "Keep reading" 链接
     const contentHtml = `
       <p>${description}</p>
       <div style="margin-top: 32px; font-style: italic;">
@@ -53,7 +53,7 @@ export async function generateFeed() {
       description,
       content: contentHtml,
       date: new Date(date),
-      author: [AUTHOR]
+      author: [author ?? AUTHOR]
     })
   })
 

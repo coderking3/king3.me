@@ -4,15 +4,18 @@ import { useTheme } from 'next-themes'
 import { useCallback } from 'react'
 import { flushSync } from 'react-dom'
 
+import { usePrefersReducedMotion } from './usePrefersReducedMotion'
+
 export function useThemeToggle() {
   const { theme, setTheme } = useTheme()
+  const prefersReducedMotion = usePrefersReducedMotion()
 
   const toggleTheme = useCallback(() => {
     // 检查浏览器支持及用户偏好
     const isAppearanceTransition =
       typeof document !== 'undefined' &&
       'startViewTransition' in document &&
-      !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      !prefersReducedMotion
 
     const newTheme = theme === 'dark' ? 'light' : 'dark'
 
@@ -31,7 +34,7 @@ export function useThemeToggle() {
         setTheme(newTheme)
       })
     })
-  }, [theme, setTheme])
+  }, [theme, setTheme, prefersReducedMotion])
 
   return { theme, toggleTheme }
 }

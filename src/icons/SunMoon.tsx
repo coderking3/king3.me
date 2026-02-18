@@ -10,7 +10,7 @@ import { useId } from 'react'
 
 import { SPRINGS } from '@/constants'
 import { usePrefersReducedMotion } from '@/hooks'
-import { range, roundTo } from '@/lib/utils'
+import { range, roundTo } from '@/lib/math'
 
 const SUN_RADIUS = 6
 const MOON_RADIUS = 9.5

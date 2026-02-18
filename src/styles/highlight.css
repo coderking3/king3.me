@@ -1,0 +1,33 @@
+@reference "tailwindcss";
+
+/* 
+  Shiki Highlight
+*/
+
+/* 代码块容器 */
+figure {
+  @apply border-border/50 dark:border-border/70 my-8 overflow-hidden rounded-xl border;
+
+  pre {
+    @apply m-0;
+    @apply font-code text-[16.5px] leading-[1.5] font-medium;
+  }
+}
+
+/* 亮色主题样式 */
+pre[data-theme*=' '],
+pre[data-theme*=' '] span {
+  color: var(--shiki-light) !important;
+  background-color: #f9fafb !important;
+
+  /* background-color: var(--shiki-light-bg) !important; */
+}
+
+/* 暗色主题样式 */
+html.dark pre[data-theme*=' '],
+html.dark pre[data-theme*=' '] span {
+  color: var(--shiki-dark) !important;
+  background-color: #0e1017 !important;
+
+  /* background-color: var(--shiki-dark-bg) !important; */
+}

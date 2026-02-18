@@ -1,10 +1,9 @@
+import { COPYRIGHT } from '@/constants'
+
 const footerQuotes = [
-  `Code is poetry.`,
-  `Less code, more life.`,
-  `Done is better than perfect.`,
-  `Make it work, make it right.`,
-  `console.log('keep going');`,
-  `console.log('Hello, World');`
+  'Code is poetry.',
+  'Less code, more life.',
+  'Done is better than perfect.'
 ]
 
 function Footer() {
@@ -20,7 +19,7 @@ function Footer() {
       <div className="mx-auto w-full max-w-6xl px-8">
         <div className="border-muted-foreground w-full border opacity-10"></div>
         <div className="text-muted-foreground/70 flex h-24 flex-col items-center justify-center gap-1 text-sm">
-          <p>&copy; 2025-present King3. All Rights Reserved.</p>
+          <p>{COPYRIGHT}</p>
           <span>{quote}</span>
         </div>
       </div>

@@ -28,9 +28,7 @@ function Logo() {
         ></LogoIcon>
       </span>
 
-      <span className="ml-1 font-(family-name:--font-audiowide) text-xl font-normal">
-        King3
-      </span>
+      <span className="font-logo ml-1 text-xl font-normal">King3</span>
     </Link>
   )
 }

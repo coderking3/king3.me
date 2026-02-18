@@ -8,6 +8,13 @@ import fg from 'fast-glob'
 import matter from 'gray-matter'
 import { formatDate } from 'kedash'
 
+import { AUTHOR_INFO } from '@/constants'
+
+const AUTHOR = {
+  ...AUTHOR_INFO,
+  link: process.env.SITE_URL || AUTHOR_INFO.link
+}
+
 const postsDirectory = path.join(process.cwd(), 'content/posts')
 
 export async function getPostsBySlug(slug: string) {
@@ -32,6 +39,7 @@ export async function getPostsMetadata(file: string) {
 
   const postsMetadata = {
     ...data,
+    author: data?.author ?? AUTHOR,
     date: formatDate(new Date(data.date).getTime()),
     slug
   } as unknown as PostsMetadata
