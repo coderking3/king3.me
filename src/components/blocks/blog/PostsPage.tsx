@@ -11,7 +11,7 @@ import rehypeSlug from 'rehype-slug'
 import { extractHeadings } from '@/lib/toc'
 import { cn } from '@/lib/utils'
 
-import { PostsTableOfContents } from '..'
+import { PostsActions, PostsTableOfContents } from '..'
 
 const author = 'King3'
 
@@ -35,15 +35,18 @@ async function PostsPage({ posts }: PostsPageProps) {
 
   return (
     <div className="mt-24">
-      <div className="mx-auto max-w-6xl px-8">
-        <article className="w-full md:flex md:justify-between xl:relative">
-          <aside className="hidden w-40 shrink-0 lg:block">
-            <div className="sticky top-26">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="relative flex justify-center gap-8">
+          {/* 左侧 - 目录导航 */}
+          <aside className="hidden w-48 shrink-0 xl:block">
+            <div className="sticky top-28">
               <PostsTableOfContents headings={headings} />
             </div>
           </aside>
-          <main className="">
-            {/* 文章头部 - 全宽 */}
+
+          {/* 中间 - 文章主体 */}
+          <article className="w-full min-w-0 max-w-3xl">
+            {/* 文章头部 */}
             <header className="mb-12">
               {/* 封面图 */}
               {metadata.image && (
@@ -59,13 +62,13 @@ async function PostsPage({ posts }: PostsPageProps) {
               )}
 
               {/* 标题 */}
-              <h1 className="text-primary mb-4 text-4xl font-bold lg:text-5xl">
+              <h1 className="text-primary mb-4 text-balance text-4xl font-bold lg:text-5xl">
                 {metadata.title}
               </h1>
 
               {/* 描述 */}
               {metadata.description && (
-                <p className="text-muted-foreground mb-6 text-lg">
+                <p className="text-muted-foreground mb-6 text-pretty text-lg">
                   {metadata.description}
                 </p>
               )}
@@ -136,8 +139,15 @@ async function PostsPage({ posts }: PostsPageProps) {
                 }}
               />
             </div>
-          </main>
-        </article>
+          </article>
+
+          {/* 右侧 - 快捷操作 */}
+          <aside className="hidden w-16 shrink-0 xl:block">
+            <div className="sticky top-28">
+              <PostsActions />
+            </div>
+          </aside>
+        </div>
       </div>
     </div>
   )
