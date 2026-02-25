@@ -35,118 +35,122 @@ async function PostsPage({ posts }: PostsPageProps) {
 
   return (
     <div className="mt-24">
-      <div className="relative mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        {/* 左侧 - 快捷操作（绝对定位，不影响文章居中） */}
-        <aside className="absolute top-0 right-full mr-6 hidden xl:block">
-          <div className="sticky top-28">
-            <PostsActions />
-          </div>
-        </aside>
+      <div className="mx-auto max-w-[90rem] px-4 sm:px-6 lg:px-8">
+        <div className="flex items-start gap-8">
+          {/* 左侧 - 快捷操作（粘性定位） */}
+          <aside className="hidden w-14 shrink-0 xl:block">
+            <div className="sticky top-28">
+              <PostsActions />
+            </div>
+          </aside>
 
-        {/* 右侧 - 目录导航（绝对定位，不影响文章居中） */}
-        <aside className="absolute top-0 left-full ml-6 hidden w-52 xl:block">
-          <div className="sticky top-28">
-            <PostsTableOfContents headings={headings} />
-          </div>
-        </aside>
+          {/* 中间 - 文章主体（flex-1 自动填充，内容限宽居左） */}
+          <main className="min-w-0 flex-1">
+            <article className="max-w-3xl">
+              {/* 文章头部 */}
+              <header className="mb-12">
+                {/* 封面图 */}
+                {metadata.image && (
+                  <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
+                    <Image
+                      src={metadata.image}
+                      alt={metadata.title}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 768px"
+                      className="object-cover"
+                      priority
+                    />
+                  </div>
+                )}
 
-        {/* 文章主体（始终居中） */}
-        <article className="w-full">
-          {/* 文章头部 */}
-          <header className="mb-12">
-            {/* 封面图 */}
-            {metadata.image && (
-              <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
-                <Image
-                  src={metadata.image}
-                  alt={metadata.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 768px"
-                  className="object-cover"
-                  priority
+                {/* 标题 */}
+                <h1 className="text-primary mb-4 text-balance text-4xl font-bold lg:text-5xl">
+                  {metadata.title}
+                </h1>
+
+                {/* 描述 */}
+                {metadata.description && (
+                  <p className="text-muted-foreground mb-6 text-pretty text-lg">
+                    {metadata.description}
+                  </p>
+                )}
+
+                {/* Meta 信息 */}
+                <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
+                  <time dateTime={date.toISOString()}>
+                    {date.toLocaleDateString('zh-CN', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
+                  </time>
+                  <span>·</span>
+                  <span>{author}</span>
+
+                  {/* 标签 */}
+                  {metadata.tags && metadata.tags.length > 0 && (
+                    <>
+                      <span>·</span>
+                      <div className="flex flex-wrap gap-2">
+                        {metadata.tags.map((tag) => (
+                          <span
+                            key={tag}
+                            className="bg-secondary text-foreground rounded-md px-2.5 py-0.5 text-xs font-medium"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </header>
+
+              {/* 内容区域 */}
+              <div
+                className={cn(
+                  'prose prose-lg dark:prose-invert',
+                  'prose-headings:text-primary prose-headings:scroll-mt-24',
+                  'prose-p:text-foreground prose-p:tracking-tight prose-p:text-base',
+                  'prose-a:text-brand prose-a:opacity-80 prose-a:no-underline hover:prose-a:underline hover:prose-a:opacity-100',
+                  'prose-ul:text-foreground prose-ol:text-foreground prose-li:text-foreground prose-li:text-base',
+                  'prose-strong:text-foreground prose-strong:font-bold',
+                  'prose-code:text-foreground',
+                  'prose-img:opacity-90 prose-img:rounded-lg',
+                  'max-w-none'
+                )}
+              >
+                <MDXRemote
+                  source={content}
+                  options={{
+                    mdxOptions: {
+                      rehypePlugins: [
+                        rehypeSlug,
+                        [
+                          rehypeAutolinkHeadings,
+                          {
+                            behavior: 'wrap',
+                            properties: {
+                              className: ['anchor']
+                            }
+                          }
+                        ],
+                        [rehypePrettyCode, rehypePrettyCodeOptions]
+                      ]
+                    }
+                  }}
                 />
               </div>
-            )}
+            </article>
+          </main>
 
-            {/* 标题 */}
-            <h1 className="text-primary mb-4 text-balance text-4xl font-bold lg:text-5xl">
-              {metadata.title}
-            </h1>
-
-            {/* 描述 */}
-            {metadata.description && (
-              <p className="text-muted-foreground mb-6 text-pretty text-lg">
-                {metadata.description}
-              </p>
-            )}
-
-            {/* Meta 信息 */}
-            <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
-              <time dateTime={date.toISOString()}>
-                {date.toLocaleDateString('zh-CN', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </time>
-              <span>·</span>
-              <span>{author}</span>
-
-              {/* 标签 */}
-              {metadata.tags && metadata.tags.length > 0 && (
-                <>
-                  <span>·</span>
-                  <div className="flex flex-wrap gap-2">
-                    {metadata.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="bg-secondary text-foreground rounded-md px-2.5 py-0.5 text-xs font-medium"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </>
-              )}
+          {/* 右侧 - 目录导航（粘性定位） */}
+          <aside className="hidden w-56 shrink-0 xl:block">
+            <div className="sticky top-28">
+              <PostsTableOfContents headings={headings} />
             </div>
-          </header>
-
-          {/* 内容区域 */}
-          <div
-            className={cn(
-              'prose prose-lg dark:prose-invert',
-              'prose-headings:text-primary prose-headings:scroll-mt-24',
-              'prose-p:text-foreground prose-p:tracking-tight prose-p:text-base',
-              'prose-a:text-brand prose-a:opacity-80 prose-a:no-underline hover:prose-a:underline hover:prose-a:opacity-100',
-              'prose-ul:text-foreground prose-ol:text-foreground prose-li:text-foreground prose-li:text-base',
-              'prose-strong:text-foreground prose-strong:font-bold',
-              'prose-code:text-foreground',
-              'prose-img:opacity-90 prose-img:rounded-lg',
-              'max-w-none'
-            )}
-          >
-            <MDXRemote
-              source={content}
-              options={{
-                mdxOptions: {
-                  rehypePlugins: [
-                    rehypeSlug,
-                    [
-                      rehypeAutolinkHeadings,
-                      {
-                        behavior: 'wrap',
-                        properties: {
-                          className: ['anchor']
-                        }
-                      }
-                    ],
-                    [rehypePrettyCode, rehypePrettyCodeOptions]
-                  ]
-                }
-              }}
-            />
-          </div>
-        </article>
+          </aside>
+        </div>
       </div>
     </div>
   )
