@@ -27,7 +27,7 @@ export default function Page() {
         </div>
 
         {/* 右侧边栏 */}
-        <aside className="sticky top-21 h-fit w-full space-y-8 lg:w-90">
+        <aside className="sticky h-fit w-full space-y-8 lg:top-8 lg:w-90">
           {/* 我的歌单 */}
           <FeaturedMusic />
         </aside>

@@ -12,6 +12,7 @@ import { createInteractiveIcon } from './_internal/utils'
 interface BiliBiliIconProps extends SvgIcon {
   isHovered?: boolean
 }
+
 export function BiliBiliIcon({
   size = 20,
   color = 'currentColor',

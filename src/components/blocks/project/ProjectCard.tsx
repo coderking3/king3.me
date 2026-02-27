@@ -38,7 +38,7 @@ function ProjectCard(props: { project: Project }) {
         </p>
       </div>
 
-      <div className="border-border bg-primary/2.5 dark:bg-primary/5 absolute -inset-x-4 -inset-y-6 z-0 scale-95 border border-dashed opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl" />
+      <div className="border-border bg-secondary/80 absolute -inset-x-4 -inset-y-6 z-0 scale-95 border border-dashed opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-2xl" />
 
       <p className="group-hover:text-brand text-foreground/90 pointer-events-none z-20 mt-6 flex items-center text-sm font-medium transition group-hover:-translate-y-0.5">
         <span className="mr-2">{new URL(project.link).host}</span>

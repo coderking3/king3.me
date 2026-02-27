@@ -1,6 +1,6 @@
 'use client'
 
-import type { Songs } from '@/data'
+import type { Song } from '@/data'
 
 import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
@@ -8,10 +8,12 @@ import { useEffect, useRef, useState } from 'react'
 
 import { getRandomSongs, playlist } from '@/data'
 import { Equalizer, NetEaseMusicIcon } from '@/icons'
+import { cn } from '@/lib/utils'
 
 function FeaturedMusic() {
-  const [randomSongs] = useState<Songs[]>(() => getRandomSongs(playlist))
+  const [randomSongs] = useState<Song[]>(() => getRandomSongs(playlist))
   const [playingUrl, setPlayingUrl] = useState<string | null>(null)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // 组件卸载时停止播放
@@ -22,23 +24,23 @@ function FeaturedMusic() {
     }
   }, [])
 
-  const handlePlay = (song: Songs) => {
-    if (playingUrl === song.url) {
-      audioRef.current?.pause()
-      setPlayingUrl(null)
-      return
+  const handlePlay = (song: Song) => {
+    if (playingUrl === song.url && audioRef.current) {
+      if (isPlaying) {
+        audioRef.current?.pause()
+        setIsPlaying(false)
+        return
+      }
+
+      audioRef.current?.play()
+      setIsPlaying(true)
+    } else {
+      const audio = new Audio(song.url)
+      audioRef.current = audio
+      audio.play()
+      setIsPlaying(true)
+      setPlayingUrl(song.url)
     }
-
-    if (audioRef.current) {
-      audioRef.current.pause()
-    }
-
-    const audio = new Audio(song.url)
-    audioRef.current = audio
-    audio.play()
-    setPlayingUrl(song.url)
-
-    audio.addEventListener('ended', () => setPlayingUrl(null), { once: true })
   }
 
   return (
@@ -53,7 +55,7 @@ function FeaturedMusic() {
 
       <div className="space-y-4">
         {randomSongs.map((song) => {
-          const isPlaying = playingUrl === song.url
+          const isPlay = playingUrl === song.url && isPlaying
 
           return (
             <div
@@ -67,18 +69,19 @@ function FeaturedMusic() {
                   src={`${song.cover}?waadw=48y48&type=webp`}
                   alt={song.name}
                   fill
-                  className={`object-cover transition-all duration-300 ${
-                    isPlaying ? 'brightness-50' : 'group-hover:brightness-50'
-                  }`}
+                  className={cn(
+                    'object-cover transition-all duration-300',
+                    isPlay ? 'brightness-50' : 'group-hover:brightness-50'
+                  )}
                 />
+
                 <div
-                  className={`absolute inset-0 flex items-center justify-center text-white transition-opacity duration-200 ${
-                    isPlaying
-                      ? 'opacity-100'
-                      : 'opacity-0 group-hover:opacity-100'
-                  }`}
+                  className={cn(
+                    'absolute inset-0 flex items-center justify-center text-white transition-opacity duration-200',
+                    isPlay ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                  )}
                 >
-                  {isPlaying ? (
+                  {isPlay ? (
                     <Pause size={16} fill="white" strokeWidth={0} />
                   ) : (
                     <Play size={16} fill="white" strokeWidth={0} />
@@ -86,44 +89,20 @@ function FeaturedMusic() {
                 </div>
               </div>
 
-              {/* 
- <div className="z-10 min-w-0 flex-1">
- 
-              <p className="truncate text-sm font-medium">{song.name}</p>
-              <p className="text-muted-foreground truncate text-xs">
-                {Array.isArray(song.author)
-                  ? song.author.join(' / ')
-                  : `${song.author}`}
-              </p>
-            </div>
-*/}
-              {/* 歌曲信息 */}
-              <div className="z-10 min-w-0 flex-1">
-                <div className="flex justify-between">
-                  <div className="flex items-center justify-between gap-2">
-                    <p
-                      className={`truncate text-sm font-medium transition-colors ${
-                        isPlaying ? 'text-primary' : ''
-                      }`}
-                    >
-                      {song.name}
-                    </p>
-                  </div>
-
+              <div className="z-10 flex w-full items-center justify-between">
+                <div className="flex-1">
+                  <p className="truncate text-sm font-medium">{song.name}</p>
                   <p className="text-muted-foreground truncate text-xs">
                     {Array.isArray(song.author)
                       ? song.author.join(' / ')
-                      : song.author}
+                      : `${song.author}`}
                   </p>
                 </div>
-
-                {/* 时长  */}
-                <span className="text-muted-foreground shrink-0 text-xs tabular-nums">
+                <span className="text-muted-foreground mr-2 shrink-0 text-xs tabular-nums">
                   {song.duration}
                 </span>
               </div>
 
-              {/* hover 背景 */}
               <div className="bg-muted absolute -inset-x-1.5 -inset-y-1.5 z-0 scale-95 rounded-2xl opacity-0 transition group-hover:scale-100 group-hover:opacity-100" />
             </div>
           )

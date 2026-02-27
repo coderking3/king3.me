@@ -100,8 +100,9 @@ function Hero() {
         className="text-primary/90 max-w-3xl text-lg leading-relaxed"
       >
         I'm a frontend developer passionate about open source and crafting my
-        own projects. When not coding, I'm capturing moments 📷, traveling ✈️,
-        or lost in music 🎵.
+        own projects.
+        <br /> When not coding, I'm capturing moments 📷, traveling ✈️, or lost
+        in music 🎵.
       </Animated>
 
       {/* Socials */}

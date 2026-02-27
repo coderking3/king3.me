@@ -19,11 +19,9 @@ export default function Page() {
       <div className="mx-auto max-w-6xl px-8">
         <header className="max-w-2xl">
           <h1 className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl">
-            My Projects
+            {title}
           </h1>
-          <p className="text-foreground/80 mt-6 text-lg">
-            This my all projects and lib.
-          </p>
+          <p className="text-foreground/80 mt-6 text-lg">{description}</p>
         </header>
 
         <div className="mt-16 sm:mt-20">

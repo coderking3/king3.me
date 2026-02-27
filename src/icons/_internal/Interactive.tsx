@@ -1,11 +1,6 @@
 'use client'
 
-import type {
-  BoopDuration,
-  InteractionTrigger,
-  InteractiveState,
-  SvgIcon
-} from './types'
+import type { InteractionTrigger, InteractiveState, SvgIcon } from './types'
 
 import Link from 'next/link'
 import React from 'react'
@@ -18,7 +13,7 @@ interface BaseProps {
   alt?: string
   size?: number
   trigger?: InteractionTrigger | InteractionTrigger[]
-  duration?: number | BoopDuration
+  duration?: number
   children: (state: InteractiveState) => React.ReactNode
   ref?: React.RefObject<HTMLAnchorElement | HTMLButtonElement | null>
 }
@@ -69,8 +64,7 @@ function Interactive({
         'size-8 min-w-8',
         'rounded-full outline-offset-2',
         'transition-colors duration-200',
-        'text-inherit',
-        'hover:text-accent-foreground',
+        'hover:text-primary hover:dark:text-accent-foreground text-inherit',
         'before:absolute before:-inset-1 before:content-[""]',
         className
       )}

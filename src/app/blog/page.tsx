@@ -16,10 +16,7 @@ export default function Page() {
           <h1 className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl">
             Welcome to my blog
           </h1>
-          <p className="text-muted-foreground mt-6 text-lg">
-            {/* <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400"> */}
-            {description}
-          </p>
+          <p className="text-muted-foreground mt-6 text-lg">{description}</p>
         </header>
 
         <div className="mt-20 grid grid-cols-2 gap-8">

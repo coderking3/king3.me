@@ -1,6 +1,6 @@
 'use client'
 
-import type { HTMLMotionProps } from 'framer-motion'
+import type { Easing, HTMLMotionProps } from 'framer-motion'
 import type { ReactNode } from 'react'
 
 import type { MotionOptions } from '@/types'
@@ -8,6 +8,8 @@ import type { MotionOptions } from '@/types'
 import { motion } from 'framer-motion'
 
 type MotionElement = keyof typeof motion
+
+const EASE_FUNCTION: Easing = [0.22, 1, 0.36, 1]
 
 // 预设动画效果
 export const animationPresets = {
@@ -17,7 +19,7 @@ export const animationPresets = {
     transition: {
       duration: 0.5,
       delay,
-      ease: [0.22, 1, 0.36, 1]
+      ease: EASE_FUNCTION
     }
   }),
   fadeInUp: (delay = 0): MotionOptions => ({
@@ -26,7 +28,7 @@ export const animationPresets = {
     transition: {
       duration: 0.6,
       delay,
-      ease: [0.22, 1, 0.36, 1]
+      ease: EASE_FUNCTION
     }
   }),
   fadeInDown: (delay = 0): MotionOptions => ({
@@ -35,7 +37,7 @@ export const animationPresets = {
     transition: {
       duration: 0.6,
       delay,
-      ease: [0.22, 1, 0.36, 1]
+      ease: EASE_FUNCTION
     }
   }),
   scaleIn: (delay = 0): MotionOptions => ({
@@ -44,7 +46,7 @@ export const animationPresets = {
     transition: {
       duration: 0.5,
       delay,
-      ease: [0.22, 1, 0.36, 1]
+      ease: EASE_FUNCTION
     }
   }),
   slideInLeft: (delay = 0): MotionOptions => ({
@@ -53,7 +55,7 @@ export const animationPresets = {
     transition: {
       duration: 0.5,
       delay,
-      ease: [0.22, 1, 0.36, 1]
+      ease: EASE_FUNCTION
     }
   }),
   slideInRight: (delay = 0): MotionOptions => ({
@@ -62,7 +64,7 @@ export const animationPresets = {
     transition: {
       duration: 0.5,
       delay,
-      ease: [0.22, 1, 0.36, 1]
+      ease: EASE_FUNCTION
     }
   })
 }

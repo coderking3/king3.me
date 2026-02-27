@@ -1,12 +1,7 @@
 'use client'
 
-import type {
-  BoopDuration,
-  InteractionTrigger,
-  InteractiveState
-} from './types'
+import type { InteractionTrigger, InteractiveState } from './types'
 
-import { isObject } from 'kedash'
 import { useMemo, useState } from 'react'
 
 import { useBoop } from '@/hooks'
@@ -24,7 +19,7 @@ interface UseInteractiveOptions {
   /** 触发 boop 的交互类型 */
   trigger?: InteractionTrigger | InteractionTrigger[]
   /** Boop 持续时间（毫秒）- 可以是统一值或分别设置 */
-  duration?: number | BoopDuration
+  duration?: number
   /** 自定义事件处理器 */
   onHandlers?: Partial<InteractionHandlers>
 }
@@ -40,14 +35,9 @@ export function useInteractive({
   onHandlers = {}
 }: UseInteractiveOptions = {}): UseInteractiveReturn {
   const [isHovering, setIsHovering] = useState(false)
-  const [isPressed, setIsPressed] = useState(false)
+  const [isClicked, setIsClicked] = useState(false)
 
-  // 解析 duration 配置
-  const hoverDuration = isObject(duration) ? duration.hover : duration
-  const clickDuration = isObject(duration) ? duration.click : duration
-
-  const isHovered = useBoop(isHovering, hoverDuration)
-  const isClicked = useBoop(isPressed, clickDuration)
+  const isHovered = useBoop(isHovering, duration)
 
   // 标准化 trigger 为数组
   const triggers = useMemo(
@@ -70,19 +60,19 @@ export function useInteractive({
       },
       onMouseDown: (e: any) => {
         onHandlers.onMouseDown?.(e)
-        if (shouldHandleClick) setIsPressed(true)
+        if (shouldHandleClick) setIsClicked(true)
       },
       onMouseUp: (e: any) => {
         onHandlers.onMouseUp?.(e)
-        if (shouldHandleClick) setIsPressed(false)
+        if (shouldHandleClick) setIsClicked(false)
       },
       onTouchStart: (e: any) => {
         onHandlers.onTouchStart?.(e)
-        if (shouldHandleClick) setIsPressed(true)
+        if (shouldHandleClick) setIsClicked(true)
       },
       onTouchEnd: (e: any) => {
         onHandlers.onTouchEnd?.(e)
-        if (shouldHandleClick) setIsPressed(false)
+        if (shouldHandleClick) setIsClicked(false)
       }
     }),
     [onHandlers, shouldHandleHover, shouldHandleClick]

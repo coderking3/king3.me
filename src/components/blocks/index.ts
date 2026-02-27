@@ -6,6 +6,7 @@ export { default as Typewriter } from './home/Typewriter'
 
 // Part: blog
 export { default as Posts } from './blog/Posts'
+export { default as PostsActions } from './blog/PostsActions'
 export { default as PostsCard } from './blog/PostsCard'
 export { default as PostsPage } from './blog/PostsPage'
 export { default as PostsTableOfContents } from './blog/PostsTableOfContents'
@@ -13,3 +14,10 @@ export { default as PostsTableOfContents } from './blog/PostsTableOfContents'
 // Part: project
 export { default as ProjectCard } from './project/ProjectCard'
 export { default as Projects } from './project/Projects'
+
+// Part: message
+export { default as MessageBoard } from './message/MessageBoard'
+
+// Part: auth
+export { default as AuthForm } from './auth/AuthForm'
+export { default as AuthModal } from './auth/AuthModal'
