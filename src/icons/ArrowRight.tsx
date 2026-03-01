@@ -1,0 +1,23 @@
+import type { SvgIcon } from './_internal/types'
+
+interface MaterialArrowRightProps extends Omit<SvgIcon, 'strokeWidth'> {}
+
+export function MaterialArrowRightIcon({
+  size = 20,
+  color = 'currentColor'
+}: MaterialArrowRightProps) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      className="block overflow-visible"
+      width={`${size / 16}rem`}
+      height={`${size / 16}rem`}
+    >
+      <path
+        fill={color}
+        d="M16.15 13H5q-.425 0-.712-.288T4 12t.288-.712T5 11h11.15L13.3 8.15q-.3-.3-.288-.7t.288-.7q.3-.3.713-.312t.712.287L19.3 11.3q.15.15.213.325t.062.375t-.062.375t-.213.325l-4.575 4.575q-.3.3-.712.288t-.713-.313q-.275-.3-.288-.7t.288-.7z"
+      />
+    </svg>
+  )
+}

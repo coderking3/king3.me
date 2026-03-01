@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from 'next-themes'
 import { Roboto_Mono } from 'next/font/google' // 引入 字体
 import localFont from 'next/font/local'
@@ -44,30 +45,32 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn(robotoMono.variable, audioWide.variable)}
-    >
-      <body className={cn('min-h-screen scroll-smooth antialiased', '')}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <Background art="random" />
+    <ClerkProvider>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={cn(robotoMono.variable, audioWide.variable)}
+      >
+        <body className={cn('min-h-screen scroll-smooth antialiased', '')}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Background art="random" />
 
-          {/* container */}
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+            {/* container */}
+            <div className="relative flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
 
-          <Toaster position="top-right" />
-        </ThemeProvider>
-      </body>
-    </html>
+            <Toaster position="top-right" />
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 'use client'
 
 import type { VariantProps } from 'class-variance-authority'
@@ -5,7 +6,8 @@ import type { VariantProps } from 'class-variance-authority'
 import { cva } from 'class-variance-authority'
 import { useMemo } from 'react'
 
-import { Label, Separator } from '@/components/ui'
+import { Label } from '@/components/ui/label'
+import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
 function FieldSet({ className, ...props }: React.ComponentProps<'fieldset'>) {
@@ -57,11 +59,11 @@ const fieldVariants = cva(
   {
     variants: {
       orientation: {
-        vertical: 'flex-col [&>*]:w-full [&>.sr-only]:w-auto',
+        vertical: 'flex-col *:w-full [&>.sr-only]:w-auto',
         horizontal:
-          'flex-row items-center [&>[data-slot=field-label]]:flex-auto has-[>[data-slot=field-content]]:items-start has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px',
+          'flex-row items-center *:data-[slot=field-label]:flex-auto has-[>[data-slot=field-content]]:items-start has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px',
         responsive:
-          'flex-col [&>*]:w-full [&>.sr-only]:w-auto @md/field-group:flex-row @md/field-group:items-center @md/field-group:[&>*]:w-auto @md/field-group:[&>[data-slot=field-label]]:flex-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px'
+          'flex-col *:w-full [&>.sr-only]:w-auto @md/field-group:flex-row @md/field-group:items-center @md/field-group:*:w-auto @md/field-group:*:data-[slot=field-label]:flex-auto @md/field-group:has-[>[data-slot=field-content]]:items-start @md/field-group:has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-px'
       }
     },
     defaultVariants: {
@@ -107,7 +109,7 @@ function FieldLabel({
     <Label
       data-slot="field-label"
       className={cn(
-        'has-data-checked:bg-primary/5 has-data-checked:border-primary dark:has-data-checked:bg-primary/10 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5',
+        'has-data-checked:bg-primary/5 has-data-checked:border-primary/30 dark:has-data-checked:border-primary/20 dark:has-data-checked:bg-primary/10 group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-[>[data-slot=field]]:rounded-lg has-[>[data-slot=field]]:border *:data-[slot=field]:p-2.5',
         'has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col',
         className
       )}
@@ -134,7 +136,7 @@ function FieldDescription({ className, ...props }: React.ComponentProps<'p'>) {
     <p
       data-slot="field-description"
       className={cn(
-        'text-muted-foreground text-left text-sm leading-normal font-normal group-has-data-[orientation=horizontal]/field:text-balance [[data-variant=legend]+&]:-mt-1.5',
+        'text-muted-foreground text-left text-sm leading-normal font-normal group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5',
         'last:mt-0 nth-last-2:-mt-1',
         '[&>a:hover]:text-primary [&>a]:underline [&>a]:underline-offset-4',
         className
@@ -203,7 +205,6 @@ function FieldError({
       <ul className="ml-4 flex list-disc flex-col gap-1">
         {uniqueErrors.map(
           (error, index) =>
-            // eslint-disable-next-line react/no-array-index-key
             error?.message && <li key={index}>{error.message}</li>
         )}
       </ul>

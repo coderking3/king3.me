@@ -19,5 +19,5 @@ export { default as Projects } from './project/Projects'
 export { default as MessageBoard } from './message/MessageBoard'
 
 // Part: auth
-export { default as AuthForm } from './auth/AuthForm'
+export { default as AuthForm } from './auth/AuthFormold'
 export { default as AuthModal } from './auth/AuthModal'

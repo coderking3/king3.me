@@ -46,3 +46,6 @@ prisma/generated
 
 # file-kit crypto
 !*.crypto.json
+
+# clerk configuration (can include secrets)
+/.clerk/
