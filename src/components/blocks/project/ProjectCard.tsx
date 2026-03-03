@@ -9,6 +9,8 @@ import Link from 'next/link'
 import { useInteractive } from '@/icons'
 import { ExternalLinkIcon } from '@/icons/ExternalLink'
 
+const ICON_SIZE = 120
+
 function ProjectCard(props: { project: Project }) {
   const { project } = props
   const { isHovered, handlers } = useInteractive()
@@ -21,9 +23,9 @@ function ProjectCard(props: { project: Project }) {
       <div className="z-20">
         <Image
           className="size-12"
-          width={48}
-          height={48}
-          src={project.icon}
+          width={ICON_SIZE}
+          height={ICON_SIZE}
+          src={`${project.icon}@${ICON_SIZE}w_${ICON_SIZE}h_1e_1c.webp`}
           alt={project.name}
         ></Image>
 

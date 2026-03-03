@@ -17,10 +17,10 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.2.0",
-    "@clerk/nextjs": "^6.39.0",
     "@linaria/core": "^6.3.0",
     "@linaria/react": "^6.3.0",
     "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "^7.4.2",
     "@react-spring/web": "^10.0.3",
     "@wyw-in-js/babel-preset": "^0.8.1",
     "better-auth": "^1.4.20",

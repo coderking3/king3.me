@@ -15,12 +15,6 @@ export const auth = betterAuth({
     provider: 'postgresql'
   }),
 
-  emailAndPassword: {
-    enabled: true,
-    minPasswordLength: 6,
-    maxPasswordLength: 20
-  },
-
   // OAuth
   socialProviders: {
     google: {
