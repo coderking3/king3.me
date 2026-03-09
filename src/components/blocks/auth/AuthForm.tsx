@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 import { Spinner } from '@/components/ui'
 import { GithubCircleIcon, GoogleIcon, MaterialArrowRightIcon } from '@/icons'
@@ -81,16 +82,45 @@ function AuthForm({ onSuccess }: AuthFormProps) {
     if (anyLoading) return
     setLoadingProvider(provider)
     try {
-      await authClient.signIn.social({ provider })
-      // await new Promise((resolve) => {
-      //   setTimeout(() => {
-      //     resolve('a')
-      //   }, 3000)
-      // })
+      console.log(`🚀 ~ provider:`, provider)
+      const result = await authClient.signIn.social({
+        provider,
+        callbackURL: '/message'
+      })
+
+      //     const handleSocialSignIn = async () => {
+      //   setLoading(true);
+      // try {
+      //   await authClient.signIn.social({
+      //     provider: "github",
+      //     callbackURL: "/admin",
+      //   });
+      // } catch {
+      //   toast.error("登录失败");
+      //   setLoading(false);
+      // }
+      // };
+
+      console.log('OAuth result:', result)
+
+      if (result?.error) {
+        toast.error(
+          result.error.statusText || 'Login failed, please try again.'
+        )
+        return
+      }
+
+      // OAuth 流程会触发页面跳转，成功回调后返回原页面
+      // 如果返回了 URL 但没有自动跳转，手动处理
+      // if (result.data?.url) {
+      //   window.location.href = result.data.url
+      //   return
+      // }
 
       onSuccess?.()
     } catch (err) {
-      console.error(err)
+      console.error('OAuth error:', err)
+      toast.error('An error occurred during login.')
     } finally {
       setLoadingProvider(null)
     }
@@ -101,25 +131,12 @@ function AuthForm({ onSuccess }: AuthFormProps) {
       {/* Logo */}
       <div className="mb-6 flex items-center gap-2">
         <div className="bg-foreground relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg">
-          {/* <span className="text-background text-xs font-bold">K</span> */}
-
           <Image
             src="http://i0.hdslb.com/bfs/openplatform/7360364dd1b217628c0b00606eac1dc2b403a5ef.png"
             alt="avatar"
             fill
           />
         </div>
-        {/* 
-        <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
-                            <Image
-                              src={metadata.image}
-                              alt={metadata.title}
-                              fill
-                              className="object-cover"
-                              priority
-                            />
-                          </div>
-        */}
         <span className="text-foreground text-sm font-semibold tracking-tight">
           king3.me
         </span>

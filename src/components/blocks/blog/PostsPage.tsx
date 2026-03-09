@@ -13,6 +13,7 @@ import { extractHeadings } from '@/lib/posts'
 import { cn } from '@/lib/utils'
 
 import { PostsActions, PostsTableOfContents } from '..'
+import { ARTICLE_TITLE } from './PostsTableOfContents'
 
 const author = 'King3'
 
@@ -35,7 +36,7 @@ async function PostsPage({ posts }: PostsPageProps) {
   const date = new Date(metadata.date)
 
   return (
-    <div className="mt-20">
+    <div className="mt-12">
       <div className="mx-auto max-w-6xl px-6">
         <div className="relative flex justify-between">
           {/* 左侧 - 快捷操作 */}
@@ -66,7 +67,10 @@ async function PostsPage({ posts }: PostsPageProps) {
                 )}
 
                 {/* 标题 */}
-                <h1 className="text-primary mb-4 text-4xl font-bold text-balance lg:text-5xl">
+                <h1
+                  id={ARTICLE_TITLE}
+                  className="text-primary mb-4 text-4xl font-bold text-balance lg:text-5xl"
+                >
                   {metadata.title}
                 </h1>
 

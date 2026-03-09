@@ -18,55 +18,9 @@ export default defineConfig(
     }
   },
   {
-    files: ['./king-images.ts'],
+    files: ['./CLAUDE.md'],
     rules: {
-      'perfectionist/sort-objects': [
-        'warn',
-        {
-          type: 'alphabetical',
-          order: 'asc',
-          groups: [
-            'id',
-            'name',
-            'url',
-            'type',
-            'width',
-            'height',
-            'date',
-            'unknown'
-          ],
-          customGroups: [
-            {
-              groupName: 'id',
-              elementNamePattern: '^id$'
-            },
-            {
-              groupName: 'name',
-              elementNamePattern: '^name$'
-            },
-            {
-              groupName: 'url',
-              elementNamePattern: '^url$'
-            },
-            {
-              groupName: 'type',
-              elementNamePattern: '^type$'
-            },
-            {
-              groupName: 'width',
-              elementNamePattern: '^width$'
-            },
-            {
-              groupName: 'height',
-              elementNamePattern: '^height$'
-            },
-            {
-              groupName: 'date',
-              elementNamePattern: '^date$'
-            }
-          ]
-        }
-      ]
+      'yaml/no-empty-document': 'warn'
     }
   }
 )

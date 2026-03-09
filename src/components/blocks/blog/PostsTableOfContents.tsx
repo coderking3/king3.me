@@ -21,6 +21,8 @@ const LEVEL_CLASSES: Record<number, string> = {
   6: 'mt-1 pl-14'
 }
 
+export const ARTICLE_TITLE = 'article-title'
+
 function useActiveHeading(headings: TocItem[]) {
   const [activeId, setActiveId] = useState<string>('')
   const offsetsRef = useRef<{ id: string; top: number }[]>([])
@@ -76,9 +78,14 @@ function PostsTableOfContents({ headings }: PostsDirectoryProps) {
 
   return (
     <nav aria-label={TOC_TITLE} className="h-fit">
-      <p className="text-foreground mb-1 text-sm font-semibold tracking-wide uppercase">
-        {TOC_TITLE}
-      </p>
+      <a
+        href={`#${ARTICLE_TITLE}`}
+        onClick={(e) => handleClick(e, ARTICLE_TITLE)}
+      >
+        <p className="text-foreground mb-1 text-sm font-semibold tracking-wide uppercase">
+          {TOC_TITLE}
+        </p>
+      </a>
 
       {headings.map((heading) => {
         const isActive = activeId === heading.id
