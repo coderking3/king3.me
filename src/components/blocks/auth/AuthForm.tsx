@@ -82,40 +82,12 @@ function AuthForm({ onSuccess }: AuthFormProps) {
     if (anyLoading) return
     setLoadingProvider(provider)
     try {
-      console.log(`🚀 ~ provider:`, provider)
-      const result = await authClient.signIn.social({
-        provider,
-        callbackURL: '/message'
+      // Better-Auth 的 signIn.social 会触发 OAuth 流程
+      // 成功后重定向到 callbackURL，失败返回错误
+      await authClient.signIn.social({
+        callbackURL: '/message',
+        provider
       })
-
-      //     const handleSocialSignIn = async () => {
-      //   setLoading(true);
-      // try {
-      //   await authClient.signIn.social({
-      //     provider: "github",
-      //     callbackURL: "/admin",
-      //   });
-      // } catch {
-      //   toast.error("登录失败");
-      //   setLoading(false);
-      // }
-      // };
-
-      console.log('OAuth result:', result)
-
-      if (result?.error) {
-        toast.error(
-          result.error.statusText || 'Login failed, please try again.'
-        )
-        return
-      }
-
-      // OAuth 流程会触发页面跳转，成功回调后返回原页面
-      // 如果返回了 URL 但没有自动跳转，手动处理
-      // if (result.data?.url) {
-      //   window.location.href = result.data.url
-      //   return
-      // }
 
       onSuccess?.()
     } catch (err) {
