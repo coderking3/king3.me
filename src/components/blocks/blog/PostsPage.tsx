@@ -129,6 +129,7 @@ async function PostsPage({ posts }: PostsPageProps) {
                 <MDXRemote
                   source={content}
                   options={{
+                    parseFrontmatter: false,
                     mdxOptions: {
                       rehypePlugins: [
                         rehypeSlug,
