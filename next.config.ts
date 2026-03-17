@@ -38,6 +38,13 @@ const nextConfig: NextConfig = {
         hostname: 'p4.music.126.net',
         port: '',
         pathname: `/**/*`
+      },
+      // Githubusercontent
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
+        port: '',
+        pathname: `/**/*`
       }
     ]
   },

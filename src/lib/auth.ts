@@ -1,6 +1,6 @@
 /* eslint-disable perfectionist/sort-imports */
 import 'dotenv/config'
-import 'server-only'
+// import 'server-only'
 
 import process from 'node:process'
 

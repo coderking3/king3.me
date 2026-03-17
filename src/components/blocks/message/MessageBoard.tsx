@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 
 import { Button, Textarea } from '@/components/ui'
@@ -20,7 +21,7 @@ const MessageBoard = () => {
         // 已登录：显示输入框 + 操作栏
         <div className="space-y-2">
           <div className="flex items-center gap-2">
-            {/* {session.user.image && (
+            {session.user.image && (
               <Image
                 src={session.user.image}
                 alt="avatar"
@@ -31,7 +32,7 @@ const MessageBoard = () => {
             )}
             <span className="text-xs text-gray-500 dark:text-gray-400">
               {session.user.name}
-            </span> */}
+            </span>
             <button
               type="button"
               onClick={() => signOut()}
