@@ -1,13 +1,17 @@
 'use client'
 
-import type { Project } from '@/data/projects'
-
-// import { ExternalLinkIcon } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { useInteractive } from '@/icons'
 import { ExternalLinkIcon } from '@/icons/ExternalLink'
+
+interface Project {
+  name: string
+  description: string
+  link: string
+  icon: string
+}
 
 const ICON_SIZE = 120
 

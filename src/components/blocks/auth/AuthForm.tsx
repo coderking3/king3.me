@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils'
 type Provider = 'github' | 'google'
 
 interface AuthFormProps {
+  callbackURL?: string
   onSuccess?: () => void
 }
 
@@ -74,7 +75,7 @@ function OAuthButton({
   )
 }
 
-function AuthForm({ onSuccess }: AuthFormProps) {
+function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null)
   const anyLoading = loadingProvider !== null
 
@@ -82,10 +83,8 @@ function AuthForm({ onSuccess }: AuthFormProps) {
     if (anyLoading) return
     setLoadingProvider(provider)
     try {
-      // Better-Auth 的 signIn.social 会触发 OAuth 流程
-      // 成功后重定向到 callbackURL，失败返回错误
       await authClient.signIn.social({
-        callbackURL: '/message',
+        callbackURL,
         provider
       })
 

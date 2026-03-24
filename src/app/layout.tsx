@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 
-import { Background, Footer, Header } from '@/components/layouts'
+import { Background } from '@/components/layouts'
 import { Toaster } from '@/components/ui'
 import { audioWide, robotoMono } from '@/lib/font'
 import { cn } from '@/lib/utils'
@@ -42,12 +42,7 @@ export default function RootLayout({
         >
           <Background art="random" />
 
-          {/* container */}
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          {children}
 
           <Toaster position="top-right" />
         </ThemeProvider>

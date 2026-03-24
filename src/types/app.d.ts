@@ -1,37 +1,14 @@
-import type { MotionNodeAnimationOptions } from 'framer-motion'
+import type { motion, MotionNodeAnimationOptions } from 'framer-motion'
 
-interface AuthorInfo {
-  name: string
-  email?: string
-  link?: string
-}
+export type MotionOptions = MotionNodeAnimationOptions
+export type MotionElement = keyof typeof motion
 
-/* Components Types */
-
-type MotionOptions = MotionNodeAnimationOptions
-
-interface TocItem {
+export interface TocItem {
   id: string
   text: string
   level: number
 }
 
-/* MDX Types */
-
-interface PostsMetadata {
-  title: string
-  description: string
-  image: string
-  date: string
-  tags?: string[]
-  author?: AuthorInfo
-  published?: boolean
-  slug: string
-}
-
-interface Posts {
-  metadata: PostsMetadata
-  content: string
-}
-
-export type { MotionOptions, Posts, PostsMetadata, TocItem }
+export type ActionResult<T = void> =
+  | { success: true; data: T }
+  | { success: false; error: string }

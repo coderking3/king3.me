@@ -9,152 +9,92 @@ This is **king3.me**, a personal blog built with Next.js 16, React 19, and TypeS
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router) + React 19
-- **Styling**: Tailwind CSS 4 + Shadcn UI (Base UI)
+- **Styling**: Tailwind CSS 4 + Shadcn UI (`base-nova` style, primitives from `@base-ui/react`)
 - **Animations**: Framer Motion + @react-spring/web
 - **Authentication**: Better-Auth with OAuth (Google/GitHub)
-- **Database**: Neon PostgreSQL + Prisma 7
-- **CSS-in-JS**: Linaria (@wyw-in-js)
+- **Database**: Neon PostgreSQL + Prisma 7 (with `@prisma/adapter-pg`)
+- **CSS-in-JS**: Linaria via `next-with-linaria`
 - **Package Manager**: pnpm
 
 ## Common Commands
 
 ```bash
-# Development - runs on port 3060
-pnpm dev
+pnpm dev               # Development server on port 3060
+pnpm build             # Production build (runs prisma generate first)
+pnpm start             # Production server on port 3080
 
-# Production build
-pnpm build
-
-# Start production server - runs on port 3080
-pnpm start
-
-# Linting
 pnpm lint              # Run ESLint
 pnpm lint:fix          # Fix ESLint issues
 pnpm stylelint         # Run Stylelint on CSS files
 pnpm stylelint:fix     # Fix CSS issues
 pnpm format            # Run Prettier on all files
 
-# Database
 pnpm db:generate       # Generate Prisma client
 pnpm db:push           # Push schema changes to database
 ```
 
-## Project Structure
-
-```
-src/
-├── app/                 # Next.js App Router routes
-│   ├── api/auth/[...all]/    # Better-Auth API routes
-│   ├── blog/                 # Blog listing and posts
-│   ├── feed.xml/             # RSS feed generation (ISR)
-│   ├── message/              # Message board page
-│   ├── project/              # Projects showcase
-│   └── ...
-├── components/
-│   ├── blocks/         # Page-specific components (home, blog, project, message, auth)
-│   ├── layouts/        # Layout components (Header, Footer, Background)
-│   └── ui/             # Reusable UI components (Base UI based)
-├── lib/                # Utility functions
-│   ├── auth.ts         # Better-Auth configuration
-│   ├── posts.ts        # MDX post processing utilities
-│   ├── prisma.ts       # Prisma client singleton
-│   └── rss.ts          # RSS feed generation
-├── hooks/              # Custom React hooks
-├── types/              # TypeScript type definitions
-└── styles/             # Global CSS and Tailwind config
-
-content/posts/          # MDX blog post files
-prisma/
-├── schema.prisma       # Database schema
-└── generated/          # Generated Prisma client
-```
-
 ## Key Architecture Decisions
+
+### Import Aliases
+
+- `@/*` maps to `src/*`
+- `~/*` maps to project root (used for `~/prisma/generated/client`)
+
+### Component Organization
+
+- `src/components/blocks/{feature}/` — page-specific components (home, blog, project, message, auth)
+- `src/components/layouts/` — Header, Footer, Background, Navbar (barrel exported via `index.ts`)
+- `src/components/ui/` — reusable UI components based on Base UI (barrel exported via `index.ts`)
 
 ### MDX Blog System
 
-Blog posts are stored as `.mdx` files in `content/posts/`. Each post has frontmatter with the following fields:
+Blog posts live in `content/posts/` as `.mdx` files. Required frontmatter:
 
 ```yaml
----
 title: string
 description: string
 image: string
 date: YYYY-MM-DD HH:mm:ss
 tags: string[]
 published: boolean
----
 ```
 
-Posts are processed using `gray-matter` for frontmatter parsing and `next-mdx-remote` for rendering. The `src/lib/posts.ts` module provides utilities:
+Key utilities in `src/lib/posts.ts`: `getAllPosts()`, `getPostsBySlug(slug)`, `extractHeadings(content)`. Posts are parsed with `gray-matter` and rendered with `next-mdx-remote`. Heading IDs use `github-slugger` (matching `rehype-slug`).
 
-- `getAllPosts()` - Returns all published posts sorted by date
-- `getPostsBySlug(slug)` - Returns a single post with content
-- `extractHeadings(content)` - Extracts TOC from markdown headings
+### Authentication (Better-Auth)
 
-### Authentication
+Two auth modules exist:
 
-Authentication uses **Better-Auth** with the Prisma adapter. The auth configuration is in `src/lib/auth.ts` and supports:
+- **Server**: `src/lib/auth.ts` — `betterAuth()` instance with Prisma adapter, used in API routes and server components
+- **Client**: `src/lib/auth-client.ts` — `createAuthClient()` exports `signIn`, `signUp`, `signOut`, `useSession` for client components
 
-- OAuth providers: Google, GitHub
-- Session management via cookies
-- Database-backed sessions and accounts
+API routes: `src/app/api/auth/[...all]/route.ts` using `toNextJsHandler()`.
 
-API routes are handled by `src/app/api/auth/[...all]/route.ts` using `toNextJsHandler()`.
+### Database
 
-### Database Schema
+- Prisma client generated to `prisma/generated/` and imported via `~/prisma/generated/client`
+- Uses `PrismaPg` adapter (not the default Prisma connector) — see `src/lib/prisma.ts`
+- Singleton pattern with `globalThis` caching in development
+- Models: `User`, `Session`, `Account`, `Verification` (Better-Auth), `Message` (message board)
 
-The Prisma schema includes models for:
+### Styling
 
-- `User` / `Session` / `Account` / `Verification` - Better-Auth tables
-- `Message` - Message board entries
+- Tailwind CSS 4 with `@import 'tailwindcss'` syntax
+- Theme switching via `next-themes` (light/dark, class-based)
+- Custom fonts: Wotfard, PingFang SC, FiraCode (configured in `src/lib/font.ts`)
 
-The Prisma client is generated to `prisma/generated/` and imported via `src/lib/prisma.ts` as a singleton.
+### Configuration
 
-### Styling System
+- `reactStrictMode: false`, `reactCompiler: true` in Next.js config
+- Next.js config wrapped with `withLinaria()` — see `next.config.ts`
+- ESLint uses `@king-3/eslint-config` with `defineConfig()` — see `eslint.config.js`
+- RSS feed at `/feed.xml` with ISR; `/feed`, `/rss`, `/rss.xml` rewrite to it
 
-- **Tailwind CSS 4** uses the new `@import 'tailwindcss'` syntax
-- **Base UI** components (not Radix) - imported from `@base-ui/react`
-- **Linaria** for CSS-in-JS via `next-with-linaria`
-- Custom fonts: Wotfard, PingFang SC, FiraCode
-- Theme switching via `next-themes` (light/dark modes)
+### Key Files
 
-### RSS Feed
-
-The RSS feed is generated at `/feed.xml` with ISR revalidation every hour. Aliases `/feed`, `/rss`, and `/rss.xml` redirect to it.
-
-## Configuration Notes
-
-### Next.js (`next.config.ts`)
-
-- `reactStrictMode: false` - Strict mode is disabled
-- `reactCompiler: true` - React Compiler is enabled
-- Custom remote image patterns for BiliBili and Netease Cloud Music
-
-### TypeScript Paths
-
-- `@/*` maps to `src/*`
-- `~/*` maps to root directory
-
-### ESLint
-
-Uses `@king-3/eslint-config` with custom overrides in `eslint.config.js`.
+- `src/constants.ts` — navigation items, spring configs, author info, copyright
+- `src/lib/utils.ts` — `cn()` utility (clsx + tailwind-merge)
 
 ### Environment Variables
 
-Required variables (see `.env.example`):
-
-- `SITE_URL` - Public site URL
-- `DATABASE_URL` / `DIRECT_URL` - Neon PostgreSQL URLs
-- `BETTER_AUTH_URL` / `BETTER_AUTH_SECRET` - Auth configuration
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` - Google OAuth
-- `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` - GitHub OAuth
-
-## Development Guidelines
-
-1. **Components**: Place page-specific components in `src/components/blocks/{feature}/`, shared UI in `src/components/ui/`
-2. **MDX Posts**: Add new posts to `content/posts/` with required frontmatter fields
-3. **Database Changes**: After modifying `prisma/schema.prisma`, run `pnpm db:generate` and `pnpm db:push`
-4. **CSS**: Follow Stylelint rules; use Tailwind's `@apply` for complex utilities
-5. **Types**: Add shared types to `src/types/`; use `.d.ts` for module declarations
+See `.env.example` for required variables: `SITE_URL`, `DATABASE_URL`, `DIRECT_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, Google/GitHub OAuth credentials.

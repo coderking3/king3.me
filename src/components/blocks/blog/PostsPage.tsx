@@ -8,7 +8,7 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { extractHeadings } from '@/lib/posts'
 import { cn } from '@/lib/utils'
 
@@ -42,7 +42,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           {/* 左侧 - 快捷操作 */}
           <aside className="mr-1 ml-[13px] hidden w-10 shrink-0 xl:block">
             <div className="sticky top-24">
-              <Animated preset="slideInLeft" delay={0.15}>
+              <Animated preset={{ mode: 'slideInLeft', delay: 0.15 }}>
                 <PostsActions />
               </Animated>
             </div>
@@ -50,7 +50,7 @@ async function PostsPage({ posts }: PostsPageProps) {
 
           {/* 中间 - 文章主体 */}
           <article className="w-full max-w-3xl min-w-0">
-            <Animated preset="fadeIn" delay={0.15}>
+            <Animated preset={{ mode: 'fadeIn', delay: 0.15 }}>
               {/* 文章头部 */}
               <header className="mb-12">
                 {/* 封面图 */}
@@ -154,7 +154,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           {/* 右侧 - 目录导航 */}
           <aside className="hidden w-48 shrink-0 pl-2 xl:block">
             <div className="sticky top-24">
-              <Animated preset="slideInRight" delay={0.15}>
+              <Animated preset={{ mode: 'slideInRight', delay: 0.15 }}>
                 <PostsTableOfContents headings={headings} />
               </Animated>
             </div>

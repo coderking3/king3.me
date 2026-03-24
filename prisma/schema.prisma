@@ -14,12 +14,16 @@ datasource db {
 }
 
 model Message {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   message   String
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   userId    String
   userName  String
   userImg   String
+  parentId  String?
+  parent    Message?  @relation("MessageReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Message[] @relation("MessageReplies")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
@@ -30,21 +34,27 @@ model User {
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
+  role          String?
+  banned        Boolean?
+  banReason     String?
+  banExpires    DateTime?
   sessions      Session[]
   accounts      Account[]
+  messages      Message[]
   @@map("user")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String   @unique
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id             String   @id
+  expiresAt      DateTime
+  token          String   @unique
+  createdAt      DateTime
+  updatedAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  userId         String
+  impersonatedBy String?
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   @@map("session")
 }
 
@@ -74,4 +84,27 @@ model Verification {
   createdAt  DateTime?
   updatedAt  DateTime?
   @@map("verification")
+}
+
+model Playlist {
+  id        String   @id @default(uuid())
+  name      String
+  author    String[]
+  cover     String
+  url       String
+  duration  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  link        String
+  icon        String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

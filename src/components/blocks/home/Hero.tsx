@@ -1,4 +1,4 @@
-import Animated from '@/components/Animated'
+import { Animated } from '@/components/common'
 import { BiliBili, Email, GithubCircle, X, Youtube } from '@/icons'
 
 import Typewriter from './Typewriter'
@@ -48,7 +48,7 @@ function Hero() {
       {/* Title */}
       <Animated
         as="h1"
-        preset="fadeIn"
+        preset="fadeInUp"
         className="text-primary mb-6 font-mono text-6xl font-medium tracking-tight"
       >
         <span>Hi, I&apos;m </span>
@@ -58,7 +58,7 @@ function Hero() {
       {/* Typewriter */}
       <Animated
         as="div"
-        preset="fadeIn"
+        preset="fadeInUp"
         delay={0.1}
         className="mb-7.5 flex h-16 min-h-16 items-center font-mono"
       >
@@ -68,7 +68,7 @@ function Hero() {
       {/* Tags */}
       <Animated
         as="p"
-        preset="fadeIn"
+        preset="fadeInUp"
         delay={0.2}
         className="text-brand/90 mb-5.5 w-full text-2xl font-medium tracking-wide"
       >
@@ -95,7 +95,7 @@ function Hero() {
       {/* Description */}
       <Animated
         as="p"
-        preset="fadeIn"
+        preset="fadeInUp"
         delay={0.35}
         className="text-primary/90 max-w-3xl text-lg leading-relaxed"
       >

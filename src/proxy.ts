@@ -2,28 +2,22 @@ import type { NextRequest } from 'next/server'
 
 import { NextResponse } from 'next/server'
 
-export async function proxy(_request: NextRequest) {
+import { getSession } from '@/lib/auth'
+
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  if (pathname.startsWith('/admin')) {
+    const session = await getSession()
+
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.redirect(new URL('/', request.url))
+    }
+  }
+
   return NextResponse.next()
 }
 
-// import type { NextRequest } from 'next/server'
-
-// import { headers } from 'next/headers'
-// import { NextResponse } from 'next/server'
-
-// import { auth } from '@/lib/auth'
-
-// export async function proxy(request: NextRequest) {
-//   const session = await auth.api.getSession({
-//     headers: await headers()
-//   })
-
-//   if (!session) {
-//     return NextResponse.redirect(new URL('/sign-in', request.url))
-//   }
-//   return NextResponse.next()
-// }
-
-// export const config = {
-//   matcher: ['/admin/:path*']
-// }
+export const config = {
+  matcher: ['/admin/:path*']
+}

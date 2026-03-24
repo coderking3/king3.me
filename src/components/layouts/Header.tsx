@@ -4,11 +4,11 @@ import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
+import { ThemeMode } from '@/components/common'
 import { Feed, Github, Search } from '@/icons'
 import { clamp } from '@/lib/math'
 import { cn } from '@/lib/utils'
 
-import ThemeMode from '../ThemeMode'
 import Logo from './Logo'
 import Navbar from './Navbar'
 

@@ -18,6 +18,10 @@ export { default as Projects } from './project/Projects'
 // Part: message
 export { default as MessageBoard } from './message/MessageBoard'
 
+// Part: about
+export { ExploreCard, TechStack } from './about'
+export type { ExploreItem } from './about'
+
 // Part: auth
 export { default as AuthForm } from './auth/AuthForm'
 export { default as AuthModal } from './auth/AuthModal'

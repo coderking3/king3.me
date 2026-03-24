@@ -16,7 +16,11 @@ interface AuthModalProps {
   callbackURL?: string
 }
 
-export default function AuthModal({ open, onOpenChange }: AuthModalProps) {
+export default function AuthModal({
+  open,
+  onOpenChange,
+  callbackURL
+}: AuthModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -29,7 +33,10 @@ export default function AuthModal({ open, onOpenChange }: AuthModalProps) {
           <DialogDescription>使用第三方账户登录</DialogDescription>
         </DialogHeader>
 
-        <AuthForm onSuccess={() => onOpenChange(false)} />
+        <AuthForm
+          callbackURL={callbackURL}
+          onSuccess={() => onOpenChange(false)}
+        />
       </DialogContent>
     </Dialog>
   )

@@ -18,3 +18,12 @@ export const range = (start: number, end?: number, step: number = 1) => {
 
 export const roundTo = (value: number, places = 0) =>
   Math.round(value * 10 ** places) / 10 ** places
+
+export const randomList = <T = any>(list: T[], count = 5) => {
+  const arr = list.slice()
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr.slice(0, Math.min(count, arr.length))
+}

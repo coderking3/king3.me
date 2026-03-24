@@ -1,17 +1,21 @@
 'use client'
 
-import type { Song } from '@/data'
-
 import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
-import { getRandomSongs, playlist } from '@/data'
 import { Equalizer, NetEaseMusicIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
-function FeaturedMusic() {
-  const [randomSongs] = useState<Song[]>(() => getRandomSongs(playlist))
+interface Song {
+  name: string
+  author: string[]
+  cover: string
+  url: string
+  duration: string
+}
+
+function FeaturedMusic({ songs }: { songs: Song[] }) {
   const [playingUrl, setPlayingUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -54,7 +58,7 @@ function FeaturedMusic() {
       </h2>
 
       <div className="space-y-4">
-        {randomSongs.map((song) => {
+        {songs.map((song) => {
           const isPlay = playingUrl === song.url && isPlaying
 
           return (
