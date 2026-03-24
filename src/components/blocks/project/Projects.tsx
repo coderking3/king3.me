@@ -6,7 +6,6 @@ async function Projects() {
   const projects = await prisma.project.findMany({
     orderBy: { order: 'asc' }
   })
-  console.log(`🚀 ~ projects:`, projects)
 
   return (
     <ul
