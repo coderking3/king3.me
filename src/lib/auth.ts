@@ -36,10 +36,9 @@ export const auth = betterAuth({
   plugins: [admin(), dash(), nextCookies()]
 })
 
-// 导出类型，客户端侧类型推断用
 export type Auth = typeof auth
 
-// 获取 auth session
+// Retrieve auth session
 export async function getSession() {
   const session = await auth.api.getSession({
     headers: await headers()
@@ -48,12 +47,12 @@ export async function getSession() {
   return session
 }
 
-// 检查是否为管理员
+// Check if it is an administrator
 export async function checkAdmin() {
   const session = await getSession()
 
   if (!session || session.user.role !== 'admin') {
-    throw new Error('无权限进行此操作')
+    throw new Error('No permission to perform this operation')
   }
 
   return session

@@ -43,5 +43,8 @@
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
   },
+  "[markdown]": {
+    "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+  },
   "git.ignoreLimitWarning": true
 }

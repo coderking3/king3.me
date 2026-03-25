@@ -107,7 +107,7 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
                 </span>
               </div>
 
-              <div className="bg-muted absolute -inset-x-1.5 -inset-y-1.5 z-0 scale-95 rounded-2xl opacity-0 transition group-hover:scale-100 group-hover:opacity-100" />
+              <div className="bg-muted absolute -inset-x-1.5 -inset-y-1.5 z-0 scale-95 rounded-xl opacity-0 transition group-hover:scale-100 group-hover:opacity-100" />
             </div>
           )
         })}

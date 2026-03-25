@@ -18,7 +18,7 @@ import {
   SelectValue
 } from '@/components/ui'
 
-const PAGE_SIZE_OPTIONS = [10, 20, 30, 50] as const
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 50] as const
 
 interface TablePaginationProps<T> {
   table: Table<T>
@@ -49,10 +49,10 @@ export function TablePagination<T>({
         )}
       </div>
 
-      {/* 分页控制 */}
+      {/* Pagination control */}
       {showPagination && (
         <div className="flex items-center gap-6">
-          {/* 每页条数 */}
+          {/* Number of items per page */}
           <div className="flex items-center gap-2">
             <span className="text-sm font-medium">Rows per page</span>
             <Select
@@ -72,12 +72,12 @@ export function TablePagination<T>({
             </Select>
           </div>
 
-          {/* 页码信息 */}
+          {/* Page number information */}
           <span className="text-sm font-medium">
             Page {pageIndex + 1} of {pageCount}
           </span>
 
-          {/* 翻页按钮 */}
+          {/* Page-turn button */}
           <div className="flex items-center gap-1">
             <Button
               variant="outline"

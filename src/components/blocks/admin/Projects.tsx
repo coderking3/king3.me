@@ -14,7 +14,8 @@ import {
   deleteProjectAction,
   updateProjectAction
 } from '@/app/actions/projects'
-import { DataTable, Form, Modal } from '@/components/common'
+import { Form, Modal } from '@/components/common'
+import { TestDataTable } from '@/components/common/TestDataTable'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -73,6 +74,7 @@ function getColumns(
     {
       key: 'name',
       title: 'Name',
+      sortable: true,
       render: (value) => <span className="text-sm font-medium">{value}</span>
     },
     {
@@ -180,22 +182,34 @@ export default function Projects({ projects }: { projects: Project[] }) {
 
   return (
     <>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-lg font-semibold">Projects</h1>
-        <Button size="sm" onClick={() => setShowCreate(true)}>
-          <Plus size={16} />
-          Add Project
-        </Button>
-      </div>
-
       {projects.length === 0 ? (
         <div className="text-muted-foreground flex flex-col items-center justify-center py-20">
           <FolderKanban size={48} className="mb-4 opacity-30" />
           <p>No projects yet</p>
         </div>
       ) : (
-        <DataTable columns={columns} data={projects} />
-        // <Table columns={columns} data={projects} />
+        // <DataTable pagination={true} columns={columns} data={projects} />
+        <TestDataTable
+          columns={columns}
+          data={projects}
+          pagination
+          rowKey="id"
+          selectable
+          toolbar={{
+            filterFields: [{ key: 'name', label: 'Name' }],
+            actions: (
+              <Button size="sm" onClick={() => setShowCreate(true)}>
+                <Plus size={16} />
+                New
+              </Button>
+            ),
+            columnToggle: true
+          }}
+          // eslint-disable-next-line no-console
+          onFilter={(values) => console.log(values)}
+          // eslint-disable-next-line no-console
+          onSelectionChange={(rows) => console.log('selected:', rows)}
+        />
       )}
 
       {/* Create / Edit Modal */}

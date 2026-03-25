@@ -25,7 +25,7 @@ export default function AuthModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         position="top"
-        className="w-full max-w-[400px] rounded-2xl px-8 py-7"
+        className="w-full max-w-[400px] rounded-xl px-8 py-7"
       >
         {/* 无障碍必须有 title/description，视觉上由 AuthForm 内部渲染，这里隐藏 */}
         <DialogHeader className="sr-only">

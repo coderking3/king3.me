@@ -19,6 +19,7 @@ function Modal(props: ModalProps) {
     title,
     description,
     className = 'sm:max-w-md',
+    position = 'top',
     children,
     renderFooter,
     showFooter = true
@@ -46,7 +47,7 @@ function Modal(props: ModalProps) {
   })()
 
   const content = (
-    <DialogContent className={className}>
+    <DialogContent position={position} className={className}>
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         {description && <DialogDescription>{description}</DialogDescription>}

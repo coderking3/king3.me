@@ -10,8 +10,8 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith('/admin')) {
     const session = await getSession()
 
-    if (!session || session.user.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url))
+    if (!session || session?.user.role !== 'admin') {
+      return NextResponse.redirect(new URL('/auth', request.url))
     }
   }
 

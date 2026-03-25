@@ -1,15 +1,3 @@
-import '@tanstack/react-table'
-
-// ── TanStack meta 类型扩展 ───────────────────────────────────
-declare module '@tanstack/react-table' {
-  // eslint-disable-next-line unused-imports/no-unused-vars
-  interface ColumnMeta<TData, TValue> {
-    className?: string
-    headClassName?: string
-    cellClassName?: string
-  }
-}
-
 // ── ColumnConfig ─────────────────────────────────────────────
 export interface ColumnConfig<T> {
   key: string

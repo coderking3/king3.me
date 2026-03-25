@@ -6,6 +6,7 @@ interface ModalSharedProps {
   className?: string
   children: React.ReactNode
   showFooter?: boolean
+  position?: 'center' | 'top'
 }
 
 interface DefaultFooterProps {

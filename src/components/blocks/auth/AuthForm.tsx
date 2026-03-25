@@ -38,7 +38,7 @@ function OAuthButton({
       disabled={disabled}
       className={cn(
         'group border-border/80 bg-background! hover:bg-muted! dark:hover:bg-muted',
-        'relative flex h-14 w-full items-center justify-between overflow-hidden rounded-xl border pr-4 pl-4 transition-colors',
+        'relative flex h-14 w-full items-center justify-between overflow-hidden rounded-lg border pr-4 pl-4 transition-colors',
         disabled
           ? 'pointer-events-none cursor-not-allowed opacity-50'
           : 'cursor-pointer'
@@ -101,7 +101,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
     <div className="w-full">
       {/* Logo */}
       <div className="mb-6 flex items-center gap-2">
-        <div className="bg-foreground relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-lg">
+        <div className="bg-foreground relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-md">
           <Image
             src="http://i0.hdslb.com/bfs/openplatform/7360364dd1b217628c0b00606eac1dc2b403a5ef.png"
             alt="avatar"
@@ -153,7 +153,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
       </div>
 
       {/* 安全说明 */}
-      <div className="bg-muted/40 border-border/40 flex items-center justify-center gap-2 rounded-xl border px-4 py-2">
+      <div className="bg-muted/40 border-border/40 flex items-center justify-center gap-2 rounded-lg border px-4 py-2">
         <svg
           className="text-muted-foreground/70 size-3.5 shrink-0"
           viewBox="0 0 24 24"

@@ -11,7 +11,7 @@ import { Link } from '@/icons/Link'
 import { cn } from '@/lib/utils'
 
 const actionButtonClass = [
-  'group flex h-10 w-10 items-center justify-center rounded-xl',
+  'group flex h-10 w-10 items-center justify-center rounded-lg',
   'dark:bg-secondary/80 text-muted-foreground hover:bg-accent/30 hover:dark:bg-accent hover:text-foreground  border-border/50 hover:border-border/80 hover:dark:border-border border',
   'transition-all duration-200'
 ]

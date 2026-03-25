@@ -3,6 +3,7 @@
 import type {
   ColumnDef,
   ColumnFiltersState,
+  PaginationState,
   RowSelectionState,
   SortingState,
   VisibilityState
@@ -40,11 +41,11 @@ function buildColumnDefs<T extends object>(
     cols.push({
       id: 'select',
       header: ({ table }) => {
-        const checked =
-          table.getIsAllPageRowsSelected() || table.getIsSomePageRowsSelected()
+        const allSelected = table.getIsAllPageRowsSelected()
+        const someSelected = table.getIsSomePageRowsSelected()
         return (
           <Checkbox
-            checked={checked}
+            checked={allSelected || someSelected}
             onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
             aria-label="Select all"
           />
@@ -93,7 +94,7 @@ function buildColumnDefs<T extends object>(
             col.className
           ),
           headClassName: cn(col.headClassName, isActions && 'text-center'),
-          bodyClassName: col.cellClassName
+          cellClassName: col.cellClassName
         }
       }
     })
@@ -136,7 +137,10 @@ function buildGetRowId<T extends object>(
   return (row, index) => String((row as any)[rowKey] ?? index)
 }
 
-// ── getPaginationRowModel 稳定引用 ────────────────────────────
+// ── row model 稳定引用（工厂函数只调用一次，避免每次渲染重建导致状态重置） ──
+const stableCoreRowModel = getCoreRowModel()
+const stableSortedRowModel = getSortedRowModel()
+const stableFilteredRowModel = getFilteredRowModel()
 const stablePaginationRowModel = getPaginationRowModel()
 
 // ── useDataTable ──────────────────────────────────────────────
@@ -172,17 +176,23 @@ export function useDataTable<T extends object>({
 
   const pageSize = useMemo(() => resolvePageSize(pagination), [pagination])
 
+  const [paginationState, setPaginationState] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: pageSize ?? 5
+    // pageSize: pageSize ?? 10
+  })
+
   const columns = useMemo(
     () => buildColumnDefs(columnConfigs, selectable),
     // 同上，避免数组引用变化导致无效 memo 失效
 
     // prettier-ignore
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ JSON.stringify(columnConfigs.map((c) => ({
-        key: c.key,
-        sortable: c.sortable,
-        enableHiding: c.enableHiding
-    }))), selectable ]
+    [JSON.stringify(columnConfigs.map((c) => ({
+      key: c.key,
+      sortable: c.sortable,
+      enableHiding: c.enableHiding
+    }))), selectable]
   )
 
   const getRowId = useMemo(() => buildGetRowId(rowKey), [rowKey])
@@ -191,17 +201,23 @@ export function useDataTable<T extends object>({
     data,
     columns,
     getRowId,
-    state: { sorting, columnFilters, columnVisibility, rowSelection },
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+      ...(pagination && { pagination: paginationState })
+    },
     enableRowSelection: selectable,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    ...(pagination && { getPaginationRowModel: stablePaginationRowModel }),
-    ...(pageSize && { initialState: { pagination: { pageSize } } })
+    ...(pagination && { onPaginationChange: setPaginationState }),
+    getCoreRowModel: stableCoreRowModel,
+    getSortedRowModel: stableSortedRowModel,
+    getFilteredRowModel: stableFilteredRowModel,
+    ...(pagination && { getPaginationRowModel: stablePaginationRowModel })
   })
 
   // 选中行变化时通知外部，onSelectionChange 进依赖确保不产生陈旧闭包
@@ -215,9 +231,8 @@ export function useDataTable<T extends object>({
       .getFilteredSelectedRowModel()
       .rows.map((row) => row.original)
     stableOnSelectionChange(selectedRows)
-  }, [table, rowSelection, stableOnSelectionChange])
-  // table 对象每次 render 都是新引用，不放入 deps；
-  // rowSelection 状态变化即可驱动此 effect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rowSelection, stableOnSelectionChange])
 
   return { table, searchConfig, pageSize, columns }
 }

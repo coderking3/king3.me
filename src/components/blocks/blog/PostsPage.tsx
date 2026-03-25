@@ -36,7 +36,7 @@ async function PostsPage({ posts }: PostsPageProps) {
   const date = new Date(metadata.date)
 
   return (
-    <div className="mt-12">
+    <div className="mt-18">
       <div className="mx-auto max-w-6xl px-6">
         <div className="relative flex justify-between">
           {/* 左侧 - 快捷操作 */}
