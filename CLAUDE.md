@@ -98,3 +98,7 @@ API routes: `src/app/api/auth/[...all]/route.ts` using `toNextJsHandler()`.
 ### Environment Variables
 
 See `.env.example` for required variables: `SITE_URL`, `DATABASE_URL`, `DIRECT_URL`, `BETTER_AUTH_URL`, `BETTER_AUTH_SECRET`, Google/GitHub OAuth credentials.
+
+## Code Conventions
+
+- **Language**: All code comments, JSDoc, and section headers must be in **English**. Do not use Chinese in source code.

@@ -3,7 +3,7 @@
 import type { Table } from '@tanstack/react-table'
 
 import type { ColumnConfig } from '@/components/common'
-import type { Project } from '@/types'
+import type { Playlist } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
@@ -12,48 +12,67 @@ import { toast } from 'sonner'
 import { z } from 'zod/v4'
 
 import {
-  createProjectAction,
-  deleteProjectAction,
-  updateProjectAction
-} from '@/app/actions/projects'
+  createSongAction,
+  deleteSongAction,
+  updateSongAction
+} from '@/app/actions/playlist'
 import { Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
 
 // ──── Form Config ────
 
-const projectSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  description: z.string().max(500, 'Description is too long'),
-  link: z.union([z.url('Please enter a valid URL'), z.literal('')]),
-  icon: z.union([z.url('Please enter a valid URL'), z.literal('')])
+const songSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
+  author: z.string().min(1, 'Artist is required'),
+  cover: z.union([z.url('Please enter a valid URL'), z.literal('')]),
+  url: z.union([z.url('Please enter a valid URL'), z.literal('')]),
+  duration: z
+    .string()
+    .regex(/^(\d{1,2}:)?\d{2}:\d{2}$|^$/, 'Format: MM:SS or HH:MM:SS')
 })
 
-type ProjectFormValues = z.infer<typeof projectSchema>
+type SongFormValues = z.infer<typeof songSchema>
 
-const projectFields: Parameters<typeof Form<ProjectFormValues>>[0]['fields'] = [
-  { name: 'name', label: 'Name', type: 'input', placeholder: 'Project name' },
+const songFields: Parameters<typeof Form<SongFormValues>>[0]['fields'] = [
+  { name: 'name', label: 'Name', type: 'input', placeholder: 'Song name' },
   {
-    name: 'description',
-    label: 'Description',
-    type: 'textarea',
-    placeholder: 'Project description'
+    name: 'author',
+    label: 'Artist (comma separated)',
+    type: 'input',
+    placeholder: 'Artist 1, Artist 2'
   },
-  { name: 'link', label: 'Link', type: 'input', placeholder: 'https://...' },
-  { name: 'icon', label: 'Icon URL', type: 'input', placeholder: 'https://...' }
+  {
+    name: 'cover',
+    label: 'Cover URL',
+    type: 'input',
+    placeholder: 'https://...'
+  },
+  {
+    name: 'url',
+    label: 'Audio URL',
+    type: 'input',
+    placeholder: 'https://...'
+  },
+  {
+    name: 'duration',
+    label: 'Duration',
+    type: 'input',
+    placeholder: 'e.g. 03:52'
+  }
 ]
 
 // ──── Table Columns ────
 
-const columns: ColumnConfig<Project>[] = [
+const columns: ColumnConfig<Playlist>[] = [
   {
-    key: 'icon',
-    title: 'Icon',
+    key: 'cover',
+    title: 'Cover',
     render: (_, record) => (
       <Image
-        src={record.icon}
+        src={`${record.cover}?waadw=40y40&type=webp`}
         alt={record.name}
-        width={32}
-        height={32}
+        width={40}
+        height={40}
         className="rounded"
       />
     )
@@ -65,24 +84,19 @@ const columns: ColumnConfig<Project>[] = [
     render: (value) => <span className="text-sm font-medium">{value}</span>
   },
   {
-    key: 'description',
-    title: 'Description',
-    render: (value) => (
-      <p className="text-muted-foreground max-w-xs truncate text-sm">{value}</p>
+    key: 'author',
+    title: 'Artist',
+    render: (value: string[]) => (
+      <span className="text-muted-foreground text-sm">{value.join(' / ')}</span>
     )
   },
   {
-    key: 'link',
-    title: 'Link',
+    key: 'duration',
+    title: 'Duration',
     render: (value) => (
-      <a
-        href={value}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-primary max-w-[200px] truncate text-sm hover:underline"
-      >
+      <span className="text-muted-foreground text-sm tabular-nums">
         {value}
-      </a>
+      </span>
     )
   },
   {
@@ -97,19 +111,23 @@ const columns: ColumnConfig<Project>[] = [
 
 // ──── Component ────
 
-export default function Projects({ projects }: { projects: Project[] }) {
-  const tableRef = useRef<Table<Project>>(null)
-  const [editProject, setEditProject] = useState<Project | null>(null)
+export default function PlaylistComponent({
+  playlist
+}: {
+  playlist: Playlist[]
+}) {
+  const tableRef = useRef<Table<Playlist>>(null)
+  const [editSong, setEditSong] = useState<Playlist | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
-  const formOpen = showCreate || !!editProject
+  const formOpen = showCreate || !!editSong
 
   const handleDelete = async () => {
     if (!deleteId) return
-    const result = await deleteProjectAction(deleteId)
+    const result = await deleteSongAction(deleteId)
     if (result.success) {
-      toast.success('Project deleted')
+      toast.success('Song deleted')
     } else {
       toast.error(result.error)
     }
@@ -118,13 +136,20 @@ export default function Projects({ projects }: { projects: Project[] }) {
 
   const handleCloseForm = () => {
     setShowCreate(false)
-    setEditProject(null)
+    setEditSong(null)
   }
 
-  const handleSubmit = async (data: ProjectFormValues) => {
-    const result = editProject
-      ? await updateProjectAction(editProject.id, data)
-      : await createProjectAction(data)
+  const handleSubmit = async (data: SongFormValues) => {
+    const payload = {
+      ...data,
+      author: data.author
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+    }
+    const result = editSong
+      ? await updateSongAction(editSong.id, payload)
+      : await createSongAction(payload)
     if (result.success) {
       handleCloseForm()
     } else {
@@ -132,21 +157,22 @@ export default function Projects({ projects }: { projects: Project[] }) {
     }
   }
 
-  const formDefaultValues: ProjectFormValues = {
-    name: editProject?.name || '',
-    description: editProject?.description || '',
-    link: editProject?.link || '',
-    icon: editProject?.icon || ''
+  const formDefaultValues: SongFormValues = {
+    name: editSong?.name || '',
+    author: editSong?.author.join(', ') || '',
+    cover: editSong?.cover || '',
+    url: editSong?.url || '',
+    duration: editSong?.duration || ''
   }
 
   return (
     <>
       <DataTable
         columns={columns}
-        data={projects}
+        data={playlist}
         pagination
         rowKey="id"
-        loading={!projects.length}
+        loading={!playlist.length}
         selectable
         tableRef={tableRef}
         actions={{
@@ -155,7 +181,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
             <div className="flex items-center justify-center gap-1">
               <button
                 type="button"
-                onClick={() => setEditProject(record)}
+                onClick={() => setEditSong(record)}
                 className="text-muted-foreground hover:text-foreground rounded p-1 transition-colors"
                 title="Edit"
               >
@@ -192,7 +218,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
               </Button>
               <Button size="sm" onClick={() => setShowCreate(true)}>
                 <Plus size={16} />
-                New
+                Add Song
               </Button>
             </div>
           ),
@@ -204,12 +230,12 @@ export default function Projects({ projects }: { projects: Project[] }) {
       <Modal
         open={formOpen}
         onClose={handleCloseForm}
-        title={editProject ? 'Edit Project' : 'Add Project'}
+        title={editSong ? 'Edit Song' : 'Add Song'}
         showFooter={false}
       >
         <Form
-          schema={projectSchema}
-          fields={projectFields}
+          schema={songSchema}
+          fields={songFields}
           defaultValues={formDefaultValues}
           onSubmit={handleSubmit}
         />
@@ -219,8 +245,8 @@ export default function Projects({ projects }: { projects: Project[] }) {
       <Confirm
         open={!!deleteId}
         onClose={() => setDeleteId(null)}
-        title="Delete project"
-        description="This will permanently remove the project."
+        title="Delete song"
+        description="This will permanently remove the song from the playlist."
         variant="destructive"
         confirmText="Delete"
         onConfirm={handleDelete}

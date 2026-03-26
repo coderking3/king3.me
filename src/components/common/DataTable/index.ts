@@ -1,2 +1,7 @@
-export { DataTable } from './Table'
-export type { ColumnConfig, DataTableProps } from './types'
+export { DataTable } from './DataTable'
+export type {
+  ActionConfig,
+  ColumnConfig,
+  ColumnVisibilityItem,
+  DataTableProps
+} from './types'

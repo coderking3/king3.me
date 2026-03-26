@@ -1,6 +1,6 @@
 export * from './Animated'
+export * from './Confirm'
 export * from './DataTable'
 export * from './Form'
 export * from './Modal'
-// export * from './Tableaaa'
 export * from './ThemeMode'

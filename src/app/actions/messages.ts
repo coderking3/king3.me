@@ -47,6 +47,26 @@ export async function deleteMessageAction(id: string) {
   }
 }
 
+export async function createMessageAction(message: string, userId?: string) {
+  try {
+    const session = await checkAdmin()
+    const name = userId ? `User (${userId})` : session.user.name
+    const img = userId ? '' : (session.user.image ?? '')
+
+    await messageDb.create({
+      message,
+      userId: userId ?? session.user.id,
+      userName: name,
+      userImg: img
+    })
+    revalidatePath('/admin/messages')
+    revalidatePath('/message')
+    return actionSuccess(undefined)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
 export async function replyToMessageAction(parentId: string, message: string) {
   try {
     const session = await checkAdmin()

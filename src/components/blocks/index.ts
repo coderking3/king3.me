@@ -25,3 +25,8 @@ export type { ExploreItem } from './about'
 // Part: auth
 export { default as AuthForm } from './auth/AuthForm'
 export { default as AuthModal } from './auth/AuthModal'
+
+// Part: admin
+export { default as AdminMessages } from './admin/Messages'
+export { default as AdminPlaylist } from './admin/Playlist'
+export { default as AdminProjects } from './admin/Projects'

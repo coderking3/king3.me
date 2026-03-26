@@ -1,54 +1,122 @@
-// ── ColumnConfig ─────────────────────────────────────────────
+import type {
+  PaginationInitialTableState,
+  RowData,
+  Table
+} from '@tanstack/react-table'
+
+// ── TanStack meta type extension ────────────────────────────────
+declare module '@tanstack/react-table' {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  interface ColumnMeta<TData extends RowData, TValue> {
+    className?: string
+    headClassName?: string
+    cellClassName?: string
+  }
+}
+
+// ── Column config ───────────────────────────────────────────────
+
 export interface ColumnConfig<T> {
   key: string
   title: string
   className?: string
   headClassName?: string
   cellClassName?: string
-  /** 是否允许排序，默认 false */
+  /** Whether sorting is enabled, default false */
   sortable?: boolean
-  /**
-   * 是否允许在列显示面板中切换，默认 true
-   * actions 列之类的建议设为 false
-   */
+  /** Whether the column can be toggled in the visibility panel, default true. Set false for action columns. */
   enableHiding?: boolean
   render?: (value: any, record: T, index: number) => React.ReactNode
 }
 
-// ── searchable 配置 ───────────────────────────────────────────
-export interface SearchableConfig {
-  /** Input placeholder */
-  placeholder?: string
-  /** 过滤作用的字段 key，默认取第一个非 actions 列 */
-  filterKey?: string
-}
-
-// ── pagination 配置 ───────────────────────────────────────────
-export interface PaginationConfig {
-  pageSize?: number
-}
-
-// ── DataTableProps ────────────────────────────────────────────────
-export interface DataTableProps<T extends object> {
-  columns: ColumnConfig<T>[]
-  data: T[]
-  rowKey?: keyof T | ((record: T) => string)
-  wrapperClassName?: string
+export interface ActionConfig<T> {
+  /** Column title, default 'Actions' */
+  title?: string
+  /** Column width className, e.g. 'w-24' */
   className?: string
+  /** Render action buttons */
+  render: (record: T, index: number) => React.ReactNode
+}
 
-  // ── 可选增强功能 ─────────────────────────────────────────────
-  /** true 使用默认配置，传对象可自定义 placeholder / filterKey */
-  searchable?: boolean | SearchableConfig
-  /** true 默认 10 条/页，传对象可自定义 pageSize */
-  pagination?: boolean | PaginationConfig
-  /** 启用行多选（自动注入 checkbox 列） */
-  selectable?: boolean
-  /** 行选中状态变化时的回调，参数为当前所有选中行的原始数据 */
-  onSelectionChange?: (rows: T[]) => void
-  /** 是否显示列显示/隐藏切换面板 */
+// ── Filter fields ───────────────────────────────────────────────
+
+export interface InputFilterField {
+  type?: 'input'
+  key: string
+  label: string
+  placeholder?: string
+}
+
+export interface SelectFilterField {
+  type: 'select'
+  key: string
+  label: string
+  placeholder?: string
+  options: { label: string; value: string }[]
+}
+
+/** Supports input / select filter fields. Extendable with date-range etc. */
+export type FilterField = InputFilterField | SelectFilterField
+
+// ── Toolbar config ──────────────────────────────────────────────
+
+export interface ToolbarConfig {
+  /** Left-side filter field configs */
+  filterFields?: FilterField[]
+  /**
+   * Filter mode:
+   * - 'auto': filter on input (client-side), uses TanStack column filtering
+   * - 'manual': trigger onFilter callback on Query button click (server-side)
+   * Default 'auto'
+   */
+  filterMode?: 'auto' | 'manual'
+  /** Callback for Query / Reset in manual mode */
+  onFilter?: (values: Record<string, string>) => void
+  /** Right-side custom action area for "Add", "Export" buttons etc. */
+  actions?: React.ReactNode
+  /** Enable column visibility dropdown (View button). Column data is derived internally by DataTable. */
   columnToggle?: boolean
-  /** 空数据时展示的文案，默认 'No results.' */
+}
+
+/** Derived from the table instance by DataTable and passed to Toolbar. No manual maintenance needed. */
+export interface ColumnVisibilityItem {
+  id: string
+  /** Display name, derived from ColumnConfig.title */
+  label: string
+  isVisible: boolean
+}
+
+// ── DataTable props ─────────────────────────────────────────────
+
+export interface DataTableProps<T extends object> {
+  /** Column configurations */
+  columns: ColumnConfig<T>[]
+  /** Data source */
+  data: T[]
+  /** Wrapper container className */
+  wrapClassName?: string
+  /** Table container className */
+  className?: string
+  /** Custom row key for TanStack getRowId */
+  rowKey?: keyof T | ((record: T, index: number) => string)
+
+  /* ── Optional enhancements ── */
+
+  /** Pagination: true for default 10 rows/page, or pass an object to customize pageSize / pageIndex */
+  pagination?: boolean | PaginationInitialTableState
+  /** Enable multi-row selection (auto-injects checkbox column) */
+  selectable?: boolean
+  /** Expose the TanStack Table instance for external access (e.g. selected rows) */
+  tableRef?: React.RefObject<Table<T> | null>
+  /** Action column config, appended as the last column (non-sortable, non-hideable) */
+  actions?: ActionConfig<T>
+  /** Text shown when data is empty, default 'No results.' */
   emptyText?: string
-  /** 是否处于加载状态 */
+  /** Whether the table is in a loading state */
   loading?: boolean
+
+  /* ── Toolbar ── */
+
+  /** Toolbar config: filter fields, action buttons, column visibility toggle */
+  toolbar?: ToolbarConfig
 }

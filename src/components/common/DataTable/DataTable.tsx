@@ -7,17 +7,18 @@ import type {
   VisibilityState
 } from '@tanstack/react-table'
 
-import type { ColumnVisibilityItem } from './components/TableToolbar'
-import type { TestDataTableProps } from './types'
+import type { ColumnVisibilityItem, DataTableProps } from './types'
 
+import { css } from '@linaria/core'
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 
 import {
   Table,
@@ -32,28 +33,50 @@ import { cn } from '@/lib/utils'
 import { TablePagination, TableToolbar } from './components'
 import { buildColumnDefs, buildGetRowId, resolvePaginationState } from './utils'
 
+const tableFirstColPadding = css`
+  & th:first-child,
+  & td:first-child {
+    padding-left: 1rem;
+  }
+`
+
+const tableFirstColPaddingRight = css`
+  & th:first-child,
+  & td:first-child {
+    padding-right: 0.25rem;
+  }
+`
+
+const tableLastColPadding = css`
+  & th:last-child,
+  & td:last-child {
+    padding-right: 1rem;
+  }
+`
+
 /* ── Stable model factories (avoid re-creation on each render) ─── */
 const coreRowModel = getCoreRowModel()
+const filteredRowModel = getFilteredRowModel()
 const sortedRowModel = getSortedRowModel()
 const paginationRowModel = getPaginationRowModel()
 
-// ── TestDataTable ───────────────────────────────────────────────
-export function TestDataTable<T extends object>({
+// ── DataTable ───────────────────────────────────────────────────
+export function DataTable<T extends object>({
   columns: columnConfigs,
   data,
   rowKey,
   pagination,
+  actions,
   selectable = false,
-  onSelectionChange,
+  tableRef,
   emptyText = 'No results.',
   loading,
   wrapClassName,
   className,
-  // Toolbar
-  toolbar,
-  onFilter
-}: TestDataTableProps<T>) {
+  toolbar
+}: DataTableProps<T>) {
   const enablePagination = !!pagination
+  const enableClientFilter = !!toolbar && toolbar.filterMode !== 'manual'
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -64,8 +87,12 @@ export function TestDataTable<T extends object>({
 
   const getRowId = useMemo(() => buildGetRowId(rowKey), [rowKey])
 
+  // 保持 actions 引用稳定，避免调用方 inline object 导致 columns 每次重建
+  const actionsRef = useRef(actions)
+  actionsRef.current = actions
+
   const columns = useMemo(
-    () => buildColumnDefs(columnConfigs, selectable),
+    () => buildColumnDefs(columnConfigs, selectable, actionsRef.current),
     // prettier-ignore
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [JSON.stringify(columnConfigs.map((c) => ({
@@ -89,6 +116,7 @@ export function TestDataTable<T extends object>({
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: coreRowModel,
+    ...(enableClientFilter && { getFilteredRowModel: filteredRowModel }),
     getSortedRowModel: sortedRowModel,
     ...(enablePagination && {
       getPaginationRowModel: paginationRowModel,
@@ -96,20 +124,10 @@ export function TestDataTable<T extends object>({
     })
   })
 
-  // ── 选中行变化时通知外部 ──────────────────────────────────────
-  const stableOnSelectionChange = useCallback(
-    (rows: T[]) => onSelectionChange?.(rows),
-    [onSelectionChange]
-  )
-
-  useEffect(() => {
-    if (!selectable) return
-    const selectedRows = table
-      .getFilteredSelectedRowModel()
-      .rows.map((r) => r.original)
-    stableOnSelectionChange(selectedRows)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rowSelection, stableOnSelectionChange, selectable])
+  // ── 暴露 table 实例给外部 ───
+  if (tableRef) {
+    tableRef.current = table
+  }
 
   // ── 从 table 实例派生列显隐数据，传给 Toolbar ─────────────────
   // enableHiding: false 的列（如 select checkbox）会被自动排除
@@ -139,7 +157,9 @@ export function TestDataTable<T extends object>({
       {toolbar && (
         <TableToolbar
           filterFields={toolbar.filterFields}
-          onFilter={onFilter}
+          filterMode={toolbar.filterMode}
+          onFilter={toolbar.onFilter}
+          table={table}
           actions={toolbar.actions}
           columnToggle={toolbar.columnToggle}
           columnVisibilities={columnVisibilities}
@@ -150,7 +170,15 @@ export function TestDataTable<T extends object>({
       )}
 
       {/* Table */}
-      <div className={cn('overflow-hidden rounded-md border', className)}>
+      <div
+        className={cn(
+          'overflow-hidden rounded-md border',
+          tableFirstColPadding,
+          selectable && tableFirstColPaddingRight,
+          !actions && tableLastColPadding,
+          className
+        )}
+      >
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

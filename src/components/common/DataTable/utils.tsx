@@ -7,10 +7,9 @@ import type {
   Row
 } from '@tanstack/react-table'
 
-import type { ColumnConfig, TestDataTableProps } from './types'
+import type { ActionConfig, ColumnConfig, DataTableProps } from './types'
 
 import { Checkbox } from '@/components/ui'
-import { cn } from '@/lib/utils'
 
 import { TableSortableHeader } from './components/TableSortableHeader'
 
@@ -30,11 +29,11 @@ export function resolvePaginationState(
 /* ------------  Build getRowId from rowKey prop  ------------ */
 
 export function buildGetRowId<T extends object>(
-  rowKey?: TestDataTableProps<T>['rowKey']
+  rowKey?: DataTableProps<T>['rowKey']
 ): ((originalRow: T, index: number, parent?: Row<T>) => string) | undefined {
   if (!rowKey) return undefined
   if (typeof rowKey === 'function')
-    return (originalRow, index) => rowKey(originalRow) ?? String(index)
+    return (originalRow, index) => rowKey(originalRow, index) ?? String(index)
   return (originalRow, index) => String((originalRow as any)[rowKey] ?? index)
 }
 
@@ -42,7 +41,8 @@ export function buildGetRowId<T extends object>(
 
 export function buildColumnDefs<T extends object>(
   configs: ColumnConfig<T>[],
-  selectable?: boolean
+  selectable?: boolean,
+  actions?: ActionConfig<T>
 ): ColumnDef<T>[] {
   const cols: ColumnDef<T>[] = []
 
@@ -54,7 +54,8 @@ export function buildColumnDefs<T extends object>(
         const someSelected = table.getIsSomePageRowsSelected()
         return (
           <Checkbox
-            checked={allSelected || someSelected}
+            checked={allSelected}
+            indeterminate={someSelected && !allSelected}
             onCheckedChange={(v) => table.toggleAllPageRowsSelected(!!v)}
             aria-label="Select all"
           />
@@ -68,16 +69,15 @@ export function buildColumnDefs<T extends object>(
         />
       ),
       enableSorting: false,
-      enableHiding: false
+      enableHiding: false,
+      meta: {
+        className: 'w-10'
+      }
     })
   }
 
   cols.push(
-    ...configs.map<ColumnDef<T>>((col, index) => {
-      const isActions = col.key === 'actions'
-      const isFirst = index === 0
-      const isLast = index === configs.length - 1
-
+    ...configs.map<ColumnDef<T>>((col) => {
       return {
         id: col.key,
         accessorKey: col.key,
@@ -91,6 +91,7 @@ export function buildColumnDefs<T extends object>(
             )
           : col.title,
         enableSorting: col.sortable ?? false,
+        enableHiding: col.enableHiding ?? true,
         cell: col.render
           ? ({ row }) =>
               col.render!(
@@ -100,17 +101,27 @@ export function buildColumnDefs<T extends object>(
               )
           : ({ row }) => String((row.original as any)[col.key] ?? ''),
         meta: {
-          className: cn(
-            isFirst && 'pl-4',
-            !isActions && isLast && 'pr-4',
-            col.className
-          ),
-          headClassName: cn(col.headClassName, isActions && 'text-center'),
+          className: col.className,
+          headClassName: col.headClassName,
           cellClassName: col.cellClassName
         }
       }
     })
   )
+
+  if (actions) {
+    cols.push({
+      id: 'actions',
+      header: actions.title ?? 'Actions',
+      enableSorting: false,
+      enableHiding: false,
+      cell: ({ row }) => actions.render(row.original, row.index),
+      meta: {
+        className: actions.className,
+        headClassName: 'text-center'
+      }
+    })
+  }
 
   return cols
 }

@@ -1,5 +1,5 @@
 import { getProjectsAction } from '@/app/actions/projects'
-import Projects from '@/components/blocks/admin/Projects'
+import { AdminProjects } from '@/components/blocks'
 import { Animated } from '@/components/common'
 
 export default async function AdminProjectsPage() {
@@ -8,7 +8,7 @@ export default async function AdminProjectsPage() {
 
   return (
     <Animated preset="fadeIn">
-      <Projects projects={result.data} />
+      <AdminProjects projects={result.data} />
     </Animated>
   )
 }

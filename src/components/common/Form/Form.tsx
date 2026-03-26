@@ -91,19 +91,23 @@ export function Form<TFV extends FieldValues>(props: FormProps<TFV>) {
   }
 
   const defaultActions = (
-    <Field orientation="horizontal" className={cn('mt-6', actionClassName)}>
-      <Button type="submit" disabled={isDisabled}>
-        {submitting ? 'Submitting...' : submitText}
-      </Button>
+    <Field
+      orientation="horizontal"
+      className={cn('mt-6 justify-end', actionClassName)}
+    >
       {showReset && (
         <Button
           type="button"
+          variant="outline"
           disabled={isDisabled}
           onClick={() => form.reset()}
         >
           {resetText}
         </Button>
       )}
+      <Button type="submit" disabled={isDisabled}>
+        {submitting ? 'Submitting...' : submitText}
+      </Button>
     </Field>
   )
 

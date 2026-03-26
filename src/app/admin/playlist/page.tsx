@@ -1,5 +1,5 @@
 import { getPlaylistAction } from '@/app/actions/playlist'
-// import PlaylistTable from '@/components/blocks/admin/PlaylistTable'
+import { AdminPlaylist } from '@/components/blocks'
 import { Animated } from '@/components/common'
 
 export default async function AdminPlaylistPage() {
@@ -8,8 +8,8 @@ export default async function AdminPlaylistPage() {
 
   return (
     <Animated preset="fadeIn">
-      <h1 className="mb-4 text-lg font-semibold">Playlist</h1>
-      {/* <PlaylistTable playlist={result.data} /> */}
+      {/* <h1 className="mb-4 text-lg font-semibold">Playlist</h1> */}
+      <AdminPlaylist playlist={result.data} />
     </Animated>
   )
 }

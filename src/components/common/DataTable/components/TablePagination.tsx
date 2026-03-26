@@ -1,127 +1,150 @@
 'use client'
 
-import type { Table } from '@tanstack/react-table'
-
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight
-} from 'lucide-react'
-
 import {
   Button,
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue
 } from '@/components/ui'
+import { cn } from '@/lib/utils'
 
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 30, 50] as const
 
-interface TablePaginationProps<T> {
-  table: Table<T>
-  selectable?: boolean
-  showPagination?: boolean
+export interface PaginationProps {
+  pageIndex: number
+  pageSize: number
+  pageCount: number
+  canPreviousPage: boolean
+  canNextPage: boolean
+  onPageIndexChange: (index: number) => void
+  onPageSizeChange: (size: number) => void
+  onPreviousPage: () => void
+  onNextPage: () => void
 }
 
-export function TablePagination<T>({
-  table,
-  selectable,
-  showPagination
-}: TablePaginationProps<T>) {
-  if (!selectable && !showPagination) return null
+/**
+ * Generate visible page numbers (0-based) with max 3 pages shown.
+ * Returns items that are either a page index (number) or an ellipsis marker.
+ */
+function getVisiblePages(
+  pageIndex: number,
+  pageCount: number
+): (number | 'ellipsis-start' | 'ellipsis-end')[] {
+  if (pageCount <= 3) {
+    return Array.from({ length: pageCount }, (_, i) => i)
+  }
 
-  const selectedCount = table.getFilteredSelectedRowModel().rows.length
-  const totalCount = table.getFilteredRowModel().rows.length
-  const { pageIndex } = table.getState().pagination
-  const pageCount = table.getPageCount()
+  // Window of 3 consecutive pages centered on current
+  let start = pageIndex - 1
+  let end = pageIndex + 1
+
+  // Clamp to valid range
+  if (start < 0) {
+    start = 0
+    end = 2
+  }
+  if (end >= pageCount) {
+    end = pageCount - 1
+    start = pageCount - 3
+  }
+
+  const pages: (number | 'ellipsis-start' | 'ellipsis-end')[] = []
+
+  if (start > 0) pages.push('ellipsis-start')
+  for (let i = start; i <= end; i++) pages.push(i)
+  if (end < pageCount - 1) pages.push('ellipsis-end')
+
+  return pages
+}
+
+export function TablePagination({
+  pageIndex,
+  pageSize,
+  pageCount,
+  canPreviousPage,
+  canNextPage,
+  onPageIndexChange,
+  onPageSizeChange,
+  onPreviousPage,
+  onNextPage
+}: PaginationProps) {
+  const visiblePages = getVisiblePages(pageIndex, pageCount)
 
   return (
-    <div className="flex items-center justify-between py-4">
-      {/* 选中行计数 */}
-      <div className="text-muted-foreground flex-1 text-sm">
-        {selectable && (
-          <span>
-            {selectedCount} of {totalCount} row(s) selected.
-          </span>
-        )}
-      </div>
+    <div className="flex items-center justify-end gap-4 py-4">
+      {/* Page navigation */}
+      <Pagination className="mx-0 w-auto">
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious
+              onClick={canPreviousPage ? onPreviousPage : undefined}
+              aria-disabled={!canPreviousPage}
+              className={cn(
+                !canPreviousPage && 'pointer-events-none opacity-50'
+              )}
+            />
+          </PaginationItem>
 
-      {/* Pagination control */}
-      {showPagination && (
-        <div className="flex items-center gap-6">
-          {/* Number of items per page */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium">Rows per page</span>
-            <Select
-              value={String(table.getState().pagination.pageSize)}
-              onValueChange={(v) => table.setPageSize(Number(v))}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {PAGE_SIZE_OPTIONS.map((size) => (
-                  <SelectItem key={size} value={String(size)}>
-                    {size}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {visiblePages.map((item) => {
+            if (typeof item === 'string') {
+              return (
+                <PaginationItem key={item}>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )
+            }
 
-          {/* Page number information */}
-          <span className="text-sm font-medium">
-            Page {pageIndex + 1} of {pageCount}
-          </span>
+            const isActive = item === pageIndex
+            return (
+              <PaginationItem key={item}>
+                <Button
+                  variant={isActive ? 'outline' : 'ghost'}
+                  size="icon"
+                  className={cn('size-8', isActive && 'pointer-events-none')}
+                  onClick={() => onPageIndexChange(item)}
+                  aria-label={`Go to page ${item + 1}`}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {item + 1}
+                </Button>
+              </PaginationItem>
+            )
+          })}
 
-          {/* Page-turn button */}
-          <div className="flex items-center gap-1">
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-              aria-label="Go to first page"
-            >
-              <ChevronsLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              aria-label="Go to previous page"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              aria-label="Go to next page"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              className="h-8 w-8"
-              onClick={() => table.setPageIndex(pageCount - 1)}
-              disabled={!table.getCanNextPage()}
-              aria-label="Go to last page"
-            >
-              <ChevronsRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      )}
+          <PaginationItem>
+            <PaginationNext
+              onClick={canNextPage ? onNextPage : undefined}
+              aria-disabled={!canNextPage}
+              className={cn(!canNextPage && 'pointer-events-none opacity-50')}
+            />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+
+      {/* Rows per page */}
+      <Select
+        value={String(pageSize)}
+        onValueChange={(v) => onPageSizeChange(Number(v))}
+      >
+        <SelectTrigger className="h-8 w-auto gap-1 shadow-none dark:border-transparent">
+          <SelectValue>{pageSize} / page</SelectValue>
+        </SelectTrigger>
+        <SelectContent side="top">
+          {PAGE_SIZE_OPTIONS.map((size) => (
+            <SelectItem key={size} value={String(size)}>
+              {size} / page
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   )
 }
