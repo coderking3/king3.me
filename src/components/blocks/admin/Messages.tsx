@@ -100,7 +100,7 @@ const columns: ColumnConfig<MessageWithReplies>[] = [
     title: 'Replies',
     className: 'text-center',
     render: (_, record) =>
-      record.replies.length > 0 ? (
+      record.replies?.length ? (
         <Badge variant="secondary">{record.replies.length}</Badge>
       ) : null
   }
@@ -177,6 +177,13 @@ export default function Messages({
         pagination
         rowKey="id"
         loading={!messages.length}
+        // expandable={{
+        //   getChildren: (msg) => msg.replies as MessageWithReplies[]
+        // }}
+        expandable={{
+          getChildren: (comment) => comment.replies as MessageWithReplies[],
+          indentSize: 24
+        }}
         selectable
         tableRef={tableRef}
         actions={{

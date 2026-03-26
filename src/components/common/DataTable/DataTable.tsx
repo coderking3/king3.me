@@ -1,7 +1,9 @@
 'use client'
 
 import type {
+  ExpandedState,
   PaginationState,
+  Row,
   RowSelectionState,
   SortingState,
   VisibilityState
@@ -13,12 +15,13 @@ import { css } from '@linaria/core'
 import {
   flexRender,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useMemo, useRef, useState } from 'react'
+import { Fragment, useMemo, useRef, useState } from 'react'
 
 import {
   Table,
@@ -33,20 +36,20 @@ import { cn } from '@/lib/utils'
 import { TablePagination, TableToolbar } from './components'
 import { buildColumnDefs, buildGetRowId, resolvePaginationState } from './utils'
 
+// ── CSS helpers ────────────────────────────────────────────────
+
 const tableFirstColPadding = css`
   & th:first-child,
   & td:first-child {
     padding-left: 1rem;
   }
 `
-
 const tableFirstColPaddingRight = css`
   & th:first-child,
   & td:first-child {
     padding-right: 0.25rem;
   }
 `
-
 const tableLastColPadding = css`
   & th:last-child,
   & td:last-child {
@@ -54,13 +57,14 @@ const tableLastColPadding = css`
   }
 `
 
-/* ── Stable model factories (avoid re-creation on each render) ─── */
+/* ── Stable model factories ───────────────────────────────────── */
 const coreRowModel = getCoreRowModel()
 const filteredRowModel = getFilteredRowModel()
 const sortedRowModel = getSortedRowModel()
 const paginationRowModel = getPaginationRowModel()
+const expandedRowModel = getExpandedRowModel()
 
-// ── DataTable ───────────────────────────────────────────────────
+// ── DataTable ──────────────────────────────────────────────────
 export function DataTable<T extends object>({
   columns: columnConfigs,
   data,
@@ -73,10 +77,13 @@ export function DataTable<T extends object>({
   loading,
   wrapClassName,
   className,
-  toolbar
+  toolbar,
+  expandable
 }: DataTableProps<T>) {
   const enablePagination = !!pagination
   const enableClientFilter = !!toolbar && toolbar.filterMode !== 'manual'
+  const enableExpandable = !!expandable
+  const indentSize = expandable?.indentSize ?? 20
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -85,52 +92,61 @@ export function DataTable<T extends object>({
     resolvePaginationState(pagination)
   )
 
+  const [expanded, setExpanded] = useState<ExpandedState>({})
+
   const getRowId = useMemo(() => buildGetRowId(rowKey), [rowKey])
 
-  // 保持 actions 引用稳定，避免调用方 inline object 导致 columns 每次重建
   const actionsRef = useRef(actions)
   actionsRef.current = actions
 
   const columns = useMemo(
-    () => buildColumnDefs(columnConfigs, selectable, actionsRef.current),
+    () =>
+      buildColumnDefs(
+        columnConfigs,
+        selectable,
+        actionsRef.current,
+        expandable
+      ),
     // prettier-ignore
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(columnConfigs.map((c) => ({
-      key: c.key,
-      sortable: c.sortable,
-    }))), selectable]
+    [JSON.stringify(columnConfigs.map((c) => ({ key: c.key, sortable: c.sortable }))), selectable, expandable]
   )
 
   const table = useReactTable<T>({
     data,
     columns,
     getRowId,
+    getSubRows: enableExpandable
+      ? (row) => expandable.getChildren?.(row) ?? []
+      : undefined,
     state: {
       sorting,
       rowSelection,
       columnVisibility,
+      expanded,
       ...(enablePagination && { pagination: paginationState })
     },
     enableRowSelection: selectable,
     onSortingChange: setSorting,
     onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility,
+    ...(enableExpandable && { onExpandedChange: setExpanded }),
     getCoreRowModel: coreRowModel,
     ...(enableClientFilter && { getFilteredRowModel: filteredRowModel }),
     getSortedRowModel: sortedRowModel,
+    ...(enableExpandable && { getExpandedRowModel: expandedRowModel }),
     ...(enablePagination && {
       getPaginationRowModel: paginationRowModel,
       onPaginationChange: setPaginationState
     })
   })
 
-  // ── 暴露 table 实例给外部 ───
+  // ── 暴露 table 实例 ────────────────────────────────────────────
   if (tableRef) {
     tableRef.current = table
   }
 
-  // ── 从 table 实例派生列显隐数据，传给 Toolbar ─────────────────
-  // enableHiding: false 的列（如 select checkbox）会被自动排除
+  // ── 列显隐数据派生 ─────────────────────────────────────────────
   const columnVisibilities = useMemo<ColumnVisibilityItem[]>(
     () =>
       table
@@ -138,7 +154,6 @@ export function DataTable<T extends object>({
         .filter((col) => col.getCanHide())
         .map((col) => ({
           id: col.id,
-          // 优先取 columnDef.header string，回退到 id
           label:
             typeof col.columnDef.header === 'string'
               ? col.columnDef.header
@@ -149,11 +164,49 @@ export function DataTable<T extends object>({
     [columnVisibility, columns]
   )
 
-  // ── render ────────────────────────────────────────────────────
+  // ── Row 渲染 ──────────────────────────────────────────────────
+  const renderRow = (row: Row<T>) => {
+    // Tree 模式：在第一个内容列（非 select/expand）加缩进
+    const firstContentCellIndex = row
+      .getVisibleCells()
+      .findIndex(
+        (cell) => cell.column.id !== 'select' && cell.column.id !== 'expand'
+      )
+
+    return (
+      <Fragment key={row.id}>
+        {/* ── 数据行 ── */}
+        <TableRow data-state={row.getIsSelected() ? 'selected' : undefined}>
+          {row.getVisibleCells().map((cell, cellIndex) => {
+            const isFirstContentCell =
+              enableExpandable && cellIndex === firstContentCellIndex
+            const depthIndent =
+              isFirstContentCell && row.depth > 0
+                ? row.depth * indentSize
+                : undefined
+
+            return (
+              <TableCell
+                key={cell.id}
+                className={cn(
+                  cell.column.columnDef.meta?.className,
+                  cell.column.columnDef.meta?.cellClassName
+                )}
+                style={depthIndent ? { paddingLeft: depthIndent } : undefined}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </TableCell>
+            )
+          })}
+        </TableRow>
+      </Fragment>
+    )
+  }
+
+  // ── render ─────────────────────────────────────────────────────
 
   return (
     <div className={wrapClassName}>
-      {/* Toolbar */}
       {toolbar && (
         <TableToolbar
           filterFields={toolbar.filterFields}
@@ -169,7 +222,6 @@ export function DataTable<T extends object>({
         />
       )}
 
-      {/* Table */}
       <div
         className={cn(
           'overflow-hidden rounded-md border',
@@ -214,27 +266,7 @@ export function DataTable<T extends object>({
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() ? 'selected' : undefined}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className={cn(
-                        cell.column.columnDef.meta?.className,
-                        cell.column.columnDef.meta?.cellClassName
-                      )}
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+              table.getRowModel().rows.map((row) => renderRow(row))
             ) : (
               <TableRow>
                 <TableCell
@@ -249,7 +281,6 @@ export function DataTable<T extends object>({
         </Table>
       </div>
 
-      {/* Pagination */}
       {enablePagination && (
         <TablePagination
           pageIndex={paginationState.pageIndex}

@@ -4,7 +4,8 @@ import type {
   Table
 } from '@tanstack/react-table'
 
-// ── TanStack meta type extension ────────────────────────────────
+// ──── TanStack meta type extension ────
+
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line unused-imports/no-unused-vars
   interface ColumnMeta<TData extends RowData, TValue> {
@@ -14,7 +15,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-// ── Column config ───────────────────────────────────────────────
+// ──── Column config ────
 
 export interface ColumnConfig<T> {
   key: string
@@ -29,6 +30,37 @@ export interface ColumnConfig<T> {
   render?: (value: any, record: T, index: number) => React.ReactNode
 }
 
+// ──── Expandable config ────
+
+export interface ExpandableConfig<T> {
+  /**
+   * Tree mode — provide child rows with the same data structure.
+   * TanStack handles flattening; DataTable adds depth-based indentation automatically.
+   *
+   * 树形模式：提供与父行相同结构的子行数据。
+   * TanStack 负责数据扁平化，DataTable 按 row.depth 自动缩进第一列。
+   */
+  getChildren?: (record: T) => T[] | undefined
+
+  /**
+   * Indentation size (px) per depth level in tree mode.
+   * Default: 20
+   *
+   * 树形模式下每级深度的缩进像素值，默认 20。
+   */
+  indentSize?: number
+
+  /**
+   * Whether to show the expand toggle for a specific row.
+   * Return false to hide the toggle for leaf rows that have no meaningful content.
+   * Default: always show when getChildren returns a non-empty array, or renderExpanded is provided.
+   *
+   * 控制某行是否显示展开箭头。
+   * 对于没有子内容的叶子行可返回 false 隐藏按钮。
+   */
+  rowExpandable?: (record: T) => boolean
+}
+
 export interface ActionConfig<T> {
   /** Column title, default 'Actions' */
   title?: string
@@ -38,7 +70,7 @@ export interface ActionConfig<T> {
   render: (record: T, index: number) => React.ReactNode
 }
 
-// ── Filter fields ───────────────────────────────────────────────
+// ──── Filter fields ────
 
 export interface InputFilterField {
   type?: 'input'
@@ -58,7 +90,7 @@ export interface SelectFilterField {
 /** Supports input / select filter fields. Extendable with date-range etc. */
 export type FilterField = InputFilterField | SelectFilterField
 
-// ── Toolbar config ──────────────────────────────────────────────
+// ──── Toolbar config ────
 
 export interface ToolbarConfig {
   /** Left-side filter field configs */
@@ -86,7 +118,7 @@ export interface ColumnVisibilityItem {
   isVisible: boolean
 }
 
-// ── DataTable props ─────────────────────────────────────────────
+// ──── DataTable props ────
 
 export interface DataTableProps<T extends object> {
   /** Column configurations */
@@ -114,6 +146,11 @@ export interface DataTableProps<T extends object> {
   emptyText?: string
   /** Whether the table is in a loading state */
   loading?: boolean
+
+  /* ── Expandable rows ── */
+
+  /** Expandable row configuration */
+  expandable?: ExpandableConfig<T>
 
   /* ── Toolbar ── */
 

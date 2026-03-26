@@ -7,9 +7,17 @@ import type {
   Row
 } from '@tanstack/react-table'
 
-import type { ActionConfig, ColumnConfig, DataTableProps } from './types'
+import type {
+  ActionConfig,
+  ColumnConfig,
+  DataTableProps,
+  ExpandableConfig
+} from './types'
+
+import { ChevronDown, ChevronRight } from 'lucide-react'
 
 import { Checkbox } from '@/components/ui'
+import { cn } from '@/lib/utils'
 
 import { TableSortableHeader } from './components/TableSortableHeader'
 
@@ -22,11 +30,10 @@ export function resolvePaginationState(
   pagination?: boolean | PaginationInitialTableState
 ): PaginationState {
   if (!pagination || pagination === true) return DEFAULT_PAGINATION_STATE
-
   return { ...DEFAULT_PAGINATION_STATE, ...pagination }
 }
 
-/* ------------  Build getRowId from rowKey prop  ------------ */
+/* ------------ Build getRowId from rowKey prop ------------ */
 
 export function buildGetRowId<T extends object>(
   rowKey?: DataTableProps<T>['rowKey']
@@ -37,12 +44,13 @@ export function buildGetRowId<T extends object>(
   return (originalRow, index) => String((originalRow as any)[rowKey] ?? index)
 }
 
-/* ------------  Convert ColumnConfig[] to TanStack ColumnDef[]  ------------ */
+/* ------------ Convert ColumnConfig[] to TanStack ColumnDef[] ------------ */
 
 export function buildColumnDefs<T extends object>(
   configs: ColumnConfig<T>[],
   selectable?: boolean,
-  actions?: ActionConfig<T>
+  actions?: ActionConfig<T>,
+  expandable?: ExpandableConfig<T>
 ): ColumnDef<T>[] {
   const cols: ColumnDef<T>[] = []
 
@@ -70,43 +78,82 @@ export function buildColumnDefs<T extends object>(
       ),
       enableSorting: false,
       enableHiding: false,
-      meta: {
-        className: 'w-10'
-      }
+      meta: { className: 'w-10' }
+    })
+  }
+
+  if (expandable) {
+    cols.push({
+      id: 'expand',
+      header: '',
+      enableSorting: false,
+      enableHiding: false,
+      cell: ({ row }) => {
+        let canExpand = false
+        if (expandable.rowExpandable) {
+          canExpand = expandable.rowExpandable(row.original)
+        } else {
+          canExpand = (row.subRows?.length ?? 0) > 0
+        }
+
+        const isExpanded = row.getIsExpanded()
+
+        const handleToggle = (e: React.MouseEvent) => {
+          e.stopPropagation()
+          row.toggleExpanded()
+        }
+
+        return (
+          <button
+            type="button"
+            onClick={canExpand ? handleToggle : undefined}
+            aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
+            className={cn(
+              'text-muted-foreground hover:bg-muted flex items-center justify-center rounded p-0.5 transition-colors',
+              !canExpand && 'pointer-events-none invisible'
+            )}
+          >
+            {isExpanded ? (
+              <ChevronDown size={16} />
+            ) : (
+              <ChevronRight size={16} />
+            )}
+          </button>
+        )
+      },
+      meta: { className: 'w-10' }
     })
   }
 
   cols.push(
-    ...configs.map<ColumnDef<T>>((col) => {
-      return {
-        id: col.key,
-        accessorKey: col.key,
-        header: col.sortable
-          ? ({ column }) => (
-              <TableSortableHeader
-                title={col.title}
-                sorted={column.getIsSorted()}
-                onToggleSorting={column.getToggleSortingHandler()}
-              />
-            )
-          : col.title,
-        enableSorting: col.sortable ?? false,
-        enableHiding: col.enableHiding ?? true,
-        cell: col.render
-          ? ({ row }) =>
-              col.render!(
-                (row.original as any)[col.key],
-                row.original,
-                row.index
-              )
-          : ({ row }) => String((row.original as any)[col.key] ?? ''),
-        meta: {
-          className: col.className,
-          headClassName: col.headClassName,
-          cellClassName: col.cellClassName
-        }
+    ...configs.map<ColumnDef<T>>((col) => ({
+      id: col.key,
+      accessorKey: col.key,
+      header: col.sortable
+        ? ({ column }) => (
+            <TableSortableHeader
+              title={col.title}
+              sorted={column.getIsSorted()}
+              onToggleSorting={column.getToggleSortingHandler()}
+            />
+          )
+        : col.title,
+      enableSorting: col.sortable ?? false,
+      enableHiding: col.enableHiding ?? true,
+      cell: col.render
+        ? ({ row }) => {
+            const value = row.original
+              ? (row.original as any)[col.key]
+              : undefined
+            return col.render!(value, row.original, row.index)
+          }
+        : ({ row }) => String((row.original as any)?.[col.key] ?? ''),
+      meta: {
+        className: col.className,
+        headClassName: col.headClassName,
+        cellClassName: col.cellClassName
       }
-    })
+    }))
   )
 
   if (actions) {
