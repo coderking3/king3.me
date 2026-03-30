@@ -7,7 +7,7 @@ import type {
 } from 'react-hook-form'
 import type { z } from 'zod/v4'
 
-// ──── Base ────
+/* --- Base --- */
 
 interface BaseFieldConfig<TFV extends FieldValues> {
   name: Path<TFV>
@@ -26,7 +26,7 @@ export interface FieldOptions<TFV extends FieldValues> extends Omit<
   name: string
 }
 
-// ──── Built-in Controls ────
+/* --- Built-in controls --- */
 
 export interface InputControlConfig extends Omit<
   React.ComponentProps<'input'>,
@@ -62,7 +62,7 @@ export interface SelectControlConfig {
   className?: string
   size?: 'sm' | 'default'
   alignItemWithTrigger?: boolean
-  /** Controls what is displayed in the trigger after selection: 'label' (default) or 'value' */
+  /** What to display in the trigger after selection: 'label' (default) or 'value' */
   display?: 'label' | 'value'
 }
 
@@ -71,7 +71,7 @@ export interface SelectFieldConfig<TFV extends FieldValues>
   type: 'select'
 }
 
-// ──── Custom Field ────
+/* --- Custom field --- */
 
 interface CustomControlFieldConfig<
   TFV extends FieldValues
@@ -101,7 +101,7 @@ export type CustomFieldConfig<TFV extends FieldValues> =
   | CustomControlFieldConfig<TFV>
   | CustomControllerFieldConfig<TFV>
 
-// ──── Field Config Union ────
+/* --- Field config union --- */
 
 export type FormFieldConfig<TFV extends FieldValues> =
   | InputFieldConfig<TFV>
@@ -109,7 +109,7 @@ export type FormFieldConfig<TFV extends FieldValues> =
   | SelectFieldConfig<TFV>
   | CustomFieldConfig<TFV>
 
-// ──── Control Props (for built-in control components) ────
+/* --- Control props --- */
 
 export interface ControlProps<
   TFV extends FieldValues,
@@ -121,7 +121,7 @@ export interface ControlProps<
   componentProps: Omit<TConfig, BaseFieldAttr | 'type'>
 }
 
-// ──── FormField Props ────
+/* --- FormField props --- */
 
 export interface FormFieldProps<TFV extends FieldValues> {
   config: FormFieldConfig<TFV>
@@ -136,7 +136,7 @@ export interface FieldWrapperProps<TFV extends FieldValues> {
   children: React.ReactNode
 }
 
-// ──── Form Props ────
+/* --- Form props --- */
 
 export interface FormActionProps<TFV extends FieldValues> {
   form: UseFormReturn<TFV>
@@ -154,12 +154,12 @@ export interface FormProps<TFV extends FieldValues> {
   onError?: (error: unknown) => void
   onChange?: (values: Partial<TFV>) => void
 
-  /** Custom actions renderer, overrides default submit/reset buttons */
+  /** Override default submit/reset buttons */
   renderActions?: (props: FormActionProps<TFV>) => React.ReactNode
   submitText?: string
   resetText?: string
   showReset?: boolean
-  /** Render actions inside or outside the <form> element (only works with renderActions). Default: 'inner' */
+  /** Where to render custom actions. Default: 'inner' */
   actionsPosition?: 'inner' | 'outer'
 
   disabled?: boolean

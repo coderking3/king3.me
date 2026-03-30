@@ -14,6 +14,28 @@ import { Controller } from 'react-hook-form'
 import { Field, FieldDescription, FieldError, FieldLabel } from '../../ui'
 import { controlMap } from './controls'
 
+/* --- FieldWrapper --- */
+
+export function FieldWrapper<TFV extends FieldValues>({
+  fieldOptions,
+  invalid,
+  error,
+  children
+}: FieldWrapperProps<TFV>) {
+  return (
+    <Field data-invalid={invalid}>
+      <FieldLabel htmlFor={fieldOptions.name}>{fieldOptions.label}</FieldLabel>
+      {children}
+      {fieldOptions.description && (
+        <FieldDescription>{fieldOptions.description}</FieldDescription>
+      )}
+      {invalid && <FieldError errors={[error]} />}
+    </Field>
+  )
+}
+
+/* --- FormField --- */
+
 export function FormField<TFV extends FieldValues>({
   config,
   form,
@@ -36,10 +58,9 @@ export function FormField<TFV extends FieldValues>({
     disabled: disabled || fieldDisabled
   }
 
-  // Fully custom rendering, bypass Controller wrapper
+  // Custom controller mode — bypass Controller wrapper entirely
   if (type === undefined) {
     const { render, custom } = config as CustomFieldConfig<TFV>
-
     if (custom === 'controller') {
       return <>{render({ form, fieldOptions })}</>
     }
@@ -56,9 +77,7 @@ export function FormField<TFV extends FieldValues>({
         if (type === undefined) {
           const { render, custom } = config as CustomFieldConfig<TFV>
           const rendered = render({ form, field, fieldState, fieldOptions })
-
           if (custom === 'field') return <>{rendered}</>
-
           return (
             <FieldWrapper
               fieldOptions={fieldOptions}
@@ -90,23 +109,5 @@ export function FormField<TFV extends FieldValues>({
         )
       }}
     />
-  )
-}
-
-export function FieldWrapper<TFV extends FieldValues>({
-  fieldOptions,
-  invalid,
-  error,
-  children
-}: FieldWrapperProps<TFV>) {
-  return (
-    <Field data-invalid={invalid}>
-      <FieldLabel htmlFor={fieldOptions.name}>{fieldOptions.label}</FieldLabel>
-      {children}
-      {fieldOptions.description && (
-        <FieldDescription>{fieldOptions.description}</FieldDescription>
-      )}
-      {invalid && <FieldError errors={[error]} />}
-    </Field>
   )
 }

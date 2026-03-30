@@ -47,8 +47,6 @@ export function SelectControl<TFV extends FieldValues>({
         </SelectValue>
       </SelectTrigger>
       <SelectContent alignItemWithTrigger={alignItemWithTrigger}>
-        {/* <SelectItem value="auto">Auto</SelectItem> */}
-        {/* <SelectSeparator /> */}
         {options.map(({ label, value, disabled }) => (
           <SelectItem key={value} value={value} disabled={disabled}>
             {label}

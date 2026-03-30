@@ -8,7 +8,6 @@ export default async function AdminPlaylistPage() {
 
   return (
     <Animated preset="fadeIn">
-      {/* <h1 className="mb-4 text-lg font-semibold">Playlist</h1> */}
       <AdminPlaylist playlist={result.data} />
     </Animated>
   )

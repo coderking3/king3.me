@@ -20,7 +20,6 @@ export function FeatherIcon({
   isHovered = false
 }: GithubIconProps) {
   const svgSpring = useSpring({
-    // 在 X 和 Y 轴上产生微小的不对称位移
     to: isHovered
       ? [
           { transform: 'translate(2px, -1px)' },

@@ -12,14 +12,13 @@ interface LinkIconProps extends SvgIcon {
 
 const SPRING_CONFIG = { tension: 300, friction: 16 }
 
-// 平移量（SVG 坐标单位）
+// Translation offset (SVG coordinate units)
 const OFFSET = 1.2
-// 直线缩短比例，1 = 原长，0.3 = 缩至 30%
+// Line shrink ratio: 1 = full length, 0.3 = 30%
 const LINE_SCALE_MIN = 0.3
 
-// path1 末尾直线原始向量
+// Original line vectors at path endpoints
 const L1 = { x: -1.72, y: 1.71 }
-// path2 末尾直线原始向量
 const L2 = { x: 1.71, y: -1.71 }
 
 export function LinkIcon({
@@ -33,7 +32,7 @@ export function LinkIcon({
     config: SPRING_CONFIG
   })
 
-  // path1：右上环，靠拢时左下平移 + 末尾直线缩短
+  // Upper-right arc: shift down-left + shorten end line
   const path1D = t.to((v) => {
     const scale = 1 - (1 - LINE_SCALE_MIN) * v
     const lx = (L1.x * scale).toFixed(3)
@@ -41,7 +40,7 @@ export function LinkIcon({
     return `M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l${lx} ${ly}`
   })
 
-  // path2：左下环，靠拢时右上平移 + 末尾直线缩短
+  // Lower-left arc: shift up-right + shorten end line
   const path2D = t.to((v) => {
     const scale = 1 - (1 - LINE_SCALE_MIN) * v
     const lx = (L2.x * scale).toFixed(3)

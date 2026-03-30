@@ -34,37 +34,44 @@ import {
 import { cn } from '@/lib/utils'
 
 import { TablePagination, TableToolbar } from './components'
-import { buildColumnDefs, buildGetRowId, resolvePaginationState } from './utils'
+import {
+  buildColumnDefs,
+  buildGetRowId,
+  resolveDefaultExpanded,
+  resolvePaginationState
+} from './utils'
 
-// ── CSS helpers ────────────────────────────────────────────────
+/* --- Styles --- */
 
-const tableFirstColPadding = css`
+const firstColPadding = css`
   & th:first-child,
   & td:first-child {
     padding-left: 1rem;
   }
 `
-const tableFirstColPaddingRight = css`
+const firstColPaddingRight = css`
   & th:first-child,
   & td:first-child {
     padding-right: 0.25rem;
   }
 `
-const tableLastColPadding = css`
+const lastColPadding = css`
   & th:last-child,
   & td:last-child {
     padding-right: 1rem;
   }
 `
 
-/* ── Stable model factories ───────────────────────────────────── */
+/* --- Row model factories (module-level singletons) --- */
+
 const coreRowModel = getCoreRowModel()
 const filteredRowModel = getFilteredRowModel()
 const sortedRowModel = getSortedRowModel()
 const paginationRowModel = getPaginationRowModel()
 const expandedRowModel = getExpandedRowModel()
 
-// ── DataTable ──────────────────────────────────────────────────
+/* --- DataTable --- */
+
 export function DataTable<T extends object>({
   columns: columnConfigs,
   data,
@@ -82,8 +89,15 @@ export function DataTable<T extends object>({
 }: DataTableProps<T>) {
   const enablePagination = !!pagination
   const enableClientFilter = !!toolbar && toolbar.filterMode !== 'manual'
-  const enableExpandable = !!expandable
+  const expandMode = expandable?.render
+    ? 'panel'
+    : expandable?.getChildren
+      ? 'tree'
+      : null
+  const enableExpandable = !!expandable && !!expandMode
   const indentSize = expandable?.indentSize ?? 20
+
+  /* --- State --- */
 
   const [sorting, setSorting] = useState<SortingState>([])
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
@@ -91,8 +105,11 @@ export function DataTable<T extends object>({
   const [paginationState, setPaginationState] = useState<PaginationState>(() =>
     resolvePaginationState(pagination)
   )
+  const [expanded, setExpanded] = useState<ExpandedState>(() =>
+    resolveDefaultExpanded(expandable?.defaultExpanded)
+  )
 
-  const [expanded, setExpanded] = useState<ExpandedState>({})
+  /* --- Derived --- */
 
   const getRowId = useMemo(() => buildGetRowId(rowKey), [rowKey])
 
@@ -112,13 +129,17 @@ export function DataTable<T extends object>({
     [JSON.stringify(columnConfigs.map((c) => ({ key: c.key, sortable: c.sortable }))), selectable, expandable]
   )
 
+  /* --- Table instance --- */
+
   const table = useReactTable<T>({
     data,
     columns,
     getRowId,
-    getSubRows: enableExpandable
-      ? (row) => expandable.getChildren?.(row) ?? []
-      : undefined,
+    getSubRows:
+      expandMode === 'tree'
+        ? (row) => expandable!.getChildren!(row) ?? []
+        : undefined,
+    getRowCanExpand: expandMode === 'panel' ? () => true : undefined,
     state: {
       sorting,
       rowSelection,
@@ -141,12 +162,10 @@ export function DataTable<T extends object>({
     })
   })
 
-  // ── 暴露 table 实例 ────────────────────────────────────────────
   if (tableRef) {
     tableRef.current = table
   }
 
-  // ── 列显隐数据派生 ─────────────────────────────────────────────
   const columnVisibilities = useMemo<ColumnVisibilityItem[]>(
     () =>
       table
@@ -164,9 +183,9 @@ export function DataTable<T extends object>({
     [columnVisibility, columns]
   )
 
-  // ── Row 渲染 ──────────────────────────────────────────────────
+  /* --- Row renderer --- */
+
   const renderRow = (row: Row<T>) => {
-    // Tree 模式：在第一个内容列（非 select/expand）加缩进
     const firstContentCellIndex = row
       .getVisibleCells()
       .findIndex(
@@ -175,7 +194,6 @@ export function DataTable<T extends object>({
 
     return (
       <Fragment key={row.id}>
-        {/* ── 数据行 ── */}
         <TableRow data-state={row.getIsSelected() ? 'selected' : undefined}>
           {row.getVisibleCells().map((cell, cellIndex) => {
             const isFirstContentCell =
@@ -199,11 +217,17 @@ export function DataTable<T extends object>({
             )
           })}
         </TableRow>
+
+        {expandMode === 'panel' && row.getIsExpanded() && (
+          <TableRow className="hover:bg-transparent">
+            <TableCell colSpan={row.getVisibleCells().length} className="p-0">
+              {expandable!.render!(row.original, row)}
+            </TableCell>
+          </TableRow>
+        )}
       </Fragment>
     )
   }
-
-  // ── render ─────────────────────────────────────────────────────
 
   return (
     <div className={wrapClassName}>
@@ -225,9 +249,9 @@ export function DataTable<T extends object>({
       <div
         className={cn(
           'overflow-hidden rounded-md border',
-          tableFirstColPadding,
-          selectable && tableFirstColPaddingRight,
-          !actions && tableLastColPadding,
+          firstColPadding,
+          selectable && firstColPaddingRight,
+          !actions && lastColPadding,
           className
         )}
       >

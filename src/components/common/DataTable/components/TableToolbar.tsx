@@ -25,36 +25,28 @@ import {
   SelectValue
 } from '@/components/ui'
 
-// ── Types ──────────────────────────────────────────────────────────
+/* --- Types --- */
 
 export interface TableToolbarProps {
-  /** 左侧筛选字段配置 */
   filterFields?: FilterField[]
-  /** 筛选模式，默认 'auto' */
   filterMode?: 'auto' | 'manual'
-  /** manual 模式下点击 Query / Reset 时触发 */
   onFilter?: (values: Record<string, string>) => void
-  /** TanStack Table 实例，auto 模式下用于 column.setFilterValue */
   table?: Table<any>
-
-  /** 右侧自定义操作区（新增、导出等业务按钮） */
   actions?: React.ReactNode
-
-  /** 列显隐 Dropdown */
   columnToggle?: boolean
   columnVisibilities?: ColumnVisibilityItem[]
   onColumnVisibilityChange?: (columnId: string, visible: boolean) => void
 }
 
-// ── Helpers ────────────────────────────────────────────────────────
+/* --- Helpers --- */
 
 function buildEmptyValues(fields: FilterField[]): Record<string, string> {
   return Object.fromEntries(fields.map((f) => [f.key, '']))
 }
 
-// ── Component ──────────────────────────────────────────────────────
-
 const DefaultFilterFields: FilterField[] = []
+
+/* --- Component --- */
 
 export function TableToolbar({
   filterFields = DefaultFilterFields,
@@ -79,12 +71,11 @@ export function TableToolbar({
 
   if (!showToolbar) return null
 
-  // ── handlers ──────────────────────────────────────────────────
+  /* --- Handlers --- */
 
   const setValue = (key: string, val: string) =>
     setValues((prev) => ({ ...prev, [key]: val }))
 
-  // auto 模式：输入即筛选
   const handleAutoChange = (key: string, value: string) => {
     setValue(key, value)
     table?.getColumn(key)?.setFilterValue(value || undefined)
@@ -98,7 +89,6 @@ export function TableToolbar({
     )
   }
 
-  // manual 模式：点击 Query 触发
   const handleManualQuery = () => onFilter?.(values)
 
   const handleManualReset = () => {
@@ -107,11 +97,10 @@ export function TableToolbar({
     onFilter?.(empty)
   }
 
-  // ── render ────────────────────────────────────────────────────
+  /* --- Render --- */
 
   return (
     <div className="mb-4 flex items-end justify-between gap-4">
-      {/* ── Left: filter fields ── */}
       {hasFilterFields && (
         <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
           {filterFields.map((field) => (
@@ -161,7 +150,6 @@ export function TableToolbar({
             </div>
           ))}
 
-          {/* manual 模式：Query 按钮 */}
           {!isAuto && (
             <Button size="sm" className="h-8" onClick={handleManualQuery}>
               <Search className="mr-1.5 h-3.5 w-3.5" />
@@ -169,7 +157,6 @@ export function TableToolbar({
             </Button>
           )}
 
-          {/* Reset 按钮：有活跃筛选时显示 */}
           {hasActiveFilters && (
             <Button
               size="sm"
@@ -184,7 +171,6 @@ export function TableToolbar({
         </div>
       )}
 
-      {/* ── Right: custom actions + column toggle ── */}
       {showRightSide && (
         <div className="ml-auto flex shrink-0 items-center gap-2">
           {actions}

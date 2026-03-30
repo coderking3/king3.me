@@ -44,7 +44,7 @@ function OAuthButton({
           : 'cursor-pointer'
       )}
     >
-      {/* 左侧：图标 + 双行文字 */}
+      {/* Left: icon + text */}
       <div className={cn('flex items-center gap-3.5', loading && 'opacity-0')}>
         <span className="text-foreground/60 group-hover:text-foreground/80 shrink-0 transition-colors">
           {icon}
@@ -59,7 +59,7 @@ function OAuthButton({
         </div>
       </div>
 
-      {/* 右侧 */}
+      {/* Right */}
       {loading ? (
         <span className="absolute inset-0 flex items-center justify-center">
           <Spinner />
@@ -143,7 +143,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
         />
       </div>
 
-      {/* 分隔 */}
+      {/* Divider */}
       <div className="my-5 flex items-center gap-3">
         <div className="bg-border h-px flex-1" />
         <span className="text-muted-foreground text-[10.5px] font-medium tracking-[0.15em] uppercase">
@@ -152,7 +152,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
         <div className="bg-border h-px flex-1" />
       </div>
 
-      {/* 安全说明 */}
+      {/* Security notice */}
       <div className="bg-muted/40 border-border/40 flex items-center justify-center gap-2 rounded-lg border px-4 py-2">
         <svg
           className="text-muted-foreground/70 size-3.5 shrink-0"

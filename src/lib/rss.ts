@@ -12,7 +12,6 @@ const AUTHOR = {
   link: process.env.SITE_URL || AUTHOR_INFO.link
 }
 
-// 生成 Feed
 export async function generateFeed() {
   const posts = await getAllPosts()
 
@@ -32,7 +31,6 @@ export async function generateFeed() {
     }
   })
 
-  // 添加文章到 feed (通常只添加最近的 20 篇)
   const recentPosts = posts.slice(0, 20)
 
   recentPosts.forEach((post) => {

@@ -1,4 +1,4 @@
-// ──── Shared Props ────
+/* --- Shared --- */
 
 interface ConfirmSharedProps {
   title: string
@@ -13,7 +13,7 @@ interface ConfirmSharedProps {
   onCancel?: () => void
 }
 
-// ──── Open Mode ────
+/* --- Open mode --- */
 
 interface ControlledModeProps {
   open: boolean
@@ -26,6 +26,8 @@ interface TriggerModeProps {
   onClose?: never
   trigger: React.ReactNode
 }
+
+/* --- Exports --- */
 
 export type ConfirmProps = ConfirmSharedProps &
   (ControlledModeProps | TriggerModeProps)

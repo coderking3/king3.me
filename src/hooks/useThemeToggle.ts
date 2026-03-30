@@ -11,7 +11,6 @@ export function useThemeToggle() {
   const prefersReducedMotion = usePrefersReducedMotion()
 
   const toggleTheme = useCallback(() => {
-    // 检查浏览器支持及用户偏好
     const isAppearanceTransition =
       typeof document !== 'undefined' &&
       'startViewTransition' in document &&
@@ -19,16 +18,13 @@ export function useThemeToggle() {
 
     const newTheme = theme === 'dark' ? 'light' : 'dark'
 
-    // 不支持时直接切换
     if (!isAppearanceTransition) {
       setTheme(newTheme)
       return
     }
 
-    // 使用 View Transition API 包装状态变更
+    // flushSync ensures React commits DOM changes before View Transition captures the snapshot
     document.startViewTransition(() => {
-      // 使用 flushSync 强制 React 立即更新 DOM 状态
-      // 这样 View Transition 才能捕捉到正确的“新状态”快照
       // eslint-disable-next-line react-dom/no-flush-sync
       flushSync(() => {
         setTheme(newTheme)

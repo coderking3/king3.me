@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui'
 
-function Confirm({
+export function Confirm({
   title,
   description,
   variant = 'default',
@@ -69,5 +69,3 @@ function Confirm({
     </AlertDialog>
   )
 }
-
-export { Confirm }

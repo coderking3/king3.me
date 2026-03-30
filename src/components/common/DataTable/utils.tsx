@@ -1,7 +1,6 @@
-/* ------------ Parse pagination prop ------------ */
-
 import type {
   ColumnDef,
+  ExpandedState,
   PaginationInitialTableState,
   PaginationState,
   Row
@@ -21,7 +20,9 @@ import { cn } from '@/lib/utils'
 
 import { TableSortableHeader } from './components/TableSortableHeader'
 
-const DEFAULT_PAGINATION_STATE = {
+/* --- Pagination --- */
+
+const DEFAULT_PAGINATION_STATE: PaginationState = {
   pageIndex: 0,
   pageSize: 10
 }
@@ -33,7 +34,19 @@ export function resolvePaginationState(
   return { ...DEFAULT_PAGINATION_STATE, ...pagination }
 }
 
-/* ------------ Build getRowId from rowKey prop ------------ */
+/* --- Expanded state --- */
+
+export function resolveDefaultExpanded(
+  defaultExpanded?: true | string[]
+): ExpandedState {
+  if (defaultExpanded === true) return true
+  if (Array.isArray(defaultExpanded)) {
+    return Object.fromEntries(defaultExpanded.map((id) => [id, true]))
+  }
+  return {}
+}
+
+/* --- Row ID --- */
 
 export function buildGetRowId<T extends object>(
   rowKey?: DataTableProps<T>['rowKey']
@@ -44,7 +57,7 @@ export function buildGetRowId<T extends object>(
   return (originalRow, index) => String((originalRow as any)[rowKey] ?? index)
 }
 
-/* ------------ Convert ColumnConfig[] to TanStack ColumnDef[] ------------ */
+/* --- Column definitions --- */
 
 export function buildColumnDefs<T extends object>(
   configs: ColumnConfig<T>[],
@@ -92,21 +105,25 @@ export function buildColumnDefs<T extends object>(
         let canExpand = false
         if (expandable.rowExpandable) {
           canExpand = expandable.rowExpandable(row.original)
+        } else if (expandable.render) {
+          canExpand = true
         } else {
           canExpand = (row.subRows?.length ?? 0) > 0
         }
 
         const isExpanded = row.getIsExpanded()
 
-        const handleToggle = (e: React.MouseEvent) => {
-          e.stopPropagation()
-          row.toggleExpanded()
-        }
-
         return (
           <button
             type="button"
-            onClick={canExpand ? handleToggle : undefined}
+            onClick={
+              canExpand
+                ? (e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    row.toggleExpanded()
+                  }
+                : undefined
+            }
             aria-label={isExpanded ? 'Collapse row' : 'Expand row'}
             className={cn(
               'text-muted-foreground hover:bg-muted flex items-center justify-center rounded p-0.5 transition-colors',

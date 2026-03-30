@@ -14,7 +14,7 @@ import {
   DialogTrigger
 } from '@/components/ui'
 
-function Modal(props: ModalProps) {
+export function Modal(props: ModalProps) {
   const {
     title,
     description,
@@ -24,6 +24,8 @@ function Modal(props: ModalProps) {
     renderFooter,
     showFooter = true
   } = props
+
+  /* --- Footer --- */
 
   const footerContent = (() => {
     if (!showFooter) return null
@@ -46,6 +48,8 @@ function Modal(props: ModalProps) {
     )
   })()
 
+  /* --- Content --- */
+
   const content = (
     <DialogContent position={position} className={className}>
       <DialogHeader>
@@ -56,6 +60,8 @@ function Modal(props: ModalProps) {
       {footerContent}
     </DialogContent>
   )
+
+  /* --- Render --- */
 
   // Trigger mode
   if ('trigger' in props && props.trigger) {
@@ -76,5 +82,3 @@ function Modal(props: ModalProps) {
     </Dialog>
   )
 }
-
-export { Modal }

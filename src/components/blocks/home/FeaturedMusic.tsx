@@ -20,7 +20,6 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
-  // 组件卸载时停止播放
   useEffect(() => {
     return () => {
       audioRef.current?.pause()
@@ -67,7 +66,7 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
               onClick={() => handlePlay(song)}
               className="group relative flex cursor-pointer items-center gap-3"
             >
-              {/* 封面 */}
+              {/* Cover */}
               <div className="relative z-10 h-12 w-12 shrink-0 overflow-hidden rounded select-none">
                 <Image
                   src={`${song.cover}?waadw=48y48&type=webp`}

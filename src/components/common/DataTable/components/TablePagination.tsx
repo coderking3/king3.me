@@ -30,10 +30,9 @@ export interface PaginationProps {
   onNextPage: () => void
 }
 
-/**
- * Generate visible page numbers (0-based) with max 3 pages shown.
- * Returns items that are either a page index (number) or an ellipsis marker.
- */
+/* --- Helpers --- */
+
+/** Generate visible page numbers (0-based) with a sliding window of 3. */
 function getVisiblePages(
   pageIndex: number,
   pageCount: number
@@ -42,11 +41,9 @@ function getVisiblePages(
     return Array.from({ length: pageCount }, (_, i) => i)
   }
 
-  // Window of 3 consecutive pages centered on current
   let start = pageIndex - 1
   let end = pageIndex + 1
 
-  // Clamp to valid range
   if (start < 0) {
     start = 0
     end = 2
@@ -65,6 +62,8 @@ function getVisiblePages(
   return pages
 }
 
+/* --- Component --- */
+
 export function TablePagination({
   pageIndex,
   pageSize,
@@ -80,7 +79,6 @@ export function TablePagination({
 
   return (
     <div className="flex items-center justify-end gap-4 py-4">
-      {/* Page navigation */}
       <Pagination className="mx-0 w-auto">
         <PaginationContent>
           <PaginationItem>
@@ -129,7 +127,6 @@ export function TablePagination({
         </PaginationContent>
       </Pagination>
 
-      {/* Rows per page */}
       <Select
         value={String(pageSize)}
         onValueChange={(v) => onPageSizeChange(Number(v))}

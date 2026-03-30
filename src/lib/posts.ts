@@ -73,7 +73,6 @@ export async function getAllPosts() {
   return posts
     .filter((post) => {
       const { title, description, date, published } = post
-      // 必须有 title, description, date，且 published 不为 false
       return title && description && date && published !== false
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -88,7 +87,7 @@ export function extractHeadings(content: string): TocItem[] {
   while ((match = headingRegex.exec(content)) !== null) {
     const level = match[1].length
     const text = match[2].trim()
-    // 使用 github-slugger 生成与 rehype-slug 一致的id
+    // Matches rehype-slug output
     const id = slugger.slug(text)
 
     headings.push({ id, text, level })

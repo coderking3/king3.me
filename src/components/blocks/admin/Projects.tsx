@@ -177,19 +177,6 @@ export default function Projects({ projects }: { projects: Project[] }) {
           filterMode: 'auto',
           actions: (
             <div className="flex gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => {
-                  const selected = tableRef.current
-                    ?.getFilteredSelectedRowModel()
-                    .rows.map((r) => r.original)
-                  // eslint-disable-next-line no-console
-                  console.log('selected rows:', selected)
-                }}
-              >
-                Log Selected
-              </Button>
               <Button size="sm" onClick={() => setShowCreate(true)}>
                 <Plus size={16} />
                 New

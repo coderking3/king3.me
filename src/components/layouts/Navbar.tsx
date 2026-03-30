@@ -42,28 +42,24 @@ function Navbar({ page, className }: NavbarProps) {
     }
   }
 
-  // 找到当前 active 项的索引
   const activeIndex = NAVIGATION_ITEMS.findIndex(
     ({ href }) => (page.includes(href) && href !== '/') || page === href
   )
 
-  // 记录上一次的 active 索引
   useEffect(() => {
     if (activeIndex !== -1) {
       setPrevActiveIndex(activeIndex)
     }
   }, [activeIndex])
 
-  // 计算每个项的动画延迟（波浪效果）
+  // Wave delay: ripple outward from the active item
   const getNavItemDelay = (index: number) => {
-    const animateDelay = 0.04 // 4ms
+    const animateDelay = 0.04
 
-    // 如果有 active 项，从 active 项开始波浪扩散
     if (activeIndex !== -1) {
       return Math.abs(index - activeIndex) * animateDelay
     }
 
-    // 如果没有 active 项但有之前的 active，从之前的位置开始波浪还原
     if (prevActiveIndex !== -1) {
       return Math.abs(index - prevActiveIndex) * animateDelay
     }
@@ -103,7 +99,7 @@ function Navbar({ page, className }: NavbarProps) {
               onHoverEnd={() => setHoveredItem(null)}
               {...navItemMotion(i)}
             >
-              {/* Active 底部指示器 */}
+              {/* Active indicator */}
               <AnimatePresence>
                 {isActive && (
                   <motion.div
@@ -113,7 +109,7 @@ function Navbar({ page, className }: NavbarProps) {
                   />
                 )}
               </AnimatePresence>
-              {/* Active 光晕 */}
+              {/* Active glow */}
               <AnimatePresence>
                 {isActive && (
                   <motion.div
@@ -123,7 +119,7 @@ function Navbar({ page, className }: NavbarProps) {
                 )}
               </AnimatePresence>
 
-              {/* Hover 药丸 */}
+              {/* Hover pill */}
               <AnimatePresence>
                 {isHovered && (
                   <motion.div
@@ -140,7 +136,6 @@ function Navbar({ page, className }: NavbarProps) {
               <Link href={href} className="block px-3 py-2.5">
                 <motion.span
                   className={cn(
-                    /* 改动：非激活态用 muted-foreground，激活态用 primary，对比更清晰 */
                     'text-muted-foreground relative font-bold transition-colors',
                     isActive &&
                       'text-accent-foreground/85 hover:text-accent-foreground'

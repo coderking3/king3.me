@@ -7,7 +7,7 @@ const footerQuotes = [
 ]
 
 function Footer() {
-  // 每日一言：基于日期哈希选择
+  // Daily quote selected by date hash
   const today = new Date().toDateString()
   const hash = today
     .split('')

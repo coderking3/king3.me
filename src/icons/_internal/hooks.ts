@@ -16,16 +16,12 @@ interface InteractionHandlers {
 }
 
 interface UseInteractiveOptions {
-  /** 触发 boop 的交互类型 */
   trigger?: InteractionTrigger | InteractionTrigger[]
-  /** Boop 持续时间（毫秒）- 可以是统一值或分别设置 */
   duration?: number
-  /** 自定义事件处理器 */
   onHandlers?: Partial<InteractionHandlers>
 }
 
 interface UseInteractiveReturn extends InteractiveState {
-  /** 交互事件处理器（需展开到元素上） */
   handlers: Required<InteractionHandlers>
 }
 
@@ -39,7 +35,6 @@ export function useInteractive({
 
   const isHovered = useBoop(isHovering, duration)
 
-  // 标准化 trigger 为数组
   const triggers = useMemo(
     () => (Array.isArray(trigger) ? trigger : [trigger]),
     [trigger]

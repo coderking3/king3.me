@@ -40,14 +40,13 @@ function PostsActions() {
 
   return (
     <nav className="flex flex-col items-center gap-3">
-      {/* 返回博客列表 */}
       <ArrowLeft
         href="/blog"
         className={cn(...actionButtonClass)}
         alt="Return to blog list"
       />
 
-      {/* 复制链接 */}
+      {/* Copy link */}
       <div
         onClick={handleCopyLink}
         className={cn(
@@ -60,9 +59,9 @@ function PostsActions() {
           {copied ? (
             <motion.span
               key="check"
-              initial={{ y: 20, opacity: 0 }} // 从下进入
+              initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 20, opacity: 0 }} // 向下退出
+              exit={{ y: 20, opacity: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
               <Check size={18} />
@@ -70,9 +69,9 @@ function PostsActions() {
           ) : (
             <motion.span
               key="link"
-              initial={{ y: -20, opacity: 0 }} // 从上进入
+              initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }} // 向上退出
+              exit={{ y: -20, opacity: 0 }}
               transition={{ duration: 0.2, ease: 'easeOut' }}
             >
               <Link className="hover:text-foreground hover:dark:text-foreground" />
@@ -82,10 +81,9 @@ function PostsActions() {
         <span className="sr-only">Copy link</span>
       </div>
 
-      {/* 分隔线 */}
       <div className="bg-border my-1 h-px w-5" />
 
-      {/* 回到顶部 */}
+      {/* Scroll to top */}
       <ChevronUp
         onClick={scrollToTop}
         className={cn(

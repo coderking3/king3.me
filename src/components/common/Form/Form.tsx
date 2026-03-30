@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 'use client'
 
 import type { FieldValues } from 'react-hook-form'
@@ -34,19 +33,16 @@ export function Form<TFV extends FieldValues>(props: FormProps<TFV>) {
   } = props
 
   const formId = useId()
-
   const [submitting, setSubmitting] = useState(false)
 
-  // Extract defaultValues from field definitions, field-level overrides global
+  // Field-level defaultValues override global ones
   const fieldDefaultValues = useMemo(() => {
     const values = {} as Record<string, unknown>
-
     for (const field of fields) {
       if (field.defaultValue !== undefined) {
         values[String(field.name)] = field.defaultValue
       }
     }
-
     return values as Partial<TFV>
   }, [fields])
 
@@ -58,19 +54,17 @@ export function Form<TFV extends FieldValues>(props: FormProps<TFV>) {
     } as any
   })
 
-  // Subscribe to form value changes
   useEffect(() => {
     if (!onChange) return
-
     const subscription = form.watch((values) => {
       onChange(values as Partial<TFV>)
     })
-
     return () => subscription.unsubscribe()
   }, [form, onChange])
 
+  /* --- Handlers --- */
+
   const handleSubmit = async (values: TFV) => {
-    console.log(`🚀 ~ values:`, values)
     setSubmitting(true)
     try {
       await onSubmit(values)
@@ -80,6 +74,8 @@ export function Form<TFV extends FieldValues>(props: FormProps<TFV>) {
       setSubmitting(false)
     }
   }
+
+  /* --- Render --- */
 
   const isDisabled = disabled || submitting
 

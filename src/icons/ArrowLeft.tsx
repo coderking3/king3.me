@@ -21,13 +21,13 @@ export function ArrowLeftIcon({
   strokeWidth = 2,
   isHovered = false
 }: ArrowLeftIconProps) {
-  // 横线左端往左延伸: 6px → 3px
+  // Line left end extends: 6 → 3
   const lineSpring = useSpring({
     x1: isHovered ? 3 : 6,
     config: SPRING_CONFIG
   })
 
-  // 箭头头部同步往左移动：x轴整体 -3px
+  // Arrow head shifts left by 3px
   const polylineSpring = useSpring({
     points: isHovered ? '9 5 2 12 9 19' : '12 5 5 12 12 19',
     config: SPRING_CONFIG
@@ -46,9 +46,7 @@ export function ArrowLeftIcon({
       strokeLinecap="round"
       strokeLinejoin="round"
     >
-      {/* 横线：右端固定在 x2=19，左端动画延伸 */}
       <animated.line x2={19} y1={12} y2={12} {...lineSpring} />
-      {/* 箭头头部：整体往左移 */}
       <animated.polyline {...polylineSpring} />
     </svg>
   )

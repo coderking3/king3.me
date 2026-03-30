@@ -177,12 +177,51 @@ export default function Messages({
         pagination
         rowKey="id"
         loading={!messages.length}
+        // Tree mode (commented out for panel mode testing)
         // expandable={{
-        //   getChildren: (msg) => msg.replies as MessageWithReplies[]
+        //   getChildren: (msg) => msg.replies as MessageWithReplies[],
+        //   indentSize: 24
         // }}
         expandable={{
-          getChildren: (comment) => comment.replies as MessageWithReplies[],
-          indentSize: 24
+          rowExpandable: (record) => record.replies?.length > 0,
+          render: (record) => (
+            <div className="bg-muted/50 p-4">
+              <p className="text-muted-foreground text-xs font-medium">
+                {record.userName} &middot;{' '}
+                {new Date(record.createdAt).toLocaleString()}
+              </p>
+              <p className="mt-1 text-sm">{record.message}</p>
+              {record.replies?.length > 0 && (
+                <div className="mt-3 space-y-2">
+                  <p className="text-muted-foreground text-xs font-medium">
+                    {record.replies.length} replies:
+                  </p>
+                  {record.replies.map((reply) => (
+                    <div
+                      key={reply.id}
+                      className="bg-background flex items-start justify-between rounded-md border p-3"
+                    >
+                      <div>
+                        <p className="text-muted-foreground text-xs">
+                          {reply.userName} &middot;{' '}
+                          {new Date(reply.createdAt).toLocaleString()}
+                        </p>
+                        <p className="mt-1 text-sm">{reply.message}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteId(reply.id)}
+                        className="text-muted-foreground hover:text-destructive shrink-0 rounded p-1 transition-colors"
+                        title="Delete reply"
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
         }}
         selectable
         tableRef={tableRef}
@@ -190,14 +229,16 @@ export default function Messages({
           className: 'w-24',
           render: (record) => (
             <div className="flex items-center justify-center gap-1">
-              <button
-                type="button"
-                onClick={() => setReplyTo(record)}
-                className="text-muted-foreground hover:text-foreground rounded p-1 transition-colors"
-                title="Reply"
-              >
-                <Reply size={16} />
-              </button>
+              {!record.parentId && (
+                <button
+                  type="button"
+                  onClick={() => setReplyTo(record)}
+                  className="text-muted-foreground hover:text-foreground rounded p-1 transition-colors"
+                  title="Reply"
+                >
+                  <Reply size={16} />
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setDeleteId(record.id)}

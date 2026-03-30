@@ -8,8 +8,6 @@ export default async function AdminMessagesPage() {
 
   return (
     <Animated preset="fadeIn">
-      {/* <h1 className="mb-4 text-lg font-semibold">Messages</h1> */}
-      {/* <MessagesTable messages={result.data} /> */}
       <AdminMessages messages={result.data} />
     </Animated>
   )

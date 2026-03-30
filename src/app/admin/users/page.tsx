@@ -1,5 +1,5 @@
 import { getUsersAction } from '@/app/actions/users'
-import UsersTable from '@/components/blocks/admin/UsersTable'
+import { AdminUsers } from '@/components/blocks'
 import { Animated } from '@/components/common'
 
 export default async function AdminUsersPage() {
@@ -8,8 +8,7 @@ export default async function AdminUsersPage() {
 
   return (
     <Animated preset="fadeIn">
-      <h1 className="mb-4 text-lg font-semibold">Users</h1>
-      <UsersTable users={result.data} />
+      <AdminUsers users={result.data} />
     </Animated>
   )
 }

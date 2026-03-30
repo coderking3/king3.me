@@ -1,13 +1,12 @@
-import { Roboto_Mono } from 'next/font/google' // 引入 字体
+import { Roboto_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
-// Audiowide 使用本地子集字体
 export const audioWide = localFont({
   src: '../../public/fonts/Audiowide-King3.woff2',
   variable: '--font-audiowide',
   weight: '400',
   display: 'swap',
-  preload: true // 文件很小,可以预加载
+  preload: true
 })
 
 export const robotoMono = Roboto_Mono({

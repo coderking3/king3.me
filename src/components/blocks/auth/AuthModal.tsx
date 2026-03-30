@@ -27,10 +27,12 @@ export default function AuthModal({
         position="top"
         className="w-full max-w-[400px] rounded-xl px-8 py-7"
       >
-        {/* 无障碍必须有 title/description，视觉上由 AuthForm 内部渲染，这里隐藏 */}
+        {/* Visually hidden for accessibility; AuthForm renders its own heading */}
         <DialogHeader className="sr-only">
-          <DialogTitle>登录</DialogTitle>
-          <DialogDescription>使用第三方账户登录</DialogDescription>
+          <DialogTitle>Sign in</DialogTitle>
+          <DialogDescription>
+            Sign in with a third-party account
+          </DialogDescription>
         </DialogHeader>
 
         <AuthForm

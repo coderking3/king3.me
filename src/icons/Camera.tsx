@@ -41,13 +41,11 @@ export function CameraIcon({
       strokeWidth={strokeWidth}
       style={svgSpring}
     >
-      {/* 相机机身 */}
       <animated.path
         fill={color}
         d="M4 21q-.825 0-1.412-.587Q2 19.825 2 19V7q0-.825.588-1.412Q3.175 5 4 5h3.15L8.7 3.325q.15-.15.337-.238Q9.225 3 9.425 3h5.15q.2 0 .388.087q.187.088.337.238L16.85 5H20q.825 0 1.413.588Q22 6.175 22 7v12q0 .825-.587 1.413Q20.825 21 20 21Zm16-2V7h-4.05l-1.825-2h-4.25L8.05 7H4v12Z"
       />
 
-      {/* 镜头圆环 */}
       <animated.path
         fill={color}
         fillRule="evenodd"
@@ -56,7 +54,6 @@ export function CameraIcon({
         style={lensSpring}
       />
 
-      {/* 闪光灯 */}
       <animated.circle
         cx="18"
         cy="9"

@@ -39,7 +39,7 @@ async function PostsPage({ posts }: PostsPageProps) {
     <div className="mt-18">
       <div className="mx-auto max-w-6xl px-6">
         <div className="relative flex justify-between">
-          {/* 左侧 - 快捷操作 */}
+          {/* Left - Actions */}
           <aside className="mr-1 ml-[13px] hidden w-10 shrink-0 xl:block">
             <div className="sticky top-24">
               <Animated preset={{ mode: 'slideInLeft', delay: 0.15 }}>
@@ -48,12 +48,10 @@ async function PostsPage({ posts }: PostsPageProps) {
             </div>
           </aside>
 
-          {/* 中间 - 文章主体 */}
+          {/* Center - Article */}
           <article className="w-full max-w-3xl min-w-0">
             <Animated preset={{ mode: 'fadeIn', delay: 0.15 }}>
-              {/* 文章头部 */}
               <header className="mb-12">
-                {/* 封面图 */}
                 {metadata.image && (
                   <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
                     <Image
@@ -66,7 +64,6 @@ async function PostsPage({ posts }: PostsPageProps) {
                   </div>
                 )}
 
-                {/* 标题 */}
                 <h1
                   id={ARTICLE_TITLE}
                   className="text-primary mb-4 text-4xl font-bold text-balance lg:text-5xl"
@@ -74,14 +71,13 @@ async function PostsPage({ posts }: PostsPageProps) {
                   {metadata.title}
                 </h1>
 
-                {/* 描述 */}
                 {metadata.description && (
                   <p className="text-muted-foreground mb-6 text-lg text-pretty">
                     {metadata.description}
                   </p>
                 )}
 
-                {/* Meta 信息 */}
+                {/* Meta */}
                 <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
                   <time dateTime={date.toISOString()}>
                     {date.toLocaleDateString('en', {
@@ -93,7 +89,7 @@ async function PostsPage({ posts }: PostsPageProps) {
                   <span>·</span>
                   <span>{author}</span>
 
-                  {/* 标签 */}
+                  {/* Tags */}
                   {metadata.tags && metadata.tags.length > 0 && (
                     <>
                       <span>·</span>
@@ -112,7 +108,7 @@ async function PostsPage({ posts }: PostsPageProps) {
                 </div>
               </header>
 
-              {/* 内容区域 */}
+              {/* Content */}
               <main
                 className={cn(
                   'prose prose-lg dark:prose-invert',
@@ -151,7 +147,7 @@ async function PostsPage({ posts }: PostsPageProps) {
             </Animated>
           </article>
 
-          {/* 右侧 - 目录导航 */}
+          {/* Right - Table of contents */}
           <aside className="hidden w-48 shrink-0 pl-2 xl:block">
             <div className="sticky top-24">
               <Animated preset={{ mode: 'slideInRight', delay: 0.15 }}>

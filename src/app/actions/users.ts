@@ -61,3 +61,47 @@ export async function setUserRoleAction(userId: string, role: Role | Role[]) {
     return actionError(error)
   }
 }
+
+export async function getUserAction(userId: string) {
+  try {
+    await checkAdmin()
+    const result = await auth.api.getUser({
+      headers: await headers(),
+      query: { id: userId }
+    })
+    return actionSuccess(result)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
+export async function updateUserAction(
+  userId: string,
+  data: { name?: string; image?: string }
+) {
+  try {
+    await checkAdmin()
+    await auth.api.adminUpdateUser({
+      headers: await headers(),
+      body: { userId, data }
+    })
+    revalidatePath('/admin/users')
+    return actionSuccess(undefined)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
+export async function removeUserAction(userId: string) {
+  try {
+    await checkAdmin()
+    await auth.api.removeUser({
+      headers: await headers(),
+      body: { userId }
+    })
+    revalidatePath('/admin/users')
+    return actionSuccess(undefined)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}

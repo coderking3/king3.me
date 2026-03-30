@@ -1,10 +1,11 @@
 import type {
   PaginationInitialTableState,
+  Row,
   RowData,
   Table
 } from '@tanstack/react-table'
 
-// ──── TanStack meta type extension ────
+/* --- TanStack meta extension --- */
 
 declare module '@tanstack/react-table' {
   // eslint-disable-next-line unused-imports/no-unused-vars
@@ -15,7 +16,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-// ──── Column config ────
+/* --- Column --- */
 
 export interface ColumnConfig<T> {
   key: string
@@ -23,54 +24,44 @@ export interface ColumnConfig<T> {
   className?: string
   headClassName?: string
   cellClassName?: string
-  /** Whether sorting is enabled, default false */
+  /** Default: false */
   sortable?: boolean
-  /** Whether the column can be toggled in the visibility panel, default true. Set false for action columns. */
+  /** Default: true */
   enableHiding?: boolean
   render?: (value: any, record: T, index: number) => React.ReactNode
 }
 
-// ──── Expandable config ────
+/* --- Expandable --- */
 
 export interface ExpandableConfig<T> {
+  /** Control which rows show the expand toggle */
+  rowExpandable?: (record: T) => boolean
   /**
-   * Tree mode — provide child rows with the same data structure.
-   * TanStack handles flattening; DataTable adds depth-based indentation automatically.
-   *
-   * 树形模式：提供与父行相同结构的子行数据。
-   * TanStack 负责数据扁平化，DataTable 按 row.depth 自动缩进第一列。
+   * Default expanded state.
+   * - `true`: all rows
+   * - `string[]`: matching row IDs
    */
-  getChildren?: (record: T) => T[] | undefined
+  defaultExpanded?: true | string[]
 
-  /**
-   * Indentation size (px) per depth level in tree mode.
-   * Default: 20
-   *
-   * 树形模式下每级深度的缩进像素值，默认 20。
-   */
+  /** Tree mode: return child rows. Ignored when `render` is provided. */
+  getChildren?: (record: T) => T[] | undefined
+  /** Tree mode indent per depth level (px). Default: 20 */
   indentSize?: number
 
-  /**
-   * Whether to show the expand toggle for a specific row.
-   * Return false to hide the toggle for leaf rows that have no meaningful content.
-   * Default: always show when getChildren returns a non-empty array, or renderExpanded is provided.
-   *
-   * 控制某行是否显示展开箭头。
-   * 对于没有子内容的叶子行可返回 false 隐藏按钮。
-   */
-  rowExpandable?: (record: T) => boolean
+  /** Panel mode: render detail content below a row. Takes priority over `getChildren`. */
+  render?: (record: T, row: Row<T>) => React.ReactNode
 }
 
+/* --- Action column --- */
+
 export interface ActionConfig<T> {
-  /** Column title, default 'Actions' */
+  /** Default: 'Actions' */
   title?: string
-  /** Column width className, e.g. 'w-24' */
   className?: string
-  /** Render action buttons */
   render: (record: T, index: number) => React.ReactNode
 }
 
-// ──── Filter fields ────
+/* --- Filter fields --- */
 
 export interface InputFilterField {
   type?: 'input'
@@ -87,73 +78,51 @@ export interface SelectFilterField {
   options: { label: string; value: string }[]
 }
 
-/** Supports input / select filter fields. Extendable with date-range etc. */
 export type FilterField = InputFilterField | SelectFilterField
 
-// ──── Toolbar config ────
+/* --- Toolbar --- */
 
 export interface ToolbarConfig {
-  /** Left-side filter field configs */
   filterFields?: FilterField[]
   /**
-   * Filter mode:
-   * - 'auto': filter on input (client-side), uses TanStack column filtering
-   * - 'manual': trigger onFilter callback on Query button click (server-side)
-   * Default 'auto'
+   * - `'auto'`: client-side filtering on input change
+   * - `'manual'`: server-side, triggers `onFilter` on button click
+   *
+   * Default: `'auto'`
    */
   filterMode?: 'auto' | 'manual'
-  /** Callback for Query / Reset in manual mode */
   onFilter?: (values: Record<string, string>) => void
-  /** Right-side custom action area for "Add", "Export" buttons etc. */
+  /** Right-side custom actions (e.g. "Add", "Export" buttons) */
   actions?: React.ReactNode
-  /** Enable column visibility dropdown (View button). Column data is derived internally by DataTable. */
   columnToggle?: boolean
 }
 
-/** Derived from the table instance by DataTable and passed to Toolbar. No manual maintenance needed. */
 export interface ColumnVisibilityItem {
   id: string
-  /** Display name, derived from ColumnConfig.title */
   label: string
   isVisible: boolean
 }
 
-// ──── DataTable props ────
+/* --- DataTable props --- */
 
 export interface DataTableProps<T extends object> {
-  /** Column configurations */
   columns: ColumnConfig<T>[]
-  /** Data source */
   data: T[]
-  /** Wrapper container className */
   wrapClassName?: string
-  /** Table container className */
   className?: string
-  /** Custom row key for TanStack getRowId */
   rowKey?: keyof T | ((record: T, index: number) => string)
 
-  /* ── Optional enhancements ── */
-
-  /** Pagination: true for default 10 rows/page, or pass an object to customize pageSize / pageIndex */
+  /** `true` for default (10/page), or `{ pageSize, pageIndex }` */
   pagination?: boolean | PaginationInitialTableState
-  /** Enable multi-row selection (auto-injects checkbox column) */
+  /** Auto-injects checkbox column */
   selectable?: boolean
-  /** Expose the TanStack Table instance for external access (e.g. selected rows) */
+  /** Expose TanStack Table instance */
   tableRef?: React.RefObject<Table<T> | null>
-  /** Action column config, appended as the last column (non-sortable, non-hideable) */
   actions?: ActionConfig<T>
-  /** Text shown when data is empty, default 'No results.' */
+  /** Default: 'No results.' */
   emptyText?: string
-  /** Whether the table is in a loading state */
   loading?: boolean
 
-  /* ── Expandable rows ── */
-
-  /** Expandable row configuration */
   expandable?: ExpandableConfig<T>
-
-  /* ── Toolbar ── */
-
-  /** Toolbar config: filter fields, action buttons, column visibility toggle */
   toolbar?: ToolbarConfig
 }

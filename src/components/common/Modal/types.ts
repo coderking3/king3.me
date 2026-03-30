@@ -1,4 +1,4 @@
-// ──── Shared Props ────
+/* --- Shared --- */
 
 interface ModalSharedProps {
   title: string
@@ -8,6 +8,8 @@ interface ModalSharedProps {
   showFooter?: boolean
   position?: 'center' | 'top'
 }
+
+/* --- Footer --- */
 
 interface DefaultFooterProps {
   renderFooter?: never
@@ -25,7 +27,7 @@ interface CustomFooterProps {
   onCancel?: never
 }
 
-// ──── Open Mode ────
+/* --- Open mode --- */
 
 interface ControlledModeProps {
   open: boolean
@@ -38,6 +40,8 @@ interface TriggerModeProps {
   onClose?: never
   trigger: React.ReactNode
 }
+
+/* --- Exports --- */
 
 export type ModalProps = ModalSharedProps &
   (DefaultFooterProps | CustomFooterProps) &

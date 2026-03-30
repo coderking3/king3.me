@@ -7,7 +7,6 @@ export type SortDirection = 'asc' | 'desc' | false
 interface TableSortableHeaderProps {
   title: string
   sorted: SortDirection
-  /** 直接传入 column.getToggleSortingHandler()，内置 none → asc → desc → none 三态循环 */
   onToggleSorting?: (event: unknown) => void
 }
 

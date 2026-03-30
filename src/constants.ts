@@ -21,9 +21,9 @@ export const NAVIGATION_ITEMS = [
 
 export const SPRINGS: Record<'springy', SpringConfig> = {
   springy: {
-    /* 弹簧刚度。数值越高，运动越剧烈。默认值为 100。 */
+    /* Spring stiffness. Higher values produce more vigorous motion. Default: 100. */
     tension: 300,
-    /* 反作用力的大小。如果设置为 0，弹簧将无限振荡。默认值为 10。 */
+    /* Damping force. If set to 0, the spring will oscillate indefinitely. Default: 10. */
     friction: 10
   }
 }
