@@ -3,8 +3,8 @@ import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import React from 'react'
 
-import { Background } from '@/components/layouts'
 import { Toaster } from '@/components/ui'
+import { TooltipProvider } from '@/components/ui/tooltip'
 import { audioWide, robotoMono } from '@/lib/font'
 import { cn } from '@/lib/utils'
 
@@ -40,11 +40,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Background art="random" />
+          <TooltipProvider>
+            {children}
 
-          {children}
-
-          <Toaster position="top-right" />
+            <Toaster position="top-right" />
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

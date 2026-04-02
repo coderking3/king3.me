@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
 import React from 'react'
 
-import { AdminHeader, AdminSidebar } from '@/components/layouts'
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { AdminHeader, AdminSidebar } from '@/layouts/admin'
 import { getSession } from '@/lib/auth'
 
 export default async function AdminLayout({
@@ -13,14 +14,25 @@ export default async function AdminLayout({
   if (!session) redirect('/auth')
 
   return (
-    <div className="flex h-screen">
-      <AdminSidebar />
-
-      <div className="flex flex-1 flex-col overflow-hidden">
-        <AdminHeader user={session.user} />
-
-        <div className="flex-1 overflow-auto p-6">{children}</div>
-      </div>
-    </div>
+    <SidebarProvider
+      style={
+        {
+          '--sidebar-width': '14.5rem',
+          '--header-height': '3.5rem'
+        } as React.CSSProperties
+      }
+    >
+      <AdminSidebar user={session.user} variant="inset" />
+      <SidebarInset>
+        <AdminHeader />
+        <div className="flex flex-1 flex-col">
+          <div className="@container/main flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 px-4 py-4 md:gap-6 md:py-6 lg:px-6">
+              {children}
+            </div>
+          </div>
+        </div>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }

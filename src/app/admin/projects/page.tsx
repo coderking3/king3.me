@@ -1,14 +1,9 @@
 import { getProjectsAction } from '@/app/actions/projects'
-import { AdminProjects } from '@/components/blocks'
-import { Animated } from '@/components/common'
+import { ProjectsPage } from '@/views/admin'
 
-export default async function AdminProjectsPage() {
+export default async function Page() {
   const result = await getProjectsAction()
   if (!result.success) throw new Error(result.error)
 
-  return (
-    <Animated preset="fadeIn">
-      <AdminProjects projects={result.data} />
-    </Animated>
-  )
+  return <ProjectsPage projects={result.data} />
 }

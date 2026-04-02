@@ -1,14 +1,9 @@
 import { getMessagesAction } from '@/app/actions/messages'
-import { AdminMessages } from '@/components/blocks'
-import { Animated } from '@/components/common'
+import { MessagesPage } from '@/views/admin'
 
-export default async function AdminMessagesPage() {
+export default async function Page() {
   const result = await getMessagesAction()
   if (!result.success) throw new Error(result.error)
 
-  return (
-    <Animated preset="fadeIn">
-      <AdminMessages messages={result.data} />
-    </Animated>
-  )
+  return <MessagesPage messages={result.data} />
 }

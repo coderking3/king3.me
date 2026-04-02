@@ -1,5 +1,8 @@
-import { redirect } from 'next/navigation'
+import { getDashboardData } from '@/db/dashboard'
+import { DashboardPage } from '@/views/admin'
 
-export default function AdminPage() {
-  redirect('/admin/messages')
+export default async function Page() {
+  const data = await getDashboardData()
+
+  return <DashboardPage data={data} />
 }

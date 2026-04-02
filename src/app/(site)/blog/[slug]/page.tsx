@@ -1,5 +1,5 @@
-import { PostsPage } from '@/components/blocks'
 import { getPostsBySlug } from '@/lib/posts'
+import { PostsPage } from '@/views/blog'
 
 export default async function Page({
   params

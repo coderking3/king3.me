@@ -1,14 +1,9 @@
 import { getPlaylistAction } from '@/app/actions/playlist'
-import { AdminPlaylist } from '@/components/blocks'
-import { Animated } from '@/components/common'
+import { PlaylistPage } from '@/views/admin'
 
-export default async function AdminPlaylistPage() {
+export default async function Page() {
   const result = await getPlaylistAction()
   if (!result.success) throw new Error(result.error)
 
-  return (
-    <Animated preset="fadeIn">
-      <AdminPlaylist playlist={result.data} />
-    </Animated>
-  )
+  return <PlaylistPage playlist={result.data} />
 }

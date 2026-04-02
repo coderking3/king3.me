@@ -1,14 +1,9 @@
 import { getUsersAction } from '@/app/actions/users'
-import { AdminUsers } from '@/components/blocks'
-import { Animated } from '@/components/common'
+import { UsersPage } from '@/views/admin'
 
-export default async function AdminUsersPage() {
+export default async function Page() {
   const result = await getUsersAction()
   if (!result.success) throw new Error(result.error)
 
-  return (
-    <Animated preset="fadeIn">
-      <AdminUsers users={result.data} />
-    </Animated>
-  )
+  return <UsersPage users={result.data} />
 }
