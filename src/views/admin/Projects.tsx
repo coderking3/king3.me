@@ -7,13 +7,14 @@ import type { Project } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod/v4'
 
 import {
   createProjectAction,
   deleteProjectAction,
+  reorderProjectsAction,
   updateProjectAction
 } from '@/app/actions/projects'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
@@ -99,11 +100,18 @@ const columns: ColumnConfig<Project>[] = [
 
 export default function Projects({ projects }: { projects: Project[] }) {
   const tableRef = useRef<Table<Project>>(null)
+  const [projectRows, setProjectRows] = useState(projects)
+  const [isReordering, startReorderTransition] = useTransition()
   const [editProject, setEditProject] = useState<Project | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const formOpen = showCreate || !!editProject
+  const isTableLoading = isReordering || projectRows.length === 0
+
+  useEffect(() => {
+    setProjectRows(projects)
+  }, [projects])
 
   const handleDelete = async () => {
     if (!deleteId) return
@@ -132,6 +140,35 @@ export default function Projects({ projects }: { projects: Project[] }) {
     }
   }
 
+  const persistReorder = async (
+    nextProjects: Project[],
+    previousProjects: Project[]
+  ) => {
+    const result = await reorderProjectsAction(
+      nextProjects.map((project) => project.id)
+    )
+
+    if (result.success) {
+      setProjectRows(result.data)
+      return
+    }
+
+    setProjectRows(previousProjects)
+    toast.error(result.error)
+  }
+
+  const handleReorder = async (nextProjects: Project[]) => {
+    const previousProjects = projectRows
+    setProjectRows(nextProjects)
+
+    startReorderTransition(() => {
+      persistReorder(nextProjects, previousProjects).catch(() => {
+        setProjectRows(previousProjects)
+        toast.error('Failed to update project order')
+      })
+    })
+  }
+
   const formDefaultValues: ProjectFormValues = {
     name: editProject?.name || '',
     description: editProject?.description || '',
@@ -143,10 +180,12 @@ export default function Projects({ projects }: { projects: Project[] }) {
     <Animated preset="fadeIn">
       <DataTable
         columns={columns}
-        data={projects}
-        pagination
+        data={projectRows}
+        loading={isTableLoading}
+        pagination={{
+          pageSize: 50
+        }}
         rowKey="id"
-        loading={!projects.length}
         selectable
         tableRef={tableRef}
         actions={{
@@ -184,6 +223,11 @@ export default function Projects({ projects }: { projects: Project[] }) {
             </div>
           ),
           columnToggle: true
+        }}
+        dragSort={{
+          enabled: true,
+          disabled: isTableLoading,
+          onDragEnd: handleReorder
         }}
       />
 

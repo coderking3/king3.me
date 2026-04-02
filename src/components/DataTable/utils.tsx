@@ -1,7 +1,6 @@
 import type {
   ColumnDef,
   ExpandedState,
-  PaginationInitialTableState,
   PaginationState,
   Row
 } from '@tanstack/react-table'
@@ -28,7 +27,7 @@ const DEFAULT_PAGINATION_STATE: PaginationState = {
 }
 
 export function resolvePaginationState(
-  pagination?: boolean | PaginationInitialTableState
+  pagination?: boolean | Partial<PaginationState>
 ): PaginationState {
   if (!pagination || pagination === true) return DEFAULT_PAGINATION_STATE
   return { ...DEFAULT_PAGINATION_STATE, ...pagination }
@@ -63,7 +62,8 @@ export function buildColumnDefs<T extends object>(
   configs: ColumnConfig<T>[],
   selectable?: boolean,
   actions?: ActionConfig<T>,
-  expandable?: ExpandableConfig<T>
+  expandable?: ExpandableConfig<T>,
+  dragHandle?: boolean
 ): ColumnDef<T>[] {
   const cols: ColumnDef<T>[] = []
 
@@ -92,6 +92,21 @@ export function buildColumnDefs<T extends object>(
       enableSorting: false,
       enableHiding: false,
       meta: { className: 'w-10' }
+    })
+  }
+
+  if (dragHandle) {
+    cols.push({
+      id: 'drag',
+      header: '',
+      enableSorting: false,
+      enableHiding: false,
+      cell: () => null,
+      meta: {
+        className: 'w-10',
+        headClassName: 'w-10',
+        cellClassName: 'w-10'
+      }
     })
   }
 

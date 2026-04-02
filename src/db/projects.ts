@@ -28,6 +28,35 @@ class ProjectDb {
     return this.serialize(result)
   }
 
+  async reorder(ids: string[]): Promise<Project[]> {
+    const currentProjects = await prisma.project.findMany({
+      select: { id: true }
+    })
+
+    if (currentProjects.length !== ids.length) {
+      throw new Error('Project reorder payload is incomplete.')
+    }
+
+    const currentIdSet = new Set(currentProjects.map((project) => project.id))
+    if (
+      ids.some((id) => !currentIdSet.has(id)) ||
+      new Set(ids).size !== ids.length
+    ) {
+      throw new Error('Project reorder payload is invalid.')
+    }
+
+    await prisma.$transaction(
+      ids.map((id, index) =>
+        prisma.project.update({
+          where: { id },
+          data: { order: index }
+        })
+      )
+    )
+
+    return this.queryAll()
+  }
+
   async delete(id: string): Promise<Project> {
     const result = await prisma.project.delete({ where: { id } })
     return this.serialize(result)

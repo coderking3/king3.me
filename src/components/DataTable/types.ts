@@ -1,5 +1,5 @@
 import type {
-  PaginationInitialTableState,
+  PaginationState,
   Row,
   RowData,
   Table
@@ -103,6 +103,23 @@ export interface ColumnVisibilityItem {
   isVisible: boolean
 }
 
+/* --- Drag sort --- */
+
+export interface DragSortConfig<T> {
+  /**
+   * Enables row drag sorting for the current table data.
+   * Requires a stable `rowKey`.
+   */
+  enabled?: boolean
+  /** Default: `true` */
+  handle?: boolean
+  disabled?: boolean
+  onDragEnd: (
+    nextData: T[],
+    context: { activeId: string; overId: string }
+  ) => void | Promise<void>
+}
+
 /* --- DataTable props --- */
 
 export interface DataTableProps<T extends object> {
@@ -113,7 +130,7 @@ export interface DataTableProps<T extends object> {
   rowKey?: keyof T | ((record: T, index: number) => string)
 
   /** `true` for default (10/page), or `{ pageSize, pageIndex }` */
-  pagination?: boolean | PaginationInitialTableState
+  pagination?: boolean | Partial<PaginationState>
   /** Auto-injects checkbox column */
   selectable?: boolean
   /** Expose TanStack Table instance */
@@ -125,4 +142,5 @@ export interface DataTableProps<T extends object> {
 
   expandable?: ExpandableConfig<T>
   toolbar?: ToolbarConfig
+  dragSort?: DragSortConfig<T>
 }

@@ -3,5 +3,6 @@ export type {
   ActionConfig,
   ColumnConfig,
   ColumnVisibilityItem,
-  DataTableProps
+  DataTableProps,
+  DragSortConfig
 } from './types'

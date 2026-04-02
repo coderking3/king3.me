@@ -42,6 +42,17 @@ export async function updateProjectAction(
   }
 }
 
+export async function reorderProjectsAction(ids: string[]) {
+  try {
+    await checkAdmin()
+    const result = await projectDb.reorder(ids)
+    revalidatePath('/admin/projects')
+    return actionSuccess(result)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
 export async function deleteProjectAction(id: string) {
   try {
     await checkAdmin()

@@ -1,5 +1,6 @@
 'use client'
 
+import type { DragEndEvent } from '@dnd-kit/core'
 import type {
   ExpandedState,
   PaginationState,
@@ -9,8 +10,23 @@ import type {
   VisibilityState
 } from '@tanstack/react-table'
 
-import type { ColumnVisibilityItem, DataTableProps } from './types'
+import type { ExpandMode } from './components'
+import type { DataTableProps } from './types'
 
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable'
 import { css } from '@linaria/core'
 import {
   flexRender,
@@ -33,7 +49,7 @@ import {
 } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-import { TablePagination, TableToolbar } from './components'
+import { SortableTableRow, TablePagination, TableToolbar } from './components'
 import {
   buildColumnDefs,
   buildGetRowId,
@@ -85,17 +101,20 @@ export function DataTable<T extends object>({
   wrapClassName,
   className,
   toolbar,
-  expandable
+  expandable,
+  dragSort
 }: DataTableProps<T>) {
   const enablePagination = !!pagination
   const enableClientFilter = !!toolbar && toolbar.filterMode !== 'manual'
-  const expandMode = expandable?.render
+  const expandMode: ExpandMode = expandable?.render
     ? 'panel'
     : expandable?.getChildren
       ? 'tree'
       : null
   const enableExpandable = !!expandable && !!expandMode
   const indentSize = expandable?.indentSize ?? 20
+  const enableDragSort = !!dragSort?.enabled
+  const dragHandle = dragSort?.handle ?? true
 
   /* --- State --- */
 
@@ -113,8 +132,30 @@ export function DataTable<T extends object>({
 
   const getRowId = useMemo(() => buildGetRowId(rowKey), [rowKey])
 
+  if (enableDragSort && !getRowId) {
+    throw new Error('DataTable dragSort requires a stable rowKey.')
+  }
+
+  const dragDisabled =
+    !enableDragSort ||
+    !!dragSort?.disabled ||
+    !!sorting.length ||
+    loading === true ||
+    data.length < 2
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 6 }
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  )
+
   const actionsRef = useRef(actions)
   actionsRef.current = actions
+
+  const showDragHandleColumn = enableDragSort && dragHandle
 
   const columns = useMemo(
     () =>
@@ -122,11 +163,18 @@ export function DataTable<T extends object>({
         columnConfigs,
         selectable,
         actionsRef.current,
-        expandable
+        expandable,
+        showDragHandleColumn
       ),
     // prettier-ignore
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [JSON.stringify(columnConfigs.map((c) => ({ key: c.key, sortable: c.sortable }))), selectable, expandable]
+    [JSON.stringify(columnConfigs.map((c) => ({ key: c.key, sortable: c.sortable }))), selectable, expandable, showDragHandleColumn]
+  )
+
+  const dataIds = useMemo(
+    () =>
+      data.map((record, index) => getRowId?.(record, index) ?? String(index)),
+    [data, getRowId]
   )
 
   /* --- Table instance --- */
@@ -166,7 +214,7 @@ export function DataTable<T extends object>({
     tableRef.current = table
   }
 
-  const columnVisibilities = useMemo<ColumnVisibilityItem[]>(
+  const columnVisibilities = useMemo(
     () =>
       table
         .getAllColumns()
@@ -183,13 +231,18 @@ export function DataTable<T extends object>({
     [columnVisibility, columns]
   )
 
+  const dndRowIds = table.getRowModel().rows.map((row) => row.id)
+
   /* --- Row renderer --- */
 
-  const renderRow = (row: Row<T>) => {
+  const renderStaticRow = (row: Row<T>) => {
     const firstContentCellIndex = row
       .getVisibleCells()
       .findIndex(
-        (cell) => cell.column.id !== 'select' && cell.column.id !== 'expand'
+        (cell) =>
+          cell.column.id !== 'select' &&
+          cell.column.id !== 'drag' &&
+          cell.column.id !== 'expand'
       )
 
     return (
@@ -229,6 +282,94 @@ export function DataTable<T extends object>({
     )
   }
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    if (!enableDragSort || dragDisabled || !dragSort?.onDragEnd) return
+
+    const { active, over } = event
+    if (!over || active.id === over.id) return
+
+    const oldIndex = dataIds.indexOf(String(active.id))
+    const newIndex = dataIds.indexOf(String(over.id))
+    if (oldIndex < 0 || newIndex < 0) return
+
+    const dragResult = dragSort.onDragEnd(arrayMove(data, oldIndex, newIndex), {
+      activeId: String(active.id),
+      overId: String(over.id)
+    })
+
+    if (dragResult instanceof Promise) {
+      dragResult.catch(() => undefined)
+    }
+  }
+
+  const bodyContent = loading ? (
+    <TableRow>
+      <TableCell
+        colSpan={columns.length}
+        className="text-muted-foreground h-64 text-center"
+      >
+        Loading...
+      </TableCell>
+    </TableRow>
+  ) : table.getRowModel().rows.length ? (
+    enableDragSort ? (
+      <SortableContext items={dndRowIds} strategy={verticalListSortingStrategy}>
+        {table.getRowModel().rows.map((row) => (
+          <SortableTableRow
+            key={row.id}
+            row={row}
+            dragHandle={dragHandle}
+            dragDisabled={dragDisabled}
+            enableExpandable={enableExpandable}
+            expandMode={expandMode}
+            indentSize={indentSize}
+            expandable={expandable}
+          />
+        ))}
+      </SortableContext>
+    ) : (
+      table.getRowModel().rows.map((row) => renderStaticRow(row))
+    )
+  ) : (
+    <TableRow>
+      <TableCell
+        colSpan={columns.length}
+        className="text-muted-foreground h-64 text-center"
+      >
+        {emptyText}
+      </TableCell>
+    </TableRow>
+  )
+
+  const tableContent = (
+    <Table>
+      <TableHeader>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <TableHead
+                key={header.id}
+                className={cn(
+                  header.column.columnDef.meta?.className,
+                  header.column.columnDef.meta?.headClassName
+                )}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+              </TableHead>
+            ))}
+          </TableRow>
+        ))}
+      </TableHeader>
+
+      <TableBody>{bodyContent}</TableBody>
+    </Table>
+  )
+
   return (
     <div className={wrapClassName}>
       {toolbar && (
@@ -255,54 +396,17 @@ export function DataTable<T extends object>({
           className
         )}
       >
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className={cn(
-                      header.column.columnDef.meta?.className,
-                      header.column.columnDef.meta?.headClassName
-                    )}
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {loading ? (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-muted-foreground h-24 text-center"
-                >
-                  Loading...
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => renderRow(row))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-muted-foreground h-24 text-center"
-                >
-                  {emptyText}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
+        {enableDragSort ? (
+          <DndContext
+            collisionDetection={closestCenter}
+            sensors={sensors}
+            onDragEnd={handleDragEnd}
+          >
+            {tableContent}
+          </DndContext>
+        ) : (
+          tableContent
+        )}
       </div>
 
       {enablePagination && (
