@@ -8,8 +8,8 @@ async function PostsList({ limit = 5 }: { limit?: number }) {
 
   return (
     <>
-      {posts.map((post) => (
-        <PostsCard key={post.slug} metadata={post} />
+      {posts.map((post, index) => (
+        <PostsCard key={post.slug} index={index} metadata={post} />
       ))}
     </>
   )

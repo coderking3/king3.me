@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
+import { Animated } from '@/components'
 import { useInteractive } from '@/icons'
 import { ExternalLinkIcon } from '@/icons/ExternalLink'
 
@@ -14,6 +15,8 @@ interface Project {
 }
 
 const ICON_SIZE = 120
+const BASE_DELAY = 0.12
+const STAGGER_DELAY = 0.08
 
 interface ProjectCardProps {
   idx: number
@@ -21,11 +24,13 @@ interface ProjectCardProps {
 }
 
 function ProjectCard(props: ProjectCardProps) {
-  const { project } = props
+  const { idx, project } = props
   const { isHovered, handlers } = useInteractive()
 
   return (
-    <li
+    <Animated
+      as="li"
+      preset={{ mode: 'fadeInUp', delay: BASE_DELAY + idx * STAGGER_DELAY }}
       className="group relative flex flex-col items-start justify-between"
       {...handlers}
     >
@@ -55,7 +60,7 @@ function ProjectCard(props: ProjectCardProps) {
         <span className="mr-2">{new URL(project.link).host}</span>
         <ExternalLinkIcon isHovered={isHovered} size={16} />
       </p>
-    </li>
+    </Animated>
   )
 }
 
