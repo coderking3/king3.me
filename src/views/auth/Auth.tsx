@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 import { useInteractive } from '@/icons'
 import { ArrowLeftIcon } from '@/icons/ArrowLeft'
@@ -26,7 +27,7 @@ function Back() {
   )
 }
 
-function AuthPage() {
+function AuthContent() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
 
@@ -37,6 +38,14 @@ function AuthPage() {
         <AuthForm callbackURL={redirect} />
       </div>
     </div>
+  )
+}
+
+function AuthPage() {
+  return (
+    <Suspense>
+      <AuthContent />
+    </Suspense>
   )
 }
 
