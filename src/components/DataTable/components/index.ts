@@ -1,4 +1,7 @@
+export * from './DataTableRow'
+export * from './DraggableTable'
 export * from './SortableTableRow'
+export * from './TableContent'
 export * from './TablePagination'
 export * from './TableSortableHeader'
 export * from './TableToolbar'

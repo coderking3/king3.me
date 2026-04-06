@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
 import { ThemeMode } from '@/components'
+import { useIsMobile } from '@/hooks'
 import { Feed, Search } from '@/icons'
 import { useSession } from '@/lib/auth-client'
 import { clamp } from '@/lib/math'
@@ -23,12 +24,13 @@ function Header() {
   const page = pathname.split('/').slice(0, 2).join('/')
   const { data: session } = useSession()
 
+  const isMobile = useIsMobile()
   const isInitial = useRef(true)
   const headerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const downDelay = 64
-    const upDelay = 64
+    const downDelay = isMobile ? 40 : 64
+    const upDelay = isMobile ? 40 : 64
 
     function setProperty(property: string, value: string | null) {
       document.documentElement.style.setProperty(property, value)
@@ -92,83 +94,74 @@ function Header() {
       window.removeEventListener('scroll', updateStyles)
       window.removeEventListener('resize', updateStyles)
     }
-  }, [])
+  }, [isMobile])
 
   return (
     <>
       <motion.header
-        className="relative z-50 mb-(--header-mb,0px) flex h-(--header-height,180px) flex-col"
+        className="relative z-50 mb-(--header-mb,0px) flex h-(--header-height,140px) flex-col md:h-(--header-height,180px)"
         layout
         layoutRoot
       >
         <div
           ref={headerRef}
-          className="top-0 z-10 h-16 pt-6"
+          className="top-0 z-10 h-14 pt-5 md:h-16 md:pt-6"
           style={{
             position:
               'var(--header-position)' as React.CSSProperties['position']
           }}
         >
           <div
-            className="top-(--header-top,--spacing(6)) w-full"
+            className="inset-x-0 top-(--header-top,--spacing(6))"
             style={{
               position:
                 'var(--header-inner-position)' as React.CSSProperties['position']
             }}
           >
-            <div className="mx-auto h-full max-w-6xl px-6">
-              <div className="relative flex h-full items-center justify-between">
-                {/* Menus */}
-                <div
-                  className={cn(
-                    headerGlassCardClass,
-                    'h-11.5 pr-3 pl-3 md:pr-0'
-                  )}
-                >
-                  {/* Mobile hamburger */}
+            <div className="mx-auto h-full max-w-6xl px-4 sm:px-6">
+              {/* Mobile: single full-width capsule */}
+              <div
+                className={cn(
+                  headerGlassCardClass,
+                  'h-11.5 w-full justify-between px-2 sm:px-3 md:hidden'
+                )}
+              >
+                <div className="flex items-center">
                   <MobileNav />
-
-                  {/* Logo */}
                   <Logo />
+                </div>
+                <div className="text-accent-foreground/85 flex items-center gap-0.5">
+                  <Search />
+                  <UserAvatar user={session?.user ?? null} />
+                  <ThemeMode enterAnimationDelay={200} />
+                </div>
+              </div>
 
-                  {/* Divider */}
-                  <div className="bg-border ml-3 hidden h-6 w-[1.5px] md:block" />
-
-                  {/* Navbar */}
-                  <div className="hidden flex-1 items-center justify-center md:flex">
+              {/* Desktop: dual capsule layout */}
+              <div className="relative hidden h-full items-center justify-between md:flex">
+                <div className={cn(headerGlassCardClass, 'h-11.5 pr-0 pl-3')}>
+                  <Logo />
+                  <div className="bg-border ml-3 h-6 w-[1.5px]" />
+                  <div className="flex flex-1 items-center justify-center">
                     <Navbar page={page} className="pr-3 pl-1.5" />
                   </div>
                 </div>
 
-                {/* Actions */}
-                <div
-                  className={cn(
-                    'header-actions flex flex-1 items-center justify-end'
-                  )}
-                >
+                <div className="flex flex-1 items-center justify-end">
                   <div
                     className={cn(
                       headerGlassCardClass,
                       'text-accent-foreground/85 h-11.5 w-auto gap-0.5 px-3 transition-all'
                     )}
                   >
-                    {/* Search icon*/}
                     <Search />
-
-                    {/* User avatar / login icon */}
                     <UserAvatar user={session?.user ?? null} />
-
-                    {/* ThemeToggle icon */}
                     <ThemeMode enterAnimationDelay={200} />
-
-                    {/* FeedXML icon (hidden on mobile, shown in MobileNav sheet) */}
-                    <div className="hidden md:block">
-                      <Feed
-                        href="/feed.xml"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      />
-                    </div>
+                    <Feed
+                      href="/feed.xml"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    />
                   </div>
                 </div>
               </div>

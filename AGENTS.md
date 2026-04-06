@@ -196,6 +196,56 @@ Server actions live in `src/app/actions/` and use helper functions from `src/lib
 - `useInteractive()` hook (`src/icons/_internal/hooks.ts`) provides `isHovered` state + mouse event `handlers`
 - Spring config: `SPRINGS.springy` (`{ tension: 300, friction: 10 }`) in `src/constants.ts`
 
+### Page Transition Guidelines
+
+Page entrance animations use the `<Animated>` component (`src/components/Animated`) powered by Framer Motion. Follow these timing rules to keep pages feeling snappy (all content visible within ~0.7–0.9s):
+
+**Global defaults** (`src/components/Animated/presets.ts`):
+
+- `duration`: **0.35s** — single element animation length
+- `ease`: `[0.22, 1, 0.36, 1]` — cubic-bezier easeOutExpo
+- `fadeInUp` offset: **14px**
+
+**Header pattern** — title and description animate separately:
+
+```
+<header>
+  <Animated preset="fadeInUp">                                // delay: 0
+    <h1>Title</h1>
+  </Animated>
+  <Animated preset={{ mode: 'fadeInUp', delay: 0.06 }}>      // delay: 0.06
+    <p>Description</p>
+  </Animated>
+</header>
+```
+
+**Staggered list pattern** — cards/items use base delay + per-item stagger:
+
+```
+BASE_DELAY = 0.12        // start after header finishes
+STAGGER_DELAY = 0.04     // interval between items
+
+<Animated preset={{ mode: 'fadeInUp', delay: BASE_DELAY + idx * STAGGER_DELAY }}>
+```
+
+**Timing budget reference** (12-item list page):
+
+| Element     | delay | ends at   |
+| ----------- | ----- | --------- |
+| Title       | 0s    | 0.35s     |
+| Description | 0.06s | 0.41s     |
+| 1st card    | 0.12s | 0.47s     |
+| 6th card    | 0.32s | 0.67s     |
+| 12th card   | 0.56s | **0.91s** |
+
+**Rules of thumb**:
+
+- All first-screen content should be visible within **~0.7s**
+- Full page content within **~0.9s** max
+- Never exceed **1s** total — users lose attention beyond that (Nielsen Norman Group)
+- Use `preset` for standard animations; only use `animation` prop for custom behaviors (e.g. scale bounce on social icons)
+- Do **not** pass `table` instances or other incompatible-library objects to child components when `reactCompiler: true` — extract plain data and callbacks instead
+
 ### Key Files
 
 - `src/constants.ts` — navigation items, spring configs, author info, copyright

@@ -49,7 +49,7 @@ function Hero() {
       <Animated
         as="h1"
         preset="fadeInUp"
-        className="text-primary mb-6 font-mono text-6xl font-medium tracking-tight"
+        className="text-primary mb-6 font-mono text-4xl font-medium tracking-tight sm:text-5xl md:text-6xl"
       >
         <span>Hi, I&apos;m </span>
         <SelectedText text="King3" />
@@ -58,17 +58,22 @@ function Hero() {
       {/* Typewriter */}
       <Animated
         as="div"
-        preset={{ mode: 'fadeInUp', delay: 0.1 }}
+        preset={{ mode: 'fadeInUp', delay: 0.06 }}
         className="mb-7.5 flex h-16 min-h-16 items-center font-mono"
       >
-        <Typewriter text1={'<Developer/>'} text2="<Storyteller/>" />
+        <Typewriter
+          text1="<Developer/>"
+          text2="<Storyteller/>"
+          shortText1="<Dev/>"
+          shortText2="<Story/>"
+        />
       </Animated>
 
       {/* Tags */}
       <Animated
         as="p"
-        preset={{ mode: 'fadeInUp', delay: 0.2 }}
-        className="text-brand/90 mb-5.5 w-full text-2xl font-medium tracking-wide"
+        preset={{ mode: 'fadeInUp', delay: 0.12 }}
+        className="text-brand/90 mb-5.5 w-full text-xl font-medium tracking-wide sm:text-2xl"
       >
         {TOPICS.map((tag, index) => (
           <Animated
@@ -76,11 +81,11 @@ function Hero() {
             key={tag}
             className="mr-3 inline-block"
             animation={{
-              initial: { opacity: 0, y: 10 },
+              initial: { opacity: 0, y: 8 },
               animate: { opacity: 1, y: 0 },
               transition: {
-                duration: 0.4,
-                delay: 0.3 + index * 0.06,
+                duration: 0.3,
+                delay: 0.18 + index * 0.04,
                 ease: [0.22, 1, 0.36, 1]
               }
             }}
@@ -93,7 +98,7 @@ function Hero() {
       {/* Description */}
       <Animated
         as="p"
-        preset={{ mode: 'fadeInUp', delay: 0.35 }}
+        preset={{ mode: 'fadeInUp', delay: 0.22 }}
         className="text-primary/90 max-w-3xl text-lg leading-relaxed"
       >
         I'm a frontend developer passionate about open source and crafting my
@@ -108,7 +113,7 @@ function Hero() {
         animation={{
           initial: { opacity: 0 },
           animate: { opacity: 1 },
-          transition: { duration: 0.5, delay: 0.45 }
+          transition: { duration: 0.35, delay: 0.28 }
         }}
       >
         {SOCIALS.map(({ icon: Icon, href }, index) => (
@@ -118,8 +123,8 @@ function Hero() {
               initial: { opacity: 0, scale: 0.8 },
               animate: { opacity: 1, scale: 1 },
               transition: {
-                duration: 0.35,
-                delay: 0.5 + index * 0.05,
+                duration: 0.25,
+                delay: 0.32 + index * 0.03,
                 ease: [0.34, 1.56, 0.64, 1]
               }
             }}

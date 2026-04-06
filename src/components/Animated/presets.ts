@@ -5,11 +5,11 @@ import type { PresetOption } from './types'
 import type { MotionOptions } from '@/types'
 
 const DEFAULT_EASE: Easing = [0.22, 1, 0.36, 1]
-const DEFAULT_DURATION = 0.5
+const DEFAULT_DURATION = 0.35
 
 export const presetConfigs = {
   fadeIn: {},
-  fadeInUp: { y: 20 },
+  fadeInUp: { y: 14 },
   fadeInDown: { y: -20 },
   slideInLeft: { x: -30 },
   slideInRight: { x: 30 }

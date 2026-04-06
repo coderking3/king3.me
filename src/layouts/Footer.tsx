@@ -15,8 +15,8 @@ function Footer() {
   const quote = footerQuotes[hash % footerQuotes.length]
 
   return (
-    <footer className="mt-32">
-      <div className="mx-auto w-full max-w-6xl px-8">
+    <footer className="mt-16 sm:mt-32">
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-8">
         <div className="border-muted-foreground w-full border opacity-10"></div>
         <div className="text-muted-foreground/70 flex h-24 flex-col items-center justify-center gap-1 text-sm">
           <p>{COPYRIGHT}</p>

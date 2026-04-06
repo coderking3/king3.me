@@ -13,19 +13,29 @@ interface ProjectPageProps {
 
 function ProjectPage({ projects }: ProjectPageProps) {
   return (
-    <div className="mt-24">
-      <div className="mx-auto max-w-6xl px-8">
-        <Animated as="header" preset="fadeInUp" className="max-w-2xl">
-          <h1 className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl">
+    <div className="mt-16 sm:mt-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
+        <header className="max-w-2xl">
+          <Animated
+            as="h1"
+            preset="fadeInUp"
+            className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
+          >
             {title}
-          </h1>
-          <p className="text-foreground/80 mt-6 text-lg">{description}</p>
-        </Animated>
+          </Animated>
+          <Animated
+            as="p"
+            preset={{ mode: 'fadeInUp', delay: 0.06 }}
+            className="text-muted-foreground mt-6 text-lg"
+          >
+            {description}
+          </Animated>
+        </header>
 
-        <div className="mt-16 sm:mt-20">
+        <div className="mt-12 sm:mt-20">
           <ul
             role="list"
-            className="grid grid-cols-1 gap-x-12 gap-y-16 sm:grid-cols-2 lg:grid-cols-3"
+            className="grid grid-cols-1 gap-x-12 gap-y-6 sm:grid-cols-2 sm:gap-y-16 lg:grid-cols-3"
           >
             {projects.map((project, index) => (
               <ProjectCard idx={index} key={project.id} project={project} />

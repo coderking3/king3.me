@@ -44,10 +44,12 @@ function DialogContent({
   children,
   showCloseButton = true,
   position = 'center',
+  fullscreen = false,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
   position?: 'center' | 'top'
+  fullscreen?: boolean
 }) {
   const positionClass =
     position === 'center' ? 'top-1/2 -translate-y-1/2' : 'top-25 translate-y-0'
@@ -57,9 +59,15 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Popup
         data-slot="dialog-content"
+        data-fullscreen={fullscreen || undefined}
         className={cn(
-          'bg-popover text-popover-foreground ring-foreground/10 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 text-sm ring-1 duration-100 outline-none sm:max-w-sm',
-          positionClass,
+          'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed z-50 grid text-sm duration-100 outline-none',
+          fullscreen
+            ? 'inset-0 w-full gap-4 overflow-y-auto p-4'
+            : cn(
+                'ring-foreground/10 data-open:zoom-in-95 data-closed:zoom-out-95 left-1/2 w-full max-w-[calc(100%-2rem)] -translate-x-1/2 gap-4 rounded-xl p-4 ring-1 sm:max-w-sm',
+                positionClass
+              ),
           className
         )}
         {...props}
@@ -107,7 +115,7 @@ function DialogFooter({
     <div
       data-slot="dialog-footer"
       className={cn(
-        'bg-muted/50 -mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 sm:flex-row sm:justify-end',
+        'bg-muted/50 -mx-4 -mb-4 flex flex-col-reverse gap-2 rounded-b-xl border-t p-4 in-data-[fullscreen]:rounded-b-none sm:flex-row sm:justify-end',
         className
       )}
       {...props}

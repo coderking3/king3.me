@@ -1,7 +1,5 @@
 'use client'
 
-import type { Table } from '@tanstack/react-table'
-
 import type { ColumnVisibilityItem, FilterField } from '../types'
 
 import { RotateCcw, Search, Settings2 } from 'lucide-react'
@@ -31,7 +29,8 @@ export interface TableToolbarProps {
   filterFields?: FilterField[]
   filterMode?: 'auto' | 'manual'
   onFilter?: (values: Record<string, string>) => void
-  table?: Table<any>
+  /** Set a column's filter value (for auto filter mode) */
+  setColumnFilterValue?: (columnId: string, value: string | undefined) => void
   actions?: React.ReactNode
   columnToggle?: boolean
   columnVisibilities?: ColumnVisibilityItem[]
@@ -52,7 +51,7 @@ export function TableToolbar({
   filterFields = DefaultFilterFields,
   filterMode = 'auto',
   onFilter,
-  table,
+  setColumnFilterValue,
   actions,
   columnToggle,
   columnVisibilities,
@@ -78,15 +77,13 @@ export function TableToolbar({
 
   const handleAutoChange = (key: string, value: string) => {
     setValue(key, value)
-    table?.getColumn(key)?.setFilterValue(value || undefined)
+    setColumnFilterValue?.(key, value || undefined)
   }
 
   const handleAutoReset = () => {
     const empty = buildEmptyValues(filterFields)
     setValues(empty)
-    filterFields.forEach((f) =>
-      table?.getColumn(f.key)?.setFilterValue(undefined)
-    )
+    filterFields.forEach((f) => setColumnFilterValue?.(f.key, undefined))
   }
 
   const handleManualQuery = () => onFilter?.(values)

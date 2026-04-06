@@ -1,23 +1,50 @@
-import Posts from './PostsList'
+import type { PostsMetadata } from '@/types'
+
+import { Animated } from '@/components'
+
+import PostsCard from './PostsCard'
 
 const description =
   'Writing blog posts is one of my favorite ways to share and reflect, and I hope to pass on useful technical knowledge to more people. I prefer writing about technical topics, but I also write about non-technical topics, such as photography and personal reflections.'
 
 export { description }
 
-function Blog() {
+const BASE_DELAY = 0.12
+const STAGGER_DELAY = 0.04
+
+function Blog({ posts }: { posts: PostsMetadata[] }) {
   return (
-    <div className="mt-24">
-      <div className="mx-auto max-w-6xl px-8">
+    <div className="mt-16 sm:mt-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <header className="max-w-2xl">
-          <h1 className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl">
+          <Animated
+            as="h1"
+            preset="fadeInUp"
+            className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
+          >
             Welcome to my blog
-          </h1>
-          <p className="text-muted-foreground mt-6 text-lg">{description}</p>
+          </Animated>
+          <Animated
+            as="p"
+            preset={{ mode: 'fadeInUp', delay: 0.06 }}
+            className="text-muted-foreground mt-6 text-lg"
+          >
+            {description}
+          </Animated>
         </header>
 
-        <div className="mt-20 grid grid-cols-2 gap-8">
-          <Posts limit={12} />
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:mt-20 sm:grid-cols-2 sm:gap-8">
+          {posts.map((post, idx) => (
+            <Animated
+              key={post.slug}
+              preset={{
+                mode: 'fadeInUp',
+                delay: BASE_DELAY + idx * STAGGER_DELAY
+              }}
+            >
+              <PostsCard metadata={post} />
+            </Animated>
+          ))}
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ function PostsCard({ metadata }: { metadata: PostsMetadata }) {
     <article className="group border-border block cursor-pointer rounded-2xl border bg-transparent backdrop-blur-xs backdrop-saturate-150 transition-all duration-300">
       <Link href={`/blog/${slug}`}>
         {/* Cover */}
-        <div className="relative aspect-10/4 w-full overflow-hidden rounded-t-2xl select-none">
+        <div className="relative aspect-video w-full overflow-hidden rounded-t-2xl select-none sm:aspect-10/4">
           <Image
             src={image}
             alt={title}
@@ -19,7 +19,7 @@ function PostsCard({ metadata }: { metadata: PostsMetadata }) {
           />
         </div>
 
-        <div className="space-y-3 px-6 py-3">
+        <div className="space-y-3 px-4 py-3 sm:px-6">
           <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
             <time className="font-medium">{date}</time>
             {tags.length > 0 && (

@@ -20,6 +20,7 @@ export function Modal(props: ModalProps) {
     description,
     className = 'sm:max-w-md',
     position = 'top',
+    fullscreen = false,
     children,
     renderFooter,
     showFooter = true
@@ -51,7 +52,11 @@ export function Modal(props: ModalProps) {
   /* --- Content --- */
 
   const content = (
-    <DialogContent position={position} className={className}>
+    <DialogContent
+      position={position}
+      fullscreen={fullscreen}
+      className={className}
+    >
       <DialogHeader>
         <DialogTitle>{title}</DialogTitle>
         {description && <DialogDescription>{description}</DialogDescription>}

@@ -7,6 +7,7 @@ interface ModalSharedProps {
   children: React.ReactNode
   showFooter?: boolean
   position?: 'center' | 'top'
+  fullscreen?: boolean
 }
 
 /* --- Footer --- */

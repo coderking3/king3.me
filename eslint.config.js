@@ -3,7 +3,8 @@ import { defineConfig } from '@king-3/eslint-config'
 export default defineConfig(
   {
     typescript: true,
-    nextjs: true
+    nextjs: true,
+    ignores: ['./docs/**/*.md']
   },
   {
     name: 'custom-rules',
@@ -15,12 +16,6 @@ export default defineConfig(
         'error',
         { classes: false, functions: false, variables: false }
       ]
-    }
-  },
-  {
-    files: ['./CLAUDE.md'],
-    rules: {
-      'yaml/no-empty-document': 'warn'
     }
   }
 )

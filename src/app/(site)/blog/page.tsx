@@ -1,3 +1,4 @@
+import { getAllPosts } from '@/lib/posts'
 import { blogDescription, BlogPage } from '@/views/blog'
 
 export const metadata = {
@@ -5,6 +6,9 @@ export const metadata = {
   description: blogDescription
 }
 
-export default function Page() {
-  return <BlogPage />
+export default async function Page() {
+  const allPosts = await getAllPosts()
+  const posts = allPosts.slice(0, 12)
+
+  return <BlogPage posts={posts} />
 }

@@ -14,8 +14,10 @@ import {
   SheetTrigger
 } from '@/components/ui'
 import { NAVIGATION_ITEMS } from '@/constants'
-import { Feed } from '@/icons'
+import { FeedIcon } from '@/icons'
 import { cn } from '@/lib/utils'
+
+const MOBILE_NAV_ITEMS = [{ name: 'Home', href: '/' }, ...NAVIGATION_ITEMS]
 
 function MobileNav() {
   const [open, setOpen] = useState(false)
@@ -42,7 +44,7 @@ function MobileNav() {
 
         <nav className="flex-1 px-4">
           <ul className="space-y-1">
-            {NAVIGATION_ITEMS.map(({ name, href }) => {
+            {MOBILE_NAV_ITEMS.map(({ name, href }) => {
               const isActive =
                 (page.includes(href) && href !== '/') || page === href
 
@@ -65,9 +67,16 @@ function MobileNav() {
           </ul>
         </nav>
 
-        <SheetFooter className="flex-row items-center gap-1 border-t px-4">
-          <Feed href="/feed.xml" target="_blank" rel="noopener noreferrer" />
-          <span className="text-muted-foreground text-sm">RSS Feed</span>
+        <SheetFooter className="border-t px-4">
+          <Link
+            href="/feed.xml"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
+          >
+            <FeedIcon />
+            <span>RSS Feed</span>
+          </Link>
         </SheetFooter>
       </SheetContent>
     </Sheet>

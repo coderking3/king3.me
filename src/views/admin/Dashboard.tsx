@@ -21,12 +21,12 @@ interface StatCardProps {
 
 function StatCard({ title, value, newThisMonth, icon }: StatCardProps) {
   return (
-    <div className="border-border rounded-lg border p-6">
+    <div className="border-border rounded-lg border p-4 md:p-6">
       <div className="flex items-center justify-between">
         <p className="text-muted-foreground text-sm font-medium">{title}</p>
         <span className="text-muted-foreground">{icon}</span>
       </div>
-      <p className="mt-2 text-3xl font-bold">{value}</p>
+      <p className="mt-2 text-2xl font-bold md:text-3xl">{value}</p>
       {newThisMonth !== undefined && (
         <p className="text-muted-foreground mt-1 text-xs">
           +{newThisMonth} this month
@@ -101,7 +101,7 @@ function Dashboard({ data }: DashboardProps) {
       </div>
 
       {/* Recent Messages & Users */}
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <SectionCard
           title="Recent Messages"
           href="/admin/messages"
@@ -174,7 +174,7 @@ function Dashboard({ data }: DashboardProps) {
       </div>
 
       {/* Projects & Playlist */}
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <SectionCard title="Projects" href="/admin/projects" linkText="Manage">
           <div className="space-y-3">
             {projects.length === 0 && (

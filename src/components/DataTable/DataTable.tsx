@@ -1,35 +1,24 @@
 'use client'
 
-import type { DragEndEvent } from '@dnd-kit/core'
 import type {
   ExpandedState,
   PaginationState,
-  Row,
   RowSelectionState,
   SortingState,
   VisibilityState
 } from '@tanstack/react-table'
 
-import type { ExpandMode } from './components'
-import type { DataTableProps } from './types'
+import type { ExpandMode } from './components/SortableTableRow'
+import type { ColumnVisibilityItem, DataTableProps } from './types'
 
 import {
-  closestCenter,
-  DndContext,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors
 } from '@dnd-kit/core'
+import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy
-} from '@dnd-kit/sortable'
-import { css } from '@linaria/core'
-import {
-  flexRender,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
@@ -37,46 +26,22 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { Fragment, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from '@/components/ui'
 import { cn } from '@/lib/utils'
 
-import { SortableTableRow, TablePagination, TableToolbar } from './components'
+import {
+  DraggableTable,
+  TableContent,
+  TablePagination,
+  TableToolbar
+} from './components'
 import {
   buildColumnDefs,
   buildGetRowId,
   resolveDefaultExpanded,
   resolvePaginationState
 } from './utils'
-
-/* --- Styles --- */
-
-const firstColPadding = css`
-  & th:first-child,
-  & td:first-child {
-    padding-left: 1rem;
-  }
-`
-const firstColPaddingRight = css`
-  & th:first-child,
-  & td:first-child {
-    padding-right: 0.25rem;
-  }
-`
-const lastColPadding = css`
-  & th:last-child,
-  & td:last-child {
-    padding-right: 1rem;
-  }
-`
 
 /* --- Row model factories (module-level singletons) --- */
 
@@ -85,6 +50,12 @@ const filteredRowModel = getFilteredRowModel()
 const sortedRowModel = getSortedRowModel()
 const paginationRowModel = getPaginationRowModel()
 const expandedRowModel = getExpandedRowModel()
+
+/* --- Tailwind table padding classes --- */
+
+const firstColPl = '[&_th:first-child]:pl-4 [&_td:first-child]:pl-4'
+const firstColPr = '[&_th:first-child]:pr-1 [&_td:first-child]:pr-1'
+const lastColPr = '[&_th:last-child]:pr-4 [&_td:last-child]:pr-4'
 
 /* --- DataTable --- */
 
@@ -210,11 +181,11 @@ export function DataTable<T extends object>({
     })
   })
 
-  if (tableRef) {
-    tableRef.current = table
-  }
+  useEffect(() => {
+    if (tableRef) tableRef.current = table
+  }, [table, tableRef])
 
-  const columnVisibilities = useMemo(
+  const columnVisibilities = useMemo<ColumnVisibilityItem[]>(
     () =>
       table
         .getAllColumns()
@@ -231,58 +202,15 @@ export function DataTable<T extends object>({
     [columnVisibility, columns]
   )
 
-  const dndRowIds = table.getRowModel().rows.map((row) => row.id)
+  /* --- Drag handler --- */
 
-  /* --- Row renderer --- */
-
-  const renderStaticRow = (row: Row<T>) => {
-    const firstContentCellIndex = row
-      .getVisibleCells()
-      .findIndex(
-        (cell) =>
-          cell.column.id !== 'select' &&
-          cell.column.id !== 'drag' &&
-          cell.column.id !== 'expand'
-      )
-
-    return (
-      <Fragment key={row.id}>
-        <TableRow data-state={row.getIsSelected() ? 'selected' : undefined}>
-          {row.getVisibleCells().map((cell, cellIndex) => {
-            const isFirstContentCell =
-              enableExpandable && cellIndex === firstContentCellIndex
-            const depthIndent =
-              isFirstContentCell && row.depth > 0
-                ? row.depth * indentSize
-                : undefined
-
-            return (
-              <TableCell
-                key={cell.id}
-                className={cn(
-                  cell.column.columnDef.meta?.className,
-                  cell.column.columnDef.meta?.cellClassName
-                )}
-                style={depthIndent ? { paddingLeft: depthIndent } : undefined}
-              >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            )
-          })}
-        </TableRow>
-
-        {expandMode === 'panel' && row.getIsExpanded() && (
-          <TableRow className="hover:bg-transparent">
-            <TableCell colSpan={row.getVisibleCells().length} className="p-0">
-              {expandable!.render!(row.original, row)}
-            </TableCell>
-          </TableRow>
-        )}
-      </Fragment>
-    )
-  }
-
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = (
+    event: Parameters<typeof DraggableTable>[0]['onDragEnd'] extends (
+      e: infer E
+    ) => any
+      ? E
+      : never
+  ) => {
     if (!enableDragSort || dragDisabled || !dragSort?.onDragEnd) return
 
     const { active, over } = event
@@ -302,72 +230,31 @@ export function DataTable<T extends object>({
     }
   }
 
-  const bodyContent = loading ? (
-    <TableRow>
-      <TableCell
-        colSpan={columns.length}
-        className="text-muted-foreground h-64 text-center"
-      >
-        Loading...
-      </TableCell>
-    </TableRow>
-  ) : table.getRowModel().rows.length ? (
-    enableDragSort ? (
-      <SortableContext items={dndRowIds} strategy={verticalListSortingStrategy}>
-        {table.getRowModel().rows.map((row) => (
-          <SortableTableRow
-            key={row.id}
-            row={row}
-            dragHandle={dragHandle}
-            dragDisabled={dragDisabled}
-            enableExpandable={enableExpandable}
-            expandMode={expandMode}
-            indentSize={indentSize}
-            expandable={expandable}
-          />
-        ))}
-      </SortableContext>
-    ) : (
-      table.getRowModel().rows.map((row) => renderStaticRow(row))
-    )
-  ) : (
-    <TableRow>
-      <TableCell
-        colSpan={columns.length}
-        className="text-muted-foreground h-64 text-center"
-      >
-        {emptyText}
-      </TableCell>
-    </TableRow>
-  )
+  /* --- Extract data from table (avoid passing table instance to children) --- */
+
+  const headerGroups = table.getHeaderGroups()
+  const rows = table.getRowModel().rows
+  const pageCount = table.getPageCount()
+  const canPreviousPage = table.getCanPreviousPage()
+  const canNextPage = table.getCanNextPage()
+
+  /* --- Render --- */
 
   const tableContent = (
-    <Table>
-      <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
-              <TableHead
-                key={header.id}
-                className={cn(
-                  header.column.columnDef.meta?.className,
-                  header.column.columnDef.meta?.headClassName
-                )}
-              >
-                {header.isPlaceholder
-                  ? null
-                  : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-              </TableHead>
-            ))}
-          </TableRow>
-        ))}
-      </TableHeader>
-
-      <TableBody>{bodyContent}</TableBody>
-    </Table>
+    <TableContent
+      headerGroups={headerGroups}
+      rows={rows}
+      columns={columns}
+      loading={loading}
+      emptyText={emptyText}
+      enableDragSort={enableDragSort}
+      dragDisabled={dragDisabled}
+      dragHandle={dragHandle}
+      enableExpandable={enableExpandable}
+      expandMode={expandMode}
+      indentSize={indentSize}
+      expandable={expandable}
+    />
   )
 
   return (
@@ -377,7 +264,9 @@ export function DataTable<T extends object>({
           filterFields={toolbar.filterFields}
           filterMode={toolbar.filterMode}
           onFilter={toolbar.onFilter}
-          table={table}
+          setColumnFilterValue={(columnId, value) =>
+            table.getColumn(columnId)?.setFilterValue(value)
+          }
           actions={toolbar.actions}
           columnToggle={toolbar.columnToggle}
           columnVisibilities={columnVisibilities}
@@ -390,20 +279,16 @@ export function DataTable<T extends object>({
       <div
         className={cn(
           'overflow-hidden rounded-md border',
-          firstColPadding,
-          selectable && firstColPaddingRight,
-          !actions && lastColPadding,
+          firstColPl,
+          selectable && firstColPr,
+          !actions && lastColPr,
           className
         )}
       >
         {enableDragSort ? (
-          <DndContext
-            collisionDetection={closestCenter}
-            sensors={sensors}
-            onDragEnd={handleDragEnd}
-          >
+          <DraggableTable sensors={sensors} onDragEnd={handleDragEnd}>
             {tableContent}
-          </DndContext>
+          </DraggableTable>
         ) : (
           tableContent
         )}
@@ -413,9 +298,9 @@ export function DataTable<T extends object>({
         <TablePagination
           pageIndex={paginationState.pageIndex}
           pageSize={paginationState.pageSize}
-          pageCount={table.getPageCount()}
-          canPreviousPage={table.getCanPreviousPage()}
-          canNextPage={table.getCanNextPage()}
+          pageCount={pageCount}
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
           onPageIndexChange={table.setPageIndex}
           onPageSizeChange={table.setPageSize}
           onPreviousPage={table.previousPage}

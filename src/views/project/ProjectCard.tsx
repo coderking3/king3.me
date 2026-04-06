@@ -16,7 +16,7 @@ interface Project {
 
 const ICON_SIZE = 120
 const BASE_DELAY = 0.12
-const STAGGER_DELAY = 0.08
+const STAGGER_DELAY = 0.04
 
 interface ProjectCardProps {
   idx: number
@@ -31,7 +31,7 @@ function ProjectCard(props: ProjectCardProps) {
     <Animated
       as="li"
       preset={{ mode: 'fadeInUp', delay: BASE_DELAY + idx * STAGGER_DELAY }}
-      className="group relative flex flex-col items-start justify-between"
+      className="border-border group relative flex flex-col items-start justify-between rounded-xl border border-dashed p-4 pb-3 md:border-0 md:p-0"
       {...handlers}
     >
       <div className="z-20">
@@ -43,9 +43,9 @@ function ProjectCard(props: ProjectCardProps) {
           alt={project.name}
         ></Image>
 
-        <h2 className="text-primary mt-6 text-base font-semibold">
+        <h2 className="text-primary mt-3 text-base font-semibold md:mt-6">
           <Link href={project.link} target="_blank">
-            <span className="absolute -inset-x-4 -inset-y-6 z-20 sm:-inset-x-6 sm:rounded-2xl" />
+            <span className="absolute inset-0 z-20 md:-inset-x-6 md:-inset-y-6 md:rounded-2xl" />
             {project.name}
           </Link>
         </h2>
@@ -54,9 +54,10 @@ function ProjectCard(props: ProjectCardProps) {
         </p>
       </div>
 
-      <div className="border-border bg-secondary/80 absolute -inset-x-4 -inset-y-6 z-0 scale-95 border border-dashed opacity-0 transition group-hover:scale-100 group-hover:opacity-100 sm:-inset-x-6 sm:rounded-xl" />
+      {/* Desktop: dashed hover border + background */}
+      <div className="border-border bg-secondary/80 absolute -inset-x-6 -inset-y-6 z-0 hidden scale-95 rounded-xl border border-dashed opacity-0 transition md:block md:group-hover:scale-100 md:group-hover:opacity-100" />
 
-      <p className="group-hover:text-brand text-foreground/90 pointer-events-none z-20 mt-6 flex items-center text-sm font-medium transition group-hover:-translate-y-0.5">
+      <p className="text-brand md:text-foreground/90 md:group-hover:text-brand pointer-events-none z-20 mt-3 flex items-center text-sm font-medium transition md:mt-6 md:group-hover:-translate-y-0.5">
         <span className="mr-2">{new URL(project.link).host}</span>
         <ExternalLinkIcon isHovered={isHovered} size={16} />
       </p>

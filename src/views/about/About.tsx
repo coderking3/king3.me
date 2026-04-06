@@ -34,8 +34,8 @@ const EXPLORE_ITEMS: ExploreItem[] = [
 
 function AboutPage() {
   return (
-    <div className="mt-24">
-      <div className="mx-auto max-w-6xl px-8">
+    <div className="mt-16 sm:mt-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         {/* Header */}
         <Animated as="header" preset="fadeInUp" className="max-w-2xl">
           <h1 className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl">

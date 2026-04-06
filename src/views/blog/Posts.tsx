@@ -13,6 +13,7 @@ import { extractHeadings } from '@/lib/posts'
 import { cn } from '@/lib/utils'
 
 import PostsActions from './PostsActions'
+import PostsFloatingBar from './PostsFloatingBar'
 import PostsTableOfContents, { ARTICLE_TITLE } from './PostsTableOfContents'
 
 const author = 'King3'
@@ -36,8 +37,8 @@ async function PostsPage({ posts }: PostsPageProps) {
   const date = new Date(metadata.date)
 
   return (
-    <div className="mt-18">
-      <div className="mx-auto max-w-6xl px-6">
+    <div className="mt-14 sm:mt-18">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="relative flex justify-between">
           {/* Left - Actions */}
           <aside className="mr-1 ml-[13px] hidden w-10 shrink-0 xl:block">
@@ -51,7 +52,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           {/* Center - Article */}
           <article className="w-full max-w-3xl min-w-0">
             <Animated preset={{ mode: 'fadeIn', delay: 0.15 }}>
-              <header className="mb-12">
+              <header className="mb-8 sm:mb-12">
                 {metadata.image && (
                   <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
                     <Image
@@ -66,7 +67,7 @@ async function PostsPage({ posts }: PostsPageProps) {
 
                 <h1
                   id={ARTICLE_TITLE}
-                  className="text-primary mb-4 text-4xl font-bold text-balance lg:text-5xl"
+                  className="text-primary mb-4 text-3xl font-bold text-balance sm:text-4xl lg:text-5xl"
                 >
                   {metadata.title}
                 </h1>
@@ -119,6 +120,7 @@ async function PostsPage({ posts }: PostsPageProps) {
                   'prose-strong:text-foreground prose-strong:font-bold',
                   'prose-code:text-foreground',
                   'prose-img:opacity-90 prose-img:rounded-lg',
+                  'prose-pre:overflow-x-auto prose-pre:scrollbar-none prose-pre:text-sm sm:prose-pre:text-base',
                   'max-w-none'
                 )}
               >
@@ -157,6 +159,9 @@ async function PostsPage({ posts }: PostsPageProps) {
           </aside>
         </div>
       </div>
+
+      {/* Mobile floating bar (below xl) */}
+      <PostsFloatingBar headings={headings} />
     </div>
   )
 }
