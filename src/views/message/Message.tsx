@@ -41,7 +41,10 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
         </header>
 
         <div className="mt-16 sm:mt-20">
-          <Animated preset={{ mode: 'fadeInUp', delay: 0.12 }} className="max-w-2xl">
+          <Animated
+            preset={{ mode: 'fadeInUp', delay: 0.12 }}
+            className="max-w-2xl"
+          >
             {session ? (
               <MessageInput user={session.user} />
             ) : (
