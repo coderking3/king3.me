@@ -13,7 +13,7 @@ interface ProjectPageProps {
 
 function ProjectPage({ projects }: ProjectPageProps) {
   return (
-    <div className="mt-16 sm:mt-24">
+    <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <header className="max-w-2xl">
           <Animated

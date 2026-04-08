@@ -33,10 +33,10 @@ export default function RootLayout({
       suppressHydrationWarning
       className={cn(robotoMono.variable, audioWide.variable)}
     >
-      <body className={cn('min-h-screen scroll-smooth antialiased', '')}>
+      <body className="min-h-screen scroll-smooth antialiased">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >

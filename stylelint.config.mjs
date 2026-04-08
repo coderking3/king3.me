@@ -41,6 +41,14 @@ export default {
     // 允许使用现代的媒体查询范围写法
     'media-feature-range-notation': null,
 
+    // Allow CSS Modules pseudo-classes
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        ignorePseudoClasses: ['global', 'export', 'local']
+      }
+    ],
+
     // 允许 Tailwind 特有指令
     'at-rule-no-unknown': [
       true,

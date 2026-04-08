@@ -4,13 +4,14 @@ import type { SpringConfig } from '@react-spring/web'
 
 import type { SvgIcon } from './_internal/types'
 
-import { styled } from '@linaria/react'
 import { animated, useSpring, useTrail } from '@react-spring/web'
 import { useId } from 'react'
 
 import { SPRINGS } from '@/constants'
 import { usePrefersReducedMotion } from '@/hooks'
 import { range, roundTo } from '@/lib/math'
+
+import styles from './SunMoon.module.css'
 
 const SUN_RADIUS = 6
 const MOON_RADIUS = 9.5
@@ -142,7 +143,8 @@ export function SunMoonIcon({
           }
 
           return (
-            <SunDot
+            <animated.circle
+              className={styles.sunDot}
               key={angle}
               data-include-enter-animation={String(!!includeEnterAnimation)}
               cx={calcAxis('cos')}
@@ -186,16 +188,3 @@ export function SunMoonIcon({
     </animated.svg>
   )
 }
-
-const SunDot = styled(animated.circle)`
-  &[data-include-enter-animation='true'] {
-    animation: pop 500ms cubic-bezier(0.07, 0.7, 0.35, 1.35) backwards;
-    animation-delay: var(--enter-animation-delay);
-
-    @keyframes pop {
-      from {
-        transform: scale(0);
-      }
-    }
-  }
-`

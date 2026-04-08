@@ -8,9 +8,7 @@ import { Check, ChevronsRight, List, X } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui'
-import { ArrowLeft } from '@/icons/ArrowLeft'
-import { ChevronUp } from '@/icons/ChevronUp'
-import { Link } from '@/icons/Link'
+import { Back, ChevronUp, Link } from '@/icons'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from './PostsTableOfContents'
@@ -95,7 +93,7 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
                     transition={{ duration: 0.2 }}
                   >
                     {/* Back to blog */}
-                    <ArrowLeft
+                    <Back
                       href="/blog"
                       className={actionButtonClass}
                       alt="Return to blog list"

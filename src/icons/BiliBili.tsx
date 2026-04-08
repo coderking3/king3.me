@@ -2,7 +2,6 @@
 
 import type { SvgIcon } from './_internal/types'
 
-import { styled } from '@linaria/react'
 import { animated, useSpring } from '@react-spring/web'
 
 import { SPRINGS } from '@/constants'
@@ -25,14 +24,13 @@ export function BiliBiliIcon({
   })
 
   return (
-    <Svg
+    <animated.svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       className="block overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
-      // fill={color}
-      style={svgSpring}
+      style={{ transformOrigin: '50% 85%', ...svgSpring }}
     >
       <g
         fill="none"
@@ -44,12 +42,8 @@ export function BiliBiliIcon({
         <rect width="20" height="16" x="2" y="5" rx="4" />
         <path d="m7 2l3 3m7-3l-3 3m-5 9v-2m6 0v2" />
       </g>
-    </Svg>
+    </animated.svg>
   )
 }
 
 export const BiliBili = createInteractiveIcon(BiliBiliIcon)
-
-const Svg = styled(animated.svg)`
-  transform-origin: 50% 85%;
-`

@@ -244,7 +244,10 @@ STAGGER_DELAY = 0.04     // interval between items
 - Full page content within **~0.9s** max
 - Never exceed **1s** total — users lose attention beyond that (Nielsen Norman Group)
 - Use `preset` for standard animations; only use `animation` prop for custom behaviors (e.g. scale bounce on social icons)
-- Do **not** pass `table` instances or other incompatible-library objects to child components when `reactCompiler: true` — extract plain data and callbacks instead
+- **React Compiler compatibility** (`reactCompiler: true`):
+  - Do **not** extract sub-components that receive referentially-stable mutable objects (e.g. TanStack `table`, `row`) as props — React Compiler caches renders based on reference equality, so state changes inside those objects will be missed. Prefer inline render functions instead.
+  - When a component boundary is **required** (e.g. for hooks like `useSortable`), pass derived primitive props (e.g. `isExpanded={row.getIsExpanded()}`) alongside the mutable object so React Compiler can detect state changes.
+  - See `DataTable` for the canonical example: most rendering is inlined; only `TableSortableRow` is a separate component (because it needs `useSortable`), and it receives `isExpanded`/`isSelected` primitives to break memoization.
 
 ### Key Files
 

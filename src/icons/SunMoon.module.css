@@ -1,0 +1,10 @@
+.sunDot[data-include-enter-animation='true'] {
+  animation: pop 500ms cubic-bezier(0.07, 0.7, 0.35, 1.35) backwards;
+  animation-delay: var(--enter-animation-delay);
+}
+
+@keyframes pop {
+  from {
+    transform: scale(0);
+  }
+}

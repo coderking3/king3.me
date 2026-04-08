@@ -2,7 +2,6 @@
 
 import type { SvgIcon } from './_internal/types'
 
-import { styled } from '@linaria/react'
 import { animated, useSpring } from '@react-spring/web'
 
 import { SPRINGS } from '@/constants'
@@ -32,14 +31,14 @@ export function FeatherIcon({
   })
 
   return (
-    <Svg
+    <animated.svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       className="block overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
       strokeWidth={strokeWidth}
-      style={svgSpring}
+      style={{ transformOrigin: '50% 85%', ...svgSpring }}
     >
       <path
         fill="none"
@@ -48,12 +47,8 @@ export function FeatherIcon({
         strokeLinejoin="round"
         d="M12.67 19a2 2 0 0 0 1.416-.588l6.154-6.172a6 6 0 0 0-8.49-8.49L5.586 9.914A2 2 0 0 0 5 11.328V18a1 1 0 0 0 1 1zM16 8L2 22m15.5-7H9"
       />
-    </Svg>
+    </animated.svg>
   )
 }
 
 export const Feather = createInteractiveIcon(FeatherIcon)
-
-const Svg = styled(animated.svg)`
-  transform-origin: 50% 85%;
-`

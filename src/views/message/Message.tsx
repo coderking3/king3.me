@@ -21,7 +21,7 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
   const { openModal } = useAuthModal()
 
   return (
-    <div className="mt-16 sm:mt-24">
+    <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <header className="max-w-2xl">
           <Animated
@@ -41,7 +41,7 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
         </header>
 
         <div className="mt-16 sm:mt-20">
-          <div className="max-w-2xl">
+          <Animated preset={{ mode: 'fadeInUp', delay: 0.12 }} className="max-w-2xl">
             {session ? (
               <MessageInput user={session.user} />
             ) : (
@@ -49,7 +49,7 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
                 Please log in to leave a message
               </Button>
             )}
-          </div>
+          </Animated>
 
           {messages.length > 0 && <MessageList messages={messages} />}
         </div>

@@ -73,7 +73,7 @@ function MessageInput({ user }: MessageInputProps) {
           onKeyDown={handleKeyDown}
           placeholder="Say something..."
           rows={3}
-          className="min-h-0 resize-none border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
+          className="min-h-0 resize-none border-0 bg-transparent! px-0 shadow-none focus-visible:ring-0"
         />
 
         <AnimatePresence>

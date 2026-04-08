@@ -15,7 +15,7 @@ interface AnimatedProps {
   as?: MotionElement
   animation?: MotionOptions
   preset?: PresetOption
-  children: ReactNode
+  children?: ReactNode
   className?: string
 }
 

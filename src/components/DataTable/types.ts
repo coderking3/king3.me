@@ -31,6 +31,10 @@ export interface ColumnConfig<T> {
   render?: (value: any, record: T, index: number) => React.ReactNode
 }
 
+/* --- Expand mode --- */
+
+export type ExpandMode = 'panel' | 'tree' | null
+
 /* --- Expandable --- */
 
 export interface ExpandableConfig<T> {

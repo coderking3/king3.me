@@ -1,24 +1,33 @@
 'use client'
 
+import type { DragEndEvent } from '@dnd-kit/core'
 import type {
   ExpandedState,
   PaginationState,
+  Row,
   RowSelectionState,
   SortingState,
   VisibilityState
 } from '@tanstack/react-table'
 
-import type { ExpandMode } from './components/SortableTableRow'
-import type { ColumnVisibilityItem, DataTableProps } from './types'
+import type { ColumnVisibilityItem, DataTableProps, ExpandMode } from './types'
 
 import {
+  closestCenter,
+  DndContext,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors
 } from '@dnd-kit/core'
-import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable'
 import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable'
+import {
+  flexRender,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
@@ -26,16 +35,19 @@ import {
   getSortedRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { useEffect, useMemo, useRef, useState } from 'react'
-
-import { cn } from '@/lib/utils'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 
 import {
-  DraggableTable,
-  TableContent,
-  TablePagination,
-  TableToolbar
-} from './components'
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui'
+import { cn } from '@/lib/utils'
+
+import { TablePagination, TableSortableRow, TableToolbar } from './components'
 import {
   buildColumnDefs,
   buildGetRowId,
@@ -202,15 +214,15 @@ export function DataTable<T extends object>({
     [columnVisibility, columns]
   )
 
+  /* --- Derived from table instance --- */
+
+  const headerGroups = table.getHeaderGroups()
+  const rows = table.getRowModel().rows
+  const colSpan = columns.length
+
   /* --- Drag handler --- */
 
-  const handleDragEnd = (
-    event: Parameters<typeof DraggableTable>[0]['onDragEnd'] extends (
-      e: infer E
-    ) => any
-      ? E
-      : never
-  ) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     if (!enableDragSort || dragDisabled || !dragSort?.onDragEnd) return
 
     const { active, over } = event
@@ -230,32 +242,133 @@ export function DataTable<T extends object>({
     }
   }
 
-  /* --- Extract data from table (avoid passing table instance to children) --- */
+  /* --- Row renderer (inline, no component boundary) --- */
 
-  const headerGroups = table.getHeaderGroups()
-  const rows = table.getRowModel().rows
-  const pageCount = table.getPageCount()
-  const canPreviousPage = table.getCanPreviousPage()
-  const canNextPage = table.getCanNextPage()
+  const renderRow = (row: Row<T>) => {
+    const firstContentCellIndex = enableExpandable
+      ? row
+          .getVisibleCells()
+          .findIndex(
+            (cell) =>
+              cell.column.id !== 'select' &&
+              cell.column.id !== 'drag' &&
+              cell.column.id !== 'expand'
+          )
+      : -1
 
-  /* --- Render --- */
+    return (
+      <Fragment key={row.id}>
+        <TableRow data-state={row.getIsSelected() ? 'selected' : undefined}>
+          {row.getVisibleCells().map((cell, cellIndex) => {
+            const isFirstContentCell = cellIndex === firstContentCellIndex
+            const depthIndent =
+              isFirstContentCell && row.depth > 0
+                ? row.depth * indentSize
+                : undefined
+
+            return (
+              <TableCell
+                key={cell.id}
+                className={cn(
+                  cell.column.columnDef.meta?.className,
+                  cell.column.columnDef.meta?.cellClassName
+                )}
+                style={depthIndent ? { paddingLeft: depthIndent } : undefined}
+              >
+                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </TableCell>
+            )
+          })}
+        </TableRow>
+
+        {expandMode === 'panel' && row.getIsExpanded() && (
+          <TableRow className="hover:bg-transparent">
+            <TableCell colSpan={row.getVisibleCells().length} className="p-0">
+              {expandable!.render!(row.original, row)}
+            </TableCell>
+          </TableRow>
+        )}
+      </Fragment>
+    )
+  }
+
+  /* --- Body content --- */
+
+  const dndRowIds = rows.map((row) => row.id)
+
+  const bodyContent = loading ? (
+    <TableRow>
+      <TableCell
+        colSpan={colSpan}
+        className="text-muted-foreground h-64 text-center"
+      >
+        Loading...
+      </TableCell>
+    </TableRow>
+  ) : rows.length ? (
+    enableDragSort ? (
+      <SortableContext items={dndRowIds} strategy={verticalListSortingStrategy}>
+        {rows.map((row) => (
+          <TableSortableRow
+            key={row.id}
+            row={row}
+            dragHandle={dragHandle}
+            dragDisabled={dragDisabled}
+            enableExpandable={enableExpandable}
+            expandMode={expandMode}
+            indentSize={indentSize}
+            expandable={expandable}
+            isExpanded={row.getIsExpanded()}
+            isSelected={row.getIsSelected()}
+          />
+        ))}
+      </SortableContext>
+    ) : (
+      rows.map((row) => renderRow(row))
+    )
+  ) : (
+    <TableRow>
+      <TableCell
+        colSpan={colSpan}
+        className="text-muted-foreground h-64 text-center"
+      >
+        {emptyText}
+      </TableCell>
+    </TableRow>
+  )
+
+  /* --- Table markup --- */
 
   const tableContent = (
-    <TableContent
-      headerGroups={headerGroups}
-      rows={rows}
-      columns={columns}
-      loading={loading}
-      emptyText={emptyText}
-      enableDragSort={enableDragSort}
-      dragDisabled={dragDisabled}
-      dragHandle={dragHandle}
-      enableExpandable={enableExpandable}
-      expandMode={expandMode}
-      indentSize={indentSize}
-      expandable={expandable}
-    />
+    <Table>
+      <TableHeader>
+        {headerGroups.map((headerGroup) => (
+          <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <TableHead
+                key={header.id}
+                className={cn(
+                  header.column.columnDef.meta?.className,
+                  header.column.columnDef.meta?.headClassName
+                )}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+              </TableHead>
+            ))}
+          </TableRow>
+        ))}
+      </TableHeader>
+
+      <TableBody>{bodyContent}</TableBody>
+    </Table>
   )
+
+  /* --- Render --- */
 
   return (
     <div className={wrapClassName}>
@@ -286,9 +399,13 @@ export function DataTable<T extends object>({
         )}
       >
         {enableDragSort ? (
-          <DraggableTable sensors={sensors} onDragEnd={handleDragEnd}>
+          <DndContext
+            collisionDetection={closestCenter}
+            sensors={sensors}
+            onDragEnd={handleDragEnd}
+          >
             {tableContent}
-          </DraggableTable>
+          </DndContext>
         ) : (
           tableContent
         )}
@@ -298,9 +415,9 @@ export function DataTable<T extends object>({
         <TablePagination
           pageIndex={paginationState.pageIndex}
           pageSize={paginationState.pageSize}
-          pageCount={pageCount}
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
+          pageCount={table.getPageCount()}
+          canPreviousPage={table.getCanPreviousPage()}
+          canNextPage={table.getCanNextPage()}
           onPageIndexChange={table.setPageIndex}
           onPageSizeChange={table.setPageSize}
           onPreviousPage={table.previousPage}

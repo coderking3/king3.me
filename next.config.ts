@@ -1,7 +1,5 @@
 import type { NextConfig } from 'next'
 
-import withLinaria from 'next-with-linaria'
-
 const nextConfig: NextConfig = {
   // Turn off React's strict mode
   reactStrictMode: false,
@@ -67,4 +65,4 @@ const nextConfig: NextConfig = {
   }
 }
 
-export default withLinaria(nextConfig)
+export default nextConfig

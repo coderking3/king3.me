@@ -1,3 +1,5 @@
+'use client'
+
 import type { InteractiveState, SvgIcon } from './_internal/types'
 
 import { animated, useSpring } from '@react-spring/web'

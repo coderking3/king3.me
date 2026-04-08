@@ -2,7 +2,6 @@
 
 import type { SvgIcon } from './_internal/types'
 
-import { styled } from '@linaria/react'
 import { animated, useSpring } from '@react-spring/web'
 
 import { SPRINGS } from '@/constants'
@@ -24,13 +23,13 @@ export function EmailIcon({
   })
 
   return (
-    <Svg
+    <animated.svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       className="block overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
-      style={svgSpring}
+      style={{ transformOrigin: '50% 85%', ...svgSpring }}
     >
       <g
         fill="none"
@@ -42,12 +41,8 @@ export function EmailIcon({
         <path d="m22 7l-8.991 5.727a2 2 0 0 1-2.009 0L2 7" />
         <rect width="20" height="16" x="2" y="4" rx="2" />
       </g>
-    </Svg>
+    </animated.svg>
   )
 }
 
 export const Email = createInteractiveIcon(EmailIcon)
-
-const Svg = styled(animated.svg)`
-  transform-origin: 50% 85%;
-`

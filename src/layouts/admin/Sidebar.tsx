@@ -3,6 +3,7 @@
 import {
   CalendarDays,
   Ellipsis,
+  Feather,
   FolderKanban,
   LayoutDashboard,
   LogOut,
@@ -42,6 +43,7 @@ export const navItems = [
   { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/playlist', label: 'Playlist', icon: Music },
+  { href: '/admin/poems', label: 'Poems', icon: Feather },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban }
 ]
 

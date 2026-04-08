@@ -5,9 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { useState } from 'react'
 
-import { ArrowLeft } from '@/icons/ArrowLeft'
-import { ChevronUp } from '@/icons/ChevronUp'
-import { Link } from '@/icons/Link'
+import { Back, ChevronUp, Link } from '@/icons'
 import { cn } from '@/lib/utils'
 
 const actionButtonClass = [
@@ -40,7 +38,7 @@ function PostsActions() {
 
   return (
     <nav className="flex flex-col items-center gap-3">
-      <ArrowLeft
+      <Back
         href="/blog"
         className={cn(...actionButtonClass)}
         alt="Return to blog list"

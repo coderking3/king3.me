@@ -67,7 +67,7 @@ function MessageItem({
   return (
     <Animated
       as="li"
-      preset={{ mode: 'fadeInUp', delay: 0.12 + index * 0.04 }}
+      preset={{ mode: 'fadeInUp', delay: 0.16 + index * 0.04 }}
       className="relative pb-8"
     >
       {/* Vertical connector line */}

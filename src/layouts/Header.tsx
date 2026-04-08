@@ -17,7 +17,7 @@ import Navbar from './Navbar'
 import UserAvatar from './UserAvatar'
 
 const headerGlassCardClass =
-  'from-background/70 to-background/90 border-border/70 dark:border-border shadow-muted-foreground/7 flex items-center rounded-full border bg-linear-to-b shadow-lg backdrop-blur-xs backdrop-saturate-150'
+  'from-background/70 to-background/90 border-border/70 dark:border-border shadow-muted-foreground/3 dark:shadow-muted-foreground/5 flex items-center rounded-full border bg-linear-to-b shadow-lg backdrop-blur-xs backdrop-saturate-150'
 
 function Header() {
   const pathname = usePathname()
@@ -29,8 +29,8 @@ function Header() {
   const headerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const downDelay = isMobile ? 40 : 64
-    const upDelay = isMobile ? 40 : 64
+    const downDelay = isMobile ? 36 : 64
+    const upDelay = isMobile ? 36 : 64
 
     function setProperty(property: string, value: string | null) {
       document.documentElement.style.setProperty(property, value)
@@ -118,7 +118,7 @@ function Header() {
                 'var(--header-inner-position)' as React.CSSProperties['position']
             }}
           >
-            <div className="mx-auto h-full max-w-6xl px-4 sm:px-6">
+            <div className="mx-auto h-full max-w-6xl px-3 sm:px-8">
               {/* Mobile: single full-width capsule */}
               <div
                 className={cn(
