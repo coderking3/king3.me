@@ -1,9 +1,5 @@
-import type {
-  CreatePoemInput,
-  Poem,
-  PrismaPoem,
-  UpdatePoemInput
-} from '@/types'
+import type { PoemInput } from '@/lib/schemas'
+import type { Poem, PrismaPoem } from '@/types'
 
 import { prisma } from '@/lib/prisma'
 
@@ -13,12 +9,12 @@ class PoemDb {
     return list.map(this.serialize)
   }
 
-  async create(data: CreatePoemInput): Promise<Poem> {
+  async create(data: PoemInput): Promise<Poem> {
     const result = await prisma.poem.create({ data })
     return this.serialize(result)
   }
 
-  async update(id: string, data: UpdatePoemInput): Promise<Poem> {
+  async update(id: string, data: PoemInput): Promise<Poem> {
     const result = await prisma.poem.update({ where: { id }, data })
     return this.serialize(result)
   }

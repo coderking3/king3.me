@@ -2,7 +2,7 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ColumnConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { Playlist } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
@@ -21,7 +21,7 @@ import { Button } from '@/components/ui'
 
 // ──── Form Config ────
 
-const songSchema = z.object({
+const songFormSchema = z.object({
   name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
   author: z.string().min(1, 'Artist is required'),
   cover: z.union([z.url('Please enter a valid URL'), z.literal('')]),
@@ -31,9 +31,9 @@ const songSchema = z.object({
     .regex(/^(\d{1,2}:)?\d{2}:\d{2}$|^$/, 'Format: MM:SS or HH:MM:SS')
 })
 
-type SongFormValues = z.infer<typeof songSchema>
+type SongFormValues = z.infer<typeof songFormSchema>
 
-const songFields: Parameters<typeof Form<SongFormValues>>[0]['fields'] = [
+const songFields: FormFieldConfig<SongFormValues>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'Song name' },
   {
     name: 'author',
@@ -221,7 +221,7 @@ export default function PlaylistComponent({
         showFooter={false}
       >
         <Form
-          schema={songSchema}
+          schema={songFormSchema}
           fields={songFields}
           defaultValues={formDefaultValues}
           onSubmit={handleSubmit}

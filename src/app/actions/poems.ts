@@ -1,12 +1,13 @@
 'use server'
 
-import type { CreatePoemInput, UpdatePoemInput } from '@/types'
+import type { PoemInput } from '@/lib/schemas'
 
 import { revalidatePath } from 'next/cache'
 
 import { poemDb } from '@/db/poems'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
+import { poemSchema } from '@/lib/schemas'
 
 export async function getPoemsAction() {
   try {
@@ -17,10 +18,11 @@ export async function getPoemsAction() {
   }
 }
 
-export async function createPoemAction(input: CreatePoemInput) {
+export async function createPoemAction(data: PoemInput) {
   try {
     await checkAdmin()
-    await poemDb.create(input)
+    const parsed = poemSchema.parse(data)
+    await poemDb.create(parsed)
     revalidatePath('/admin/poems')
     revalidatePath('/poems')
     return actionSuccess(undefined)
@@ -29,10 +31,11 @@ export async function createPoemAction(input: CreatePoemInput) {
   }
 }
 
-export async function updatePoemAction(id: string, input: UpdatePoemInput) {
+export async function updatePoemAction(id: string, data: PoemInput) {
   try {
     await checkAdmin()
-    await poemDb.update(id, input)
+    const parsed = poemSchema.parse(data)
+    await poemDb.update(id, parsed)
     revalidatePath('/admin/poems')
     revalidatePath('/poems')
     return actionSuccess(undefined)

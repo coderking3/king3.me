@@ -1,9 +1,5 @@
-import type {
-  CreateSongInput,
-  Playlist,
-  PrismaPlaylist,
-  UpdateSongInput
-} from '@/types'
+import type { SongInput } from '@/lib/schemas'
+import type { Playlist, PrismaPlaylist } from '@/types'
 
 import { prisma } from '@/lib/prisma'
 
@@ -13,7 +9,7 @@ class PlaylistDb {
     return list.map(this.serialize)
   }
 
-  async create(data: CreateSongInput): Promise<Playlist> {
+  async create(data: SongInput): Promise<Playlist> {
     const maxOrder = await prisma.playlist.aggregate({ _max: { order: true } })
     const result = await prisma.playlist.create({
       data: { ...data, order: (maxOrder._max.order ?? -1) + 1 }
@@ -21,7 +17,7 @@ class PlaylistDb {
     return this.serialize(result)
   }
 
-  async update(id: string, songData: UpdateSongInput): Promise<Playlist> {
+  async update(id: string, songData: SongInput): Promise<Playlist> {
     const result = await prisma.playlist.update({
       where: { id },
       data: songData

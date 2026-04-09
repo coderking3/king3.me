@@ -41,8 +41,10 @@ function Gallery({ images }: GalleryProps) {
       initial={{ opacity: 0, scale: 0.925, y: 12 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       transition={{
-        delay: 0.35,
-        type: 'spring'
+        delay: 0.22,
+        type: 'spring',
+        stiffness: 260,
+        damping: 25
       }}
     >
       <div className="scrollbar-none -my-4 flex w-full snap-x snap-proximity scroll-pl-4 justify-start gap-4 overflow-x-auto px-4 py-4 sm:gap-6 md:justify-center md:overflow-x-hidden md:px-0">

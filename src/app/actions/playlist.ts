@@ -1,12 +1,13 @@
 'use server'
 
-import type { CreateSongInput, UpdateSongInput } from '@/types'
+import type { SongInput } from '@/lib/schemas'
 
 import { revalidatePath } from 'next/cache'
 
 import { playlistDb } from '@/db/playlist'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
+import { songSchema } from '@/lib/schemas'
 
 export async function getPlaylistAction() {
   try {
@@ -17,10 +18,11 @@ export async function getPlaylistAction() {
   }
 }
 
-export async function createSongAction(data: CreateSongInput) {
+export async function createSongAction(data: SongInput) {
   try {
     await checkAdmin()
-    await playlistDb.create({ ...data })
+    const parsed = songSchema.parse(data)
+    await playlistDb.create({ ...parsed })
 
     revalidatePath('/admin/playlist')
     revalidatePath('/')
@@ -30,10 +32,11 @@ export async function createSongAction(data: CreateSongInput) {
   }
 }
 
-export async function updateSongAction(id: string, data: UpdateSongInput) {
+export async function updateSongAction(id: string, data: SongInput) {
   try {
     await checkAdmin()
-    await playlistDb.update(id, data)
+    const parsed = songSchema.parse(data)
+    await playlistDb.update(id, parsed)
     revalidatePath('/admin/playlist')
     revalidatePath('/')
     return actionSuccess(undefined)

@@ -117,3 +117,14 @@ model Project {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model Photo {
+  id        String   @id @default(uuid())
+  name      String
+  url       String
+  width     Int
+  height    Int
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -102,12 +102,12 @@ function AboutPage() {
                         rel="noopener noreferrer"
                         className={badgeClass}
                       >
-                        {'icon' in item && item.icon}
+                        {item.icon}
                         {item.name}
                       </Link>
                     ) : (
                       <span key={item.name} className={badgeClass}>
-                        {'icon' in item && item.icon}
+                        {item.icon}
                         {item.name}
                       </span>
                     )
@@ -161,15 +161,6 @@ function AboutPage() {
                 >
                   哔哩哔哩
                 </Link>{' '}
-                {/* /{' '}
-                <a
-                  href="#"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                >
-                  抖音
-                </a>{' '} */}
                 about programming, open source, and lessons learned along the
                 way.
               </p>
@@ -187,9 +178,8 @@ function AboutPage() {
                   poems
                 </Link>
                 , reading novels, and{' '}
-                {/* TODO: replace with your Netease playlist link */}
                 <Link
-                  href="https://music.163.com/#/playlist?id=YOUR_PLAYLIST_ID"
+                  href="https://music.163.com/#/playlist?id=2675102592"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={linkClass}

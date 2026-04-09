@@ -6,13 +6,3 @@ export type Playlist = Omit<PrismaPlaylist, 'createdAt' | 'updatedAt'> & {
 }
 
 export type { PrismaPlaylist }
-
-export interface CreateSongInput {
-  name: string
-  author: string[]
-  cover: string
-  url: string
-  duration: string
-}
-
-export type UpdateSongInput = CreateSongInput

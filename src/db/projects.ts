@@ -1,9 +1,5 @@
-import type {
-  CreateProjectInput,
-  PrismaProject,
-  Project,
-  UpdateProjectInput
-} from '@/types'
+import type { ProjectInput } from '@/lib/schemas'
+import type { PrismaProject, Project } from '@/types'
 
 import { prisma } from '@/lib/prisma'
 
@@ -15,7 +11,7 @@ class ProjectDb {
     return list.map(this.serialize)
   }
 
-  async create(data: CreateProjectInput): Promise<Project> {
+  async create(data: ProjectInput): Promise<Project> {
     const maxOrder = await prisma.project.aggregate({ _max: { order: true } })
     const result = await prisma.project.create({
       data: { ...data, order: (maxOrder._max.order ?? -1) + 1 }
@@ -23,7 +19,7 @@ class ProjectDb {
     return this.serialize(result)
   }
 
-  async update(id: string, data: UpdateProjectInput): Promise<Project> {
+  async update(id: string, data: ProjectInput): Promise<Project> {
     const result = await prisma.project.update({ where: { id }, data })
     return this.serialize(result)
   }

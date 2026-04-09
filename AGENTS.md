@@ -17,8 +17,7 @@ This file provides guidance to AI coding agents when working with code in this r
 ## Tech Stack
 
 - **Framework**: Next.js 16 (App Router) + React 19 (compiler enabled)
-- **Styling**: Tailwind CSS 4 + Shadcn UI (`base-nova` style, primitives from `@base-ui/react`)
-- **CSS-in-JS**: Linaria via `next-with-linaria`
+- **Styling**: Tailwind CSS 4 + Shadcn UI (`base-nova` style, primitives from `@base-ui/react`) + CSS Modules
 - **Animations**: Framer Motion + @react-spring/web
 - **Authentication**: Better-Auth with OAuth (Google/GitHub)
 - **Database**: Neon PostgreSQL + Prisma 7 (with `@prisma/adapter-pg`)
@@ -63,21 +62,26 @@ Page files should **not** contain UI markup, layout divs, or component imports b
 
 Each route has a corresponding view component under `src/views/{feature}/`:
 
-| Route                | View                        |
-| -------------------- | --------------------------- |
-| `(site)/`            | `views/home/Home.tsx`       |
-| `(site)/blog`        | `views/blog/Blog.tsx`       |
-| `(site)/blog/[slug]` | `views/blog/Posts.tsx`      |
-| `(site)/project`     | `views/project/Project.tsx` |
-| `(site)/message`     | `views/message/Message.tsx` |
-| `(site)/about`       | `views/about/About.tsx`     |
-| `auth/`              | `views/auth/Auth.tsx`       |
-| `admin/users`        | `views/admin/Users.tsx`     |
-| `admin/projects`     | `views/admin/Projects.tsx`  |
-| `admin/messages`     | `views/admin/Messages.tsx`  |
-| `admin/playlist`     | `views/admin/Playlist.tsx`  |
+| Route                | View                            |
+| -------------------- | ------------------------------- |
+| `(site)/`            | `views/home/Home.tsx`           |
+| `(site)/blog`        | `views/blog/Blog.tsx`           |
+| `(site)/blog/[slug]` | `views/blog/Posts.tsx`          |
+| `(site)/project`     | `views/project/Project.tsx`     |
+| `(site)/message`     | `views/message/Message.tsx`     |
+| `(site)/about`       | `views/about/About.tsx`         |
+| `(site)/poems`       | `views/poems/Poems.tsx`         |
+| `(site)/photos`      | _(placeholder — not yet built)_ |
+| `(site)/use`         | _(placeholder — not yet built)_ |
+| `auth/`              | `views/auth/Auth.tsx`           |
+| `admin/`             | `views/admin/Dashboard.tsx`     |
+| `admin/users`        | `views/admin/Users.tsx`         |
+| `admin/projects`     | `views/admin/Projects.tsx`      |
+| `admin/messages`     | `views/admin/Messages.tsx`      |
+| `admin/playlist`     | `views/admin/Playlist.tsx`      |
+| `admin/poems`        | `views/admin/Poems.tsx`         |
 
-Views own all page UI: layout, headings, animations, and composition of sub-components. Barrel exported via `src/views/index.ts`.
+Views own all page UI: layout, headings, animations, and composition of sub-components. Barrel exported via each feature's `index.ts` (e.g. `src/views/admin/index.ts`).
 
 ### `src/components/` — Reusable component layer
 
@@ -86,9 +90,8 @@ Views own all page UI: layout, headings, animations, and composition of sub-comp
 
 ### `src/layouts/` — Layout components
 
-- Site layouts: `Header`, `Footer`, `Background`, `Navbar`, `Logo`, `UserAvatar`
-- Admin layouts: `admin/Header`, `admin/Sidebar`
-- Barrel exported via `index.ts`
+- Site layouts: `Header`, `Footer`, `Background`, `Navbar` (barrel exported via `index.ts`); also `Logo`, `UserAvatar`, `MobileNav`, `ArtPlum`, `ArtSnow` (imported directly)
+- Admin layouts: `admin/Header`, `admin/Sidebar` (barrel exported via `admin/index.ts`)
 
 ### `src/stores/` — Client state (Zustand)
 
@@ -97,7 +100,8 @@ Views own all page UI: layout, headings, animations, and composition of sub-comp
 
 ### `src/db/` — Data access layer
 
-- `db/projects.ts`, `db/messages.ts`, `db/playlist.ts` — database query classes wrapping Prisma
+- `db/projects.ts`, `db/messages.ts`, `db/playlist.ts`, `db/poems.ts` — database query classes wrapping Prisma
+- `db/dashboard.ts` — aggregated dashboard data queries
 - Page-level data fetching should use these classes (e.g. `projectDb.queryAll()`) rather than calling `prisma` directly
 
 ### Common component patterns
@@ -112,7 +116,7 @@ Views own all page UI: layout, headings, animations, and composition of sub-comp
 ## Routing Structure
 
 - **`(site)/`** — public-facing pages: `/`, `/blog`, `/blog/[slug]`, `/project`, `/message`, `/about`, `/poems`, `/photos`, `/use`
-- **`admin/`** — authenticated admin dashboard: `/admin/users`, `/admin/projects`, `/admin/messages`, `/admin/playlist`
+- **`admin/`** — authenticated admin dashboard: `/admin` (dashboard), `/admin/users`, `/admin/projects`, `/admin/messages`, `/admin/playlist`, `/admin/poems`
 - **`auth/`** — login page
 - **`api/auth/[...all]/`** — Better-Auth catch-all handler
 - **`feed.xml/`** — RSS feed generation (ISR); `/feed`, `/rss`, `/rss.xml` rewrite to it
@@ -157,7 +161,7 @@ API routes: `src/app/api/auth/[...all]/route.ts` using `toNextJsHandler()`.
 - Uses `PrismaPg` adapter (not the default Prisma connector) — see `src/lib/prisma.ts`
 - Singleton pattern with `globalThis` caching in development
 - Auth models: `User`, `Session`, `Account`, `Verification`
-- Business models: `Message` (with replies), `Project`, `Playlist`
+- Business models: `Message` (with replies), `Project`, `Playlist`, `Poem`
 
 ### Server Actions
 
@@ -185,7 +189,6 @@ Server actions live in `src/app/actions/` and use helper functions from `src/lib
 ### Configuration
 
 - `reactStrictMode: false`, `reactCompiler: true` in Next.js config
-- Next.js config wrapped with `withLinaria()` — see `next.config.ts`
 - Remote image patterns: BiliBili CDN, Netease Music CDN, GitHub avatars
 - ESLint uses `@king-3/eslint-config` with `defineConfig()` — see `eslint.config.js`
 - Shadcn UI configured with RSC support and `base-nova` style — see `components.json`

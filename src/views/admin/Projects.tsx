@@ -2,14 +2,14 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ColumnConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { ProjectInput } from '@/lib/schemas'
 import type { Project } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod/v4'
 
 import {
   createProjectAction,
@@ -18,21 +18,12 @@ import {
   updateProjectAction
 } from '@/app/actions/projects'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
-// import { DataTable } from '@/components/OldDataTable'
 import { Button } from '@/components/ui'
+import { projectSchema } from '@/lib/schemas'
 
 // ──── Form Config ────
 
-const projectSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  description: z.string().max(500, 'Description is too long'),
-  link: z.union([z.url('Please enter a valid URL'), z.literal('')]),
-  icon: z.union([z.url('Please enter a valid URL'), z.literal('')])
-})
-
-type ProjectFormValues = z.infer<typeof projectSchema>
-
-const projectFields: Parameters<typeof Form<ProjectFormValues>>[0]['fields'] = [
+const projectFields: FormFieldConfig<ProjectInput>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'Project name' },
   {
     name: 'description',
@@ -130,7 +121,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     setEditProject(null)
   }
 
-  const handleSubmit = async (data: ProjectFormValues) => {
+  const handleSubmit = async (data: ProjectInput) => {
     const result = editProject
       ? await updateProjectAction(editProject.id, data)
       : await createProjectAction(data)
@@ -170,7 +161,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     })
   }
 
-  const formDefaultValues: ProjectFormValues = {
+  const formDefaultValues: ProjectInput = {
     name: editProject?.name || '',
     description: editProject?.description || '',
     link: editProject?.link || '',

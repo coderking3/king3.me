@@ -5,6 +5,7 @@ import {
   Ellipsis,
   Feather,
   FolderKanban,
+  ImageIcon,
   LayoutDashboard,
   LogOut,
   MessageSquare,
@@ -43,6 +44,7 @@ export const navItems = [
   { href: '/admin/messages', label: 'Messages', icon: MessageSquare },
   { href: '/admin/users', label: 'Users', icon: Users },
   { href: '/admin/playlist', label: 'Playlist', icon: Music },
+  { href: '/admin/photos', label: 'Photos', icon: ImageIcon },
   { href: '/admin/poems', label: 'Poems', icon: Feather },
   { href: '/admin/projects', label: 'Projects', icon: FolderKanban }
 ]

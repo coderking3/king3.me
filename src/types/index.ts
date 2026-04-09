@@ -1,6 +1,7 @@
 export * from './app'
 export * from './helper'
 export * from './message'
+export * from './photo'
 export * from './playlist'
 export * from './poem'
 export * from './posts'

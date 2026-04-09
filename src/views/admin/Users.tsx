@@ -1,6 +1,6 @@
 'use client'
 
-import type { ColumnConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components'
 
 import { Pencil, Shield, ShieldOff, Trash2, UserX } from 'lucide-react'
 import Image from 'next/image'
@@ -45,7 +45,7 @@ const userSchema = z.object({
 
 type UserFormValues = z.infer<typeof userSchema>
 
-const userFields: Parameters<typeof Form<UserFormValues>>[0]['fields'] = [
+const userFields: FormFieldConfig<UserFormValues>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'User name' },
   {
     name: 'image',

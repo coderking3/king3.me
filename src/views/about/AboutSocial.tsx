@@ -77,7 +77,7 @@ function AboutSocial() {
 
       <div className="text-muted-foreground">
         {'( '}Inactive on&nbsp;&nbsp;
-        <p className="text-foreground! inline-flex flex-wrap gap-2">
+        <span className="text-foreground! inline-flex flex-wrap gap-2">
           {INACTIVE_LINKS.map(({ label, icon, href }) => (
             <Link
               key={label}
@@ -89,7 +89,7 @@ function AboutSocial() {
               {icon} {label}
             </Link>
           ))}
-        </p>
+        </span>
         {' )'}
       </div>
     </Animated>

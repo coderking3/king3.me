@@ -9,25 +9,32 @@ export const description =
 function PoemsPage({ poems }: { poems: Poem[] }) {
   return (
     <div className="mt-14 sm:mt-24">
-      <div className="mx-auto max-w-2xl px-4 pb-20 sm:px-8">
-        {/* Header */}
-        <Animated as="header" preset="fadeInUp">
-          <h1 className="text-foreground text-3xl font-medium tracking-tight sm:text-4xl">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
+        <header className="max-w-2xl">
+          <Animated
+            as="h1"
+            preset="fadeInUp"
+            className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
+          >
             {title}
-          </h1>
-        </Animated>
-        <Animated preset={{ mode: 'fadeInUp', delay: 0.06 }}>
-          <p className="text-muted-foreground mt-3 text-base">{description}</p>
-        </Animated>
+          </Animated>
+          <Animated
+            as="p"
+            preset={{ mode: 'fadeInUp', delay: 0.06 }}
+            className="text-muted-foreground mt-6 text-lg"
+          >
+            {description}
+          </Animated>
+        </header>
 
         {/* Poems list */}
-        <div className="mt-12 space-y-10">
+        <div className="mt-12 columns-1 gap-6 space-y-6 sm:columns-2 lg:columns-3">
           {poems.map((poem, i) => (
             <Animated
               key={poem.id}
               preset={{ mode: 'fadeInUp', delay: 0.12 + i * 0.04 }}
             >
-              <article className="border-border/50 border-l-2 pl-6">
+              <article className="border-border/50 hover:border-primary/50 before:bg-muted/50 relative isolate break-inside-avoid rounded-r-lg border-l-2 py-4 pr-4 pl-6 transition-colors duration-200 before:absolute before:inset-0 before:-z-10 before:origin-left before:scale-x-0 before:rounded-r-lg before:transition-transform before:duration-300 before:ease-out hover:before:scale-x-100">
                 <h2 className="text-foreground text-lg font-medium">
                   {poem.title}
                 </h2>

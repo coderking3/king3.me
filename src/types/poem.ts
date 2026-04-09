@@ -6,11 +6,3 @@ export type Poem = Omit<PrismaPoem, 'createdAt' | 'updatedAt'> & {
 }
 
 export type { PrismaPoem }
-
-export interface CreatePoemInput {
-  title: string
-  author: string
-  content: string
-}
-
-export type UpdatePoemInput = CreatePoemInput

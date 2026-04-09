@@ -2,7 +2,7 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ColumnConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { Message } from '@/types'
 
 import { Plus, Reply, Trash2 } from 'lucide-react'
@@ -17,7 +17,6 @@ import {
   replyToMessageAction
 } from '@/app/actions/messages'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
-// import { DataTable } from '@/components/OldDataTable'
 import { Badge, Button } from '@/components/ui'
 
 type MessageWithReplies = Message & { replies: Message[] }
@@ -30,7 +29,7 @@ const replySchema = z.object({
 
 type ReplyFormValues = z.infer<typeof replySchema>
 
-const replyFields: Parameters<typeof Form<ReplyFormValues>>[0]['fields'] = [
+const replyFields: FormFieldConfig<ReplyFormValues>[] = [
   {
     name: 'reply',
     label: 'Reply',
@@ -49,7 +48,7 @@ const createSchema = z.object({
 
 type CreateFormValues = z.infer<typeof createSchema>
 
-const createFields: Parameters<typeof Form<CreateFormValues>>[0]['fields'] = [
+const createFields: FormFieldConfig<CreateFormValues>[] = [
   {
     name: 'message',
     label: 'Message',

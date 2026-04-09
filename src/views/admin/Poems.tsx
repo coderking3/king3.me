@@ -2,13 +2,13 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ColumnConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { PoemInput } from '@/lib/schemas'
 import type { Poem } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod/v4'
 
 import {
   createPoemAction,
@@ -17,24 +17,11 @@ import {
 } from '@/app/actions/poems'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button } from '@/components/ui'
+import { poemSchema } from '@/lib/schemas'
 
 // ──── Form Config ────
 
-const poemSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(200, 'Title is too long'),
-  author: z
-    .string()
-    .min(1, 'Author is required')
-    .max(100, 'Author is too long'),
-  content: z
-    .string()
-    .min(1, 'Content is required')
-    .max(5000, 'Content is too long')
-})
-
-type PoemFormValues = z.infer<typeof poemSchema>
-
-const poemFields: Parameters<typeof Form<PoemFormValues>>[0]['fields'] = [
+const poemFields: FormFieldConfig<PoemInput>[] = [
   { name: 'title', label: 'Title', type: 'input', placeholder: 'Poem title' },
   {
     name: 'author',
@@ -120,7 +107,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
     setEditPoem(null)
   }
 
-  const handleSubmit = async (data: PoemFormValues) => {
+  const handleSubmit = async (data: PoemInput) => {
     const result = editPoem
       ? await updatePoemAction(editPoem.id, data)
       : await createPoemAction(data)
@@ -132,7 +119,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
     }
   }
 
-  const formDefaultValues: PoemFormValues = {
+  const formDefaultValues: PoemInput = {
     title: editPoem?.title || '',
     author: editPoem?.author || '',
     content: editPoem?.content || ''

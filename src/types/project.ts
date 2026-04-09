@@ -5,12 +5,3 @@ export type Project = Omit<PrismaProject, 'createdAt' | 'updatedAt'> & {
   updatedAt: string
 }
 export type { PrismaProject }
-
-export interface CreateProjectInput {
-  name: string
-  description: string
-  link: string
-  icon: string
-}
-
-export type UpdateProjectInput = CreateProjectInput

@@ -72,7 +72,7 @@ function Hero() {
       {/* Tags */}
       <Animated
         as="p"
-        preset={{ mode: 'fadeInUp', delay: 0.12 }}
+        preset={{ mode: 'fadeInUp', delay: 0.1 }}
         className="text-brand/90 mb-5.5 w-full text-xl font-medium tracking-wide sm:text-2xl"
       >
         {TOPICS.map((tag, index) => (
@@ -85,7 +85,7 @@ function Hero() {
               animate: { opacity: 1, y: 0 },
               transition: {
                 duration: 0.3,
-                delay: 0.18 + index * 0.04,
+                delay: 0.14 + index * 0.035,
                 ease: [0.22, 1, 0.36, 1]
               }
             }}
@@ -98,7 +98,7 @@ function Hero() {
       {/* Description */}
       <Animated
         as="p"
-        preset={{ mode: 'fadeInUp', delay: 0.22 }}
+        preset={{ mode: 'fadeInUp', delay: 0.18 }}
         className="text-primary/90 max-w-3xl text-lg leading-relaxed"
       >
         I'm a frontend developer passionate about open source and crafting my
@@ -113,7 +113,7 @@ function Hero() {
         animation={{
           initial: { opacity: 0 },
           animate: { opacity: 1 },
-          transition: { duration: 0.35, delay: 0.28 }
+          transition: { duration: 0.35, delay: 0.22 }
         }}
       >
         {SOCIALS.map(({ icon: Icon, href }, index) => (
@@ -124,7 +124,7 @@ function Hero() {
               animate: { opacity: 1, scale: 1 },
               transition: {
                 duration: 0.25,
-                delay: 0.32 + index * 0.03,
+                delay: 0.25 + index * 0.03,
                 ease: [0.34, 1.56, 0.64, 1]
               }
             }}

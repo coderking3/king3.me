@@ -1,12 +1,13 @@
 'use server'
 
-import type { CreateProjectInput, UpdateProjectInput } from '@/types'
+import type { ProjectInput } from '@/lib/schemas'
 
 import { revalidatePath } from 'next/cache'
 
 import { projectDb } from '@/db/projects'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
+import { projectSchema } from '@/lib/schemas'
 
 export async function getProjectsAction() {
   try {
@@ -17,10 +18,11 @@ export async function getProjectsAction() {
   }
 }
 
-export async function createProjectAction(data: CreateProjectInput) {
+export async function createProjectAction(data: ProjectInput) {
   try {
     await checkAdmin()
-    await projectDb.create({ ...data })
+    const parsed = projectSchema.parse(data)
+    await projectDb.create({ ...parsed })
     revalidatePath('/admin/projects')
     return actionSuccess(undefined)
   } catch (error: unknown) {
@@ -28,13 +30,11 @@ export async function createProjectAction(data: CreateProjectInput) {
   }
 }
 
-export async function updateProjectAction(
-  id: string,
-  data: UpdateProjectInput
-) {
+export async function updateProjectAction(id: string, data: ProjectInput) {
   try {
     await checkAdmin()
-    await projectDb.update(id, data)
+    const parsed = projectSchema.parse(data)
+    await projectDb.update(id, parsed)
     revalidatePath('/admin/projects')
     return actionSuccess(undefined)
   } catch (error: unknown) {
