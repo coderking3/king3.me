@@ -1,5 +1,6 @@
 import { Animated } from '@/components'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
+import { getT } from '@/i18n/server'
 import { BiliBili, Email, GithubCircle, X, Youtube } from '@/icons'
 
 import Typewriter from './Typewriter'
@@ -28,7 +29,9 @@ function SelectedText({ text }: { text: string }) {
   )
 }
 
-function Hero() {
+async function Hero() {
+  const { t } = await getT('home')
+
   return (
     <>
       {/* Title */}
@@ -37,7 +40,7 @@ function Hero() {
         preset="fadeInUp"
         className="text-primary mb-6 font-mono text-4xl font-medium tracking-tight sm:text-5xl md:text-6xl"
       >
-        <span>Hi, I&apos;m </span>
+        <span>{t('hero.greeting')} </span>
         <SelectedText text="King3" />
       </Animated>
 
@@ -48,10 +51,10 @@ function Hero() {
         className="mb-7.5 flex h-16 min-h-16 items-center font-mono"
       >
         <Typewriter
-          text1="<Developer/>"
-          text2="<Storyteller/>"
-          shortText1="<Dev/>"
-          shortText2="<Story/>"
+          text1={t('hero.developer')}
+          text2={t('hero.storyteller')}
+          shortText1={t('hero.devShort')}
+          shortText2={t('hero.storytellerShort')}
         />
       </Animated>
 
@@ -87,10 +90,12 @@ function Hero() {
         preset={{ mode: 'fadeInUp', delay: 0.18 }}
         className="text-primary/90 max-w-3xl text-lg leading-relaxed"
       >
-        I'm a frontend developer passionate about open source and crafting my
+        {t('hero.description')}
+        <br /> {t('hero.descriptionLine2')}
+        {/* I'm a frontend developer passionate about open source and crafting my
         own projects.
         <br /> When not coding, I'm capturing moments 📷, traveling ✈️, or lost
-        in music 🎵.
+        in music 🎵. */}
       </Animated>
 
       {/* Socials */}

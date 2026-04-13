@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import {
   Sheet,
@@ -23,6 +24,12 @@ function MobileNav() {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const page = pathname.split('/').slice(0, 2).join('/')
+  const { t } = useTranslation('common')
+
+  const mobileNavItems = MOBILE_NAV_ITEMS.map((item) => ({
+    ...item,
+    name: t(`nav.${item.name.toLowerCase()}` as any)
+  }))
 
   // Close sheet on route change
   useEffect(() => setOpen(false), [pathname])
@@ -44,7 +51,7 @@ function MobileNav() {
 
         <nav className="flex-1 px-4">
           <ul className="space-y-1">
-            {MOBILE_NAV_ITEMS.map(({ name, href }) => {
+            {mobileNavItems.map(({ name, href }) => {
               const isActive =
                 (page.includes(href) && href !== '/') || page === href
 
