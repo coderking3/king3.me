@@ -1,4 +1,5 @@
 import { Animated } from '@/components'
+import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
 import { BiliBili, Email, GithubCircle, X, Youtube } from '@/icons'
 
 import Typewriter from './Typewriter'
@@ -6,26 +7,11 @@ import Typewriter from './Typewriter'
 const TOPICS: string[] = ['#CoderLife', '#OpenSource', '#Photography']
 
 const SOCIALS = [
-  {
-    icon: GithubCircle,
-    href: 'https://www.github.com/coderking3'
-  },
-  {
-    icon: Youtube,
-    href: 'https://www.youtube.com/@KingCoder-mp1hd'
-  },
-  {
-    icon: BiliBili,
-    href: 'https://space.bilibili.com/627872080'
-  },
-  {
-    icon: X,
-    href: 'https://x.com/coderking_3'
-  },
-  {
-    icon: Email,
-    href: 'mailto:king3.em@gmail.com'
-  }
+  { icon: GithubCircle, href: SOCIAL_URLS.github },
+  { icon: Youtube, href: SOCIAL_URLS.youtube },
+  { icon: BiliBili, href: SOCIAL_URLS.bilibili },
+  { icon: X, href: SOCIAL_URLS.x },
+  { icon: Email, href: `mailto:${AUTHOR_INFO.email}` }
 ]
 
 function SelectedText({ text }: { text: string }) {

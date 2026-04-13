@@ -1,6 +1,7 @@
 import type { PostsMetadata } from '@/types'
 
 import { Animated } from '@/components'
+import { STAGGER } from '@/constants'
 
 import PostsCard from './PostsCard'
 
@@ -8,9 +9,6 @@ const description =
   'Writing blog posts is one of my favorite ways to share and reflect, and I hope to pass on useful technical knowledge to more people. I prefer writing about technical topics, but I also write about non-technical topics, such as photography and personal reflections.'
 
 export { description }
-
-const BASE_DELAY = 0.12
-const STAGGER_DELAY = 0.04
 
 function Blog({ posts }: { posts: PostsMetadata[] }) {
   return (
@@ -39,7 +37,7 @@ function Blog({ posts }: { posts: PostsMetadata[] }) {
               key={post.slug}
               preset={{
                 mode: 'fadeInUp',
-                delay: BASE_DELAY + idx * STAGGER_DELAY
+                delay: STAGGER.base + idx * STAGGER.step
               }}
             >
               <PostsCard metadata={post} />

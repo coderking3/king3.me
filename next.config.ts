@@ -5,8 +5,10 @@ const nextConfig: NextConfig = {
   reactStrictMode: false,
   // Enable React Compiler in Next.js.
   reactCompiler: true,
-  // Configure `pageExtensions` to include markdown and MDX files
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  experimental: {
+    turbopackFileSystemCacheForDev: false
+  },
 
   images: {
     remotePatterns: [

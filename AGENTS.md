@@ -71,7 +71,7 @@ Each route has a corresponding view component under `src/views/{feature}/`:
 | `(site)/message`     | `views/message/Message.tsx`     |
 | `(site)/about`       | `views/about/About.tsx`         |
 | `(site)/poems`       | `views/poems/Poems.tsx`         |
-| `(site)/photos`      | _(placeholder — not yet built)_ |
+| `(site)/photos`      | `views/photos/Photos.tsx`       |
 | `(site)/use`         | _(placeholder — not yet built)_ |
 | `auth/`              | `views/auth/Auth.tsx`           |
 | `admin/`             | `views/admin/Dashboard.tsx`     |
@@ -79,6 +79,7 @@ Each route has a corresponding view component under `src/views/{feature}/`:
 | `admin/projects`     | `views/admin/Projects.tsx`      |
 | `admin/messages`     | `views/admin/Messages.tsx`      |
 | `admin/playlist`     | `views/admin/Playlist.tsx`      |
+| `admin/photos`       | `views/admin/Photos.tsx`        |
 | `admin/poems`        | `views/admin/Poems.tsx`         |
 
 Views own all page UI: layout, headings, animations, and composition of sub-components. Barrel exported via each feature's `index.ts` (e.g. `src/views/admin/index.ts`).
@@ -100,7 +101,7 @@ Views own all page UI: layout, headings, animations, and composition of sub-comp
 
 ### `src/db/` — Data access layer
 
-- `db/projects.ts`, `db/messages.ts`, `db/playlist.ts`, `db/poems.ts` — database query classes wrapping Prisma
+- `db/projects.ts`, `db/messages.ts`, `db/playlist.ts`, `db/poems.ts`, `db/photos.ts` — database query classes wrapping Prisma
 - `db/dashboard.ts` — aggregated dashboard data queries
 - Page-level data fetching should use these classes (e.g. `projectDb.queryAll()`) rather than calling `prisma` directly
 
@@ -116,7 +117,7 @@ Views own all page UI: layout, headings, animations, and composition of sub-comp
 ## Routing Structure
 
 - **`(site)/`** — public-facing pages: `/`, `/blog`, `/blog/[slug]`, `/project`, `/message`, `/about`, `/poems`, `/photos`, `/use`
-- **`admin/`** — authenticated admin dashboard: `/admin` (dashboard), `/admin/users`, `/admin/projects`, `/admin/messages`, `/admin/playlist`, `/admin/poems`
+- **`admin/`** — authenticated admin dashboard: `/admin` (dashboard), `/admin/users`, `/admin/projects`, `/admin/messages`, `/admin/playlist`, `/admin/poems`, `/admin/photos`
 - **`auth/`** — login page
 - **`api/auth/[...all]/`** — Better-Auth catch-all handler
 - **`feed.xml/`** — RSS feed generation (ISR); `/feed`, `/rss`, `/rss.xml` rewrite to it
@@ -161,7 +162,7 @@ API routes: `src/app/api/auth/[...all]/route.ts` using `toNextJsHandler()`.
 - Uses `PrismaPg` adapter (not the default Prisma connector) — see `src/lib/prisma.ts`
 - Singleton pattern with `globalThis` caching in development
 - Auth models: `User`, `Session`, `Account`, `Verification`
-- Business models: `Message` (with replies), `Project`, `Playlist`, `Poem`
+- Business models: `Message` (with replies), `Project`, `Playlist`, `Poem`, `Photo`
 
 ### Server Actions
 
@@ -190,6 +191,9 @@ Server actions live in `src/app/actions/` and use helper functions from `src/lib
 
 - `reactStrictMode: false`, `reactCompiler: true` in Next.js config
 - Remote image patterns: BiliBili CDN, Netease Music CDN, GitHub avatars
+- **Image CDN formats** (do not mix up):
+  - **BiliBili CDN** (photos): `@` suffix — `@{w}w_{h}h_{e}e_{c}c.webp` (e.g. `@80w_80h_1e_1c.webp`)
+  - **Netease Music CDN** (playlist/music covers): `?waadw={w}y{h}&type=webp` (e.g. `?waadw=48y48&type=webp`)
 - ESLint uses `@king-3/eslint-config` with `defineConfig()` — see `eslint.config.js`
 - Shadcn UI configured with RSC support and `base-nova` style — see `components.json`
 

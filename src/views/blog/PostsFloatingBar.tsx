@@ -5,10 +5,10 @@ import type { TocItem } from '@/types'
 import { useScroll } from '@react-spring/web'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronsRight, List, X } from 'lucide-react'
-import { useCallback, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui'
-import { Back, ChevronUp, Link } from '@/icons'
+import { Back, ChevronUp, LinkIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from './PostsTableOfContents'
@@ -29,9 +29,15 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
   const [copied, setCopied] = useState(false)
   const [tocOpen, setTocOpen] = useState(false)
 
+  const visibleRef = useRef(false)
+
   useScroll({
     onChange: ({ value: { scrollY } }) => {
-      setVisible(scrollY > 400)
+      const shouldShow = scrollY > 400
+      if (shouldShow !== visibleRef.current) {
+        visibleRef.current = shouldShow
+        setVisible(shouldShow)
+      }
     }
   })
 
@@ -39,11 +45,15 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  const handleCopyLink = useCallback(() => {
+  const handleCopyLink = useCallback(async () => {
     if (copied) return
-    navigator.clipboard.writeText(window.location.href)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Clipboard API not available
+    }
   }, [copied])
 
   return (
@@ -127,7 +137,7 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
                             exit={{ y: -20, opacity: 0 }}
                             transition={{ duration: 0.2, ease: 'easeOut' }}
                           >
-                            <Link />
+                            <LinkIcon />
                           </motion.span>
                         )}
                       </AnimatePresence>
@@ -183,8 +193,10 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
             </SheetHeader>
             <div
               className="overflow-y-auto px-4 pb-4"
-              onClick={() => {
-                setTimeout(() => setTocOpen(false), 100)
+              onClick={(e) => {
+                if ((e.target as HTMLElement).closest('a')) {
+                  setTocOpen(false)
+                }
               }}
             >
               <PostsTableOfContents headings={headings} />

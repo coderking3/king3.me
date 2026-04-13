@@ -1,12 +1,27 @@
 'use client'
 
+import { Toolbox } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
 import { Animated } from '@/components'
-import { BrowserIcon, LogoIcon, PictureIcon, ServeIcon } from '@/icons'
+import { SOCIAL_URLS } from '@/constants'
+import {
+  BrowserIcon,
+  CameraIcon,
+  FeatherIcon,
+  LogoIcon,
+  PictureIcon,
+  ServeIcon
+} from '@/icons'
 
 import AboutSocial from './AboutSocial'
+
+const EXPLORE_LINKS = [
+  { name: 'Photos', href: '/photos', icon: <CameraIcon size={18} /> },
+  { name: 'Poems', href: '/poems', icon: <FeatherIcon size={18} /> },
+  { name: 'Uses', href: '/use', icon: <Toolbox size={18} /> }
+]
 
 export const title = 'About Me'
 export const description = `Hi, I'm King3. A frontend developer, open-source enthusiast, and creative soul.`
@@ -27,12 +42,12 @@ const NOW_LINKS: NowLinkGroup[] = [
       {
         name: 'Better Mock Server',
         icon: <ServeIcon size={16} />,
-        href: 'https://github.com/OpenKnights/better-mock-server'
+        href: `${SOCIAL_URLS.openknights}/better-mock-server`
       },
       {
         name: 'King Images',
         icon: <PictureIcon size={20} />,
-        href: 'https://github.com/coderking3/king-images'
+        href: `${SOCIAL_URLS.github}/king-images`
       }
     ]
   },
@@ -42,7 +57,7 @@ const NOW_LINKS: NowLinkGroup[] = [
       {
         name: 'OpenKnights',
         icon: <LogoIcon />,
-        href: 'https://github.com/OpenKnights'
+        href: SOCIAL_URLS.openknights
       }
     ]
   }
@@ -121,7 +136,7 @@ function AboutPage() {
                 Turning the ideas in my head into something real is what drives
                 me. I build tools I wish existed and publish them on{' '}
                 <Link
-                  href="https://github.com/OpenKnights"
+                  href={SOCIAL_URLS.openknights}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={linkClass}
@@ -130,7 +145,7 @@ function AboutPage() {
                 </Link>{' '}
                 and my{' '}
                 <Link
-                  href="https://github.com/coderking3"
+                  href={SOCIAL_URLS.github}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={linkClass}
@@ -154,7 +169,7 @@ function AboutPage() {
                 </Link>{' '}
                 and share tips on{' '}
                 <Link
-                  href="https://space.bilibili.com/627872080"
+                  href={SOCIAL_URLS.bilibili}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={linkClass}
@@ -201,7 +216,7 @@ function AboutPage() {
                 <strong className="font-medium">ChangSha</strong>, if you are
                 around, please{' '}
                 <Link
-                  href="https://space.bilibili.com/627872080"
+                  href={SOCIAL_URLS.bilibili}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={linkClass}
@@ -224,6 +239,24 @@ function AboutPage() {
 
         {/* ── Social ───────────────────────────────────────── */}
         <AboutSocial />
+
+        {/* ── Explore ──────────────────────────────────────── */}
+        <Animated preset={{ mode: 'fadeInUp', delay: 0.44 }}>
+          <h2 className="text-muted-foreground mt-10 mb-6 text-base font-medium">
+            Explore more
+          </h2>
+          <div className="-mt-2 flex flex-wrap gap-2">
+            {EXPLORE_LINKS.map(({ name, href, icon }) => (
+              <Link
+                key={name}
+                href={href}
+                className="border-border hover:border-foreground inline-flex items-center justify-center gap-1.5 border-b pb-0.5 text-base transition-colors duration-200"
+              >
+                {icon} {name}
+              </Link>
+            ))}
+          </div>
+        </Animated>
       </div>
     </div>
   )

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { Animated } from '@/components'
+import { STAGGER } from '@/constants'
 import { useInteractive } from '@/icons'
 import { ExternalLinkIcon } from '@/icons/ExternalLink'
 
@@ -15,8 +16,6 @@ interface Project {
 }
 
 const ICON_SIZE = 120
-const BASE_DELAY = 0.12
-const STAGGER_DELAY = 0.04
 
 interface ProjectCardProps {
   idx: number
@@ -30,7 +29,7 @@ function ProjectCard(props: ProjectCardProps) {
   return (
     <Animated
       as="li"
-      preset={{ mode: 'fadeInUp', delay: BASE_DELAY + idx * STAGGER_DELAY }}
+      preset={{ mode: 'fadeInUp', delay: STAGGER.base + idx * STAGGER.step }}
       className="border-border group relative flex flex-col items-start justify-between rounded-xl border border-dashed p-4 pb-3 md:border-0 md:p-0"
       {...handlers}
     >

@@ -3,6 +3,7 @@
 import Link from 'next/link'
 
 import { Animated } from '@/components'
+import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
 import {
   BiliBiliIcon,
   GithubIcon,
@@ -13,26 +14,18 @@ import {
 } from '@/icons'
 
 const SOCIAL_LINKS = [
-  {
-    label: 'GitHub',
-    icon: <GithubIcon size={18} />,
-    href: 'https://www.github.com/coderking3'
-  },
+  { label: 'GitHub', icon: <GithubIcon size={18} />, href: SOCIAL_URLS.github },
   {
     label: 'Youtube',
     icon: <YoutubeIcon size={18} />,
-    href: 'https://www.youtube.com/@KingCoder-mp1hd'
+    href: SOCIAL_URLS.youtube
   },
   {
     label: '哔哩哔哩',
     icon: <BiliBiliIcon size={18} />,
-    href: 'https://space.bilibili.com/627872080'
+    href: SOCIAL_URLS.bilibili
   },
-  {
-    label: 'Twitter',
-    icon: <XIcon size={18} />,
-    href: 'https://x.com/coderking_3'
-  }
+  { label: 'Twitter', icon: <XIcon size={18} />, href: SOCIAL_URLS.x }
 ]
 
 const INACTIVE_LINKS = [
@@ -72,7 +65,7 @@ function AboutSocial() {
       </div>
 
       <p className="text-muted-foreground my-5">
-        Or mail me at king3.wm@gmail.com
+        Or mail me at {AUTHOR_INFO.email}
       </p>
 
       <div className="text-muted-foreground">

@@ -1,7 +1,7 @@
 'use client'
 
 import { animated, useSpring } from '@react-spring/web'
-import { CalendarDays, LogOut, User } from 'lucide-react'
+import { CalendarDays, LogOut, UserRoundPlus } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
 import {
@@ -58,11 +58,7 @@ function UserAvatar({ user }: UserAvatarProps) {
       <AvatarBadge className="bg-green-600 dark:bg-green-800" />
     </Avatar>
   ) : (
-    <Avatar size="sm">
-      <AvatarFallback>
-        <User size={14} strokeWidth={2} />
-      </AvatarFallback>
-    </Avatar>
+    <UserRoundPlus size={20} />
   )
 
   if (!user) {

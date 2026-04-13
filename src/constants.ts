@@ -36,6 +36,19 @@ export const AUTHOR_INFO = {
 
 export const COPYRIGHT = '© 2025-present King3. All Rights Reserved.'
 
+export const SOCIAL_URLS = {
+  github: 'https://github.com/coderking3',
+  youtube: 'https://www.youtube.com/@KingCoder-mp1hd',
+  bilibili: 'https://space.bilibili.com/627872080',
+  x: 'https://x.com/coderking_3',
+  openknights: 'https://github.com/OpenKnights'
+} as const
+
+export const STAGGER = {
+  base: 0.12,
+  step: 0.04
+} as const
+
 export const GALLERYS: string[] = [
   'https://i0.hdslb.com/bfs/openplatform/4ab5f8290c9281aea91d6385b62f97eb1c0a03c2.png',
   'https://i0.hdslb.com/bfs/openplatform/47696dfbc15966645d7d3374306e1e0976cb48b3.jpg',

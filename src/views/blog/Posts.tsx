@@ -7,10 +7,10 @@ import Image from 'next/image'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
+import remarkGfm from 'remark-gfm'
 
 import { Animated } from '@/components'
 import { extractHeadings } from '@/lib/posts'
-import { cn } from '@/lib/utils'
 
 import PostsActions from './PostsActions'
 import PostsFloatingBar from './PostsFloatingBar'
@@ -38,10 +38,10 @@ async function PostsPage({ posts }: PostsPageProps) {
 
   return (
     <div className="mt-14 sm:mt-18">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <div className="relative flex justify-between">
           {/* Left - Actions */}
-          <aside className="mr-1 ml-[13px] hidden w-10 shrink-0 xl:block">
+          <aside className="hidden w-10 shrink-0 sm:mr-3 xl:block">
             <div className="sticky top-24">
               <Animated preset={{ mode: 'slideInLeft', delay: 0.15 }}>
                 <PostsActions />
@@ -110,25 +110,13 @@ async function PostsPage({ posts }: PostsPageProps) {
               </header>
 
               {/* Content */}
-              <main
-                className={cn(
-                  'prose prose-lg dark:prose-invert',
-                  'prose-headings:text-primary prose-headings:scroll-mt-24',
-                  'prose-p:text-foreground prose-p:tracking-tight prose-p:text-base',
-                  'prose-a:text-brand prose-a:opacity-80 prose-a:no-underline hover:prose-a:underline hover:prose-a:opacity-100',
-                  'prose-ul:text-foreground prose-ol:text-foreground prose-li:text-foreground prose-li:text-base',
-                  'prose-strong:text-foreground prose-strong:font-bold',
-                  'prose-code:text-foreground',
-                  'prose-img:opacity-90 prose-img:rounded-lg',
-                  'prose-pre:overflow-x-auto prose-pre:scrollbar-none prose-pre:text-sm sm:prose-pre:text-base',
-                  'max-w-none'
-                )}
-              >
+              <main className="prose-mdx">
                 <MDXRemote
                   source={content}
                   options={{
                     parseFrontmatter: false,
                     mdxOptions: {
+                      remarkPlugins: [remarkGfm],
                       rehypePlugins: [
                         rehypeSlug,
                         [
