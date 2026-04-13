@@ -21,7 +21,7 @@ interface UsePageProps {
 function UsePage({ content, headings }: UsePageProps) {
   return (
     <div className="mt-14 sm:mt-24">
-      <div className="mx-auto max-w-5xl px-4 sm:px-8 sm:pl-12">
+      <div className="mx-auto max-w-5xl px-4 sm:pr-0 sm:pl-12">
         <header className="max-w-2xl">
           <Animated
             as="h1"
@@ -39,35 +39,43 @@ function UsePage({ content, headings }: UsePageProps) {
           </Animated>
         </header>
 
-        <div className="relative mt-12 flex justify-between sm:mt-20">
+        <div className="relative mt-12 flex justify-between gap-12 sm:mt-20">
           {/* Center - Content */}
-          <article className="w-full max-w-3xl min-w-0">
-            <Animated preset={{ mode: 'fadeInUp', delay: 0.12 }}>
-              <main className={cn('prose-mdx', 'prose-headings:text-primary!')}>
-                <MDXRemote
-                  source={content}
-                  options={{
-                    parseFrontmatter: false,
-                    mdxOptions: {
-                      remarkPlugins: [remarkGfm],
-                      rehypePlugins: [
-                        rehypeSlug,
-                        [
-                          rehypeAutolinkHeadings,
-                          {
-                            behavior: 'wrap',
-                            properties: {
-                              className: ['anchor']
-                            }
+          <Animated
+            as="article"
+            preset={{ mode: 'fadeInUp', delay: 0.12 }}
+            className="w-full max-w-3xl min-w-0"
+          >
+            <main
+              className={cn(
+                'prose-mdx',
+                'prose-headings:text-primary!',
+                '[&>h2:first-of-type]:mt-0!'
+              )}
+            >
+              <MDXRemote
+                source={content}
+                options={{
+                  parseFrontmatter: false,
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [
+                      rehypeSlug,
+                      [
+                        rehypeAutolinkHeadings,
+                        {
+                          behavior: 'wrap',
+                          properties: {
+                            className: ['anchor']
                           }
-                        ]
+                        }
                       ]
-                    }
-                  }}
-                />
-              </main>
-            </Animated>
-          </article>
+                    ]
+                  }
+                }}
+              />
+            </main>
+          </Animated>
 
           {/* Right - Table of contents */}
           <aside className="hidden w-48 shrink-0 pl-2 xl:block">

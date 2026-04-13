@@ -1,0 +1,13 @@
+{
+  "latestUpdates": "Latest Updates",
+  "hero": {
+    "greeting": "Hi, I'm",
+    "developer": "<Developer/>",
+    "storyteller": "<Storyteller/>",
+    "devShort": "<Dev/>",
+    "storytellerShort": "<Story/>",
+    "topics": ["#CoderLife", "#OpenSource", "#Photography"],
+    "description": "I'm a frontend developer passionate about open source and crafting my own projects.",
+    "descriptionLine2": "When not coding, I'm capturing moments 📷, gaming 🎮, or lost in music 🎵."
+  }
+}

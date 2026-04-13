@@ -1,6 +1,11 @@
 import type { SpringConfig } from '@react-spring/web'
 
-export const NAVIGATION_ITEMS = [
+interface NavigationItem {
+  name: string
+  href: string
+}
+
+export const NAVIGATION_ITEMS: NavigationItem[] = [
   {
     name: 'Blog',
     href: '/blog'

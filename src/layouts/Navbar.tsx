@@ -5,6 +5,7 @@ import type { MotionOptions } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { NAVIGATION_ITEMS } from '@/constants'
 import { cn } from '@/lib/utils'
@@ -17,6 +18,13 @@ interface NavbarProps {
 function Navbar({ page, className }: NavbarProps) {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [prevActiveIndex, setPrevActiveIndex] = useState<number>(-1)
+
+  const { t } = useTranslation('common')
+
+  const navigationItems = NAVIGATION_ITEMS.map((item) => ({
+    ...item,
+    name: t(`nav.${item.name.toLowerCase()}` as any)
+  }))
 
   const commonMotion: MotionOptions = {
     initial: { opacity: 0, scale: 0.8 },
@@ -84,7 +92,7 @@ function Navbar({ page, className }: NavbarProps) {
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
       <ul className="flex h-full items-center justify-center text-sm">
-        {NAVIGATION_ITEMS.map(({ href, name }, i) => {
+        {navigationItems.map(({ href, name }, i) => {
           const isActive = activeIndex === i
           const isHovered = hoveredItem === href
 

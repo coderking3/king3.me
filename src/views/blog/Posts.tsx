@@ -50,92 +50,94 @@ async function PostsPage({ posts }: PostsPageProps) {
           </aside>
 
           {/* Center - Article */}
-          <article className="w-full max-w-3xl min-w-0">
-            <Animated preset={{ mode: 'fadeIn', delay: 0.15 }}>
-              <header className="mb-8 sm:mb-12">
-                {metadata.image && (
-                  <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
-                    <Image
-                      src={metadata.image}
-                      alt={metadata.title}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                )}
-
-                <h1
-                  id={ARTICLE_TITLE}
-                  className="text-primary mb-4 text-3xl font-bold text-balance sm:text-4xl lg:text-5xl"
-                >
-                  {metadata.title}
-                </h1>
-
-                {metadata.description && (
-                  <p className="text-muted-foreground mb-6 text-lg text-pretty">
-                    {metadata.description}
-                  </p>
-                )}
-
-                {/* Meta */}
-                <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
-                  <time dateTime={date.toISOString()}>
-                    {date.toLocaleDateString('en', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </time>
-                  <span>·</span>
-                  <span>{author}</span>
-
-                  {/* Tags */}
-                  {metadata.tags && metadata.tags.length > 0 && (
-                    <>
-                      <span>·</span>
-                      <div className="flex flex-wrap gap-2">
-                        {metadata.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="bg-secondary text-foreground rounded-md px-2.5 py-0.5 text-xs font-medium"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </>
-                  )}
+          <Animated
+            as="article"
+            preset={{ mode: 'fadeIn', delay: 0.15 }}
+            className="w-full max-w-3xl min-w-0"
+          >
+            <header className="mb-8 sm:mb-12">
+              {metadata.image && (
+                <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
+                  <Image
+                    src={metadata.image}
+                    alt={metadata.title}
+                    fill
+                    className="object-cover"
+                    priority
+                  />
                 </div>
-              </header>
+              )}
 
-              {/* Content */}
-              <main className="prose-mdx">
-                <MDXRemote
-                  source={content}
-                  options={{
-                    parseFrontmatter: false,
-                    mdxOptions: {
-                      remarkPlugins: [remarkGfm],
-                      rehypePlugins: [
-                        rehypeSlug,
-                        [
-                          rehypeAutolinkHeadings,
-                          {
-                            behavior: 'wrap',
-                            properties: {
-                              className: ['anchor']
-                            }
+              <h1
+                id={ARTICLE_TITLE}
+                className="text-primary mb-4 text-3xl font-bold text-balance sm:text-4xl lg:text-5xl"
+              >
+                {metadata.title}
+              </h1>
+
+              {metadata.description && (
+                <p className="text-muted-foreground mb-6 text-lg text-pretty">
+                  {metadata.description}
+                </p>
+              )}
+
+              {/* Meta */}
+              <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
+                <time dateTime={date.toISOString()}>
+                  {date.toLocaleDateString('en', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+                <span>·</span>
+                <span>{author}</span>
+
+                {/* Tags */}
+                {metadata.tags && metadata.tags.length > 0 && (
+                  <>
+                    <span>·</span>
+                    <div className="flex flex-wrap gap-2">
+                      {metadata.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="bg-secondary text-foreground rounded-md px-2.5 py-0.5 text-xs font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </header>
+
+            {/* Content */}
+            <main className="prose-mdx">
+              <MDXRemote
+                source={content}
+                options={{
+                  parseFrontmatter: false,
+                  mdxOptions: {
+                    remarkPlugins: [remarkGfm],
+                    rehypePlugins: [
+                      rehypeSlug,
+                      [
+                        rehypeAutolinkHeadings,
+                        {
+                          behavior: 'wrap',
+                          properties: {
+                            className: ['anchor']
                           }
-                        ],
-                        [rehypePrettyCode, rehypePrettyCodeOptions]
-                      ]
-                    }
-                  }}
-                />
-              </main>
-            </Animated>
-          </article>
+                        }
+                      ],
+                      [rehypePrettyCode, rehypePrettyCodeOptions]
+                    ]
+                  }
+                }}
+              />
+            </main>
+          </Animated>
 
           {/* Right - Table of contents */}
           <aside className="hidden w-48 shrink-0 pl-2 xl:block">

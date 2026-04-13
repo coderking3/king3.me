@@ -1,0 +1,13 @@
+{
+  "latestUpdates": "最新动态",
+  "hero": {
+    "greeting": "你好，我是",
+    "developer": "<Developer/>",
+    "storyteller": "<Storyteller/>",
+    "devShort": "<Dev/>",
+    "storytellerShort": "<Story/>",
+    "topics": ["#程序人生", "#开源", "#摄影"],
+    "description": "我是一名前端开发者，热衷于开源并打造自己的项目。",
+    "descriptionLine2": "不写代码的时候，我会记录瞬间 📷，玩游戏 🎮，或沉浸在音乐 🎵 中。"
+  }
+}

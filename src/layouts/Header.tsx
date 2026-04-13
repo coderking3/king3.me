@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
-import { ThemeMode } from '@/components'
+import { LocaleSwitcher, ThemeMode } from '@/components'
 import { useIsMobile } from '@/hooks'
 import { Feed, Search } from '@/icons'
 import { useSession } from '@/lib/auth-client'
@@ -133,6 +133,7 @@ function Header() {
                 <div className="text-accent-foreground/85 flex items-center gap-0.5">
                   <Search />
                   <UserAvatar user={session?.user ?? null} />
+                  <LocaleSwitcher />
                   <ThemeMode enterAnimationDelay={200} />
                 </div>
               </div>
@@ -156,6 +157,7 @@ function Header() {
                   >
                     <Search />
                     <UserAvatar user={session?.user ?? null} />
+                    <LocaleSwitcher />
                     <ThemeMode enterAnimationDelay={200} />
                     <Feed
                       href="/feed.xml"

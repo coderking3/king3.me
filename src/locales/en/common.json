@@ -1,0 +1,28 @@
+{
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "project": "Project",
+    "message": "Message",
+    "about": "About"
+  },
+  "footer": {
+    "copyright": "© 2025-present King3. All Rights Reserved.",
+    "quotes": [
+      "Code is poetry.",
+      "Less code, more life.",
+      "Done is better than perfect."
+    ]
+  },
+  "localeSwitcher": {
+    "label": "Switch Language"
+  },
+  "metadata": {
+    "siteTitle": "King3.me",
+    "siteDescription": "Frontend Developer & Music Enthusiast"
+  },
+  "mobile": {
+    "siteName": "King3",
+    "rssFeed": "RSS Feed"
+  }
+}
