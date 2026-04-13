@@ -1,0 +1,504 @@
+---
+  title: "Next.js 16 + i18next: Cookie-based i18n Without Changing a Single Route"
+  description: A practical guide to adding cookie-based internationalization to a Next.js 16 App Router project using i18next — zero route restructuring, zero URL prefixes, full TypeScript support.
+  image: /images/avatar.png
+  date: 2026-04-13 16:00:00
+  tags:
+    - NextJs
+    - React
+    - i18n
+  published: true
+---
+
+Most i18n guides for Next.js assume you want URL-based locale routing: `/en/about`, `/zh/about`, etc. That means wrapping your entire app in a `[locale]` dynamic segment, rewriting every page file, and potentially breaking existing links.
+
+But what if you just want a language toggle on your personal blog? Same URLs, language stored in a cookie, no SEO complexity. That's exactly what this guide covers.
+
+## The Approach: Cookie-based i18n
+
+Instead of URL prefixes, we store the user's language preference in a cookie. The data flow looks like this:
+
+```
+Browser Request
+    │
+    ▼
+proxy.ts (Next.js 16 request interceptor)
+  ├── Read Cookie (i18n_lang)
+  ├── Fallback: parse Accept-Language header
+  └── Inject custom Header: x-i18n-lang = "zh"
+    │
+    ├──────────────────────┐
+    ▼                      ▼
+Server Component        Client Component
+  getT()                  i18next + LanguageDetector
+  reads Header            reads Cookie
+  creates instance        global singleton
+  loads JSON              dynamic import JSON
+  returns { t, lang }    useTranslation() → t()
+
+Language Switch → write Cookie → router.refresh() → full re-render
+```
+
+**Key principles:**
+- Server reads language from a **custom header** (injected by proxy)
+- Client reads language from the **cookie** (via LanguageDetector)
+- Language switch: **write cookie + `router.refresh()`**
+- URLs **never change** — `/blog` is always `/blog`
+
+## Prerequisites
+
+This guide assumes:
+- Next.js 16 with App Router (uses `proxy.ts` instead of `middleware.ts`)
+- React 19
+- TypeScript
+
+## Step 1: Install Dependencies
+
+```bash
+pnpm add i18next react-i18next i18next-resources-to-backend \
+         i18next-browser-languagedetector accept-language
+```
+
+| Package | Purpose |
+|---------|---------|
+| `i18next` | Core translation engine |
+| `react-i18next` | React bindings — `useTranslation` hook |
+| `i18next-resources-to-backend` | Lazy-load JSON translation files via dynamic `import()` |
+| `i18next-browser-languagedetector` | Auto-detect language from cookie / browser on the client |
+| `accept-language` | Parse `Accept-Language` header in proxy |
+
+## Step 2: Shared Configuration
+
+Create a single source of truth for i18n settings, shared between server and client.
+
+```ts title="src/i18n/settings.ts"
+export const LANGUAGES = ['en', 'zh'] as const
+export type Language = (typeof LANGUAGES)[number]
+
+export const FALLBACK_LNG: Language = 'en'
+export const DEFAULT_NS = 'common'
+export const COOKIE_NAME = 'i18n_lang'
+export const HEADER_NAME = 'x-i18n-lang'
+
+export function getI18nOptions(
+  lng: Language = FALLBACK_LNG,
+  ns: string | string[] = DEFAULT_NS
+) {
+  return {
+    supportedLngs: LANGUAGES as unknown as string[],
+    fallbackLng: FALLBACK_LNG,
+    lng,
+    fallbackNS: DEFAULT_NS,
+    defaultNS: DEFAULT_NS,
+    ns,
+    interpolation: {
+      escapeValue: false // React handles XSS protection
+    }
+  }
+}
+```
+
+The `HEADER_NAME` is how the proxy communicates the detected language to Server Components. The `COOKIE_NAME` is how the client persists the user's choice.
+
+## Step 3: Translation Files
+
+Organize translations by **namespace** — one JSON file per page/feature area. This enables code-splitting: each page only loads the translations it needs.
+
+```
+src/locales/
+├── en/
+│   ├── common.json    # Nav, footer, shared UI
+│   ├── home.json      # Home page
+│   ├── about.json     # About page
+│   └── ...
+└── zh/
+    ├── common.json
+    ├── home.json
+    ├── about.json
+    └── ...
+```
+
+```json title="src/locales/en/common.json"
+{
+  "nav": {
+    "blog": "Blog",
+    "project": "Project",
+    "message": "Message",
+    "about": "About"
+  },
+  "footer": {
+    "copyright": "© 2025-present King3. All Rights Reserved."
+  },
+  "localeSwitcher": {
+    "label": "Switch Language"
+  }
+}
+```
+
+```json title="src/locales/zh/common.json"
+{
+  "nav": {
+    "blog": "博客",
+    "project": "项目",
+    "message": "留言",
+    "about": "关于"
+  },
+  "footer": {
+    "copyright": "© 2025-至今 King3. 保留所有权利。"
+  },
+  "localeSwitcher": {
+    "label": "切换语言"
+  }
+}
+```
+
+## Step 4: TypeScript Type Safety
+
+This is optional but highly recommended. Augment the `i18next` types so that `t()` calls get full autocompletion and compile-time checking.
+
+```ts title="src/types/i18next.d.ts"
+import 'i18next'
+
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    defaultNS: 'common'
+    resources: {
+      common: typeof import('@/locales/en/common.json')
+      home: typeof import('@/locales/en/home.json')
+      about: typeof import('@/locales/en/about.json')
+      // ... add each namespace
+    }
+  }
+}
+```
+
+Now this works:
+
+```tsx
+const { t } = useTranslation('about')
+t('title')            // ✅ autocomplete + type-checked
+t('nonExistentKey')   // ❌ TypeScript error
+```
+
+## Step 5: Proxy — Language Detection
+
+In Next.js 16, `proxy.ts` replaces the old `middleware.ts`. We add language detection **before** any existing logic (like auth guards).
+
+```ts title="src/proxy.ts"
+import type { NextRequest } from 'next/server'
+
+import acceptLanguage from 'accept-language'
+import { NextResponse } from 'next/server'
+
+import {
+  COOKIE_NAME,
+  FALLBACK_LNG,
+  HEADER_NAME,
+  LANGUAGES
+} from '@/i18n/settings'
+
+acceptLanguage.languages([...LANGUAGES])
+
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  // Language detection: Cookie → Accept-Language → fallback
+  let lang = request.cookies.get(COOKIE_NAME)?.value
+
+  if (!lang || !LANGUAGES.includes(lang as any)) {
+    lang =
+      acceptLanguage.get(request.headers.get('Accept-Language')) ?? FALLBACK_LNG
+  }
+
+  // Inject language header for Server Components
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set(HEADER_NAME, lang)
+
+  // Your existing logic (e.g., admin auth guard) goes here...
+
+  return NextResponse.next({
+    request: { headers: requestHeaders }
+  })
+}
+
+export const config = {
+  matcher: [
+    '/((?!api|_next/static|_next/image|favicon.ico|icons|images|fonts).*)'
+  ]
+}
+```
+
+The `config.matcher` should cover all page routes while excluding static assets and API routes.
+
+## Step 6: Server-side Translation Utility
+
+Server Components can't use React hooks, so we need an async utility function.
+
+```ts title="src/i18n/server.ts"
+import type { Language } from './settings'
+
+import { createInstance } from 'i18next'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import { headers } from 'next/headers'
+import { initReactI18next } from 'react-i18next/initReactI18next'
+
+import { FALLBACK_LNG, getI18nOptions, HEADER_NAME } from './settings'
+
+async function initI18next(lng: Language, ns: string | string[]) {
+  const instance = createInstance()
+  instance.use(initReactI18next)
+  instance.use(
+    resourcesToBackend(
+      (language: string, namespace: string) =>
+        import(`@/locales/${language}/${namespace}.json`)
+    )
+  )
+  await instance.init(getI18nOptions(lng, ns))
+  return instance
+}
+
+export async function getT(ns: string | string[] = 'common') {
+  const headerList = await headers()
+  const lang = (headerList.get(HEADER_NAME) as Language) ?? FALLBACK_LNG
+  const i18next = await initI18next(lang, ns)
+
+  return {
+    t: i18next.getFixedT(lang, Array.isArray(ns) ? ns[0] : ns),
+    lang,
+    i18next
+  }
+}
+```
+
+**Important:** Each call to `getT()` creates a fresh i18next instance. This prevents language state from leaking between concurrent requests on the server.
+
+## Step 7: Client-side Translation Utility
+
+Client Components use a global i18next singleton with `LanguageDetector` to auto-detect the language from the cookie.
+
+```ts title="src/i18n/client.ts"
+'use client'
+
+import i18next from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import resourcesToBackend from 'i18next-resources-to-backend'
+import { initReactI18next, useTranslation } from 'react-i18next'
+
+import { COOKIE_NAME, getI18nOptions } from './settings'
+
+const runsOnServer = typeof window === 'undefined'
+
+i18next
+  .use(initReactI18next)
+  .use(LanguageDetector)
+  .use(
+    resourcesToBackend(
+      (language: string, namespace: string) =>
+        import(`@/locales/${language}/${namespace}.json`)
+    )
+  )
+  .init({
+    ...getI18nOptions(),
+    lng: undefined, // Let LanguageDetector decide
+    detection: {
+      order: ['cookie', 'navigator'],
+      lookupCookie: COOKIE_NAME,
+      caches: ['cookie']
+    },
+    preload: runsOnServer ? ['en', 'zh'] : []
+  })
+
+export { useTranslation }
+export default i18next
+```
+
+Setting `lng: undefined` is crucial — it tells i18next to rely entirely on the LanguageDetector instead of a hardcoded value.
+
+## Step 8: Dynamic `lang` Attribute
+
+Update your root layout to read the language from the proxy-injected header:
+
+```tsx title="src/app/layout.tsx"
+import { headers } from 'next/headers'
+
+import { FALLBACK_LNG, HEADER_NAME } from '@/i18n/settings'
+
+export default async function RootLayout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  const headerList = await headers()
+  const lang = headerList.get(HEADER_NAME) ?? FALLBACK_LNG
+
+  return (
+    <html lang={lang} suppressHydrationWarning>
+      <body>{children}</body>
+    </html>
+  )
+}
+```
+
+The layout becomes an `async` function because `headers()` is asynchronous in Next.js 16.
+
+## Step 9: Language Switcher Component
+
+A simple toggle button that writes the cookie and refreshes the page:
+
+```tsx title="src/components/LocaleSwitcher.tsx"
+'use client'
+
+import { useRouter } from 'next/navigation'
+
+import { useTranslation } from '@/i18n/client'
+import { COOKIE_NAME, type Language } from '@/i18n/settings'
+
+export function LocaleSwitcher() {
+  const router = useRouter()
+  const { i18n } = useTranslation()
+  const currentLang = (i18n.language ?? 'en') as Language
+
+  const switchLang = (lang: Language) => {
+    // 1. Persist to cookie (1 year)
+    const maxAge = 60 * 60 * 24 * 365
+    document.cookie = `${COOKIE_NAME}=${lang};path=/;max-age=${maxAge};SameSite=Lax`
+
+    // 2. Update client-side i18next immediately
+    i18n.changeLanguage(lang)
+
+    // 3. Refresh to re-run Server Components with new language
+    router.refresh()
+  }
+
+  const nextLang: Language = currentLang === 'en' ? 'zh' : 'en'
+
+  return (
+    <button onClick={() => switchLang(nextLang)}>
+      {currentLang === 'en' ? '中文' : 'EN'}
+    </button>
+  )
+}
+```
+
+The three-step process is important:
+1. **Cookie** — so the proxy can detect the language on the next request
+2. **`changeLanguage()`** — so Client Components update instantly
+3. **`router.refresh()`** — so Server Components re-render with the new language
+
+## Step 10: Using Translations
+
+### In Server Components
+
+```tsx
+import { getT } from '@/i18n/server'
+
+export default async function Footer() {
+  const { t } = await getT('common')
+
+  return (
+    <footer>
+      <p>{t('footer.copyright')}</p>
+    </footer>
+  )
+}
+```
+
+### In Client Components
+
+```tsx
+'use client'
+
+import { useTranslation } from '@/i18n/client'
+
+function AboutPage() {
+  const { t } = useTranslation('about')
+
+  return <h1>{t('title')}</h1>
+}
+```
+
+### In `generateMetadata`
+
+```tsx
+import type { Metadata } from 'next'
+
+import { getT } from '@/i18n/server'
+
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT('about')
+
+  return {
+    title: t('title'),
+    description: t('description')
+  }
+}
+```
+
+Quick reference:
+
+| Context | Usage |
+|---------|-------|
+| Server Component | `const { t } = await getT('ns')` |
+| Client Component | `const { t } = useTranslation('ns')` |
+| `generateMetadata` | `const { t } = await getT('ns')` |
+| Server Action | `const { t } = await getT('ns')` |
+
+## Hydration Consistency
+
+A common pitfall with i18n is hydration mismatch — the server renders one language but the client detects another. In this setup, both sides read from the **same cookie**:
+
+- **Server:** proxy reads `i18n_lang` cookie → injects `x-i18n-lang` header → `getT()` reads it
+- **Client:** LanguageDetector reads `i18n_lang` cookie → initializes i18next
+
+Since both derive from the same cookie value, they always agree.
+
+## First Visit Behavior
+
+When a user visits for the first time (no cookie):
+
+1. Proxy reads `Accept-Language` from the browser
+2. If the browser language is Chinese → auto-detect `zh`
+3. Otherwise → fall back to `en`
+4. After manual switch, the cookie persists the choice
+
+## Lazy Loading
+
+The `i18next-resources-to-backend` plugin uses dynamic `import()` to load translation files on demand:
+
+- Visit home → loads `common.json` + `home.json`
+- Visit about → loads `common.json` + `about.json`
+- Translations for pages you haven't visited are never downloaded
+
+## SEO Considerations
+
+The main trade-off of cookie-based i18n: **search engines can't distinguish language versions** because the URL is the same for both. This means:
+
+- No `hreflang` tags (no separate URLs to point to)
+- Google will likely index only one language version
+- If multi-language SEO matters to you, use the **URL prefix approach** (`/en/about`, `/zh/about`) instead
+
+For a personal blog or internal tool, this is rarely an issue.
+
+## File Structure Summary
+
+```
+src/
+├── i18n/
+│   ├── settings.ts    # Shared config (languages, cookie name, header name)
+│   ├── server.ts      # getT() for Server Components
+│   └── client.ts      # useTranslation for Client Components
+├── locales/
+│   ├── en/
+│   │   ├── common.json
+│   │   └── about.json
+│   └── zh/
+│       ├── common.json
+│       └── about.json
+├── types/
+│   └── i18next.d.ts   # TypeScript type augmentation
+├── components/
+│   └── LocaleSwitcher.tsx
+└── proxy.ts           # Language detection + header injection
+```
+
+Zero changes to your routing structure. Zero new route segments. The entire i18n layer sits alongside your existing code, not wrapped around it.
