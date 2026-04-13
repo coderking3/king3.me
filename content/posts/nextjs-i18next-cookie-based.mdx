@@ -40,6 +40,7 @@ Language Switch → write Cookie → router.refresh() → full re-render
 ```
 
 **Key principles:**
+
 - Server reads language from a **custom header** (injected by proxy)
 - Client reads language from the **cookie** (via LanguageDetector)
 - Language switch: **write cookie + `router.refresh()`**
@@ -48,6 +49,7 @@ Language Switch → write Cookie → router.refresh() → full re-render
 ## Prerequisites
 
 This guide assumes:
+
 - Next.js 16 with App Router (uses `proxy.ts` instead of `middleware.ts`)
 - React 19
 - TypeScript
@@ -59,13 +61,13 @@ pnpm add i18next react-i18next i18next-resources-to-backend \
          i18next-browser-languagedetector accept-language
 ```
 
-| Package | Purpose |
-|---------|---------|
-| `i18next` | Core translation engine |
-| `react-i18next` | React bindings — `useTranslation` hook |
-| `i18next-resources-to-backend` | Lazy-load JSON translation files via dynamic `import()` |
+| Package                            | Purpose                                                  |
+| ---------------------------------- | -------------------------------------------------------- |
+| `i18next`                          | Core translation engine                                  |
+| `react-i18next`                    | React bindings — `useTranslation` hook                   |
+| `i18next-resources-to-backend`     | Lazy-load JSON translation files via dynamic `import()`  |
 | `i18next-browser-languagedetector` | Auto-detect language from cookie / browser on the client |
-| `accept-language` | Parse `Accept-Language` header in proxy |
+| `accept-language`                  | Parse `Accept-Language` header in proxy                  |
 
 ## Step 2: Shared Configuration
 
@@ -176,8 +178,8 @@ Now this works:
 
 ```tsx
 const { t } = useTranslation('about')
-t('title')            // ✅ autocomplete + type-checked
-t('nonExistentKey')   // ❌ TypeScript error
+t('title') // ✅ autocomplete + type-checked
+t('nonExistentKey') // ❌ TypeScript error
 ```
 
 ## Step 5: Proxy — Language Detection
@@ -381,6 +383,7 @@ export function LocaleSwitcher() {
 ```
 
 The three-step process is important:
+
 1. **Cookie** — so the proxy can detect the language on the next request
 2. **`changeLanguage()`** — so Client Components update instantly
 3. **`router.refresh()`** — so Server Components re-render with the new language
@@ -436,12 +439,12 @@ export async function generateMetadata(): Promise<Metadata> {
 
 Quick reference:
 
-| Context | Usage |
-|---------|-------|
-| Server Component | `const { t } = await getT('ns')` |
-| Client Component | `const { t } = useTranslation('ns')` |
-| `generateMetadata` | `const { t } = await getT('ns')` |
-| Server Action | `const { t } = await getT('ns')` |
+| Context            | Usage                                |
+| ------------------ | ------------------------------------ |
+| Server Component   | `const { t } = await getT('ns')`     |
+| Client Component   | `const { t } = useTranslation('ns')` |
+| `generateMetadata` | `const { t } = await getT('ns')`     |
+| Server Action      | `const { t } = await getT('ns')`     |
 
 ## Hydration Consistency
 
@@ -481,10 +484,10 @@ For a personal blog or internal tool, this is rarely an issue.
 
 ## File Structure Summary
 
-```
+```txt
 src/
 ├── i18n/
-│   ├── settings.ts    # Shared config (languages, cookie name, header name)
+│   ├── settings.ts    # Shared config (languages, cookie name, header name)xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 │   ├── server.ts      # getT() for Server Components
 │   └── client.ts      # useTranslation for Client Components
 ├── locales/
