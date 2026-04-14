@@ -7,18 +7,13 @@
     "about": "关于"
   },
   "footer": {
-    "copyright": "© 2025-至今 King3. 保留所有权利。",
-    "quotes": ["代码即诗。", "少写代码，多享人生。", "完成比完美更重要。"]
+    "copyright": "© 2025 至今 King3 保留所有权利",
+    "quotes": ["代码即诗", "少写代码, 多享人生", "完成比完美更重要"]
   },
   "localeSwitcher": {
     "label": "切换语言"
   },
-  "metadata": {
-    "siteTitle": "King3.me",
-    "siteDescription": "前端开发者 & 音乐爱好者"
-  },
   "mobile": {
-    "siteName": "King3",
     "rssFeed": "RSS 订阅"
   }
 }

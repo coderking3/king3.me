@@ -17,12 +17,7 @@
   "localeSwitcher": {
     "label": "Switch Language"
   },
-  "metadata": {
-    "siteTitle": "King3.me",
-    "siteDescription": "Frontend Developer & Music Enthusiast"
-  },
   "mobile": {
-    "siteName": "King3",
     "rssFeed": "RSS Feed"
   }
 }

@@ -3,6 +3,7 @@ import type { PostsMetadata } from '@/types'
 import { PencilLine } from 'lucide-react'
 
 import { GALLERYS } from '@/constants'
+import { getT } from '@/i18n/server'
 
 import PostsCard from '../blog/PostsCard'
 import FeaturedMusic from './FeaturedMusic'
@@ -17,13 +18,15 @@ interface Song {
   duration: string
 }
 
-export default function Home({
+export default async function Home({
   songs,
   posts
 }: {
   songs: Song[]
   posts: PostsMetadata[]
 }) {
+  const { t } = await getT('home')
+
   return (
     <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
@@ -38,7 +41,8 @@ export default function Home({
         <div className="flex-1">
           <h2 className="text-primary mt-2 mb-6 flex items-center text-lg font-semibold">
             <PencilLine size={20} />
-            <span className="ml-3">Latest Updates</span>
+            <span className="ml-3">{t('latestUpdates')}</span>
+            {/* <span className="ml-3">Latest Updates</span> */}
           </h2>
 
           <div className="space-y-8">

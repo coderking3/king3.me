@@ -5,7 +5,7 @@ import { BiliBili, Email, GithubCircle, X, Youtube } from '@/icons'
 
 import Typewriter from './Typewriter'
 
-const TOPICS: string[] = ['#CoderLife', '#OpenSource', '#Photography']
+const TOPICS: string[] = ['#SlowLife', '#OpenSource', '#Photography']
 
 const SOCIALS = [
   { icon: GithubCircle, href: SOCIAL_URLS.github },
@@ -40,7 +40,7 @@ async function Hero() {
         preset="fadeInUp"
         className="text-primary mb-6 font-mono text-4xl font-medium tracking-tight sm:text-5xl md:text-6xl"
       >
-        <span>{t('hero.greeting')} </span>
+        <span>Hi, I'm </span>
         <SelectedText text="King3" />
       </Animated>
 
@@ -51,10 +51,10 @@ async function Hero() {
         className="mb-7.5 flex h-16 min-h-16 items-center font-mono"
       >
         <Typewriter
-          text1={t('hero.developer')}
-          text2={t('hero.storyteller')}
-          shortText1={t('hero.devShort')}
-          shortText2={t('hero.storytellerShort')}
+          text1={'<Developer/>'}
+          text2={'<Storyteller/>'}
+          shortText1={'<Dev/>'}
+          shortText2={'<Story/>'}
         />
       </Animated>
 

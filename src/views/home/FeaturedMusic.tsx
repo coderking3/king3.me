@@ -3,6 +3,7 @@
 import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Equalizer, NetEaseMusicIcon } from '@/icons'
 import { cn } from '@/lib/utils'
@@ -16,6 +17,8 @@ interface Song {
 }
 
 function FeaturedMusic({ songs }: { songs: Song[] }) {
+  const { t } = useTranslation('home')
+
   const [playingUrl, setPlayingUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -50,7 +53,7 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
     <div className="border-border rounded-2xl border bg-transparent p-6 backdrop-blur-xs backdrop-saturate-150">
       <h2 className="text-primary relative mb-6 flex items-center text-base font-semibold">
         <Equalizer size={22} />
-        <span className="ml-3">Featured Music</span>
+        <span className="ml-3">{t('featuredMusic')}</span>
         <div className="absolute -top-0.5 right-0 flex items-center">
           <NetEaseMusicIcon size={36} />
         </div>

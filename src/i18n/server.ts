@@ -33,7 +33,10 @@ export async function getT(ns: string | string[] = 'common') {
   const i18next = await initI18next(lang, ns)
 
   return {
-    t: i18next.getFixedT(lang, (Array.isArray(ns) ? ns[0] : ns) as any),
+    t: i18next.getFixedT(lang, (Array.isArray(ns) ? ns[0] : ns) as any) as (
+      key: string,
+      options?: Record<string, unknown>
+    ) => any,
     lang,
     i18next
   }
