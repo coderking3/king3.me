@@ -86,13 +86,16 @@
   font-display: swap;
 }
 
-/* @font-face {
+/* 
+@font-face {
   font-family: FiraCode;
   font-style: normal;
   font-weight: 500;
-  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/FiraCodeNerdFont-Medium.ttf') format('truetype');
+  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/FiraCodeNerdFont-Medium.ttf')
+    format('truetype');
   font-display: swap;
 }
+
 
 @font-face {
   font-family: FiraCode;
@@ -250,6 +253,17 @@
   --sidebar-accent-foreground: var(--accent-foreground);
   --sidebar-border: var(--border);
   --sidebar-ring: var(--ring);
+}
+
+/* --- Utilities --- */
+
+@utility scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }
 
 /* --- Base layer --- */

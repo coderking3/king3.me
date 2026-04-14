@@ -10,6 +10,7 @@ import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
 import { Animated } from '@/components'
+import { MdxLink } from '@/components/mdx/MdxLink'
 import { extractHeadings } from '@/lib/posts'
 
 import PostsActions from './PostsActions'
@@ -70,13 +71,13 @@ async function PostsPage({ posts }: PostsPageProps) {
 
               <h1
                 id={ARTICLE_TITLE}
-                className="text-primary mb-4 text-3xl font-bold text-balance sm:text-4xl lg:text-5xl"
+                className="text-primary mb-4 text-3xl font-bold text-balance sm:text-[2.625rem]"
               >
                 {metadata.title}
               </h1>
 
               {metadata.description && (
-                <p className="text-muted-foreground mb-6 text-lg text-pretty">
+                <p className="text-muted-foreground mb-6 text-base text-pretty">
                   {metadata.description}
                 </p>
               )}
@@ -116,6 +117,7 @@ async function PostsPage({ posts }: PostsPageProps) {
             <main className="prose-mdx">
               <MDXRemote
                 source={content}
+                components={{ a: MdxLink }}
                 options={{
                   parseFrontmatter: false,
                   mdxOptions: {

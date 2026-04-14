@@ -3,21 +3,17 @@
 /* --- MDX prose content styling --- */
 
 .prose-mdx {
-  @apply prose prose-lg dark:prose-invert;
+  @apply prose dark:prose-invert sm:prose-base;
   @apply max-w-none;
 
-  /* Headings */
-  @apply prose-headings:text-brand prose-headings:scroll-mt-24 prose-headings:relative;
-  @apply prose-headings:before:absolute prose-headings:before:right-full prose-headings:before:mr-2 prose-headings:before:text-muted-foreground prose-headings:before:opacity-0 prose-headings:before:transition-opacity prose-headings:before:content-["#"] prose-headings:hover:before:opacity-100;
-
   /* Paragraphs */
-  @apply prose-p:text-foreground prose-p:tracking-tight prose-p:text-base;
+  @apply prose-p:text-foreground prose-p:tracking-tight;
 
   /* Links */
-  @apply prose-a:text-accent-foreground prose-a:underline prose-a:decoration-border prose-a:decoration-1 prose-a:underline-offset-[3px] prose-a:hover:decoration-foreground prose-a:transition-[text-decoration-color] prose-a:duration-200;
+  @apply prose-a:text-foreground prose-a:no-underline prose-a:shadow-[0_1.5px_0_var(--color-brand)] prose-a:hover:shadow-none prose-a:transition-shadow prose-a:duration-200 prose-a:font-medium;
 
   /* Lists */
-  @apply prose-ul:text-foreground prose-ol:text-foreground prose-li:text-foreground prose-li:text-base;
+  @apply prose-ul:text-foreground prose-ol:text-foreground prose-li:text-foreground;
 
   /* Strong */
   @apply prose-strong:text-foreground prose-strong:font-bold;
@@ -25,31 +21,68 @@
   /* Strikethrough */
   @apply [&_del]:text-muted-foreground;
 
+  /* Task list — checkbox aligns with bullet markers */
+  & .task-list-item {
+    @apply list-none;
+
+    & > input[type='checkbox'] {
+      @apply mr-[0.625em] -ml-[1.625em];
+    }
+  }
+
+  /* Headings */
+  & :is(:where(h1, h2, h3, h4, h5, h6)) {
+    @apply text-brand relative scroll-mt-20 sm:scroll-mt-24;
+    @apply before:text-muted-foreground before:absolute before:right-full before:mr-2 before:hidden before:opacity-0 before:transition-opacity before:content-["#"] hover:before:opacity-100 sm:before:block;
+
+    & code {
+      @apply text-[0.9em]!;
+    }
+
+    & strong {
+      @apply text-inherit;
+    }
+  }
+
   & a:has(code) {
-    @apply no-underline hover:no-underline;
+    @apply shadow-none hover:shadow-none;
   }
 
   & .anchor {
-    @apply text-inherit no-underline opacity-100 hover:no-underline;
+    @apply font-bold text-inherit opacity-100 shadow-none hover:shadow-none;
   }
 
   /* Inline code (exclude code blocks inside figure > pre) */
   & :not(pre) > code {
-    @apply text-accent-foreground bg-secondary border-border hover:border-foreground rounded-t-md border-b px-1.5 py-0.5 text-sm transition-[border-color] duration-200 before:content-none after:content-none;
+    @apply text-primary bg-secondary border-border rounded-md border px-1.5 py-0.5 text-sm font-medium before:content-none after:content-none sm:text-sm;
   }
 
-  /* Code block container */
+  /* Code block — shared pre styles */
+  & pre {
+    @apply mx-0 my-6 p-0 sm:my-8;
+    @apply border-border/50 dark:border-border/70 overflow-hidden rounded-xl border;
+    @apply font-code text-base leading-[1.6] font-medium sm:text-lg sm:leading-[1.5];
+
+    & code {
+      @apply block px-4 py-3 sm:px-6 sm:py-4;
+      @apply overflow-x-auto;
+    }
+  }
+
+  /* Code block with title */
   & figure {
-    @apply border-border/50 dark:border-border/70 my-8 overflow-hidden rounded-xl border;
+    @apply mx-0 my-6 sm:my-8;
+
+    & figcaption {
+      @apply font-code text-muted-foreground bg-secondary border-border/50 dark:border-border/70 inline-block rounded-t-lg border border-b-0 px-3 py-1 text-sm sm:px-4 sm:py-1.5;
+    }
 
     & pre {
-      @apply m-0 p-0;
-      @apply font-code text-[16.5px] leading-[1.5] font-medium;
+      @apply m-0;
+    }
 
-      & code {
-        @apply px-6 py-4;
-        @apply overflow-x-auto;
-      }
+    & figcaption + pre {
+      @apply rounded-tl-none;
     }
   }
 }
@@ -57,20 +90,15 @@
 /* --- Shiki syntax highlight themes --- */
 
 /* Light theme */
-pre[data-theme*=' '],
-pre[data-theme*=' '] span,
-pre,
-pre span {
+.prose-mdx pre,
+.prose-mdx pre span {
   color: var(--shiki-light) !important;
   background-color: #f9fafb !important;
 }
 
 /* Dark theme */
-html.dark pre[data-theme*=' '],
-html.dark pre[data-theme*=' '] span,
-html.dark figcaption,
-html.dark pre,
-html.dark pre span {
+html.dark .prose-mdx pre,
+html.dark .prose-mdx pre span {
   color: var(--shiki-dark) !important;
   background-color: #0e1017 !important;
 }

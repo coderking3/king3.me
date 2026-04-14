@@ -1,0 +1,332 @@
+---
+  title: "Markdown 语法演示"
+  description: 全面展示所有支持的 Markdown 和 MDX 语法，用于视觉样式测试。
+  image: /images/avatar.png
+  date: 2020-01-02 00:00:00
+  tags:
+    - Markdown
+    - Demo
+  published: false
+---
+
+## 标题
+
+### 三级标题
+
+#### 四级标题
+
+##### 五级标题
+
+###### 六级标题
+
+### 带有 `inline code` 的标题
+
+### 带有 **粗体** 和 _斜体_ 的标题
+
+---
+
+## 段落
+
+这是一个普通段落。天地玄黄，宇宙洪荒。日月盈昃，辰宿列张。寒来暑往，秋收冬藏。闰余成岁，律吕调阳。
+
+这是第二段。包含 **粗体文字**、_斜体文字_、**_粗斜体_**、~~删除线~~、以及 `行内代码`。你也可以用 <kbd>Ctrl</kbd> + <kbd>C</kbd> 表示键盘快捷键。
+
+这里有一个 [普通链接](https://example.com)、一个 [带 `code` 的链接](https://example.com)、以及一个 [带 **粗体** 的链接](https://example.com)。
+
+中英文混排测试：Next.js 16 使用了全新的 App Router 架构，配合 React 19 的 Server Components 特性，可以实现更好的性能优化。使用 `pnpm dev` 启动开发服务器，默认端口为 3060。
+
+---
+
+## 列表
+
+### 无序列表
+
+- 第一项
+- 第二项带 **粗体**
+- 第三项带 `代码`
+  - 嵌套项一
+  - 嵌套项二
+    - 深层嵌套
+- 第四项
+
+### 有序列表
+
+1. 第一步
+2. 第二步有一段比较长的描述文字，用来测试列表项在文本换行时的排版表现是否正常
+3. 第三步
+   1. 子步骤一
+   2. 子步骤二
+4. 第四步
+
+### 任务列表
+
+- [x] 已完成的任务
+- [ ] 未完成的任务
+- [x] 另一个已完成的任务
+- [ ] 带有 `行内代码` 的任务
+
+---
+
+## 引用
+
+> 这是一条简单的引用。
+
+> 这是一条多段引用。
+>
+> 第二段包含 **粗体** 和 _斜体_ 文字。代码同样适用：`console.log('hello')`。
+>
+> — 鲁迅
+
+> 嵌套引用：
+>
+> > 这是嵌套在另一条引用内部的引用。
+> >
+> > > 这是更深层的嵌套。
+
+---
+
+## 代码
+
+### 行内代码
+
+使用 `useState` 钩子管理状态。`Array.prototype.map()` 方法会创建一个新数组。构建时设置 `NODE_ENV=production`。
+
+### 无语言代码块
+
+```
+src/
+├── components/
+│   ├── ui/
+│   └── index.ts
+├── layouts/
+│   ├── Header.tsx
+│   └── Footer.tsx
+└── app/
+    └── page.tsx
+```
+
+### 有语言代码块
+
+```ts
+export const LANGUAGES = ['en', 'zh'] as const
+export type Language = (typeof LANGUAGES)[number]
+
+export function getI18nOptions(
+  lng: Language = 'en',
+  ns: string | string[] = 'common'
+) {
+  return {
+    supportedLngs: LANGUAGES,
+    fallbackLng: 'en',
+    lng,
+    ns
+  }
+}
+```
+
+### 带标题代码块
+
+```tsx title="src/components/Counter.tsx"
+'use client'
+
+import { useState } from 'react'
+
+export function Counter() {
+  const [count, setCount] = useState(0)
+
+  return <button onClick={() => setCount(count + 1)}>计数: {count}</button>
+}
+```
+
+```json title="package.json"
+{
+  "name": "my-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "next": "^16.0.0",
+    "react": "^19.0.0"
+  }
+}
+```
+
+```bash title="终端"
+pnpm add i18next react-i18next
+pnpm dev
+```
+
+### 长代码行（水平滚动）
+
+```ts
+const veryLongVariableName = someFunction(
+  parameterOne,
+  parameterTwo,
+  parameterThree,
+  parameterFour,
+  parameterFive,
+  parameterSix,
+  parameterSeven
+)
+```
+
+---
+
+## 表格
+
+| 功能       | 状态   | 备注                |
+| ---------- | ------ | ------------------- |
+| 暗色模式   | 已完成 | 使用 `next-themes`  |
+| 国际化     | 进行中 | 基于 Cookie 的方案  |
+| 服务端渲染 | 已完成 | App Router          |
+| 认证       | 已完成 | Better-Auth + OAuth |
+
+### 宽表格
+
+| 包名          | 用途  | 版本   | 大小  | 协议       | 维护者        |
+| ------------- | ----- | ------ | ----- | ---------- | ------------- |
+| `next`        | 框架  | 16.0.0 | 5.2MB | MIT        | Vercel        |
+| `react`       | UI 库 | 19.0.0 | 2.5MB | MIT        | Meta          |
+| `tailwindcss` | 样式  | 4.0.0  | 3.1MB | MIT        | Tailwind Labs |
+| `prisma`      | ORM   | 7.0.0  | 8.7MB | Apache-2.0 | Prisma        |
+
+---
+
+## GFM 扩展语法
+
+### 自动链接
+
+访问 https://github.com 或联系 admin@example.com — 由 remarkGfm 自动识别为链接。
+
+### 脚注
+
+这是一句带脚注的话[^1]，这是另一个脚注[^note]。
+
+[^1]: 这是第一条脚注的内容。
+
+[^note]: 脚注中可以包含 **Markdown** 和 `代码`。
+
+---
+
+## 图片
+
+![占位图片](/images/avatar.png)
+
+---
+
+## 分割线
+
+分割线上方。
+
+---
+
+分割线下方。
+
+---
+
+另一条分割线。
+
+---
+
+## HTML 元素
+
+### 缩写
+
+<abbr title="HyperText Markup Language">HTML</abbr> 规范由
+<abbr title="World Wide Web Consortium">W3C</abbr> 维护。
+
+### 上标和下标
+
+H<sub>2</sub>O 是水。E = mc<sup>2</sup> 是质能方程。
+
+### 高亮
+
+这段文字包含一个 <mark>高亮</mark> 词语。
+
+### 折叠/展开
+
+<details>
+<summary>点击展开</summary>
+
+这是展开后才能看到的隐藏内容。
+
+- 里面可以包含 **Markdown** 语法
+- 也支持 `代码` 和 [链接](https://example.com)
+
+```ts
+const hidden = '这段代码被隐藏了'
+```
+
+</details>
+
+---
+
+## 混合内容
+
+### 段落 → 代码 → 段落
+
+这里是代码块之前的文字。
+
+```ts
+const x = 42
+```
+
+这里是代码块之后的文字。
+
+### 段落 → 引用 → 代码
+
+一些介绍性文字。
+
+> 一条与主题相关的引用。
+
+```ts
+const result = doSomething()
+```
+
+### 列表中的代码块
+
+1. 首先，安装依赖：
+
+   ```bash
+   pnpm add next react
+   ```
+
+2. 然后创建组件：
+
+   ```tsx
+   export function App() {
+     return <div>你好世界</div>
+   }
+   ```
+
+3. 最后启动开发服务器：
+
+   ```bash
+   pnpm dev
+   ```
+
+---
+
+## 边界情况
+
+### 超长中文文字
+
+这是一段没有任何空格的超长中文文字用来测试浏览器对中文长文本的自动换行能力天地玄黄宇宙洪荒日月盈昃辰宿列张寒来暑往秋收冬藏闰余成岁律吕调阳。
+
+### 相邻代码块
+
+```ts
+const first = '第一个代码块'
+```
+
+```ts
+const second = '第二个代码块'
+```
+
+### 空代码块
+
+```
+
+```
+
+### 单行包含所有格式
+
+**粗体**、_斜体_、~~删除线~~、`代码`、[链接](https://example.com)、以及普通文字全部在一行里。
