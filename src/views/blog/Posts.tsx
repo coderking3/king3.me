@@ -58,7 +58,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           >
             <header className="mb-8 sm:mb-12">
               {metadata.image && (
-                <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl">
+                <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl shadow-xl">
                   <Image
                     src={metadata.image}
                     alt={metadata.title}
