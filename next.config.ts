@@ -6,9 +6,9 @@ const nextConfig: NextConfig = {
   // Enable React Compiler in Next.js.
   reactCompiler: true,
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  // experimental: {
-  //   turbopackFileSystemCacheForDev: false
-  // },
+  experimental: {
+    turbopackFileSystemCacheForDev: false
+  },
 
   images: {
     remotePatterns: [
