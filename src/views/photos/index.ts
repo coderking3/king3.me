@@ -1,1 +1,1 @@
-export { description, default as PhotosPage, title } from './Photos'
+export { default as PhotosPage } from './Photos'

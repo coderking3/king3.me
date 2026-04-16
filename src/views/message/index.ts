@@ -1,1 +1,1 @@
-export { description, default as MessagePage, title } from './Message'
+export { default as MessagePage } from './Message'

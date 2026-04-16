@@ -1,6 +1,7 @@
 'use client'
 
 import { lazy, Suspense, useState } from 'react'
+// import dynamic from 'next/dynamic'
 
 const ArtPlum = lazy(() => import('./ArtPlum'))
 const ArtSnow = lazy(() => import('./ArtSnow'))

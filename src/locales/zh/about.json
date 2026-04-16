@@ -2,20 +2,19 @@
   "title": "关于我",
   "description": "你好，我是 King3。一个前端开发者、开源爱好者和创作者。",
   "heading": "King3.",
-  "subtitle": "前端工程师 · 开源建设者 · 坐标",
+  "subtitle": "前端工程师 · 开源爱好者 · 现居 ",
   "city": "长沙",
-  "workingAs": "职业",
-  "frontendDeveloper": "前端开发者",
-  "creatorOf": "创建了",
-  "maintaining": "维护中",
-  "paragraph1": "把脑海中的想法变成现实是驱动我的动力。我构建自己期望存在的工具，并发布在 <openknights>OpenKnights</openknights> 和我的 <github>GitHub</github> 上。查看我的<projects>完整项目列表</projects>。",
-  "paragraph2": "我写<blog>博客文章</blog>，并在<bilibili>哔哩哔哩</bilibili>上分享关于编程、开源以及一路走来的经验教训。",
-  "paragraph3": "代码之外，我喜欢<photos>摄影</photos>、收集<poems>诗歌</poems>、阅读小说和<music>听音乐</music>。如果你感兴趣，这里是我使用的<uses>软硬件</uses>。",
-  "paragraph4": "我在<strong>{{city}}</strong>，如果你在附近，请<contact>联系我</contact>，一起喝杯咖啡或做些有趣的事。",
+  "workingAs": "职业: ",
+  "frontendDeveloper": "前端开发",
+  "creatorOf": "项目: ",
+  "maintaining": "维护: ",
+  "paragraph1": "把脑海中的酷点子变成现实，是我最热爱的事。我喜欢用代码构建有趣好玩的东西，并将它们发布在 <openknights>OpenKnights</openknights> 和 <github>GitHub</github> 上。在这里查看我的<projects>项目列表</projects>。",
+  "paragraph2": "我撰写关于开源、编程以及学习过程中所获心得的<blog>博客文章</blog>，偶尔也会在<bilibili>哔哩哔哩</bilibili>上分享。",
+  "paragraph3": "除了写代码，我还喜欢<photos>摄影</photos>、攥写<poems>诗词</poems>、阅读小说和<music>听音乐</music>。如果你感兴趣，这里是我使用的<use>硬件和软件</use>。",
+  "paragraph4": "我在<strong>{{city}}</strong>，如果你也在附近，欢迎<contact>联系我</contact>，一起喝杯咖啡或交流一下心得。",
   "exploreMore": "探索更多",
   "social": {
     "findMeOn": "在这里找到我",
-    "orMailMe": "或者发邮件给我",
-    "inactive": "不活跃于"
+    "orMailMe": "或通过 <email>{{email}}</email> 给我发邮件"
   }
 }

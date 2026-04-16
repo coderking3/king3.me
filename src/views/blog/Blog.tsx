@@ -2,15 +2,13 @@ import type { PostsMetadata } from '@/types'
 
 import { Animated } from '@/components'
 import { STAGGER } from '@/constants'
+import { getT } from '@/i18n/server'
 
 import PostsCard from './PostsCard'
 
-const description =
-  'Writing blog posts is one of my favorite ways to share and reflect, and I hope to pass on useful technical knowledge to more people. I prefer writing about technical topics, but I also write about non-technical topics, such as photography and personal reflections.'
+async function Blog({ posts }: { posts: PostsMetadata[] }) {
+  const { t } = await getT('blog')
 
-export { description }
-
-function Blog({ posts }: { posts: PostsMetadata[] }) {
   return (
     <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
@@ -20,14 +18,14 @@ function Blog({ posts }: { posts: PostsMetadata[] }) {
             preset="fadeInUp"
             className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
           >
-            Welcome to my blog
+            {t('title')}
           </Animated>
           <Animated
             as="p"
             preset={{ mode: 'fadeInUp', delay: 0.06 }}
             className="text-muted-foreground mt-6 text-lg"
           >
-            {description}
+            {t('description')}
           </Animated>
         </header>
 

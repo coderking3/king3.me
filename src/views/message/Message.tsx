@@ -2,6 +2,8 @@
 
 import type { Message } from '@/types'
 
+import { useTranslation } from 'react-i18next'
+
 import { Animated } from '@/components'
 import { Button } from '@/components/ui'
 import { useSession } from '@/lib/auth-client'
@@ -12,11 +14,8 @@ import MessageList from './MessageList'
 
 type MessageWithReplies = Message & { replies: Message[] }
 
-export const title = 'Welcome to my message wall'
-export const description =
-  'Here, you can leave what you want to say to me, or your suggestions, or your thoughts, or your criticism, or your praise, or your encouragement, or your complaints.'
-
 function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
+  const { t } = useTranslation('message')
   const { data: session } = useSession()
   const { openModal } = useAuthModal()
 
@@ -29,14 +28,14 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
             preset="fadeInUp"
             className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
           >
-            {title}
+            {t('title')}
           </Animated>
           <Animated
             as="p"
             preset={{ mode: 'fadeInUp', delay: 0.06 }}
             className="text-muted-foreground mt-6 text-lg"
           >
-            {description}
+            {t('description')}
           </Animated>
         </header>
 
@@ -49,7 +48,7 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
               <MessageInput user={session.user} />
             ) : (
               <Button variant="outline" size="lg" onClick={openModal}>
-                Please log in to leave a message
+                {t('loginPrompt')}
               </Button>
             )}
           </Animated>

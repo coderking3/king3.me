@@ -1,12 +1,11 @@
 import type { Poem } from '@/types'
 
 import { Animated } from '@/components'
+import { getT } from '@/i18n/server'
 
-export const title = 'Poems'
-export const description =
-  'Words that resonate — collected verses and original pieces.'
+async function PoemsPage({ poems }: { poems: Poem[] }) {
+  const { t, lang } = await getT('poems')
 
-function PoemsPage({ poems }: { poems: Poem[] }) {
   return (
     <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
@@ -16,14 +15,14 @@ function PoemsPage({ poems }: { poems: Poem[] }) {
             preset="fadeInUp"
             className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
           >
-            {title}
+            {t('title')}
           </Animated>
           <Animated
             as="p"
             preset={{ mode: 'fadeInUp', delay: 0.06 }}
             className="text-muted-foreground mt-6 text-lg"
           >
-            {description}
+            {t('description')}
           </Animated>
         </header>
 
@@ -45,7 +44,7 @@ function PoemsPage({ poems }: { poems: Poem[] }) {
                 {poem.content}
               </div>
               <time className="text-muted-foreground/60 mt-3 block text-xs">
-                {new Date(poem.createdAt).toLocaleDateString('zh-CN', {
+                {new Date(poem.createdAt).toLocaleDateString(lang, {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
@@ -57,7 +56,7 @@ function PoemsPage({ poems }: { poems: Poem[] }) {
           {poems.length === 0 && (
             <Animated preset={{ mode: 'fadeInUp', delay: 0.12 }}>
               <p className="text-muted-foreground py-20 text-center text-sm">
-                No poems yet.
+                {t('noPoems')}
               </p>
             </Animated>
           )}

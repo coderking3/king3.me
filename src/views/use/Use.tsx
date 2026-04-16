@@ -6,19 +6,19 @@ import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
 import { Animated } from '@/components'
+import { getT } from '@/i18n/server'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from '../blog/PostsTableOfContents'
-
-export const title = 'Uses'
-export const description = 'Hardware and software I use on a daily basis.'
 
 interface UsePageProps {
   content: string
   headings: TocItem[]
 }
 
-function UsePage({ content, headings }: UsePageProps) {
+async function UsePage({ content, headings }: UsePageProps) {
+  const { t } = await getT('use')
+
   return (
     <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-5xl px-4 sm:pr-0 sm:pl-12">
@@ -28,14 +28,14 @@ function UsePage({ content, headings }: UsePageProps) {
             preset="fadeInUp"
             className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
           >
-            {title}
+            {t('title')}
           </Animated>
           <Animated
             as="p"
             preset={{ mode: 'fadeInUp', delay: 0.06 }}
             className="text-muted-foreground mt-6 text-lg"
           >
-            {description}
+            {t('description')}
           </Animated>
         </header>
 

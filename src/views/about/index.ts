@@ -1,1 +1,1 @@
-export { default as AboutPage, description, title } from './About'
+export { default as AboutPage } from './About'

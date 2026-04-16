@@ -1,27 +1,17 @@
 import type { SpringConfig } from '@react-spring/web'
 
+type NavKey = 'home' | 'blog' | 'project' | 'message' | 'about'
+
 interface NavigationItem {
-  name: string
+  key: NavKey
   href: string
 }
 
 export const NAVIGATION_ITEMS: NavigationItem[] = [
-  {
-    name: 'Blog',
-    href: '/blog'
-  },
-  {
-    name: 'Project',
-    href: '/project'
-  },
-  {
-    name: 'Message',
-    href: '/message'
-  },
-  {
-    name: 'About',
-    href: '/about'
-  }
+  { key: 'blog', href: '/blog' },
+  { key: 'project', href: '/project' },
+  { key: 'message', href: '/message' },
+  { key: 'about', href: '/about' }
 ]
 
 export const SPRINGS: Record<'springy', SpringConfig> = {
@@ -34,7 +24,7 @@ export const SPRINGS: Record<'springy', SpringConfig> = {
 }
 
 export const AUTHOR_INFO = {
-  name: 'king3',
+  name: 'King3',
   email: 'king3.wm@gmail.com',
   link: 'https://github.com/coderking3'
 }

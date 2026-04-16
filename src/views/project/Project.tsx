@@ -1,17 +1,17 @@
 import type { Project } from '@/types'
 
 import { Animated } from '@/components'
+import { getT } from '@/i18n/server'
 
 import ProjectCard from './ProjectCard'
-
-export const title = 'My Projects'
-export const description = 'These are all my projects and libraries.'
 
 interface ProjectPageProps {
   projects: Project[]
 }
 
-function ProjectPage({ projects }: ProjectPageProps) {
+async function ProjectPage({ projects }: ProjectPageProps) {
+  const { t } = await getT('project')
+
   return (
     <div className="mt-14 sm:mt-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-8">
@@ -21,14 +21,14 @@ function ProjectPage({ projects }: ProjectPageProps) {
             preset="fadeInUp"
             className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
           >
-            {title}
+            {t('title')}
           </Animated>
           <Animated
             as="p"
             preset={{ mode: 'fadeInUp', delay: 0.06 }}
             className="text-muted-foreground mt-6 text-lg"
           >
-            {description}
+            {t('description')}
           </Animated>
         </header>
 

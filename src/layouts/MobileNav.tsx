@@ -18,7 +18,10 @@ import { NAVIGATION_ITEMS } from '@/constants'
 import { FeedIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
-const MOBILE_NAV_ITEMS = [{ name: 'Home', href: '/' }, ...NAVIGATION_ITEMS]
+const MOBILE_NAV_ITEMS = [
+  { key: 'home' as const, href: '/' },
+  ...NAVIGATION_ITEMS
+]
 
 function MobileNav() {
   const [open, setOpen] = useState(false)
@@ -28,7 +31,7 @@ function MobileNav() {
 
   const mobileNavItems = MOBILE_NAV_ITEMS.map((item) => ({
     ...item,
-    name: t(`nav.${item.name.toLowerCase()}` as any)
+    name: t(`nav.${item.key}`)
   }))
 
   // Close sheet on route change
@@ -51,12 +54,12 @@ function MobileNav() {
 
         <nav className="flex-1 px-4">
           <ul className="space-y-1">
-            {mobileNavItems.map(({ name, href }) => {
+            {mobileNavItems.map(({ key, name, href }) => {
               const isActive =
                 (page.includes(href) && href !== '/') || page === href
 
               return (
-                <li key={name}>
+                <li key={key}>
                   <Link
                     href={href}
                     className={cn(

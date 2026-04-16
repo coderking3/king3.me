@@ -2,20 +2,19 @@
   "title": "About Me",
   "description": "Hi, I'm King3. A frontend developer, open-source enthusiast, and creative soul.",
   "heading": "King3.",
-  "subtitle": "Frontend engineer · Open-source builder · Based in",
+  "subtitle": "Frontend engineer · Open-source builder · Based in ",
   "city": "ChangSha",
   "workingAs": "Working as a",
   "frontendDeveloper": "Frontend Developer",
   "creatorOf": "Creator of",
   "maintaining": "Maintaining",
-  "paragraph1": "Turning the ideas in my head into something real is what drives me. I build tools I wish existed and publish them on <openknights>OpenKnights</openknights> and my <github>GitHub</github>. Find my <projects>full projects list here</projects>.",
-  "paragraph2": "I write <blog>blog posts</blog> and share tips on <bilibili>哔哩哔哩</bilibili> about programming, open source, and lessons learned along the way.",
-  "paragraph3": "Outside of code, I enjoy <photos>photography</photos>, collecting <poems>poems</poems>, reading novels, and <music>listening to music</music>. In case you are interested, here are the <uses>hardware/software I use</uses>.",
+  "paragraph1": "Dreaming up cool ideas and making them come true is where my passion lies. I enjoy building cool and fun things with code, and publish them on <openknights>OpenKnights</openknights> and my <github>GitHub</github>. Find my <projects>full projects list here</projects>.",
+  "paragraph2": "I write <blog>blog posts</blog> about open source, programming, and things I learn along the way, and occasionally share them on <bilibili>哔哩哔哩</bilibili>.",
+  "paragraph3": "Outside of code, I enjoy <photos>photography</photos>, compose <poems>poems</poems>, reading novels, and <music>listening to music</music>. In case you are interested, here are the <use>hardware/software I use</use>.",
   "paragraph4": "I'm based in <strong>{{city}}</strong>, if you are around, please <contact>reach out</contact> and let's grab a coffee or work on something together.",
   "exploreMore": "Explore more",
   "social": {
     "findMeOn": "Find me on",
-    "orMailMe": "Or mail me at",
-    "inactive": "Inactive on"
+    "orMailMe": "Or mail me at <email>{{email}}</email>"
   }
 }

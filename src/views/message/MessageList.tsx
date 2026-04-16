@@ -1,6 +1,7 @@
 import type { Message } from '@/types'
 
 import Image from 'next/image'
+import { useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { relativeTime } from '@/lib/date'
@@ -9,7 +10,15 @@ type MessageWithReplies = Message & { replies: Message[] }
 
 /* --- Single Reply --- */
 
-function Reply({ reply, isLast }: { reply: Message; isLast: boolean }) {
+function Reply({
+  reply,
+  isLast,
+  lang
+}: {
+  reply: Message
+  isLast: boolean
+  lang: string
+}) {
   return (
     <div className="relative pb-3 pl-6">
       {/* Vertical line — full height for non-last, half for last */}
@@ -43,7 +52,7 @@ function Reply({ reply, isLast }: { reply: Message; isLast: boolean }) {
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold">{reply.userName}</span>
             <time className="text-[11px] opacity-40 select-none">
-              {relativeTime(reply.createdAt)}
+              {relativeTime(reply.createdAt, lang)}
             </time>
           </div>
           <p className="mt-0.5 text-sm">{reply.message}</p>
@@ -58,11 +67,13 @@ function Reply({ reply, isLast }: { reply: Message; isLast: boolean }) {
 function MessageItem({
   message,
   isLast,
-  index
+  index,
+  lang
 }: {
   message: MessageWithReplies
   isLast: boolean
   index: number
+  lang: string
 }) {
   return (
     <Animated
@@ -96,7 +107,7 @@ function MessageItem({
         <div className="-mt-0.5 flex min-w-0 flex-1 items-center gap-2">
           <b className="text-sm font-bold">{message.userName}</b>
           <time className="text-xs opacity-40 select-none">
-            {relativeTime(message.createdAt)}
+            {relativeTime(message.createdAt, lang)}
           </time>
         </div>
       </div>
@@ -117,6 +128,7 @@ function MessageItem({
               key={reply.id}
               reply={reply}
               isLast={idx === message.replies.length - 1}
+              lang={lang}
             />
           ))}
         </div>
@@ -128,6 +140,8 @@ function MessageItem({
 /* --- Message List --- */
 
 function MessageList({ messages }: { messages: MessageWithReplies[] }) {
+  const { i18n } = useTranslation()
+
   return (
     <div className="relative mt-12">
       <ul role="list" className="-mb-8 px-1 md:px-4">
@@ -137,6 +151,7 @@ function MessageList({ messages }: { messages: MessageWithReplies[] }) {
             message={message}
             isLast={idx === messages.length - 1}
             index={idx}
+            lang={i18n.language}
           />
         ))}
       </ul>

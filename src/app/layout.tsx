@@ -6,21 +6,25 @@ import React from 'react'
 
 import { Toaster } from '@/components/ui'
 import { TooltipProvider } from '@/components/ui/tooltip'
+import { getT } from '@/i18n/server'
 import { FALLBACK_LNG, HEADER_NAME } from '@/i18n/settings'
 import { audioWide, robotoMono } from '@/lib/font'
 import { cn } from '@/lib/utils'
 
 import '@/styles/global.css'
 
-/* 配置元数据 */
-export const metadata: Metadata = {
-  title: {
-    default: 'King3.me',
-    template: '%s | King3.me'
-  },
-  description: 'Frontend Developer & Music Enthusiast',
-  icons: {
-    icon: '/icons/favicon.svg'
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT('common')
+
+  return {
+    title: {
+      default: 'King3',
+      template: '%s - King3'
+    },
+    description: t('metadata.root.description'),
+    icons: {
+      icon: '/icons/favicon.svg'
+    }
   }
 }
 

@@ -6,16 +6,15 @@ import { AnimatePresence } from 'framer-motion'
 import { Grid2x2, LayoutGrid } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { cn } from '@/lib/utils'
 
 import PhotoPreview from './PhotoPreview'
 
-export const title = 'Photos'
-export const description = 'Moments captured in light — a visual journal.'
-
 function PhotosPage({ photos }: { photos: Photo[] }) {
+  const { t, i18n } = useTranslation('photos')
   const [activePhoto, setActivePhoto] = useState<Photo | null>(null)
   const [view, setView] = useState<'cover' | 'contain'>('cover')
   const isCover = view === 'cover'
@@ -29,14 +28,14 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
             preset="fadeInUp"
             className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl"
           >
-            {title}
+            {t('title')}
           </Animated>
           <Animated
             as="p"
             preset={{ mode: 'fadeInUp', delay: 0.06 }}
             className="text-muted-foreground mt-6 text-lg"
           >
-            {description}
+            {t('description')}
           </Animated>
         </header>
 
@@ -48,7 +47,7 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
           >
             <button
               type="button"
-              title="Switch view"
+              title={t('switchView')}
               className="text-muted-foreground hover:text-primary rounded-full p-2 transition-colors"
               onClick={() =>
                 setView((v) => (v === 'cover' ? 'contain' : 'cover'))
@@ -89,7 +88,7 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
           {photos.length === 0 && (
             <Animated preset={{ mode: 'fadeInUp', delay: 0.12 }}>
               <p className="text-muted-foreground py-20 text-center text-sm">
-                No photos yet.
+                {t('noPhotos')}
               </p>
             </Animated>
           )}
@@ -100,6 +99,7 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
         {activePhoto && (
           <PhotoPreview
             photo={activePhoto}
+            lang={i18n.language}
             onClose={() => setActivePhoto(null)}
           />
         )}

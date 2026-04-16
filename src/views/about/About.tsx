@@ -3,6 +3,7 @@
 import { Toolbox } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Trans, useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { SOCIAL_URLS } from '@/constants'
@@ -18,26 +19,18 @@ import {
 import AboutSocial from './AboutSocial'
 
 const EXPLORE_LINKS = [
-  { name: 'Photos', href: '/photos', icon: <CameraIcon size={18} /> },
-  { name: 'Poems', href: '/poems', icon: <FeatherIcon size={18} /> },
-  { name: 'Uses', href: '/use', icon: <Toolbox size={18} /> }
+  { key: 'photos', href: '/photos', icon: <CameraIcon size={18} /> },
+  { key: 'poems', href: '/poems', icon: <FeatherIcon size={18} /> },
+  { key: 'use', href: '/use', icon: <Toolbox size={18} /> }
 ]
 
-export const title = 'About Me'
-export const description = `Hi, I'm King3. A frontend developer, open-source enthusiast, and creative soul.`
-
-interface NowLinkGroup {
-  label: string
-  items: { name: string; href?: string; icon?: React.JSX.Element }[]
-}
-
-const NOW_LINKS: NowLinkGroup[] = [
+const NOW_LINKS = [
   {
-    label: 'Working as a',
-    items: [{ name: 'Frontend Developer', icon: <BrowserIcon size={16} /> }]
+    labelKey: 'workingAs',
+    items: [{ nameKey: 'frontendDeveloper', icon: <BrowserIcon size={16} /> }]
   },
   {
-    label: 'Creator of',
+    labelKey: 'creatorOf',
     items: [
       {
         name: 'Better Mock Server',
@@ -52,7 +45,7 @@ const NOW_LINKS: NowLinkGroup[] = [
     ]
   },
   {
-    label: 'Maintaining',
+    labelKey: 'maintaining',
     items: [
       {
         name: 'OpenKnights',
@@ -70,17 +63,26 @@ const badgeClass =
   'text-foreground/85 border-border/50 bg-accent/50 hover:text-foreground hover:border-border hover:bg-accent inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-sm no-underline transition-[border-color,background] duration-200'
 
 function AboutPage() {
+  const { t } = useTranslation('about')
+
+  const { t: commonT } = useTranslation('common')
+
+  const exploreLinks = EXPLORE_LINKS.map((item) => ({
+    ...item,
+    name: commonT(`metadata.${item.key}.title` as any)
+  }))
+
   return (
     <div className="mt-14 sm:mt-24">
-      <div className="mx-auto max-w-[52rem] px-4 sm:px-8">
+      <div className="mx-auto max-w-[54rem] px-4 sm:px-8">
         {/* ── Headline ── */}
         <Animated preset="fadeInUp" className="mb-6 sm:mb-8">
           <h1 className="text-primary font-mono text-4xl font-medium tracking-tight sm:text-5xl">
             King3.
           </h1>
           <p className="text-muted-foreground mt-1.5 text-base leading-relaxed">
-            Frontend engineer · Open-source builder · Based in{' '}
-            <span className="text-primary font-medium">ChangSha</span>
+            {t('subtitle')}
+            <span className="text-primary font-medium">{t('city')}</span>
           </p>
         </Animated>
 
@@ -102,151 +104,150 @@ function AboutPage() {
               preset={{ mode: 'fadeInUp', delay: 0.12 }}
               className="hidden space-y-2 leading-[1.75] sm:block"
             >
-              {NOW_LINKS.map((group) => (
+              {NOW_LINKS.map((group: any) => (
                 <div
-                  key={group.label}
+                  key={group.labelKey}
                   className="flex flex-wrap items-center gap-1.5"
                 >
-                  {group.label}
-                  {group.items.map((item) =>
-                    item.href ? (
+                  {t(group.labelKey)}
+                  {group.items.map((item: any) => {
+                    const name: string = item.nameKey
+                      ? t(item.nameKey)
+                      : item.name
+                    return item.href ? (
                       <Link
-                        key={item.name}
+                        key={name}
                         href={item.href}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={badgeClass}
                       >
                         {item.icon}
-                        {item.name}
+                        {name}
                       </Link>
                     ) : (
-                      <span key={item.name} className={badgeClass}>
+                      <span key={name} className={badgeClass}>
                         {item.icon}
-                        {item.name}
+                        {name}
                       </span>
                     )
-                  )}
+                  })}
                 </div>
               ))}
             </Animated>
 
-            <Animated preset={{ mode: 'fadeInUp', delay: 0.16 }}>
-              <p>
-                Turning the ideas in my head into something real is what drives
-                me. I build tools I wish existed and publish them on{' '}
-                <Link
-                  href={SOCIAL_URLS.openknights}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                >
-                  OpenKnights
-                </Link>{' '}
-                and my{' '}
-                <Link
-                  href={SOCIAL_URLS.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                >
-                  GitHub
-                </Link>
-                . Find my{' '}
-                <Link href="/project" className={linkClass}>
-                  full projects list here
-                </Link>
-                .
-              </p>
+            <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.16 }}>
+              <Trans
+                t={t}
+                i18nKey="paragraph1"
+                components={{
+                  openknights: (
+                    <Link
+                      href={SOCIAL_URLS.openknights}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    />
+                  ),
+                  github: (
+                    <Link
+                      href={SOCIAL_URLS.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    />
+                  ),
+                  projects: <Link href="/project" className={linkClass} />
+                }}
+              />
             </Animated>
 
             {/* Blog & sharing */}
-            <Animated preset={{ mode: 'fadeInUp', delay: 0.2 }}>
-              <p>
-                I write{' '}
-                <Link href="/blog" className={linkClass}>
-                  blog posts
-                </Link>{' '}
-                and share tips on{' '}
-                <Link
-                  href={SOCIAL_URLS.bilibili}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                >
-                  哔哩哔哩
-                </Link>{' '}
-                about programming, open source, and lessons learned along the
-                way.
-              </p>
+            <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.2 }}>
+              <Trans
+                t={t}
+                i18nKey="paragraph2"
+                components={{
+                  blog: <Link href="/blog" className={linkClass} />,
+                  bilibili: (
+                    <Link
+                      href={SOCIAL_URLS.bilibili}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    />
+                  )
+                }}
+              />
             </Animated>
 
             {/* Outside of code */}
-            <Animated preset={{ mode: 'fadeInUp', delay: 0.24 }}>
-              <p>
-                Outside of code, I enjoy{' '}
-                <Link href="/photos" className={linkClass}>
-                  photography
-                </Link>
-                , collecting{' '}
-                <Link href="/poems" className={linkClass}>
-                  poems
-                </Link>
-                , reading novels, and{' '}
-                <Link
-                  href="https://music.163.com/#/playlist?id=2675102592"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                >
-                  listening to music
-                </Link>
-                . In case you are interested, here are the{' '}
-                <Link href="/use" className={linkClass}>
-                  hardware/software I use
-                </Link>
-                .
-              </p>
+            <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.24 }}>
+              <Trans
+                t={t}
+                i18nKey="paragraph3"
+                components={{
+                  photos: <Link href="/photos" className={linkClass} />,
+                  poems: <Link href="/poems" className={linkClass} />,
+                  music: (
+                    <Link
+                      href="https://music.163.com/#/playlist?id=2675102592"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    />
+                  ),
+                  use: <Link href="/use" className={linkClass} />
+                }}
+              />
             </Animated>
 
             {/* Location */}
-            <Animated preset={{ mode: 'fadeInUp', delay: 0.28 }}>
-              <p>
-                I&apos;m based in{' '}
-                <strong className="font-medium">ChangSha</strong>, if you are
-                around, please{' '}
-                <Link
-                  href={SOCIAL_URLS.bilibili}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={linkClass}
-                >
-                  reach out
-                </Link>{' '}
-                and let&apos;s grab a coffee or work on something together.
-              </p>
+            <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.28 }}>
+              <Trans
+                t={t}
+                i18nKey="paragraph4"
+                values={{ city: t('city') }}
+                components={{
+                  strong: <strong className="text-foreground font-medium" />,
+                  contact: (
+                    <Link
+                      href={SOCIAL_URLS.bilibili}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={linkClass}
+                    />
+                  )
+                }}
+              />
             </Animated>
           </div>
         </div>
 
-        {/* ── Separator ────────────────────────────────────── */}
         <Animated
           preset={{ mode: 'fadeInUp', delay: 0.36 }}
           className="flex justify-center"
         >
-          <hr className="border-border mt-12 mb-10 w-16" />
+          <hr className="border-border my-8 w-16" />
         </Animated>
 
-        {/* ── Social ───────────────────────────────────────── */}
+        {/* ── Social ── */}
         <AboutSocial />
 
-        {/* ── Explore ──────────────────────────────────────── */}
+        <Animated
+          preset={{ mode: 'fadeInUp', delay: 0.36 }}
+          className="flex justify-center"
+        >
+          <hr className="border-border my-8 w-16" />
+        </Animated>
+
+        {/* ── Explore ── */}
         <Animated preset={{ mode: 'fadeInUp', delay: 0.44 }}>
-          <h2 className="text-muted-foreground mt-10 mb-6 text-base font-medium">
-            Explore more
+          <h2 className="text-muted-foreground mb-6 text-base font-medium">
+            {t('exploreMore')}
           </h2>
           <div className="-mt-2 flex flex-wrap gap-2">
-            {EXPLORE_LINKS.map(({ name, href, icon }) => (
+            {exploreLinks.map(({ name, href, icon }) => (
               <Link
                 key={name}
                 href={href}

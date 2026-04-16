@@ -10,10 +10,15 @@ import { Spinner } from '@/components/ui/spinner'
 
 interface PhotoPreviewProps {
   photo: Photo
+  lang: string
   onClose: () => void
 }
 
-export default function PhotoPreview({ photo, onClose }: PhotoPreviewProps) {
+export default function PhotoPreview({
+  photo,
+  lang,
+  onClose
+}: PhotoPreviewProps) {
   const [loaded, setLoaded] = useState(false)
 
   useEffect(() => {
@@ -72,7 +77,7 @@ export default function PhotoPreview({ photo, onClose }: PhotoPreviewProps) {
         <span className="text-sm font-medium text-white">{photo.name}</span>
         <span className="text-xs text-white/50">
           {photo.width} x {photo.height} &middot;{' '}
-          {new Date(photo.date).toLocaleDateString('zh-CN', {
+          {new Date(photo.date).toLocaleDateString(lang, {
             year: 'numeric',
             month: 'long',
             day: 'numeric'

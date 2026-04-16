@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useInteractive } from '@/icons'
 import { ArrowLeftIcon } from '@/icons/ArrowLeft'
@@ -10,6 +11,7 @@ import { ArrowLeftIcon } from '@/icons/ArrowLeft'
 import AuthForm from './AuthForm'
 
 function Back() {
+  const { t } = useTranslation('auth')
   const { isHovered, handlers } = useInteractive({
     trigger: ['hover'],
     duration: 180
@@ -22,7 +24,7 @@ function Back() {
       {...handlers}
     >
       <ArrowLeftIcon size={18} isHovered={isHovered}></ArrowLeftIcon>
-      <span className="ml-0.5">Back</span>
+      <span className="ml-0.5">{t('back')}</span>
     </Link>
   )
 }

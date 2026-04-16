@@ -23,7 +23,7 @@ function Navbar({ page, className }: NavbarProps) {
 
   const navigationItems = NAVIGATION_ITEMS.map((item) => ({
     ...item,
-    name: t(`nav.${item.name.toLowerCase()}` as any)
+    name: t(`nav.${item.key}`)
   }))
 
   const commonMotion: MotionOptions = {
@@ -92,13 +92,13 @@ function Navbar({ page, className }: NavbarProps) {
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
       <ul className="flex h-full items-center justify-center text-sm">
-        {navigationItems.map(({ href, name }, i) => {
+        {navigationItems.map(({ key, href, name }, i) => {
           const isActive = activeIndex === i
           const isHovered = hoveredItem === href
 
           return (
             <motion.li
-              key={name}
+              key={key}
               className="relative select-none"
               initial="initial"
               whileHover="hover"

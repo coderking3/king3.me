@@ -16,11 +16,9 @@ export * from './NetEaseMusic'
 export * from './Picture'
 export * from './Search'
 export * from './Serve'
-export * from './SinaWeibo'
 export * from './SunMoon'
 export * from './X'
 export * from './Youtube'
-export * from './Zhihu'
 
 // Part: Interactive
 export { useInteractive } from './_internal/hooks'

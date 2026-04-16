@@ -7,12 +7,12 @@ import { useMemo, useState } from 'react'
 import { useBoop } from '@/hooks'
 
 interface InteractionHandlers {
-  onMouseEnter: (e: any) => void
-  onMouseLeave: (e: any) => void
-  onMouseDown: (e: any) => void
-  onMouseUp: (e: any) => void
-  onTouchStart: (e: any) => void
-  onTouchEnd: (e: any) => void
+  onMouseEnter: (e: React.MouseEvent) => void
+  onMouseLeave: (e: React.MouseEvent) => void
+  onMouseDown: (e: React.MouseEvent) => void
+  onMouseUp: (e: React.MouseEvent) => void
+  onTouchStart: (e: React.TouchEvent) => void
+  onTouchEnd: (e: React.TouchEvent) => void
 }
 
 interface UseInteractiveOptions {
@@ -43,29 +43,29 @@ export function useInteractive({
   const shouldHandleHover = triggers.includes('hover')
   const shouldHandleClick = triggers.includes('click')
 
-  const handlers = useMemo(
+  const handlers = useMemo<InteractionHandlers>(
     () => ({
-      onMouseEnter: (e: any) => {
+      onMouseEnter: (e) => {
         onHandlers.onMouseEnter?.(e)
         if (shouldHandleHover) setIsHovering(true)
       },
-      onMouseLeave: (e: any) => {
+      onMouseLeave: (e) => {
         onHandlers.onMouseLeave?.(e)
         if (shouldHandleHover) setIsHovering(false)
       },
-      onMouseDown: (e: any) => {
+      onMouseDown: (e) => {
         onHandlers.onMouseDown?.(e)
         if (shouldHandleClick) setIsClicked(true)
       },
-      onMouseUp: (e: any) => {
+      onMouseUp: (e) => {
         onHandlers.onMouseUp?.(e)
         if (shouldHandleClick) setIsClicked(false)
       },
-      onTouchStart: (e: any) => {
+      onTouchStart: (e) => {
         onHandlers.onTouchStart?.(e)
         if (shouldHandleClick) setIsClicked(true)
       },
-      onTouchEnd: (e: any) => {
+      onTouchEnd: (e) => {
         onHandlers.onTouchEnd?.(e)
         if (shouldHandleClick) setIsClicked(false)
       }

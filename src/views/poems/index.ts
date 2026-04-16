@@ -1,1 +1,1 @@
-export { description, default as PoemsPage, title } from './Poems'
+export { default as PoemsPage } from './Poems'

@@ -4,6 +4,7 @@ import type { TocItem } from '@/types'
 
 import { ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { cn } from '@/lib/utils'
 
@@ -17,7 +18,6 @@ interface TocSection {
 }
 
 const SCROLL_OFFSET = 100
-const TOC_TITLE = 'Table of Contents'
 
 const CHILD_CLASSES: Record<number, string> = {
   3: 'mt-1 pl-7 text-sm',
@@ -86,6 +86,7 @@ function useActiveHeading(headings: TocItem[]) {
 }
 
 function PostsTableOfContents({ headings }: PostsDirectoryProps) {
+  const { t } = useTranslation('blog')
   const activeId = useActiveHeading(headings)
   const navRef = useRef<HTMLElement>(null)
   const sections = useMemo(() => groupHeadings(headings), [headings])
@@ -138,7 +139,7 @@ function PostsTableOfContents({ headings }: PostsDirectoryProps) {
   return (
     <nav
       ref={navRef}
-      aria-label={TOC_TITLE}
+      aria-label={t('toc')}
       className="scrollbar-none max-h-[calc(100vh-8rem)] overflow-y-auto"
     >
       <a
@@ -147,7 +148,7 @@ function PostsTableOfContents({ headings }: PostsDirectoryProps) {
         onClick={(e) => handleClick(e, ARTICLE_TITLE)}
       >
         <p className="text-foreground mb-1 text-sm font-semibold tracking-wide uppercase">
-          {TOC_TITLE}
+          {t('toc')}
         </p>
       </a>
 

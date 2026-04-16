@@ -13,6 +13,7 @@ declare module 'i18next' {
       poems: typeof import('@/locales/en/poems.json')
       photos: typeof import('@/locales/en/photos.json')
       use: typeof import('@/locales/en/use.json')
+      auth: typeof import('@/locales/en/auth.json')
     }
   }
 }

@@ -1,0 +1,14 @@
+{
+  "type": "crypto",
+  "algorithm": "aes-256-gcm",
+  "createdAt": "2026-04-16 13:48:36",
+  "file": {
+    "name": ".env.local",
+    "extension": ".local",
+    "size": 876,
+    "iv": "/lip2kSRYA04WtfD",
+    "authTag": "WpXJlg/Ml8fN8f6j0y7LFA==",
+    "salt": "ZIXzFOhhyOU4shkVTd1+vnLgzbWGgeHHJv+zrYh8pE4=",
+    "encrypted": "3yJiX7vI7PcfwFvWL3Ts/O6oFvhyFpf9nZuAEf40G1UKvs7JTkC37OJTmijQ9S5IBJEnboq0DkTvyiAmyd7VM8F1SjZrnLPDSCvy44MDfwduHhA0x1lOcMVTFZ9EZbjltUxgKD5np/k3XhV7Dm5HqBJTI2Rsk+qJAbPSJAs2Etn/bx/wwEXJz9kD4kbKuC7XZAPHvr98dt88Z0V0+2MP5GPU8gTr7zXi+ZHooBaWgonelF+7H+Ope6937UCsV+vpcyXX8Pd2yecl3H7OXKSQr0Hc56VZWDCrnPcOy3I6OdRMu7WO96Vq/p1PvhvxmPdDcaA/616N1hI2VTq0sa0e/VjfSxbdANz/CtJeygmkeRj5R9eB/92FZbIYpbUX6OrHXibFyhoMBMAUKlWVHGBBt2BWz6YJqBxVL5I5f3H3Sfj1OJgEj1xnQ44Msksc9vaDg6+1Dt+St86ZGkUMcSd7Q52cAI6AZ0yvekEAdhkPvaMPbq4xF36uatIO8RH255UDvA2XZU3JPkcfdugMGKoJdbq4SkNCCCoLO49qT5dkI6azt7NqfWTB4WZOSncATVV0KN0JG4ZOUuw0Zw4y8DioPB0XrIRxrQBW1/Rfgnt5L2Z9sCmBzh403FOY99vOlPt/bM5Mn0pkEydVNNFn8qP1JXqLXX07JiLBrsavHd6OB7HWma/uPLsqPj0ksTe/eGTk1a8NqfivhJ3eyJ5ec0BE0xvkEHbS0oZKu2AwyhhRzxNH3DLvgIfFiLtfqu5kWTPTImfIcnlAsXF9fWfjuSsZXH0Tt9GzfpGoJqKDc3OyO/s0tQXkGNHje3O4oXHFsOgwv4RHxWJWH9m+ibHXGbvViFlemYg06T3bUuDRrC6qfMuMu93Uplye3Vl65fprCWryQfavQXCUo1/NYzw8Vq2ww2rYd55IiYKZfeXbi3ZHxJlKNZQCNDlLu+pGD89U/t23fPGj2BCiJb+t3jtUsSXrNwP0mzApgKClqWw88UyiAndu/aG/kWeETkIF2E6U90Wb62QR48D3FO2SZvltNqFV6vh0kTUnh63lynDWAhbWYnRJUzfkTRe3jR6SczAavFmB5lF9jL0zMP814F98Ab9OskQqPbzsmBpyowkDn8gw9PZ7i/DBVpQyWUZaF3iqBY1511pQ08YAfGU+80qx"
+  }
+}

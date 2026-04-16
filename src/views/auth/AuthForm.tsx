@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Spinner } from '@/components/ui'
@@ -76,6 +77,7 @@ function OAuthButton({
 }
 
 function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
+  const { t } = useTranslation('auth')
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null)
   const anyLoading = loadingProvider !== null
 
@@ -116,10 +118,10 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
       {/* Title */}
       <div className="mb-7">
         <h1 className="text-foreground text-xl font-semibold tracking-tight">
-          Welcome back
+          {t('welcomeBack')}
         </h1>
         <p className="text-muted-foreground mt-1 text-sm">
-          Sign in or create an account to continue
+          {t('signInSubtitle')}
         </p>
       </div>
 
@@ -127,7 +129,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
       <div className="flex flex-col gap-2.5">
         <OAuthButton
           icon={<GithubCircleIcon size={20} />}
-          label="Continue with GitHub"
+          label={t('continueWithGithub')}
           sublabel="github.com"
           loading={loadingProvider === 'github'}
           disabled={anyLoading && loadingProvider !== 'github'}
@@ -135,7 +137,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
         />
         <OAuthButton
           icon={<GoogleIcon size={20} />}
-          label="Continue with Google"
+          label={t('continueWithGoogle')}
           sublabel="google.com"
           loading={loadingProvider === 'google'}
           disabled={anyLoading && loadingProvider !== 'google'}
@@ -147,7 +149,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
       <div className="my-5 flex items-center gap-3">
         <div className="bg-border h-px flex-1" />
         <span className="text-muted-foreground text-[10.5px] font-medium tracking-[0.15em] uppercase">
-          Secure login
+          {t('secureLogin')}
         </span>
         <div className="bg-border h-px flex-1" />
       </div>
@@ -166,7 +168,7 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
         <p className="text-muted-foreground/70 text-[12px]">
-          Your data is protected with OAuth 2.0
+          {t('oauthNotice')}
         </p>
       </div>
     </div>

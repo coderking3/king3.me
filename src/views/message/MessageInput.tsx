@@ -1,7 +1,10 @@
+'use client'
+
 import { AnimatePresence, motion } from 'framer-motion'
 import { SendHorizontal } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { sendMessageAction } from '@/app/actions/messages'
@@ -18,6 +21,7 @@ interface MessageInputProps {
 }
 
 function MessageInput({ user }: MessageInputProps) {
+  const { t } = useTranslation('message')
   const [text, setText] = useState('')
   const [sending, setSending] = useState(false)
 
@@ -28,12 +32,13 @@ function MessageInput({ user }: MessageInputProps) {
       const result = await sendMessageAction(text.trim())
       if (result.success) {
         setText('')
-        toast.success('Message sent!')
       } else {
-        toast.error(result.error)
+        console.error(result.error)
+        throw new Error(result.error)
       }
-    } catch {
-      toast.error('Failed to send message')
+    } catch (error) {
+      const errorMsg = (error as Error).message || 'Failed to send message'
+      toast.error(errorMsg)
     }
     setSending(false)
   }
@@ -71,7 +76,7 @@ function MessageInput({ user }: MessageInputProps) {
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Say something..."
+          placeholder={t('inputPlaceholder')}
           rows={3}
           className="min-h-0 resize-none border-0 bg-transparent! px-0 shadow-none focus-visible:ring-0"
         />

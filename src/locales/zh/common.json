@@ -1,4 +1,41 @@
 {
+  "metadata": {
+    "root": {
+      "description": "前端开发者 & 音乐爱好者"
+    },
+    "blog": {
+      "title": "我的博客",
+      "description": "写博客是我最喜欢的分享和反思方式之一，我希望将有用的技术知识传递给更多人。"
+    },
+    "about": {
+      "title": "关于我",
+      "description": "你好，我是 King3。一个前端开发者、开源爱好者和创作者。"
+    },
+    "project": {
+      "title": "我的项目",
+      "description": "我的开源项目、工具和创意实验合集。"
+    },
+    "message": {
+      "title": "留言墙",
+      "description": "在这里，你可以留下想对我说的话、建议或想法。"
+    },
+    "photos": {
+      "title": "照片墙",
+      "description": "用光影捕捉的瞬间 — 视觉日志。"
+    },
+    "poems": {
+      "title": "诗词集",
+      "description": "引起共鸣的文字 — 收集的诗句与原创作品。"
+    },
+    "use": {
+      "title": "装备",
+      "description": "我日常使用的软硬件。"
+    },
+    "auth": {
+      "title": "身份验证",
+      "description": "登录或创建账号以继续。"
+    }
+  },
   "nav": {
     "home": "首页",
     "blog": "博客",
@@ -15,5 +52,16 @@
   },
   "mobile": {
     "rssFeed": "RSS 订阅"
+  },
+  "notFound": {
+    "title": "迷失太空",
+    "description": "你寻找的页面已漂入虚空。",
+    "backHome": "返回地球"
+  },
+  "error": {
+    "title": "出了点问题",
+    "description": "页面发生了意外错误，你可以尝试重试以恢复当前页面。",
+    "retry": "重试",
+    "errorId": "错误 ID"
   }
 }

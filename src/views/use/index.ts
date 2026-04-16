@@ -1,1 +1,1 @@
-export { description, title, default as UsePage } from './Use'
+export { default as UsePage } from './Use'

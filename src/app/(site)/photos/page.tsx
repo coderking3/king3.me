@@ -1,13 +1,17 @@
 import type { Metadata } from 'next'
 
 import { getPhotosAction } from '@/app/actions/photos'
-import { description, PhotosPage, title } from '@/views/photos'
+import { getT } from '@/i18n/server'
+import { PhotosPage } from '@/views/photos'
 
-export const metadata = {
-  title,
-  description,
-  openGraph: { title, description }
-} satisfies Metadata
+export async function generateMetadata(): Promise<Metadata> {
+  const { t } = await getT('common')
+
+  const title = t('metadata.photos.title')
+  const description = t('metadata.photos.description')
+
+  return { title, description, openGraph: { title, description } }
+}
 
 export default async function Page() {
   const result = await getPhotosAction()

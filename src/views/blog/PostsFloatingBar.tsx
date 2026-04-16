@@ -6,6 +6,7 @@ import { useScroll } from '@react-spring/web'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronsRight, List, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui'
 import { Back, ChevronUp, LinkIcon } from '@/icons'
@@ -24,6 +25,8 @@ interface PostsFloatingBarProps {
 }
 
 function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
+  const { t } = useTranslation('blog')
+
   const [visible, setVisible] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -189,7 +192,7 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
         <Sheet open={tocOpen} onOpenChange={setTocOpen}>
           <SheetContent side="bottom" className="max-h-[60vh]">
             <SheetHeader>
-              <SheetTitle>Table of Contents</SheetTitle>
+              <SheetTitle>{t('toc')}</SheetTitle>
             </SheetHeader>
             <div
               className="overflow-y-auto px-4 pb-4"

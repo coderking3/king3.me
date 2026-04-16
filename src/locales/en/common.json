@@ -1,4 +1,41 @@
 {
+  "metadata": {
+    "root": {
+      "description": "Frontend Developer & Music Enthusiast"
+    },
+    "blog": {
+      "title": "My Blog",
+      "description": "Writing blog posts is one of my favorite ways to share and reflect, and I hope to pass on useful technical knowledge to more people."
+    },
+    "about": {
+      "title": "About Me",
+      "description": "Hi, I'm King3. A frontend developer, open-source enthusiast, and creative soul."
+    },
+    "project": {
+      "title": "My Projects",
+      "description": "A collection of my open-source projects, tools, and creative experiments."
+    },
+    "message": {
+      "title": "Message Wall",
+      "description": "Here, you can leave what you want to say to me, or your suggestions, or your thoughts."
+    },
+    "photos": {
+      "title": "Photos",
+      "description": "Moments captured in light — a visual journal."
+    },
+    "poems": {
+      "title": "Poems",
+      "description": "Words that resonate — collected verses and original pieces."
+    },
+    "use": {
+      "title": "Use",
+      "description": "Hardware and software I use on a daily basis."
+    },
+    "auth": {
+      "title": "Authentication",
+      "description": "Sign in or create an account to continue."
+    }
+  },
   "nav": {
     "home": "Home",
     "blog": "Blog",
@@ -19,5 +56,16 @@
   },
   "mobile": {
     "rssFeed": "RSS Feed"
+  },
+  "notFound": {
+    "title": "Lost in Space",
+    "description": "The page you're looking for has drifted into the void.",
+    "backHome": "Back to Earth"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "An unexpected error interrupted this page. You can try again to recover the current route.",
+    "retry": "Try again",
+    "errorId": "Error ID"
   }
 }

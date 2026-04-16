@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslation } from 'react-i18next'
+
 import {
   Dialog,
   DialogContent,
@@ -21,6 +23,8 @@ export default function AuthModal({
   onOpenChange,
   callbackURL
 }: AuthModalProps) {
+  const { t } = useTranslation('auth')
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
@@ -29,10 +33,8 @@ export default function AuthModal({
       >
         {/* Visually hidden for accessibility; AuthForm renders its own heading */}
         <DialogHeader className="sr-only">
-          <DialogTitle>Sign in</DialogTitle>
-          <DialogDescription>
-            Sign in with a third-party account
-          </DialogDescription>
+          <DialogTitle>{t('signIn')}</DialogTitle>
+          <DialogDescription>{t('signInDescription')}</DialogDescription>
         </DialogHeader>
 
         <AuthForm

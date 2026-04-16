@@ -11,13 +11,12 @@ import remarkGfm from 'remark-gfm'
 
 import { Animated } from '@/components'
 import { MdxLink } from '@/components/mdx/MdxLink'
+import { getT } from '@/i18n/server'
 import { extractHeadings } from '@/lib/posts'
 
 import PostsActions from './PostsActions'
 import PostsFloatingBar from './PostsFloatingBar'
 import PostsTableOfContents, { ARTICLE_TITLE } from './PostsTableOfContents'
-
-const author = 'King3'
 
 const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
   grid: true,
@@ -33,6 +32,7 @@ interface PostsPageProps {
 
 async function PostsPage({ posts }: PostsPageProps) {
   const { metadata, content } = posts
+  const { lang } = await getT()
 
   const headings = extractHeadings(content)
   const date = new Date(metadata.date)
@@ -85,14 +85,14 @@ async function PostsPage({ posts }: PostsPageProps) {
               {/* Meta */}
               <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
                 <time dateTime={date.toISOString()}>
-                  {date.toLocaleDateString('en', {
+                  {date.toLocaleDateString(lang, {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
                   })}
                 </time>
                 <span>·</span>
-                <span>{author}</span>
+                <span>{metadata.author?.name}</span>
 
                 {/* Tags */}
                 {metadata.tags && metadata.tags.length > 0 && (
