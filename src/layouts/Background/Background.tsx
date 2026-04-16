@@ -1,23 +1,27 @@
 'use client'
 
-import { lazy, Suspense, useState } from 'react'
-// import dynamic from 'next/dynamic'
+import type { ComponentType } from 'react'
 
-const ArtPlum = lazy(() => import('./ArtPlum'))
-const ArtSnow = lazy(() => import('./ArtSnow'))
+import dynamic from 'next/dynamic'
+import { Suspense, useState } from 'react'
 
-type LazyComponent = ReturnType<typeof lazy>
+const ArtPlum = dynamic(() => import('./ArtPlum'), {
+  ssr: false
+})
+const ArtStarry = dynamic(() => import('./ArtStarry'), {
+  ssr: false
+})
 
-type Art = 'random' | 'plum' | 'snow'
+type Art = 'random' | 'plum' | 'starry'
 type ArtKey = Exclude<Art, 'random'>
 
 interface BackgroundProps {
   art?: Art
 }
 
-const ART_COMPONENTS: Record<ArtKey, LazyComponent> = {
+const ART_COMPONENTS: Record<ArtKey, ComponentType> = {
   plum: ArtPlum,
-  snow: ArtSnow
+  starry: ArtStarry
 }
 
 const ART_KEYS: ArtKey[] = Object.keys(ART_COMPONENTS) as ArtKey[]
@@ -34,7 +38,7 @@ function Background({ art = 'random' }: BackgroundProps) {
 
   return (
     <Suspense fallback={null}>
-      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw dark:invert">
+      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw">
         <Content />
       </div>
     </Suspense>
