@@ -58,6 +58,20 @@
     "description": "你寻找的页面已漂入虚空。",
     "backHome": "返回地球"
   },
+  "search": {
+    "title": "搜索",
+    "placeholder": "搜索文章、项目、页面...",
+    "hint": "在本站搜索所有博客文章、项目和页面。",
+    "noResults": "没有找到结果。",
+    "posts": "文章",
+    "projects": "项目",
+    "pages": "页面",
+    "shortcut": {
+      "navigate": "导航",
+      "select": "打开",
+      "close": "关闭"
+    }
+  },
   "error": {
     "title": "出了点问题",
     "description": "页面发生了意外错误，你可以尝试重试以恢复当前页面。",

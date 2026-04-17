@@ -9,13 +9,11 @@ import { useTranslation } from 'react-i18next'
 import {
   Sheet,
   SheetContent,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger
 } from '@/components/ui'
 import { NAVIGATION_ITEMS } from '@/constants'
-import { FeedIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
 const MOBILE_NAV_ITEMS = [
@@ -76,18 +74,6 @@ function MobileNav() {
             })}
           </ul>
         </nav>
-
-        <SheetFooter className="border-t px-4">
-          <Link
-            href="/feed.xml"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
-          >
-            <FeedIcon />
-            <span>RSS Feed</span>
-          </Link>
-        </SheetFooter>
       </SheetContent>
     </Sheet>
   )

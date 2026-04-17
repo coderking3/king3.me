@@ -1,5 +1,7 @@
 import type { NextRequest } from 'next/server'
 
+import type { Language } from '@/i18n/settings'
+
 import acceptLanguage from 'accept-language'
 import { NextResponse } from 'next/server'
 
@@ -19,7 +21,7 @@ export async function proxy(request: NextRequest) {
   // ── 1. Language detection: Cookie → Accept-Language → fallback ──
   let lang = request.cookies.get(COOKIE_NAME)?.value
 
-  if (!lang || !LANGUAGES.includes(lang as any)) {
+  if (!lang || !LANGUAGES.includes(lang as Language)) {
     lang =
       acceptLanguage.get(request.headers.get('Accept-Language')) ?? FALLBACK_LNG
   }

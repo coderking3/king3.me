@@ -9,7 +9,7 @@ export default function SiteLayout({
 }) {
   return (
     <>
-      <Background art="random" />
+      <Background art="starry" />
 
       <div className="relative flex min-h-screen flex-col">
         <Header />

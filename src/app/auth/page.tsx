@@ -6,18 +6,6 @@ import { AuthPage } from '@/views/auth'
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT('common')
 
-  // const title = t('pageTitle.auth')
-  // const description = 'Authenticate and manage your account settings.'
-
-  // return {
-  //   title,
-  //   description,
-  //   openGraph: {
-  //     title,
-  //     description
-  //   }
-  // }
-
   const title = t('metadata.auth.title')
   const description = t('metadata.auth.description')
 

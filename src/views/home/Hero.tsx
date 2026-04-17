@@ -1,17 +1,18 @@
 import { Animated } from '@/components'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
 import { getT } from '@/i18n/server'
-import { BiliBili, Email, GithubCircle, X, Youtube } from '@/icons'
+import { BiliBili, Email, Feed, Github, X, Youtube } from '@/icons'
 
 import Typewriter from './Typewriter'
 
 const TOPICS: string[] = ['#SlowLife', '#OpenSource', '#Photography']
 
 const SOCIALS = [
-  { icon: GithubCircle, href: SOCIAL_URLS.github },
+  { icon: Github, href: SOCIAL_URLS.github },
   { icon: Youtube, href: SOCIAL_URLS.youtube },
   { icon: BiliBili, href: SOCIAL_URLS.bilibili },
   { icon: X, href: SOCIAL_URLS.x },
+  { icon: Feed, href: '/feed.xml' },
   { icon: Email, href: `mailto:${AUTHOR_INFO.email}` }
 ]
 

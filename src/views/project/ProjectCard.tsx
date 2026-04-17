@@ -53,8 +53,7 @@ function ProjectCard(props: ProjectCardProps) {
         </p>
       </div>
 
-      {/* Desktop: dashed hover border + background */}
-      <div className="border-border bg-secondary/80 absolute -inset-x-6 -inset-y-6 z-0 hidden scale-95 rounded-xl border border-dashed opacity-0 transition md:block md:group-hover:scale-100 md:group-hover:opacity-100" />
+      <div className="border-border bg-muted/30 absolute -inset-x-6 -inset-y-6 z-0 hidden scale-95 rounded-xl border border-dashed opacity-0 backdrop-blur-xs backdrop-saturate-150 transition md:block md:group-hover:scale-100 md:group-hover:opacity-100" />
 
       <p className="text-brand md:text-foreground/90 md:group-hover:text-brand pointer-events-none z-20 mt-3 flex items-center text-sm font-medium transition md:mt-6 md:group-hover:-translate-y-0.5">
         <span className="mr-2">{new URL(project.link).host}</span>

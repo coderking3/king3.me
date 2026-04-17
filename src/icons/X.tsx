@@ -18,7 +18,8 @@ export function XIcon({
   isHovered = false
 }: XIconProps) {
   const svgSpring = useSpring({
-    rotate: isHovered ? 5 : 0,
+    scaleX: isHovered ? 0.9 : 1,
+    scaleY: isHovered ? 1.08 : 1,
     config: SPRINGS.springy
   })
 
@@ -30,7 +31,7 @@ export function XIcon({
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
       strokeWidth={strokeWidth}
-      style={{ transformOrigin: '50% 85%', ...svgSpring }}
+      style={svgSpring}
     >
       <path
         fill={color}

@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 import { Animated } from '@/components/Animated'
 import { Button } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
-import { Background } from '@/layouts'
+import ArtStarry from '@/layouts/ArtStarry'
 import { cn } from '@/lib/utils'
 
 interface ErrorComponentProps {
@@ -31,7 +31,10 @@ export default function ErrorComponent({
         'bg-background'
       )}
     >
-      <Background art="starry" />
+      {/* Background */}
+      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw">
+        <ArtStarry />
+      </div>
 
       {/* Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 px-6 text-center">

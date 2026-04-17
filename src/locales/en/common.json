@@ -62,6 +62,20 @@
     "description": "The page you're looking for has drifted into the void.",
     "backHome": "Back to Earth"
   },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search posts, projects, pages...",
+    "hint": "Search across all blog posts, projects, and pages on this site.",
+    "noResults": "No results found.",
+    "posts": "Posts",
+    "projects": "Projects",
+    "pages": "Pages",
+    "shortcut": {
+      "navigate": "Navigate",
+      "select": "Open",
+      "close": "Close"
+    }
+  },
   "error": {
     "title": "Something went wrong",
     "description": "An unexpected error interrupted this page. You can try again to recover the current route.",

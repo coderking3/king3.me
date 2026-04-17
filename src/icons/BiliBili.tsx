@@ -19,7 +19,15 @@ export function BiliBiliIcon({
   isHovered = false
 }: BiliBiliIconProps) {
   const svgSpring = useSpring({
-    rotate: isHovered ? 5 : 0,
+    scale: isHovered ? 0.95 : 1,
+    config: SPRINGS.springy
+  })
+  const antennaSpring = useSpring({
+    y1: isHovered ? 5 : 2,
+    config: SPRINGS.springy
+  })
+  const eyeSpring = useSpring({
+    opacity: isHovered ? 0 : 1,
     config: SPRINGS.springy
   })
 
@@ -30,7 +38,7 @@ export function BiliBiliIcon({
       className="block overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
-      style={{ transformOrigin: '50% 85%', ...svgSpring }}
+      style={svgSpring}
     >
       <g
         fill="none"
@@ -40,7 +48,11 @@ export function BiliBiliIcon({
         strokeWidth={strokeWidth}
       >
         <rect width="20" height="16" x="2" y="5" rx="4" />
-        <path d="m7 2l3 3m7-3l-3 3m-5 9v-2m6 0v2" />
+        {/* Antennas */}
+        <animated.line x1="7" y2="5" x2="10" {...antennaSpring} />
+        <animated.line x1="17" y2="5" x2="14" {...antennaSpring} />
+        {/* Eyes */}
+        <animated.path d="M9 14v-2m6 0v2" style={eyeSpring} />
       </g>
     </animated.svg>
   )

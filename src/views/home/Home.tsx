@@ -53,7 +53,7 @@ export default async function Home({
         </div>
 
         {/* Right: sidebar */}
-        <aside className="sticky hidden h-fit w-full space-y-8 md:block lg:top-8 lg:w-90">
+        <aside className="sticky hidden h-fit w-full space-y-8 md:block lg:top-21 lg:w-90">
           <FeaturedMusic songs={songs} />
         </aside>
       </div>

@@ -39,7 +39,7 @@ export default function ArtStarry() {
     'radial-gradient(circle at 40% 30%, #60d394 0%, #1a3a2e 70%, #0a0e17 100%)'
 
   return (
-    <div className="bg-background relative size-full">
+    <div className="relative size-full dark:invert">
       {/* Star field */}
       <div className="pointer-events-none absolute inset-0">
         {stars.map((star, i) => (

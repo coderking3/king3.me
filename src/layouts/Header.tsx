@@ -4,12 +4,13 @@ import { motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
-import { LocaleSwitcher, ThemeMode } from '@/components'
+import { LanguageSwitcher, SearchCommand, ThemeMode } from '@/components'
 import { useIsMobile } from '@/hooks'
-import { Feed, Search } from '@/icons'
+import { Search } from '@/icons'
 import { useSession } from '@/lib/auth-client'
 import { clamp } from '@/lib/math'
 import { cn } from '@/lib/utils'
+import { useSearchStore } from '@/stores'
 
 import Logo from './Logo'
 import MobileNav from './MobileNav'
@@ -24,6 +25,7 @@ function Header() {
   const page = pathname.split('/').slice(0, 2).join('/')
   const { data: session } = useSession()
 
+  const { openSearch } = useSearchStore()
   const isMobile = useIsMobile()
   const isInitial = useRef(true)
   const headerRef = useRef<HTMLDivElement>(null)
@@ -131,10 +133,10 @@ function Header() {
                   <Logo />
                 </div>
                 <div className="text-accent-foreground/85 flex items-center gap-0.5">
-                  <Search />
-                  <UserAvatar user={session?.user ?? null} />
-                  <LocaleSwitcher />
+                  <Search onClick={openSearch} alt="Search" />
+                  <LanguageSwitcher />
                   <ThemeMode enterAnimationDelay={200} />
+                  <UserAvatar user={session?.user ?? null} />
                 </div>
               </div>
 
@@ -155,15 +157,10 @@ function Header() {
                       'text-accent-foreground/85 h-11.5 w-auto gap-0.5 px-3 transition-all'
                     )}
                   >
-                    <Search />
-                    <UserAvatar user={session?.user ?? null} />
-                    <LocaleSwitcher />
+                    <Search onClick={openSearch} alt="Search" />
+                    <LanguageSwitcher />
                     <ThemeMode enterAnimationDelay={200} />
-                    <Feed
-                      href="/feed.xml"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    />
+                    <UserAvatar user={session?.user ?? null} />
                   </div>
                 </div>
               </div>
@@ -172,6 +169,7 @@ function Header() {
         </div>
       </motion.header>
       <div className="h-[--content-offset]" />
+      <SearchCommand />
     </>
   )
 }

@@ -14,23 +14,23 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Tech Stack
 
-| Layer           | Technology                                                                       |
-| --------------- | -------------------------------------------------------------------------------- |
-| Framework       | Next.js 16, React 19, React Compiler                                             |
-| Language        | TypeScript (strict mode)                                                         |
-| Styling         | Tailwind CSS v4, CSS Modules, PostCSS, tw-animate-css                            |
-| UI Components   | shadcn/ui (base-nova style, zinc base color), Lucide icons                       |
-| Animation       | Framer Motion, @react-spring/web                                                 |
-| Auth            | better-auth (GitHub + Google OAuth), @better-auth/infra                          |
-| Database        | PostgreSQL via Prisma ORM (with @prisma/adapter-pg)                              |
-| Forms           | react-hook-form + @hookform/resolvers + Zod v4                                   |
-| State           | Zustand                                                                          |
-| i18n            | i18next, react-i18next, i18next-browser-languagedetector                         |
-| Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                      |
-| MDX             | next-mdx-remote, gray-matter, rehype-pretty-code, rehype-slug, remark-gfm, shiki |
-| Linting         | ESLint 9 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)  |
-| Package Manager | pnpm                                                                             |
-| Hosting         | Vercel                                                                           |
+| Layer           | Technology                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------------- |
+| Framework       | Next.js 16, React 19, React Compiler                                                                       |
+| Language        | TypeScript (strict mode)                                                                                   |
+| Styling         | Tailwind CSS v4, CSS Modules, PostCSS, tw-animate-css                                                      |
+| UI Components   | shadcn/ui (base-nova style, zinc base color), Lucide icons                                                 |
+| Animation       | Framer Motion, @react-spring/web                                                                           |
+| Auth            | better-auth (GitHub + Google OAuth), @better-auth/infra                                                    |
+| Database        | PostgreSQL via Prisma ORM (with @prisma/adapter-pg)                                                        |
+| Forms           | react-hook-form + @hookform/resolvers + Zod v4                                                             |
+| State           | Zustand                                                                                                    |
+| i18n            | i18next, react-i18next, i18next-browser-languagedetector                                                   |
+| Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                                                |
+| MDX             | next-mdx-remote, gray-matter, rehype-pretty-code, rehype-slug, rehype-autolink-headings, remark-gfm, shiki |
+| Linting         | ESLint 9 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)                            |
+| Package Manager | pnpm                                                                                                       |
+| Hosting         | Vercel                                                                                                     |
 
 ## Project Structure
 
@@ -48,6 +48,9 @@ This file provides guidance to AI coding agents when working with code in this r
 ├── src/
 │   ├── app/            # Next.js App Router
 │   │   ├── layout.tsx           # Root layout: ThemeProvider, TooltipProvider, Toaster, fonts, i18n lang
+│   │   ├── error.tsx            # Root error boundary (delegates to ErrorView)
+│   │   ├── not-found.tsx        # Root 404 page (delegates to NotFound view)
+│   │   ├── proxy.ts             # i18n middleware proxy (language detection)
 │   │   ├── (site)/              # Public pages (route group)
 │   │   │   ├── layout.tsx       # Site layout: Header, Footer, Background art
 │   │   │   ├── page.tsx         # Home
@@ -77,11 +80,14 @@ This file provides guidance to AI coding agents when working with code in this r
 │   │   ├── Form/                # Schema-driven form builder (Zod + react-hook-form)
 │   │   ├── Modal/               # Reusable modal dialog
 │   │   ├── Confirm/             # Confirm dialog
-│   │   └── Animated/            # Framer Motion wrapper with preset configs
-│   ├── views/                   # Page-specific view components (one folder per page)
-│   ├── layouts/                 # Layout components: Header, Footer, Navbar, MobileNav, Logo, Background (ArtPlum/ArtSnow), admin sidebar
+│   │   ├── Animated/            # Framer Motion wrapper with preset configs
+│   │   ├── mdx/                 # MDX utilities (MdxLink)
+│   │   ├── LanguageSwitcher.tsx   # Language switcher component
+│   │   └── ThemeMode.tsx        # Theme toggle component
+│   ├── views/                   # Page-specific view components (one folder per page, plus error/, not-found/, auth/)
+│   ├── layouts/                 # Layout components: Header, Footer, Navbar, MobileNav, Logo, UserAvatar, Background, ArtPlum, ArtStarry, admin sidebar
 │   ├── icons/                   # Custom SVG icon components with interactive wrapper
-│   ├── hooks/                   # Custom hooks: useAuthModal (re-export), useBoop, useIsMobile, useThemeToggle, usePrefersReducedMotion
+│   ├── hooks/                   # Custom hooks: useBoop, useIsMobile, useThemeToggle, usePrefersReducedMotion
 │   ├── stores/                  # Zustand stores (auth modal state)
 │   ├── db/                      # Database access layer — class-based Db wrappers around Prisma
 │   ├── lib/                     # Core utilities
@@ -124,6 +130,7 @@ This file provides guidance to AI coding agents when working with code in this r
 
 1. Copy `.env.example` to `.env` and fill in the values:
    - `DATABASE_URL` / `DIRECT_URL` — PostgreSQL connection strings (Neon recommended)
+   - `BETTER_AUTH_API_KEY` — API key for better-auth
    - `BETTER_AUTH_SECRET` — generate with `openssl rand -base64 32`
    - `BETTER_AUTH_URL` — app URL
    - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth app
@@ -169,7 +176,7 @@ This file provides guidance to AI coding agents when working with code in this r
   - Return `actionSuccess(data)` on success, `actionError(error)` on failure
   - Call `revalidatePath()` after mutations
   - Use `checkAdmin()` for admin-only operations, `getSession()` for auth checks
-- **Database access**: Never call Prisma directly from actions or pages. Use the class-based Db layer in `src/db/` (e.g., `messageDb`, `projectDb`, `playlistDb`). Each Db class has a private `serialize()` method that converts Date fields to ISO strings.
+- **Database access**: Never call Prisma directly from actions or pages. Use the class-based Db layer in `src/db/` (e.g., `dashboardDb`, `messageDb`, `photoDb`, `playlistDb`, `poemDb`, `projectDb`). Each Db class has a private `serialize()` method that converts Date fields to ISO strings.
 - **Form validation**: Define Zod schemas in `src/lib/schemas.ts`. Use the `<Form>` component from `src/components/Form/` which integrates react-hook-form + Zod resolver automatically.
 - **View components**: Page-specific logic goes in `src/views/{pageName}/`. Each folder has an `index.ts` barrel export. App Router page files (`page.tsx`) should be thin — fetch data and delegate to view components.
 - **i18n**: Server Components use `getT(namespace)` from `src/i18n/server.ts`. Client Components use `useTranslation` from `src/i18n/client.ts`. Translation files are in `src/locales/{en,zh}/{namespace}.json`. When adding a new namespace, also update `src/i18n/settings.ts` (NAMESPACES array) and `src/types/i18next.d.ts`.

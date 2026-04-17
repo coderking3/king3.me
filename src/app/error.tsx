@@ -1,4 +1,6 @@
-import { ErrorComponent } from '@/views/error'
+'use client'
+
+import { ErrorView } from '@/views/error'
 
 interface ErrorPageProps {
   error: Error & { digest?: string }
@@ -6,5 +8,5 @@ interface ErrorPageProps {
 }
 
 export default function ErrorPage({ error, unstable_retry }: ErrorPageProps) {
-  return <ErrorComponent error={error} unstable_retry={unstable_retry} />
+  return <ErrorView error={error} unstable_retry={unstable_retry} />
 }

@@ -5,12 +5,8 @@ import type { ComponentType } from 'react'
 import dynamic from 'next/dynamic'
 import { Suspense, useState } from 'react'
 
-const ArtPlum = dynamic(() => import('./ArtPlum'), {
-  ssr: false
-})
-const ArtStarry = dynamic(() => import('./ArtStarry'), {
-  ssr: false
-})
+const ArtPlum = dynamic(() => import('./ArtPlum'))
+const ArtStarry = dynamic(() => import('./ArtStarry'))
 
 type Art = 'random' | 'plum' | 'starry'
 type ArtKey = Exclude<Art, 'random'>
@@ -38,7 +34,7 @@ function Background({ art = 'random' }: BackgroundProps) {
 
   return (
     <Suspense fallback={null}>
-      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw">
+      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw dark:invert">
         <Content />
       </div>
     </Suspense>

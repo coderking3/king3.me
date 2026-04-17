@@ -1,4 +1,4 @@
-import type { DashboardData } from '@/db/dashboard'
+import type { DashboardData } from '@/db'
 
 import {
   ArrowRight,

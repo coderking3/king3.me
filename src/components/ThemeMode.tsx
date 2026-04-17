@@ -28,7 +28,7 @@ export function ThemeMode({
 
   useEffect(() => setMounted(true), [])
 
-  const onTrigger = (event: React.MouseEvent<any>) => {
+  const onTrigger = (event: React.MouseEvent) => {
     event.preventDefault()
 
     toggleTheme()

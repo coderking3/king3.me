@@ -1,7 +1,7 @@
 ---
   title: "Next.js 16 + i18next: Cookie-based i18n Without Changing a Single Route"
   description: A practical guide to adding cookie-based internationalization to a Next.js 16 App Router project using i18next — zero route restructuring, zero URL prefixes, full TypeScript support.
-  image: /images/avatar.png
+  # image: /images/avatar.png
   date: 2026-04-13 16:00:00
   tags:
     - NextJs
@@ -347,7 +347,7 @@ The layout becomes an `async` function because `headers()` is asynchronous in Ne
 
 A simple toggle button that writes the cookie and refreshes the page:
 
-```tsx title="src/components/LocaleSwitcher.tsx"
+```tsx title="src/components/LanguageSwitcher.tsx"
 'use client'
 
 import { useRouter } from 'next/navigation'

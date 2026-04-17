@@ -18,7 +18,7 @@ export function YoutubeIcon({
   isHovered = false
 }: YoutubeIconProps) {
   const svgSpring = useSpring({
-    rotate: isHovered ? 5 : 0,
+    scale: isHovered ? 1.05 : 1,
     config: SPRINGS.springy
   })
 
@@ -29,7 +29,7 @@ export function YoutubeIcon({
       className="block overflow-visible"
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
-      style={{ transformOrigin: '50% 85%', ...svgSpring }}
+      style={svgSpring}
     >
       <g fill="none">
         <path d="M1 11.5c0-3.771 0-5.657 1.172-6.828S5.229 3.5 9 3.5h6c3.771 0 5.657 0 6.828 1.172S23 7.729 23 11.5v1c0 3.771 0 5.657-1.172 6.828S18.771 20.5 15 20.5H9c-3.771 0-5.657 0-6.828-1.172S1 16.271 1 12.5z" />
