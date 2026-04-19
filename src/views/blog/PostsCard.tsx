@@ -7,7 +7,7 @@ function PostsCard({ metadata }: { metadata: PostsMetadata }) {
   const { slug, title, description, image, date, tags = [] } = metadata
 
   return (
-    <article className="group border-border bg-background/30 block cursor-pointer rounded-2xl border backdrop-blur-xs backdrop-saturate-150 transition-all duration-300">
+    <article className="group border-border bg-background/30 block cursor-pointer rounded-2xl border backdrop-blur-xs transition-all duration-300">
       <Link href={`/blog/${slug}`}>
         {/* Cover */}
         <div className="relative aspect-video w-full overflow-hidden rounded-t-2xl select-none sm:aspect-10/4">

@@ -53,7 +53,7 @@ function MessageInput({ user }: MessageInputProps) {
   return (
     <div
       className={cn(
-        'bg-muted/30 border-border flex items-start gap-3 rounded-xl border p-3 backdrop-blur-xs backdrop-saturate-150 md:p-4',
+        'bg-muted border-border flex items-start gap-3 rounded-xl border p-3 md:p-4',
         sending && 'pointer-events-none opacity-50'
       )}
     >

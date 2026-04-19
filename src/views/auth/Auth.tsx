@@ -35,7 +35,7 @@ function AuthContent() {
 
   return (
     <div className="flex min-h-svh items-center justify-center px-4">
-      <div className="from-background/70 to-background/90 border-border/70 dark:border-border shadow-muted-foreground/10 relative w-full max-w-sm rounded-2xl border bg-linear-to-b p-8 shadow-2xl backdrop-blur-xs backdrop-saturate-150">
+      <div className="from-background/70 to-background/90 border-border/70 dark:border-border shadow-muted-foreground/10 relative w-full max-w-sm rounded-2xl border bg-linear-to-b p-8 shadow-lg backdrop-blur-xs backdrop-saturate-150">
         <Back />
         <AuthForm callbackURL={redirect} />
       </div>

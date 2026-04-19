@@ -50,7 +50,7 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
   }
 
   return (
-    <div className="border-border bg-background/30 rounded-2xl border p-6 backdrop-blur-xs backdrop-saturate-150">
+    <div className="border-border bg-background/30 rounded-2xl border p-6 backdrop-blur-xs">
       <h2 className="text-primary relative mb-6 flex items-center text-base font-semibold">
         <Equalizer size={22} />
         <span className="ml-3">{t('featuredMusic')}</span>

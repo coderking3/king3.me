@@ -38,6 +38,16 @@ export async function proxy(request: NextRequest) {
     }
   }
 
+  // ── 3. Auth page redirect if already logged in ──
+  if (pathname === '/auth') {
+    const session = await getSession()
+
+    if (session) {
+      const redirectPath = session.user.role === 'admin' ? '/admin' : '/'
+      return NextResponse.redirect(new URL(redirectPath, request.url))
+    }
+  }
+
   return NextResponse.next({
     request: { headers: requestHeaders }
   })
