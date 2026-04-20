@@ -41,7 +41,10 @@
     "blog": "博客",
     "project": "项目",
     "message": "留言",
-    "about": "关于"
+    "about": "关于",
+    "photos": "照片",
+    "poems": "诗歌",
+    "uses": "使用"
   },
   "footer": {
     "copyright": "© 2025 至今 King3 保留所有权利",
@@ -66,6 +69,7 @@
     "posts": "文章",
     "projects": "项目",
     "pages": "页面",
+    "goToPage": "跳转页面",
     "shortcut": {
       "navigate": "导航",
       "select": "打开",

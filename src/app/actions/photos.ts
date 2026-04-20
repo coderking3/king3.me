@@ -44,6 +44,19 @@ export async function batchCreatePhotosAction(items: PhotoInput[]) {
   }
 }
 
+export async function updatePhotoAction(id: string, data: PhotoInput) {
+  try {
+    await checkAdmin()
+    const parsed = photoSchema.parse(data)
+    await photoDb.update(id, parsed)
+    revalidatePath('/admin/photos')
+    revalidatePath('/photos')
+    return actionSuccess(undefined)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
 export async function deletePhotoAction(id: string) {
   try {
     await checkAdmin()

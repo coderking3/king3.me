@@ -1,5 +1,6 @@
 'use client'
 
+import type { InteractionHandlers } from './hooks'
 import type { InteractionTrigger, InteractiveState, SvgIcon } from './types'
 
 import Link from 'next/link'
@@ -50,7 +51,7 @@ function Interactive({
   const { isHovered, isClicked, handlers } = useInteractive({
     trigger,
     duration,
-    onHandlers: delegated
+    onHandlers: delegated as InteractionHandlers
   })
 
   const isLink = !!href
@@ -62,7 +63,7 @@ function Interactive({
       className={cn(
         'relative inline-flex items-center justify-center',
         'size-8 min-w-8',
-        'rounded-full outline-offset-2',
+        'rounded-full outline-none',
         'transition-colors duration-200',
         'hover:text-primary hover:dark:text-accent-foreground text-inherit',
         'before:absolute before:-inset-1 before:content-[""]',

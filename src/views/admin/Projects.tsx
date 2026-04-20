@@ -208,13 +208,18 @@ export default function Projects({ projects }: { projects: Project[] }) {
           filterMode: 'auto',
           actions: (
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => setShowCreate(true)}>
-                <Plus size={16} />
-                New
+              <Button
+                size="sm"
+                className="h-8"
+                onClick={() => setShowCreate(true)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Project
               </Button>
             </div>
           ),
-          columnToggle: true
+          columnToggle: true,
+          exportable: true
         }}
         dragSort={{
           enabled: true,

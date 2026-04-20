@@ -203,13 +203,18 @@ export default function PlaylistComponent({
           filterMode: 'auto',
           actions: (
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => setShowCreate(true)}>
-                <Plus size={16} />
+              <Button
+                size="sm"
+                className="h-8"
+                onClick={() => setShowCreate(true)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
                 Add Song
               </Button>
             </div>
           ),
-          columnToggle: true
+          columnToggle: true,
+          exportable: true
         }}
       />
 

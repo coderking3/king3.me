@@ -6,6 +6,7 @@ import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { PoemInput } from '@/lib/schemas'
 import type { Poem } from '@/types'
 
+import { formatDate } from 'kedash'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -35,7 +36,8 @@ const poemFields: FormFieldConfig<PoemInput>[] = [
     type: 'textarea',
     placeholder: 'Poem content...',
     rows: 8
-  }
+  },
+  { name: 'date', label: 'Date', type: 'date' }
 ]
 
 // ──── Table Columns ────
@@ -63,12 +65,12 @@ const columns: ColumnConfig<Poem>[] = [
     )
   },
   {
-    key: 'createdAt',
-    title: 'Created',
+    key: 'date',
+    title: 'Date',
     sortable: true,
     render: (value) => (
       <span className="text-muted-foreground text-xs">
-        {new Date(value).toLocaleDateString()}
+        {formatDate(value, 'yyyy-MM-dd')}
       </span>
     )
   }
@@ -122,7 +124,8 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
   const formDefaultValues: PoemInput = {
     title: editPoem?.title || '',
     author: editPoem?.author || '',
-    content: editPoem?.content || ''
+    content: editPoem?.content || '',
+    date: editPoem ? new Date(editPoem.date) : new Date()
   }
 
   return (
@@ -165,12 +168,17 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
           ],
           filterMode: 'auto',
           actions: (
-            <Button size="sm" onClick={() => setShowCreate(true)}>
-              <Plus size={16} />
+            <Button
+              size="sm"
+              className="h-8"
+              onClick={() => setShowCreate(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
               Add Poem
             </Button>
           ),
-          columnToggle: true
+          columnToggle: true,
+          exportable: true
         }}
       />
 

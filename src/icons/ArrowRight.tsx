@@ -1,16 +1,21 @@
 import type { SvgIcon } from './_internal/types'
 
-interface MaterialArrowRightProps extends Omit<SvgIcon, 'strokeWidth'> {}
+import { cn } from '@/lib/utils'
 
-export function MaterialArrowRightIcon({
+interface MaterialArrowRightProps extends Omit<SvgIcon, 'strokeWidth'> {
+  className?: string
+}
+
+export function ArrowRightIcon({
   size = 20,
-  color = 'currentColor'
+  color = 'currentColor',
+  className
 }: MaterialArrowRightProps) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      className="block overflow-visible"
+      className={cn('block overflow-visible', className)}
       width={`${size / 16}rem`}
       height={`${size / 16}rem`}
     >

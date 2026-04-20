@@ -21,6 +21,11 @@ class PhotoDb {
     return result.count
   }
 
+  async update(id: string, data: PhotoInput): Promise<Photo> {
+    const result = await prisma.photo.update({ where: { id }, data })
+    return this.serialize(result)
+  }
+
   async delete(id: string): Promise<Photo> {
     const result = await prisma.photo.delete({ where: { id } })
     return this.serialize(result)

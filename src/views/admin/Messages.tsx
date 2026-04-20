@@ -257,12 +257,17 @@ export default function Messages({
           ],
           filterMode: 'auto',
           actions: (
-            <Button size="sm" onClick={() => setShowCreate(true)}>
-              <Plus size={16} />
-              New
+            <Button
+              size="sm"
+              className="h-8"
+              onClick={() => setShowCreate(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Message
             </Button>
           ),
-          columnToggle: true
+          columnToggle: true,
+          exportable: true
         }}
       />
 

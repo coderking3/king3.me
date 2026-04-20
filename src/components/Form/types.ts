@@ -71,6 +71,16 @@ export interface SelectFieldConfig<TFV extends FieldValues>
   type: 'select'
 }
 
+export interface DatePickerControlConfig {
+  placeholder?: string
+  className?: string
+}
+
+export interface DatePickerFieldConfig<TFV extends FieldValues>
+  extends BaseFieldConfig<TFV>, DatePickerControlConfig {
+  type: 'date'
+}
+
 /* --- Custom field --- */
 
 interface CustomControlFieldConfig<
@@ -107,6 +117,7 @@ export type FormFieldConfig<TFV extends FieldValues> =
   | InputFieldConfig<TFV>
   | TextareaFieldConfig<TFV>
   | SelectFieldConfig<TFV>
+  | DatePickerFieldConfig<TFV>
   | CustomFieldConfig<TFV>
 
 /* --- Control props --- */

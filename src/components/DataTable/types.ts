@@ -86,6 +86,11 @@ export type FilterField = InputFilterField | SelectFilterField
 
 /* --- Toolbar --- */
 
+export interface ExportConfig {
+  /** Downloaded file name (without extension). Default: `'export'` */
+  filename?: string
+}
+
 export interface ToolbarConfig {
   filterFields?: FilterField[]
   /**
@@ -99,6 +104,8 @@ export interface ToolbarConfig {
   /** Right-side custom actions (e.g. "Add", "Export" buttons) */
   actions?: React.ReactNode
   columnToggle?: boolean
+  /** Enable export button. `true` for defaults, or pass config to customize. */
+  exportable?: boolean | ExportConfig
 }
 
 export interface ColumnVisibilityItem {

@@ -386,6 +386,8 @@ export function DataTable<T extends object>({
           onColumnVisibilityChange={(id, visible) =>
             table.getColumn(id)?.toggleVisibility(visible)
           }
+          exportable={toolbar.exportable}
+          data={data}
         />
       )}
 

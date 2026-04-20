@@ -4,7 +4,8 @@ import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { PhotoInput } from '@/lib/schemas'
 import type { Photo } from '@/types'
 
-import { FileJson, Plus, Trash2 } from 'lucide-react'
+import { formatDate } from 'kedash'
+import { FileJson, Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -13,7 +14,8 @@ import { z } from 'zod/v4'
 import {
   batchCreatePhotosAction,
   createPhotoAction,
-  deletePhotoAction
+  deletePhotoAction,
+  updatePhotoAction
 } from '@/app/actions/photos'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button, DialogClose, DialogFooter, Textarea } from '@/components/ui'
@@ -26,7 +28,7 @@ const photoFormSchema = z.object({
   url: z.url('Please enter a valid URL'),
   width: z.coerce.number().int().positive('Width must be positive'),
   height: z.coerce.number().int().positive('Height must be positive'),
-  date: z.string().min(1, 'Date is required')
+  date: z.coerce.date()
 })
 
 type PhotoFormValues = z.infer<typeof photoFormSchema>
@@ -41,7 +43,7 @@ const photoFields: FormFieldConfig<PhotoFormValues>[] = [
   },
   { name: 'width', label: 'Width', type: 'input', placeholder: 'e.g. 1920' },
   { name: 'height', label: 'Height', type: 'input', placeholder: 'e.g. 1080' },
-  { name: 'date', label: 'Date', type: 'input', placeholder: 'e.g. 2025-06-07' }
+  { name: 'date', label: 'Date', type: 'date' }
 ]
 
 // ──── Table Columns ────
@@ -81,7 +83,7 @@ const columns: ColumnConfig<Photo>[] = [
     sortable: true,
     render: (value) => (
       <span className="text-muted-foreground text-xs">
-        {new Date(value).toLocaleDateString()}
+        {formatDate(value, 'yyyy-MM-dd')}
       </span>
     )
   }
@@ -91,10 +93,13 @@ const columns: ColumnConfig<Photo>[] = [
 
 export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
   const [showCreate, setShowCreate] = useState(false)
+  const [editPhoto, setEditPhoto] = useState<Photo | null>(null)
   const [showImport, setShowImport] = useState(false)
   const [importJson, setImportJson] = useState('')
   const [importLoading, setImportLoading] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+
+  const formOpen = showCreate || !!editPhoto
 
   const handleDelete = async () => {
     if (!deleteId) return
@@ -107,17 +112,24 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
     setDeleteId(null)
   }
 
-  const handleCreateSubmit = async (data: PhotoFormValues) => {
+  const handleCloseForm = () => {
+    setShowCreate(false)
+    setEditPhoto(null)
+  }
+
+  const handleSubmit = async (data: PhotoFormValues) => {
     const payload: PhotoInput = {
       ...data,
       width: Number(data.width),
       height: Number(data.height),
-      date: new Date(data.date)
+      date: data.date
     }
-    const result = await createPhotoAction(payload)
+    const result = editPhoto
+      ? await updatePhotoAction(editPhoto.id, payload)
+      : await createPhotoAction(payload)
     if (result.success) {
-      toast.success('Photo added')
-      setShowCreate(false)
+      toast.success(editPhoto ? 'Photo updated' : 'Photo added')
+      handleCloseForm()
     } else {
       toast.error(result.error)
     }
@@ -151,12 +163,12 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
     setImportLoading(false)
   }
 
-  const createDefaultValues: PhotoFormValues = {
-    name: '',
-    url: '',
-    width: 0,
-    height: 0,
-    date: new Date().toISOString().split('T')[0]
+  const formDefaultValues: PhotoFormValues = {
+    name: editPhoto?.name || '',
+    url: editPhoto?.url || '',
+    width: editPhoto?.width || 0,
+    height: editPhoto?.height || 0,
+    date: editPhoto ? new Date(editPhoto.date) : new Date()
   }
 
   return (
@@ -169,9 +181,17 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
         loading={photos === undefined}
         selectable
         actions={{
-          className: 'w-20',
+          className: 'w-24',
           render: (record) => (
-            <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center gap-1">
+              <button
+                type="button"
+                onClick={() => setEditPhoto(record)}
+                className="text-muted-foreground hover:text-foreground rounded p-1 transition-colors"
+                title="Edit"
+              >
+                <Pencil size={16} />
+              </button>
               <button
                 type="button"
                 onClick={() => setDeleteId(record.id)}
@@ -188,36 +208,42 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
           filterMode: 'auto',
           actions: (
             <div className="flex gap-2">
-              <Button size="sm" onClick={() => setShowCreate(true)}>
-                <Plus size={16} />
+              <Button
+                size="sm"
+                className="h-8"
+                onClick={() => setShowCreate(true)}
+              >
+                <Plus className="mr-2 h-4 w-4" />
                 Add Photo
               </Button>
               <Button
                 size="sm"
+                className="h-8"
                 variant="outline"
                 onClick={() => setShowImport(true)}
               >
-                <FileJson size={16} />
+                <FileJson className="mr-2 h-4 w-4" />
                 Import JSON
               </Button>
             </div>
           ),
-          columnToggle: true
+          columnToggle: true,
+          exportable: true
         }}
       />
 
-      {/* Create Modal */}
+      {/* Create / Edit Modal */}
       <Modal
-        open={showCreate}
-        onClose={() => setShowCreate(false)}
-        title="Add Photo"
+        open={formOpen}
+        onClose={handleCloseForm}
+        title={editPhoto ? 'Edit Photo' : 'Add Photo'}
         showFooter={false}
       >
         <Form
           schema={photoFormSchema}
           fields={photoFields}
-          defaultValues={createDefaultValues}
-          onSubmit={handleCreateSubmit}
+          defaultValues={formDefaultValues}
+          onSubmit={handleSubmit}
         />
       </Modal>
 

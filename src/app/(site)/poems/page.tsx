@@ -17,7 +17,5 @@ export default async function Page() {
   const result = await getPoemsAction()
   if (!result.success) throw new Error(result.error)
 
-  throw new Error('666')
-
   return <PoemsPage poems={result.data} />
 }

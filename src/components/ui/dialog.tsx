@@ -52,7 +52,9 @@ function DialogContent({
   fullscreen?: boolean
 }) {
   const positionClass =
-    position === 'center' ? 'top-1/2 -translate-y-1/2' : 'top-25 translate-y-0'
+    position === 'center'
+      ? 'top-1/2 -translate-y-1/2'
+      : 'top-[15%] translate-y-0'
 
   return (
     <DialogPortal>

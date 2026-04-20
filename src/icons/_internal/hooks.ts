@@ -6,7 +6,7 @@ import { useMemo, useState } from 'react'
 
 import { useBoop } from '@/hooks'
 
-interface InteractionHandlers {
+export interface InteractionHandlers {
   onMouseEnter: (e: React.MouseEvent) => void
   onMouseLeave: (e: React.MouseEvent) => void
   onMouseDown: (e: React.MouseEvent) => void

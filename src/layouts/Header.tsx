@@ -168,7 +168,11 @@ function Header() {
           </div>
         </div>
       </motion.header>
+
+      {/* Header Placeholder */}
       <div className="h-[--content-offset]" />
+
+      {/* Search Command */}
       <SearchCommand />
     </>
   )

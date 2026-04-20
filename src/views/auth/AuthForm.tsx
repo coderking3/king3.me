@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Spinner } from '@/components/ui'
-import { GithubCircleIcon, GoogleIcon, MaterialArrowRightIcon } from '@/icons'
+import { ArrowRightIcon, GithubCircleIcon, GoogleIcon } from '@/icons'
 import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 
@@ -68,7 +68,7 @@ function OAuthButton({
       ) : (
         !disabled && (
           <span className="-translate-x-1.5 opacity-0 transition-all duration-150 group-hover:translate-x-0 group-hover:opacity-100">
-            <MaterialArrowRightIcon size={18} />
+            <ArrowRightIcon size={18} />
           </span>
         )
       )}

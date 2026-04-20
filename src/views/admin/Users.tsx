@@ -270,7 +270,8 @@ export default function Users({ users }: { users: UserItem[] }) {
             { key: 'email', label: 'Email' }
           ],
           filterMode: 'auto',
-          columnToggle: true
+          columnToggle: true,
+          exportable: true
         }}
       />
 

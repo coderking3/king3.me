@@ -27,6 +27,7 @@ class PoemDb {
   private serialize(row: PrismaPoem): Poem {
     return {
       ...row,
+      date: row.date.toISOString(),
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString()
     }

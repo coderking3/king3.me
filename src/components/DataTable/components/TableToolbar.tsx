@@ -1,9 +1,17 @@
 'use client'
 
-import type { ColumnVisibilityItem, FilterField } from '../types'
+import type { ColumnVisibilityItem, ExportConfig, FilterField } from '../types'
 
-import { RotateCcw, Search, Settings2 } from 'lucide-react'
+import {
+  ClipboardCopy,
+  Download,
+  FileDown,
+  RotateCcw,
+  Search,
+  Settings2
+} from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 import {
   Button,
@@ -11,6 +19,7 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -35,6 +44,8 @@ export interface TableToolbarProps {
   columnToggle?: boolean
   columnVisibilities?: ColumnVisibilityItem[]
   onColumnVisibilityChange?: (columnId: string, visible: boolean) => void
+  exportable?: boolean | ExportConfig
+  data?: unknown[]
 }
 
 /* --- Helpers --- */
@@ -55,7 +66,9 @@ export function TableToolbar({
   actions,
   columnToggle,
   columnVisibilities,
-  onColumnVisibilityChange
+  onColumnVisibilityChange,
+  exportable: exportConfig,
+  data
 }: TableToolbarProps) {
   const [values, setValues] = useState<Record<string, string>>(() =>
     buildEmptyValues(filterFields)
@@ -65,7 +78,12 @@ export function TableToolbar({
   const hasActiveFilters = Object.values(values).some(Boolean)
   const hasFilterFields = filterFields.length > 0
 
-  const showRightSide = !!actions || columnToggle
+  const enableExport = !!exportConfig
+  const exportFilename =
+    (typeof exportConfig === 'object' ? exportConfig.filename : undefined) ??
+    'export'
+
+  const showRightSide = !!actions || columnToggle || enableExport
   const showToolbar = hasFilterFields || showRightSide
 
   if (!showToolbar) return null
@@ -92,6 +110,27 @@ export function TableToolbar({
     const empty = buildEmptyValues(filterFields)
     setValues(empty)
     onFilter?.(empty)
+  }
+
+  const getExportJson = () => JSON.stringify(data ?? [], null, 2)
+
+  const handleCopyJson = async () => {
+    try {
+      await navigator.clipboard.writeText(getExportJson())
+      toast.success('JSON copied to clipboard')
+    } catch {
+      toast.error('Failed to copy')
+    }
+  }
+
+  const handleDownloadJson = () => {
+    const blob = new Blob([getExportJson()], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${exportFilename}.json`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   /* --- Render --- */
@@ -171,6 +210,31 @@ export function TableToolbar({
       {showRightSide && (
         <div className="ml-auto flex shrink-0 items-center gap-2">
           {actions}
+
+          {enableExport && (
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="outline" size="sm" className="h-8">
+                    <FileDown className="mr-2 h-4 w-4" />
+                    Export
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end" className="w-44">
+                <DropdownMenuGroup>
+                  <DropdownMenuItem onClick={handleCopyJson}>
+                    <ClipboardCopy className="mr-2 h-4 w-4" />
+                    Copy JSON
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDownloadJson}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download JSON
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
 
           {columnToggle &&
             columnVisibilities &&

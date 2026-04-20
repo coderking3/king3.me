@@ -9,7 +9,8 @@ export const poemSchema = z.object({
   content: z
     .string()
     .min(1, 'Content is required')
-    .max(5000, 'Content is too long')
+    .max(5000, 'Content is too long'),
+  date: z.coerce.date()
 })
 
 export type PoemInput = z.infer<typeof poemSchema>

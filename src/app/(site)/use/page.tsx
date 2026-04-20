@@ -18,8 +18,10 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
+  const { lang } = await getT('common')
+  const filename = lang === 'en' ? 'use.md' : 'use_zh.md'
   const content = await fs.readFile(
-    path.join(process.cwd(), 'content/use.md'),
+    path.join(process.cwd(), 'content', filename),
     'utf-8'
   )
 

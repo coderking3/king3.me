@@ -41,7 +41,10 @@
     "blog": "Blog",
     "project": "Project",
     "message": "Message",
-    "about": "About"
+    "about": "About",
+    "photos": "Photos",
+    "poems": "Poems",
+    "uses": "Uses"
   },
   "footer": {
     "copyright": "© 2025-present King3. All Rights Reserved.",
@@ -70,6 +73,7 @@
     "posts": "Posts",
     "projects": "Projects",
     "pages": "Pages",
+    "goToPage": "Go to Page",
     "shortcut": {
       "navigate": "Navigate",
       "select": "Open",
