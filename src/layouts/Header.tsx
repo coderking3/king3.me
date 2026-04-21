@@ -135,8 +135,8 @@ function Header() {
                 <div className="text-accent-foreground/85 flex items-center gap-0.5">
                   <Search onClick={openSearch} alt="Search" />
                   <LanguageSwitcher />
-                  <ThemeMode enterAnimationDelay={200} />
                   <UserAvatar user={session?.user ?? null} />
+                  <ThemeMode enterAnimationDelay={200} />
                 </div>
               </div>
 
@@ -159,8 +159,8 @@ function Header() {
                   >
                     <Search onClick={openSearch} alt="Search" />
                     <LanguageSwitcher />
-                    <ThemeMode enterAnimationDelay={200} />
                     <UserAvatar user={session?.user ?? null} />
+                    <ThemeMode enterAnimationDelay={200} />
                   </div>
                 </div>
               </div>

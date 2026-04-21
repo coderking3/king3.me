@@ -49,7 +49,7 @@ async function UsePage({ content, headings }: UsePageProps) {
             <main
               className={cn(
                 'prose-mdx',
-                'prose-headings:text-primary!',
+                '[&_:is(:where(h1,h2,h3,h4,h5,h6))]:text-primary!',
                 '[&>h2:first-of-type]:mt-0!'
               )}
             >
