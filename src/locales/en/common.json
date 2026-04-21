@@ -67,16 +67,16 @@
   },
   "search": {
     "title": "Search",
-    "placeholder": "Search posts, projects, pages...",
+    "placeholder": "Search pages, projects, posts...",
     "hint": "Search across all blog posts, projects, and pages on this site.",
     "noResults": "No results found.",
     "posts": "Posts",
     "projects": "Projects",
     "pages": "Pages",
-    "goToPage": "Go to Page",
     "shortcut": {
-      "navigate": "Navigate",
-      "select": "Open",
+      "jump": "Go to Page",
+      "switch": "Switch",
+      "open": "Open",
       "close": "Close"
     }
   },

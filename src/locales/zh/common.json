@@ -63,16 +63,16 @@
   },
   "search": {
     "title": "搜索",
-    "placeholder": "搜索文章、项目、页面...",
+    "placeholder": "搜索页面、项目、文章...",
     "hint": "在本站搜索所有博客文章、项目和页面。",
     "noResults": "没有找到结果。",
     "posts": "文章",
     "projects": "项目",
     "pages": "页面",
-    "goToPage": "跳转页面",
     "shortcut": {
-      "navigate": "导航",
-      "select": "打开",
+      "jump": "跳转页面",
+      "switch": "切换",
+      "open": "打开",
       "close": "关闭"
     }
   },

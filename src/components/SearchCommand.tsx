@@ -1,6 +1,12 @@
 'use client'
 
-import { CornerDownLeft, FileTextIcon, FolderOpenIcon } from 'lucide-react'
+import {
+  ArrowUpDown,
+  CornerDownLeft,
+  FileTextIcon,
+  FolderOpenIcon,
+  PanelTop
+} from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
@@ -15,7 +21,6 @@ import {
   CommandList
 } from '@/components/ui/command'
 import { useTranslation } from '@/i18n/client'
-import { ArrowRightIcon } from '@/icons'
 import { useSearchStore } from '@/stores'
 
 interface SearchItem {
@@ -115,7 +120,7 @@ export function SearchCommand() {
                   value={title}
                   onSelect={() => handleSelect(item.href)}
                 >
-                  <ArrowRightIcon className="text-muted-foreground size-4" />
+                  <PanelTop className="text-muted-foreground size-4" />
                   {title}
                 </CommandItem>
               )
@@ -154,12 +159,37 @@ export function SearchCommand() {
         </CommandList>
       </Command>
 
-      <div className="text-muted-foreground bg-muted border-t-border absolute inset-x-0 bottom-0 z-20 flex h-10 items-center gap-2 rounded-b-xl border-t px-4 text-xs font-medium">
-        <div className="flex items-center gap-1.5">
-          <kbd className="bg-background text-muted-foreground pointer-events-none inline-flex items-center justify-center rounded-sm px-1.5 py-1 font-medium select-none">
-            <CornerDownLeft className="size-3" />
-          </kbd>
-          <span>{t('search.goToPage')}</span>
+      <div className="text-muted-foreground bg-muted border-t-border absolute inset-x-0 bottom-0 z-20 flex h-10 items-center justify-between rounded-b-xl border-t px-4 text-xs font-medium">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <kbd className="bg-background text-muted-foreground pointer-events-none inline-flex items-center justify-center rounded-sm px-1.5 py-1 font-medium select-none">
+              <ArrowUpDown className="size-3" />
+            </kbd>
+            <span>{t('search.shortcut.switch')}</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <kbd className="bg-background text-muted-foreground pointer-events-none inline-flex items-center justify-center rounded-sm px-1.5 py-1 font-medium select-none">
+              <CornerDownLeft className="size-3" />
+            </kbd>
+            <span>{t('search.shortcut.jump')}</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <kbd className="bg-background text-muted-foreground pointer-events-none inline-flex items-center justify-center rounded-sm px-1.5 py-1 font-medium select-none">
+              <span className="text-[10px]">ESC</span>
+            </kbd>
+            <span>{t('search.shortcut.close')}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <kbd className="bg-background text-muted-foreground pointer-events-none inline-flex items-center justify-center rounded-sm px-1.5 py-1 font-medium select-none">
+              <span className="text-[10px]">Ctrl</span>
+            </kbd>
+            <kbd className="bg-background text-muted-foreground pointer-events-none inline-flex items-center justify-center rounded-sm px-1.5 py-1 font-medium select-none">
+              <span className="text-[10px]">K</span>
+            </kbd>
+            <span>{t('search.shortcut.open')}</span>
+          </div>
         </div>
       </div>
     </CommandDialog>
