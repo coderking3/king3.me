@@ -6,6 +6,7 @@ import type { ControlProps, DatePickerControlConfig } from '../types'
 
 import { formatDate } from 'kedash'
 import { Calendar as CalendarIcon } from 'lucide-react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -16,15 +17,28 @@ import {
 } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
+function DropdownNav({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  return (
+    <div className={cn(className, 'flex-row-reverse')} {...props}>
+      {children}
+    </div>
+  )
+}
+
 export function DatePickerControl<TFV extends FieldValues>({
   field,
   fieldState,
   fieldOptions
 }: ControlProps<TFV, DatePickerControlConfig>) {
   const value = field.value as Date | undefined
+  const [open, setOpen] = useState(false)
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger
         render={
           <Button
@@ -46,8 +60,15 @@ export function DatePickerControl<TFV extends FieldValues>({
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
+          captionLayout="dropdown"
+          startMonth={new Date(1900, 0)}
+          endMonth={new Date()}
           selected={value}
-          onSelect={(date) => field.onChange(date)}
+          onSelect={(date) => {
+            field.onChange(date)
+            setOpen(false)
+          }}
+          components={{ DropdownNav }}
         />
       </PopoverContent>
     </Popover>

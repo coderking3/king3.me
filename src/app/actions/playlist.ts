@@ -56,3 +56,15 @@ export async function deleteSongAction(id: string) {
     return actionError(error)
   }
 }
+
+export async function batchDeleteSongsAction(ids: string[]) {
+  try {
+    await checkAdmin()
+    const count = await playlistDb.deleteMany(ids)
+    revalidatePath('/admin/playlist')
+    revalidatePath('/')
+    return actionSuccess(count)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}

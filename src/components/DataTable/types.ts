@@ -144,6 +144,8 @@ export interface DataTableProps<T extends object> {
   pagination?: boolean | Partial<PaginationState>
   /** Auto-injects checkbox column */
   selectable?: boolean
+  /** Called when row selection state changes */
+  onRowSelectionChange?: (selectedRows: T[]) => void
   /** Expose TanStack Table instance */
   tableRef?: React.RefObject<Table<T> | null>
   actions?: ActionConfig<T>

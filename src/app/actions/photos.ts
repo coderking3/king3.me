@@ -68,3 +68,15 @@ export async function deletePhotoAction(id: string) {
     return actionError(error)
   }
 }
+
+export async function batchDeletePhotosAction(ids: string[]) {
+  try {
+    await checkAdmin()
+    const count = await photoDb.deleteMany(ids)
+    revalidatePath('/admin/photos')
+    revalidatePath('/photos')
+    return actionSuccess(count)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}

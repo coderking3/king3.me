@@ -78,6 +78,7 @@ export function DataTable<T extends object>({
   pagination,
   actions,
   selectable = false,
+  onRowSelectionChange: onRowSelectionChangeProp,
   tableRef,
   emptyText = 'No results.',
   loading,
@@ -196,6 +197,15 @@ export function DataTable<T extends object>({
   useEffect(() => {
     if (tableRef) tableRef.current = table
   }, [table, tableRef])
+
+  useEffect(() => {
+    if (onRowSelectionChangeProp) {
+      const selectedRows = table
+        .getSelectedRowModel()
+        .rows.map((row) => row.original)
+      onRowSelectionChangeProp(selectedRows)
+    }
+  }, [rowSelection, onRowSelectionChangeProp, table])
 
   const columnVisibilities = useMemo<ColumnVisibilityItem[]>(
     () =>

@@ -31,6 +31,13 @@ class PhotoDb {
     return this.serialize(result)
   }
 
+  async deleteMany(ids: string[]): Promise<number> {
+    const { count } = await prisma.photo.deleteMany({
+      where: { id: { in: ids } }
+    })
+    return count
+  }
+
   private serialize(row: PrismaPhoto): Photo {
     return {
       ...row,

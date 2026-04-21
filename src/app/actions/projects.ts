@@ -63,3 +63,14 @@ export async function deleteProjectAction(id: string) {
     return actionError(error)
   }
 }
+
+export async function batchDeleteProjectsAction(ids: string[]) {
+  try {
+    await checkAdmin()
+    const count = await projectDb.deleteMany(ids)
+    revalidatePath('/admin/projects')
+    return actionSuccess(count)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}

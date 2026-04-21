@@ -1,5 +1,7 @@
 'use client'
 
+import type { Table } from '@tanstack/react-table'
+
 import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { PhotoInput } from '@/lib/schemas'
 import type { Photo } from '@/types'
@@ -7,12 +9,13 @@ import type { Photo } from '@/types'
 import { formatDate } from 'kedash'
 import { FileJson, Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod/v4'
 
 import {
   batchCreatePhotosAction,
+  batchDeletePhotosAction,
   createPhotoAction,
   deletePhotoAction,
   updatePhotoAction
@@ -92,12 +95,15 @@ const columns: ColumnConfig<Photo>[] = [
 // ──── Component ────
 
 export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
+  const tableRef = useRef<Table<Photo>>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [editPhoto, setEditPhoto] = useState<Photo | null>(null)
   const [showImport, setShowImport] = useState(false)
   const [importJson, setImportJson] = useState('')
   const [importLoading, setImportLoading] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [selectedRows, setSelectedRows] = useState<Photo[]>([])
+  const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const formOpen = showCreate || !!editPhoto
 
@@ -110,6 +116,18 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
       toast.error(result.error)
     }
     setDeleteId(null)
+  }
+
+  const handleBatchDelete = async () => {
+    const ids = selectedRows.map((row) => row.id)
+    const result = await batchDeletePhotosAction(ids)
+    if (result.success) {
+      toast.success(`${result.data} photos deleted`)
+      tableRef.current?.toggleAllRowsSelected(false)
+    } else {
+      toast.error(result.error)
+    }
+    setShowBatchDelete(false)
   }
 
   const handleCloseForm = () => {
@@ -180,6 +198,8 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
         rowKey="id"
         loading={photos === undefined}
         selectable
+        onRowSelectionChange={setSelectedRows}
+        tableRef={tableRef}
         actions={{
           className: 'w-24',
           render: (record) => (
@@ -213,7 +233,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="mr-2 size-4" />
                 Add Photo
               </Button>
               <Button
@@ -222,8 +242,18 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
                 variant="outline"
                 onClick={() => setShowImport(true)}
               >
-                <FileJson className="mr-2 h-4 w-4" />
-                Import JSON
+                <FileJson className="mr-2 size-4" />
+                Import
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="h-8"
+                disabled={selectedRows.length === 0}
+                onClick={() => setShowBatchDelete(true)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                Delete
               </Button>
             </div>
           ),
@@ -299,6 +329,18 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
         confirmText="Delete"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      {/* Batch Delete Confirm */}
+      <Confirm
+        open={showBatchDelete}
+        onClose={() => setShowBatchDelete(false)}
+        title="Batch delete photos"
+        description={`This will permanently remove ${selectedRows.length} photos.`}
+        variant="destructive"
+        confirmText="Delete All"
+        onConfirm={handleBatchDelete}
+        onCancel={() => setShowBatchDelete(false)}
       />
     </Animated>
   )

@@ -55,3 +55,15 @@ export async function deletePoemAction(id: string) {
     return actionError(error)
   }
 }
+
+export async function batchDeletePoemsAction(ids: string[]) {
+  try {
+    await checkAdmin()
+    const count = await poemDb.deleteMany(ids)
+    revalidatePath('/admin/poems')
+    revalidatePath('/poems')
+    return actionSuccess(count)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}

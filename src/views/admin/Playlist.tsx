@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { z } from 'zod/v4'
 
 import {
+  batchDeleteSongsAction,
   createSongAction,
   deleteSongAction,
   updateSongAction
@@ -120,6 +121,8 @@ export default function PlaylistComponent({
   const [editSong, setEditSong] = useState<Playlist | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [selectedRows, setSelectedRows] = useState<Playlist[]>([])
+  const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const formOpen = showCreate || !!editSong
 
@@ -132,6 +135,18 @@ export default function PlaylistComponent({
       toast.error(result.error)
     }
     setDeleteId(null)
+  }
+
+  const handleBatchDelete = async () => {
+    const ids = selectedRows.map((row) => row.id)
+    const result = await batchDeleteSongsAction(ids)
+    if (result.success) {
+      toast.success(`${result.data} songs deleted`)
+      tableRef.current?.toggleAllRowsSelected(false)
+    } else {
+      toast.error(result.error)
+    }
+    setShowBatchDelete(false)
   }
 
   const handleCloseForm = () => {
@@ -174,6 +189,7 @@ export default function PlaylistComponent({
         rowKey="id"
         loading={!playlist.length}
         selectable
+        onRowSelectionChange={setSelectedRows}
         tableRef={tableRef}
         actions={{
           className: 'w-24',
@@ -208,8 +224,18 @@ export default function PlaylistComponent({
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="mr-2 size-4" />
                 Add Song
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="h-8"
+                disabled={selectedRows.length === 0}
+                onClick={() => setShowBatchDelete(true)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                Delete
               </Button>
             </div>
           ),
@@ -243,6 +269,18 @@ export default function PlaylistComponent({
         confirmText="Delete"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      {/* Batch Delete Confirm */}
+      <Confirm
+        open={showBatchDelete}
+        onClose={() => setShowBatchDelete(false)}
+        title="Batch delete songs"
+        description={`This will permanently remove ${selectedRows.length} songs.`}
+        variant="destructive"
+        confirmText="Delete All"
+        onConfirm={handleBatchDelete}
+        onCancel={() => setShowBatchDelete(false)}
       />
     </Animated>
   )

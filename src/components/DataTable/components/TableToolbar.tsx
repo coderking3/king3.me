@@ -216,7 +216,7 @@ export function TableToolbar({
               <DropdownMenuTrigger
                 render={
                   <Button variant="outline" size="sm" className="h-8">
-                    <FileDown className="mr-2 h-4 w-4" />
+                    <FileDown className="mr-2 size-4" />
                     Export
                   </Button>
                 }
@@ -224,11 +224,11 @@ export function TableToolbar({
               <DropdownMenuContent align="end" className="w-44">
                 <DropdownMenuGroup>
                   <DropdownMenuItem onClick={handleCopyJson}>
-                    <ClipboardCopy className="mr-2 h-4 w-4" />
+                    <ClipboardCopy className="mr-2 size-4" />
                     Copy JSON
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleDownloadJson}>
-                    <Download className="mr-2 h-4 w-4" />
+                    <Download className="mr-2 size-4" />
                     Download JSON
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -244,7 +244,7 @@ export function TableToolbar({
                 <DropdownMenuTrigger
                   render={
                     <Button variant="outline" size="sm" className="h-8">
-                      <Settings2 className="mr-2 h-4 w-4" />
+                      <Settings2 className="mr-2 size-4" />
                       View
                     </Button>
                   }

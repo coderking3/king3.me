@@ -58,6 +58,28 @@ class ProjectDb {
     return this.serialize(result)
   }
 
+  async deleteMany(ids: string[]): Promise<number> {
+    const { count } = await prisma.project.deleteMany({
+      where: { id: { in: ids } }
+    })
+    // Re-compact order values after deletion
+    const remaining = await prisma.project.findMany({
+      select: { id: true },
+      orderBy: { order: 'asc' }
+    })
+    if (remaining.length > 0) {
+      await prisma.$transaction(
+        remaining.map((p, index) =>
+          prisma.project.update({
+            where: { id: p.id },
+            data: { order: index }
+          })
+        )
+      )
+    }
+    return count
+  }
+
   private serialize(row: PrismaProject): Project {
     return {
       ...row,

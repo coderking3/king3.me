@@ -47,6 +47,18 @@ export async function deleteMessageAction(id: string) {
   }
 }
 
+export async function batchDeleteMessagesAction(ids: string[]) {
+  try {
+    await checkAdmin()
+    const count = await messageDb.deleteMany(ids)
+    revalidatePath('/admin/messages')
+    revalidatePath('/message')
+    return actionSuccess(count)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
 export async function createMessageAction(message: string, userId?: string) {
   try {
     const session = await checkAdmin()
@@ -59,6 +71,18 @@ export async function createMessageAction(message: string, userId?: string) {
       userName: name,
       userImg: img
     })
+    revalidatePath('/admin/messages')
+    revalidatePath('/message')
+    return actionSuccess(undefined)
+  } catch (error: unknown) {
+    return actionError(error)
+  }
+}
+
+export async function updateMessageAction(id: string, message: string) {
+  try {
+    await checkAdmin()
+    await messageDb.update(id, message)
     revalidatePath('/admin/messages')
     revalidatePath('/message')
     return actionSuccess(undefined)

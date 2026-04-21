@@ -30,6 +30,13 @@ class PlaylistDb {
     return this.serialize(result)
   }
 
+  async deleteMany(ids: string[]): Promise<number> {
+    const { count } = await prisma.playlist.deleteMany({
+      where: { id: { in: ids } }
+    })
+    return count
+  }
+
   private serialize(row: PrismaPlaylist): Playlist {
     return {
       ...row,

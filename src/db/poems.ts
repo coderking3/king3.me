@@ -24,6 +24,13 @@ class PoemDb {
     return this.serialize(result)
   }
 
+  async deleteMany(ids: string[]): Promise<number> {
+    const { count } = await prisma.poem.deleteMany({
+      where: { id: { in: ids } }
+    })
+    return count
+  }
+
   private serialize(row: PrismaPoem): Poem {
     return {
       ...row,

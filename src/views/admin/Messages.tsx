@@ -5,16 +5,18 @@ import type { Table } from '@tanstack/react-table'
 import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { Message } from '@/types'
 
-import { Plus, Reply, Trash2 } from 'lucide-react'
+import { Pencil, Plus, Reply, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod/v4'
 
 import {
+  batchDeleteMessagesAction,
   createMessageAction,
   deleteMessageAction,
-  replyToMessageAction
+  replyToMessageAction,
+  updateMessageAction
 } from '@/app/actions/messages'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Badge, Button } from '@/components/ui'
@@ -54,6 +56,25 @@ const createFields: FormFieldConfig<CreateFormValues>[] = [
     label: 'Message',
     type: 'textarea',
     placeholder: 'Type a new message...',
+    rows: 4
+  }
+]
+
+const editSchema = z.object({
+  message: z
+    .string()
+    .min(1, 'Message is required')
+    .max(1000, 'Message is too long')
+})
+
+type EditFormValues = z.infer<typeof editSchema>
+
+const editFields: FormFieldConfig<EditFormValues>[] = [
+  {
+    name: 'message',
+    label: 'Message',
+    type: 'textarea',
+    placeholder: 'Edit message...',
     rows: 4
   }
 ]
@@ -115,8 +136,11 @@ export default function Messages({
 }) {
   const tableRef = useRef<Table<MessageWithReplies>>(null)
   const [replyTo, setReplyTo] = useState<MessageWithReplies | null>(null)
+  const [editMessage, setEditMessage] = useState<Message | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
   const [showCreate, setShowCreate] = useState(false)
+  const [selectedRows, setSelectedRows] = useState<MessageWithReplies[]>([])
+  const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const replyOpen = !!replyTo
   const createOpen = showCreate
@@ -132,6 +156,23 @@ export default function Messages({
     setDeleteId(null)
   }
 
+  const totalReplies = selectedRows.reduce(
+    (sum, row) => sum + (row.replies?.length ?? 0),
+    0
+  )
+
+  const handleBatchDelete = async () => {
+    const ids = selectedRows.map((row) => row.id)
+    const result = await batchDeleteMessagesAction(ids)
+    if (result.success) {
+      toast.success(`${result.data} messages deleted`)
+      tableRef.current?.toggleAllRowsSelected(false)
+    } else {
+      toast.error(result.error)
+    }
+    setShowBatchDelete(false)
+  }
+
   const handleReplySubmit = async (data: ReplyFormValues) => {
     if (!replyTo) return
     const result = await replyToMessageAction(replyTo.id, data.reply)
@@ -145,6 +186,21 @@ export default function Messages({
 
   const handleReplyClose = () => {
     setReplyTo(null)
+  }
+
+  const handleEditSubmit = async (data: EditFormValues) => {
+    if (!editMessage) return
+    const result = await updateMessageAction(editMessage.id, data.message)
+    if (result.success) {
+      toast.success('Message updated')
+      setEditMessage(null)
+    } else {
+      toast.error(result.error)
+    }
+  }
+
+  const handleEditClose = () => {
+    setEditMessage(null)
   }
 
   const handleCreateSubmit = async (data: CreateFormValues) => {
@@ -167,6 +223,10 @@ export default function Messages({
 
   const createDefaultValues: CreateFormValues = {
     message: ''
+  }
+
+  const editDefaultValues: EditFormValues = {
+    message: editMessage?.message || ''
   }
 
   return (
@@ -208,14 +268,24 @@ export default function Messages({
                         </p>
                         <p className="mt-1 text-sm">{reply.message}</p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setDeleteId(reply.id)}
-                        className="text-muted-foreground hover:text-destructive shrink-0 rounded p-1 transition-colors"
-                        title="Delete reply"
-                      >
-                        <Trash2 size={14} />
-                      </button>
+                      <div className="flex shrink-0 gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setEditMessage(reply)}
+                          className="text-muted-foreground hover:text-foreground rounded p-1 transition-colors"
+                          title="Edit reply"
+                        >
+                          <Pencil size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeleteId(reply.id)}
+                          className="text-muted-foreground hover:text-destructive rounded p-1 transition-colors"
+                          title="Delete reply"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -224,6 +294,7 @@ export default function Messages({
           )
         }}
         selectable
+        onRowSelectionChange={setSelectedRows}
         tableRef={tableRef}
         actions={{
           className: 'w-24',
@@ -239,6 +310,14 @@ export default function Messages({
                   <Reply size={16} />
                 </button>
               )}
+              <button
+                type="button"
+                onClick={() => setEditMessage(record)}
+                className="text-muted-foreground hover:text-foreground rounded p-1 transition-colors"
+                title="Edit"
+              >
+                <Pencil size={16} />
+              </button>
               <button
                 type="button"
                 onClick={() => setDeleteId(record.id)}
@@ -257,14 +336,26 @@ export default function Messages({
           ],
           filterMode: 'auto',
           actions: (
-            <Button
-              size="sm"
-              className="h-8"
-              onClick={() => setShowCreate(true)}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Message
-            </Button>
+            <>
+              <Button
+                size="sm"
+                className="h-8"
+                onClick={() => setShowCreate(true)}
+              >
+                <Plus className="mr-2 size-4" />
+                Add Message
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="h-8"
+                disabled={selectedRows.length === 0}
+                onClick={() => setShowBatchDelete(true)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                Delete
+              </Button>
+            </>
           ),
           columnToggle: true,
           exportable: true
@@ -309,6 +400,21 @@ export default function Messages({
         />
       </Modal>
 
+      {/* Edit Modal */}
+      <Modal
+        open={!!editMessage}
+        onClose={handleEditClose}
+        title="Edit Message"
+        showFooter={false}
+      >
+        <Form
+          schema={editSchema}
+          fields={editFields}
+          defaultValues={editDefaultValues}
+          onSubmit={handleEditSubmit}
+        />
+      </Modal>
+
       {/* Delete Confirm */}
       <Confirm
         open={!!deleteId}
@@ -319,6 +425,18 @@ export default function Messages({
         confirmText="Delete"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      {/* Batch Delete Confirm */}
+      <Confirm
+        open={showBatchDelete}
+        onClose={() => setShowBatchDelete(false)}
+        title="Batch delete messages"
+        description={`This will permanently delete ${selectedRows.length} messages and ${totalReplies} replies.`}
+        variant="destructive"
+        confirmText="Delete All"
+        onConfirm={handleBatchDelete}
+        onCancel={() => setShowBatchDelete(false)}
       />
     </Animated>
   )

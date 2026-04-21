@@ -12,6 +12,7 @@ import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
 import {
+  batchDeleteProjectsAction,
   createProjectAction,
   deleteProjectAction,
   reorderProjectsAction,
@@ -97,6 +98,8 @@ export default function Projects({ projects }: { projects: Project[] }) {
   const [editProject, setEditProject] = useState<Project | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [selectedRows, setSelectedRows] = useState<Project[]>([])
+  const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const formOpen = showCreate || !!editProject
   const isTableLoading = isReordering || projectRows.length === 0
@@ -114,6 +117,18 @@ export default function Projects({ projects }: { projects: Project[] }) {
       toast.error(result.error)
     }
     setDeleteId(null)
+  }
+
+  const handleBatchDelete = async () => {
+    const ids = selectedRows.map((row) => row.id)
+    const result = await batchDeleteProjectsAction(ids)
+    if (result.success) {
+      toast.success(`${result.data} projects deleted`)
+      tableRef.current?.toggleAllRowsSelected(false)
+    } else {
+      toast.error(result.error)
+    }
+    setShowBatchDelete(false)
   }
 
   const handleCloseForm = () => {
@@ -179,6 +194,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
         }}
         rowKey="id"
         selectable
+        onRowSelectionChange={setSelectedRows}
         tableRef={tableRef}
         actions={{
           className: 'w-24',
@@ -213,8 +229,18 @@ export default function Projects({ projects }: { projects: Project[] }) {
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
-                <Plus className="mr-2 h-4 w-4" />
+                <Plus className="mr-2 size-4" />
                 Add Project
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="h-8"
+                disabled={selectedRows.length === 0}
+                onClick={() => setShowBatchDelete(true)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                Delete
               </Button>
             </div>
           ),
@@ -253,6 +279,18 @@ export default function Projects({ projects }: { projects: Project[] }) {
         confirmText="Delete"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      {/* Batch Delete Confirm */}
+      <Confirm
+        open={showBatchDelete}
+        onClose={() => setShowBatchDelete(false)}
+        title="Batch delete projects"
+        description={`This will permanently remove ${selectedRows.length} projects.`}
+        variant="destructive"
+        confirmText="Delete All"
+        onConfirm={handleBatchDelete}
+        onCancel={() => setShowBatchDelete(false)}
       />
     </Animated>
   )

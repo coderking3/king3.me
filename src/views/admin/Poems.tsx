@@ -12,6 +12,7 @@ import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import {
+  batchDeletePoemsAction,
   createPoemAction,
   deletePoemAction,
   updatePoemAction
@@ -90,6 +91,8 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
   const [editPoem, setEditPoem] = useState<Poem | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [selectedRows, setSelectedRows] = useState<Poem[]>([])
+  const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const formOpen = showCreate || !!editPoem
 
@@ -102,6 +105,18 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
       toast.error(result.error)
     }
     setDeleteId(null)
+  }
+
+  const handleBatchDelete = async () => {
+    const ids = selectedRows.map((row) => row.id)
+    const result = await batchDeletePoemsAction(ids)
+    if (result.success) {
+      toast.success(`${result.data} poems deleted`)
+      tableRef.current?.toggleAllRowsSelected(false)
+    } else {
+      toast.error(result.error)
+    }
+    setShowBatchDelete(false)
   }
 
   const handleCloseForm = () => {
@@ -137,6 +152,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
         rowKey="id"
         loading={poems === undefined}
         selectable
+        onRowSelectionChange={setSelectedRows}
         tableRef={tableRef}
         actions={{
           className: 'w-24',
@@ -168,14 +184,26 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
           ],
           filterMode: 'auto',
           actions: (
-            <Button
-              size="sm"
-              className="h-8"
-              onClick={() => setShowCreate(true)}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Add Poem
-            </Button>
+            <>
+              <Button
+                size="sm"
+                className="h-8"
+                onClick={() => setShowCreate(true)}
+              >
+                <Plus className="mr-2 size-4" />
+                Add Poem
+              </Button>
+              <Button
+                size="sm"
+                variant="destructive"
+                className="h-8"
+                disabled={selectedRows.length === 0}
+                onClick={() => setShowBatchDelete(true)}
+              >
+                <Trash2 className="mr-2 size-4" />
+                Delete
+              </Button>
+            </>
           ),
           columnToggle: true,
           exportable: true
@@ -207,6 +235,18 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
         confirmText="Delete"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      {/* Batch Delete Confirm */}
+      <Confirm
+        open={showBatchDelete}
+        onClose={() => setShowBatchDelete(false)}
+        title="Batch delete poems"
+        description={`This will permanently remove ${selectedRows.length} poems.`}
+        variant="destructive"
+        confirmText="Delete All"
+        onConfirm={handleBatchDelete}
+        onCancel={() => setShowBatchDelete(false)}
       />
     </Animated>
   )
