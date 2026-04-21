@@ -1,3 +1,5 @@
+<!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
@@ -10,34 +12,36 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Project Overview
 
-**king3.me** — a personal website and blog built with Next.js 16 (App Router), React 19, and TypeScript. Features include: blog (MDX), project showcase, message board, photo gallery, poems, playlist, an admin dashboard for CRUD management, OAuth login (GitHub / Google), i18n (en / zh), dark mode, and RSS feed.
+**king3.me** — a personal website and blog built with Next.js 16 (App Router), React 19, and TypeScript. Features include: blog (MDX), project showcase, message board, photo gallery, poems, playlist, global search (command palette), an admin dashboard for CRUD management, OAuth login (GitHub / Google), i18n (en / zh), dark mode, and RSS feed.
 
 ## Tech Stack
 
-| Layer           | Technology                                                                                                 |
-| --------------- | ---------------------------------------------------------------------------------------------------------- |
-| Framework       | Next.js 16, React 19, React Compiler                                                                       |
-| Language        | TypeScript (strict mode)                                                                                   |
-| Styling         | Tailwind CSS v4, CSS Modules, PostCSS, tw-animate-css                                                      |
-| UI Components   | shadcn/ui (base-nova style, zinc base color), Lucide icons                                                 |
-| Animation       | Framer Motion, @react-spring/web                                                                           |
-| Auth            | better-auth (GitHub + Google OAuth), @better-auth/infra                                                    |
-| Database        | PostgreSQL via Prisma ORM (with @prisma/adapter-pg)                                                        |
-| Forms           | react-hook-form + @hookform/resolvers + Zod v4                                                             |
-| State           | Zustand                                                                                                    |
-| i18n            | i18next, react-i18next, i18next-browser-languagedetector                                                   |
-| Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                                                |
-| MDX             | next-mdx-remote, gray-matter, rehype-pretty-code, rehype-slug, rehype-autolink-headings, remark-gfm, shiki |
-| Linting         | ESLint 9 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)                            |
-| Package Manager | pnpm                                                                                                       |
-| Hosting         | Vercel                                                                                                     |
+| Layer           | Technology                                                                                                    |
+| --------------- | ------------------------------------------------------------------------------------------------------------- |
+| Framework       | Next.js 16, React 19, React Compiler                                                                          |
+| Language        | TypeScript (strict mode)                                                                                      |
+| Styling         | Tailwind CSS v4, CSS Modules, PostCSS, tw-animate-css                                                         |
+| UI Components   | shadcn/ui (base-nova style, @base-ui/react primitives, zinc base color), Lucide icons, cmdk (command palette) |
+| Animation       | Framer Motion, @react-spring/web                                                                              |
+| Auth            | better-auth (GitHub + Google OAuth), @better-auth/infra                                                       |
+| Database        | PostgreSQL via Prisma ORM (with @prisma/adapter-pg)                                                           |
+| Forms           | react-hook-form + @hookform/resolvers + Zod v4                                                                |
+| State           | Zustand                                                                                                       |
+| i18n            | i18next, react-i18next, i18next-browser-languagedetector                                                      |
+| Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                                                   |
+| MDX             | next-mdx-remote, gray-matter, rehype-pretty-code, rehype-slug, rehype-autolink-headings, remark-gfm, shiki    |
+| Utilities       | kedash, react-day-picker, react-textarea-autosize, github-slugger                                             |
+| Linting         | ESLint 9 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)                               |
+| Package Manager | pnpm                                                                                                          |
+| Hosting         | Vercel                                                                                                        |
 
 ## Project Structure
 
 ```
 ├── content/
 │   ├── posts/          # Blog posts as .mdx files (front matter: title, description, date, published)
-│   └── use.md          # "Uses" page content
+│   ├── use.md          # "Uses" page content (English)
+│   └── use_zh.md       # "Uses" page content (Chinese)
 ├── prisma/
 │   ├── schema.prisma   # Database models: User, Session, Account, Verification, Message, Playlist, Poem, Project, Photo
 │   └── generated/      # Prisma Client output (gitignored)
@@ -71,24 +75,25 @@ This file provides guidance to AI coding agents when working with code in this r
 │   │   │   ├── photos/          # Manage photos
 │   │   │   └── users/           # Manage users
 │   │   ├── auth/                # Auth page (OAuth sign-in)
-│   │   ├── actions/             # Server Actions (messages, photos, playlist, poems, projects, users)
+│   │   ├── actions/             # Server Actions (messages, photos, playlist, poems, projects, search, users)
 │   │   ├── api/auth/[...all]/   # better-auth API catch-all route
 │   │   └── feed.xml/            # RSS feed (route handler)
 │   ├── components/
 │   │   ├── ui/                  # shadcn/ui primitives (do not manually edit)
 │   │   ├── DataTable/           # Generic table with sorting, pagination, drag-sort, expand
-│   │   ├── Form/                # Schema-driven form builder (Zod + react-hook-form)
+│   │   ├── Form/                # Schema-driven form builder (Zod + react-hook-form), with controls/ subfolder
 │   │   ├── Modal/               # Reusable modal dialog
 │   │   ├── Confirm/             # Confirm dialog
 │   │   ├── Animated/            # Framer Motion wrapper with preset configs
 │   │   ├── mdx/                 # MDX utilities (MdxLink)
-│   │   ├── LanguageSwitcher.tsx   # Language switcher component
+│   │   ├── SearchCommand.tsx    # Global search command palette (cmdk)
+│   │   ├── LanguageSwitcher.tsx # Language switcher component
 │   │   └── ThemeMode.tsx        # Theme toggle component
 │   ├── views/                   # Page-specific view components (one folder per page, plus error/, not-found/, auth/)
-│   ├── layouts/                 # Layout components: Header, Footer, Navbar, MobileNav, Logo, UserAvatar, Background, ArtPlum, ArtStarry, admin sidebar
+│   ├── layouts/                 # Layout components: Header, Footer, Navbar, MobileNav, Logo, UserAvatar, Background, ArtPlum, ArtStarry, admin/Header, admin/Sidebar
 │   ├── icons/                   # Custom SVG icon components with interactive wrapper
 │   ├── hooks/                   # Custom hooks: useBoop, useIsMobile, useThemeToggle, usePrefersReducedMotion
-│   ├── stores/                  # Zustand stores (auth modal state)
+│   ├── stores/                  # Zustand stores (auth modal state, search command state)
 │   ├── db/                      # Database access layer — class-based Db wrappers around Prisma
 │   ├── lib/                     # Core utilities
 │   │   ├── auth.ts              # better-auth config, getSession(), checkAdmin()
@@ -106,7 +111,7 @@ This file provides guidance to AI coding agents when working with code in this r
 │   │   ├── settings.ts          # Languages (en, zh), namespaces, constants
 │   │   ├── server.ts            # getT() for Server Components (header-based lang detection)
 │   │   └── client.ts            # Client-side i18next init (browser detector + cookie)
-│   ├── locales/                 # Translation JSON files: {en,zh}/{common,home,about,blog,...}.json
+│   ├── locales/                 # Translation JSON files: {en,zh}/{common,home,about,blog,project,message,photos,poems,auth,use}.json
 │   ├── styles/
 │   │   ├── global.css           # Tailwind imports, font-face declarations, theme tokens (light/dark), custom utilities
 │   │   └── markdown.css         # Blog post markdown styles
@@ -116,13 +121,13 @@ This file provides guidance to AI coding agents when working with code in this r
 │   │   ├── i18next.d.ts         # i18next type augmentation for typed translations
 │   │   └── {message,photo,playlist,poem,posts,project}.ts  # Domain model types
 │   └── constants.ts             # NAVIGATION_ITEMS, AUTHOR_INFO, SOCIAL_URLS, SPRINGS, STAGGER, GALLERYS
-├── next.config.ts               # React Compiler enabled, remote image patterns, RSS rewrites
+├── next.config.ts               # React Compiler enabled, reactStrictMode off, remote image patterns, RSS rewrites
 ├── tsconfig.json                # Path aliases: @/* → ./src/*, ~/* → ./*
-├── eslint.config.js             # @king-3/eslint-config (typescript + nextjs)
+├── eslint.config.js             # @king-3/eslint-config (typescript + nextjs) with defineConfig
 ├── prettier.config.js           # @king-3/prettier-config + oxc + tailwindcss plugins
-├── stylelint.config.mjs         # Standard + recess-order, Tailwind directives allowed
+├── stylelint.config.mjs         # Standard + recess-order, Tailwind directives allowed, CSS Modules pseudo-classes
 ├── postcss.config.js            # @tailwindcss/postcss + autoprefixer
-├── components.json              # shadcn/ui config (base-nova, rsc: true, zinc)
+├── components.json              # shadcn/ui config (base-nova, rsc: true, zinc, inverted-translucent menu)
 └── prisma.config.ts             # Prisma config with DIRECT_URL datasource
 ```
 
