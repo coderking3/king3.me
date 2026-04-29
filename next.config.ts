@@ -6,9 +6,6 @@ const nextConfig: NextConfig = {
   // Enable React Compiler in Next.js.
   reactCompiler: true,
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
-  // experimental: {
-  //   turbopackFileSystemCacheForDev: false
-  // },
 
   images: {
     remotePatterns: [
@@ -16,34 +13,34 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'i0.hdslb.com',
-        port: '',
         pathname: `/**/*`
       },
       {
         protocol: 'https',
         hostname: 'i0.hdslb.com',
-        port: '',
         pathname: `/**/*`
       },
-      // NeteaseCloudMusic (p3)
+      // NeteaseCloudMusic
       {
         protocol: 'https',
         hostname: 'p3.music.126.net',
-        port: '',
         pathname: `/**/*`
       },
-      // NeteaseCloudMusic (p4)
       {
         protocol: 'https',
         hostname: 'p4.music.126.net',
-        port: '',
         pathname: `/**/*`
       },
-      // Githubusercontent
+      // Github Usercontent
       {
         protocol: 'https',
         hostname: 'avatars.githubusercontent.com',
-        port: '',
+        pathname: `/**/*`
+      },
+      // Google Usercontent
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
         pathname: `/**/*`
       }
     ]

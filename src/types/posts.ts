@@ -9,6 +9,7 @@ export interface PostsMetadata {
   description: string
   image: string
   date: string
+  lang?: 'EN' | '中文'
   tags?: string[]
   author?: AuthorInfo
   published?: boolean

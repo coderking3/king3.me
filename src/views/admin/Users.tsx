@@ -14,7 +14,7 @@ import {
   setUserRoleAction,
   unbanUserAction,
   updateUserAction
-} from '@/app/actions/users'
+} from '@/actions/users'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import {
   AlertDialogAction,

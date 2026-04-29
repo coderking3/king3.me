@@ -6,7 +6,7 @@ import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { PoemInput } from '@/lib/schemas'
 import type { Poem } from '@/types'
 
-import { formatDate } from 'kedash'
+import { format } from 'date-fns'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
@@ -16,7 +16,7 @@ import {
   createPoemAction,
   deletePoemAction,
   updatePoemAction
-} from '@/app/actions/poems'
+} from '@/actions/poems'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button } from '@/components/ui'
 import { poemSchema } from '@/lib/schemas'
@@ -71,7 +71,7 @@ const columns: ColumnConfig<Poem>[] = [
     sortable: true,
     render: (value) => (
       <span className="text-muted-foreground text-xs">
-        {formatDate(value, 'yyyy-MM-dd')}
+        {format(value, 'yyyy-MM-dd')}
       </span>
     )
   }
@@ -191,7 +191,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
                 onClick={() => setShowCreate(true)}
               >
                 <Plus className="mr-2 size-4" />
-                Add Poem
+                Create
               </Button>
               <Button
                 size="sm"

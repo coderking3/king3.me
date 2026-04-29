@@ -17,7 +17,7 @@ import {
   deleteProjectAction,
   reorderProjectsAction,
   updateProjectAction
-} from '@/app/actions/projects'
+} from '@/actions/projects'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button } from '@/components/ui'
 import { projectSchema } from '@/lib/schemas'
@@ -223,14 +223,14 @@ export default function Projects({ projects }: { projects: Project[] }) {
           filterFields: [{ key: 'name', label: 'Name' }],
           filterMode: 'auto',
           actions: (
-            <div className="flex gap-2">
+            <>
               <Button
                 size="sm"
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
                 <Plus className="mr-2 size-4" />
-                Add Project
+                Create
               </Button>
               <Button
                 size="sm"
@@ -242,7 +242,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
                 <Trash2 className="mr-2 size-4" />
                 Delete
               </Button>
-            </div>
+            </>
           ),
           columnToggle: true,
           exportable: true

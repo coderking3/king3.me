@@ -1,8 +1,11 @@
-import type { CreateMessageInput, Message, PrismaMessage } from '@/types'
+import type {
+  CreateMessageInput,
+  Message,
+  MessageWithReplies,
+  PrismaMessage
+} from '@/types'
 
 import { prisma } from '@/lib/prisma'
-
-type MessageWithReplies = Message & { replies: Message[] }
 
 class MessageDb {
   async queryAll(): Promise<MessageWithReplies[]> {

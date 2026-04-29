@@ -27,7 +27,7 @@ export default function NotFound() {
       )}
     >
       {/* Background */}
-      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw">
+      <div className="pointer-events-none fixed top-0 left-0 z-0 size-dvw dark:invert">
         <ArtStarry />
       </div>
 

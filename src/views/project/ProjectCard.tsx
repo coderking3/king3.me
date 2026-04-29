@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import { Animated } from '@/components'
 import { STAGGER } from '@/constants'
+import { useTranslation } from '@/i18n/client'
 import { useInteractive } from '@/icons'
 import { ExternalLinkIcon } from '@/icons/ExternalLink'
 
@@ -13,6 +14,20 @@ interface Project {
   description: string
   link: string
   icon: string
+}
+
+function getLocalizedDesc(description: string, lang: string): string {
+  try {
+    const parsed = JSON.parse(description)
+    if (
+      parsed &&
+      typeof parsed === 'object' &&
+      ('zh' in parsed || 'en' in parsed)
+    ) {
+      return parsed[lang] ?? parsed.en ?? description
+    }
+  } catch {}
+  return description
 }
 
 const ICON_SIZE = 120
@@ -25,6 +40,7 @@ interface ProjectCardProps {
 function ProjectCard(props: ProjectCardProps) {
   const { idx, project } = props
   const { isHovered, handlers } = useInteractive()
+  const { i18n } = useTranslation()
 
   return (
     <Animated
@@ -49,7 +65,7 @@ function ProjectCard(props: ProjectCardProps) {
           </Link>
         </h2>
         <p className="text-muted-foreground z-20 mt-2 text-sm">
-          {project.description}
+          {getLocalizedDesc(project.description, i18n.language)}
         </p>
       </div>
 

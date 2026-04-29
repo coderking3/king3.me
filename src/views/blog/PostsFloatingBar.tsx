@@ -53,7 +53,7 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
     try {
       await navigator.clipboard.writeText(window.location.href)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
+      setTimeout(setCopied, 2000, false)
     } catch {
       // Clipboard API not available
     }

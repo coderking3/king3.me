@@ -34,7 +34,7 @@ function Background({ art = 'random' }: BackgroundProps) {
 
   return (
     <Suspense fallback={null}>
-      <div className="pointer-events-none fixed top-0 left-0 z-0 h-dvh w-dvw dark:invert">
+      <div className="pointer-events-none fixed top-0 left-0 z-0 size-dvw dark:invert">
         <Content />
       </div>
     </Suspense>

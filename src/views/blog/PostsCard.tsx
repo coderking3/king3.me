@@ -4,10 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 function PostsCard({ metadata }: { metadata: PostsMetadata }) {
-  const { slug, title, description, image, date, tags = [] } = metadata
+  const { slug, title, description, image, date, lang, tags = [] } = metadata
 
   return (
-    <article className="group border-border bg-background/30 block cursor-pointer rounded-2xl border backdrop-blur-xs transition-all duration-300">
+    <article className="group border-border bg-background/30 relative block cursor-pointer rounded-2xl border backdrop-blur-xs transition-all duration-300">
       <Link href={`/blog/${slug}`}>
         {/* Cover */}
         <div className="relative aspect-video w-full overflow-hidden rounded-t-2xl select-none sm:aspect-10/4">
@@ -19,6 +19,7 @@ function PostsCard({ metadata }: { metadata: PostsMetadata }) {
           />
         </div>
 
+        {/* Title */}
         <div className="space-y-3 px-4 py-3 sm:px-6">
           <div className="text-muted-foreground flex flex-wrap items-center gap-2 text-sm">
             <time className="font-medium">{date}</time>
@@ -47,6 +48,13 @@ function PostsCard({ metadata }: { metadata: PostsMetadata }) {
             {description}
           </p>
         </div>
+
+        {/* Language Badge */}
+        {lang && (
+          <span className="bg-muted text-foreground absolute top-3 right-3 rounded-md px-2 py-0.5 text-xs font-semibold uppercase backdrop-blur-sm">
+            {lang}
+          </span>
+        )}
       </Link>
     </article>
   )

@@ -3,9 +3,11 @@
 import { useInteractive } from '@/icons'
 import { ExternalLinkIcon } from '@/icons/ExternalLink'
 
+const EXTERNAL_LINK_RE = /^https?:\/\//
+
 function isExternalLink(href?: string) {
   if (!href) return false
-  return /^https?:\/\//.test(href)
+  return EXTERNAL_LINK_RE.test(href)
 }
 
 export function MdxLink({

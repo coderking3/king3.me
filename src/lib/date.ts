@@ -1,4 +1,7 @@
-const JUST_NOW: Record<string, string> = { en: 'just now', zh: '刚刚' }
+const JUST_NOW: Record<string, string> = {
+  en: 'just now',
+  zh: '刚刚'
+}
 
 const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['year', 365 * 24 * 60 * 60 * 1000],
@@ -10,8 +13,12 @@ const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
 ]
 
 export function relativeTime(date: string | Date, locale = 'en'): string {
-  const diff = new Date(date).getTime() - Date.now()
-  if (Math.abs(diff) < 60 * 1000) return JUST_NOW[locale] ?? JUST_NOW.en
+  const target = date instanceof Date ? date : new Date(date)
+  const diff = target.getTime() - Date.now()
+
+  if (Math.abs(diff) < 60 * 1000) {
+    return JUST_NOW[locale] ?? JUST_NOW.en
+  }
 
   const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
   for (const [unit, ms] of UNITS) {
@@ -19,5 +26,6 @@ export function relativeTime(date: string | Date, locale = 'en'): string {
       return rtf.format(Math.round(diff / ms), unit)
     }
   }
+
   return JUST_NOW[locale] ?? JUST_NOW.en
 }

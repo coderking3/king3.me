@@ -8,6 +8,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": ["./src/*"],
+      "@/actions/*": ["./src/app/actions/*"],
       "~/*": ["./*"]
     },
     "resolveJsonModule": true,

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 
 import { ThemeProvider } from 'next-themes'
 import { headers } from 'next/headers'
-import React from 'react'
+import * as React from 'react'
 
 import { Toaster } from '@/components/ui'
 import { TooltipProvider } from '@/components/ui/tooltip'

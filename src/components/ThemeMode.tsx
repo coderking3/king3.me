@@ -24,6 +24,7 @@ export function ThemeMode({
   const [mounted, setMounted] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
+  // eslint-disable-next-line react-naming-convention/ref-name
   const timeoutId = useRef<number | undefined>(undefined)
 
   useEffect(() => setMounted(true), [])

@@ -2,8 +2,9 @@
 
 import type { PhotoInput } from '@/lib/schemas'
 
-import { revalidatePath } from 'next/cache'
+import type { Photo } from '@/types'
 
+import { revalidatePath } from 'next/cache'
 import { photoDb } from '@/db/photos'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
@@ -12,7 +13,7 @@ import { photoSchema } from '@/lib/schemas'
 export async function getPhotosAction() {
   try {
     const result = await photoDb.queryAll()
-    return actionSuccess(result)
+    return actionSuccess<Photo[]>(result)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -25,7 +26,7 @@ export async function createPhotoAction(data: PhotoInput) {
     await photoDb.create(parsed)
     revalidatePath('/admin/photos')
     revalidatePath('/photos')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -38,7 +39,7 @@ export async function batchCreatePhotosAction(items: PhotoInput[]) {
     const count = await photoDb.batchCreate(parsed)
     revalidatePath('/admin/photos')
     revalidatePath('/photos')
-    return actionSuccess(count)
+    return actionSuccess<number>(count)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -51,7 +52,7 @@ export async function updatePhotoAction(id: string, data: PhotoInput) {
     await photoDb.update(id, parsed)
     revalidatePath('/admin/photos')
     revalidatePath('/photos')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -63,7 +64,7 @@ export async function deletePhotoAction(id: string) {
     await photoDb.delete(id)
     revalidatePath('/admin/photos')
     revalidatePath('/photos')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -75,7 +76,7 @@ export async function batchDeletePhotosAction(ids: string[]) {
     const count = await photoDb.deleteMany(ids)
     revalidatePath('/admin/photos')
     revalidatePath('/photos')
-    return actionSuccess(count)
+    return actionSuccess<number>(count)
   } catch (error: unknown) {
     return actionError(error)
   }

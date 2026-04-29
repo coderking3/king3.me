@@ -9,9 +9,9 @@ export default defineConfig(
   {
     name: 'custom-rules',
     rules: {
-      'react-hooks/set-state-in-effect': 'off',
-      'react-hooks-extra/no-direct-set-state-in-use-effect': 'off',
+      'react/set-state-in-effect': 'off',
       'react-refresh/only-export-components': 'off',
+      'react/purity': 'off',
       'typescript/no-use-before-define': [
         'error',
         { classes: false, functions: false, variables: false }

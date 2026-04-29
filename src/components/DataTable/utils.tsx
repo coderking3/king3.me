@@ -117,7 +117,7 @@ export function buildColumnDefs<T extends object>(
       enableSorting: false,
       enableHiding: false,
       cell: ({ row }) => {
-        let canExpand = false
+        let canExpand: boolean
         if (expandable.rowExpandable) {
           canExpand = expandable.rowExpandable(row.original)
         } else if (expandable.render) {

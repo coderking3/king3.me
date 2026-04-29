@@ -14,6 +14,7 @@ export function createInteractiveIcon<T extends SvgIcon>(
 ) {
   const allIconParams = [...DEFAULT_ICON_PARAMS, ...additionalParams]
 
+  // eslint-disable-next-line react/component-hook-factories
   return function InteractiveIcon(props: InteractiveIconProps<T>) {
     const iconProps = {} as Recordable
     const delegated = {} as Recordable

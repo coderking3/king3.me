@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next'
 import TextareaAutosize from 'react-textarea-autosize'
 import { toast } from 'sonner'
 
-import { sendMessageAction } from '@/app/actions/messages'
+import { sendMessageAction } from '@/actions/messages'
 import { cn } from '@/lib/utils'
 
 const MAX_LENGTH = 600

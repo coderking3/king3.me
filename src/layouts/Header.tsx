@@ -27,6 +27,7 @@ function Header() {
 
   const { openSearch } = useSearchStore()
   const isMobile = useIsMobile()
+  // eslint-disable-next-line react-naming-convention/ref-name
   const isInitial = useRef(true)
   const headerRef = useRef<HTMLDivElement>(null)
 

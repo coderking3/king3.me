@@ -17,7 +17,7 @@ import {
   deleteMessageAction,
   replyToMessageAction,
   updateMessageAction
-} from '@/app/actions/messages'
+} from '@/actions/messages'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Badge, Button } from '@/components/ui'
 
@@ -342,8 +342,8 @@ export default function Messages({
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
-                <Plus className="mr-2 size-4" />
-                Add Message
+                <Plus size={16} className="mr-2 size-4" />
+                Create
               </Button>
               <Button
                 size="sm"

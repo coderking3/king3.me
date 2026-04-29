@@ -16,7 +16,7 @@ import {
   createSongAction,
   deleteSongAction,
   updateSongAction
-} from '@/app/actions/playlist'
+} from '@/actions/playlist'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button } from '@/components/ui'
 
@@ -218,14 +218,14 @@ export default function PlaylistComponent({
           filterFields: [{ key: 'name', label: 'Name' }],
           filterMode: 'auto',
           actions: (
-            <div className="flex gap-2">
+            <>
               <Button
                 size="sm"
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
                 <Plus className="mr-2 size-4" />
-                Add Song
+                Create
               </Button>
               <Button
                 size="sm"
@@ -237,7 +237,7 @@ export default function PlaylistComponent({
                 <Trash2 className="mr-2 size-4" />
                 Delete
               </Button>
-            </div>
+            </>
           ),
           columnToggle: true,
           exportable: true

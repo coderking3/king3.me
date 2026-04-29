@@ -6,12 +6,11 @@ import type { ColumnConfig, FormFieldConfig } from '@/components'
 import type { PhotoInput } from '@/lib/schemas'
 import type { Photo } from '@/types'
 
-import { formatDate } from 'kedash'
+import { format } from 'date-fns'
 import { FileJson, Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod/v4'
 
 import {
   batchCreatePhotosAction,
@@ -19,22 +18,14 @@ import {
   createPhotoAction,
   deletePhotoAction,
   updatePhotoAction
-} from '@/app/actions/photos'
+} from '@/actions/photos'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button, DialogClose, DialogFooter, Textarea } from '@/components/ui'
 import { photoSchema } from '@/lib/schemas'
 
 // ──── Form Config ────
 
-const photoFormSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
-  url: z.url('Please enter a valid URL'),
-  width: z.coerce.number().int().positive('Width must be positive'),
-  height: z.coerce.number().int().positive('Height must be positive'),
-  date: z.coerce.date()
-})
-
-type PhotoFormValues = z.infer<typeof photoFormSchema>
+type PhotoFormValues = PhotoInput
 
 const photoFields: FormFieldConfig<PhotoFormValues>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'Photo name' },
@@ -86,7 +77,7 @@ const columns: ColumnConfig<Photo>[] = [
     sortable: true,
     render: (value) => (
       <span className="text-muted-foreground text-xs">
-        {formatDate(value, 'yyyy-MM-dd')}
+        {format(value, 'yyyy-MM-dd')}
       </span>
     )
   }
@@ -227,14 +218,14 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
           filterFields: [{ key: 'name', label: 'Name' }],
           filterMode: 'auto',
           actions: (
-            <div className="flex gap-2">
+            <>
               <Button
                 size="sm"
                 className="h-8"
                 onClick={() => setShowCreate(true)}
               >
                 <Plus className="mr-2 size-4" />
-                Add Photo
+                Create
               </Button>
               <Button
                 size="sm"
@@ -255,7 +246,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
                 <Trash2 className="mr-2 size-4" />
                 Delete
               </Button>
-            </div>
+            </>
           ),
           columnToggle: true,
           exportable: true
@@ -270,7 +261,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
         showFooter={false}
       >
         <Form
-          schema={photoFormSchema}
+          schema={photoSchema}
           fields={photoFields}
           defaultValues={formDefaultValues}
           onSubmit={handleSubmit}

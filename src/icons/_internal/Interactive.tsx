@@ -4,7 +4,7 @@ import type { InteractionHandlers } from './hooks'
 import type { InteractionTrigger, InteractiveState, SvgIcon } from './types'
 
 import Link from 'next/link'
-import React from 'react'
+import * as React from 'react'
 
 import { cn } from '@/lib/utils'
 

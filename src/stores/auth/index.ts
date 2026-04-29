@@ -1,1 +1,0 @@
-export { useAuthModal } from './modal'

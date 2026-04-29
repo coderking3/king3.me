@@ -151,7 +151,7 @@ export function DataTable<T extends object>({
         showDragHandleColumn
       ),
     // prettier-ignore
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react/exhaustive-deps
     [JSON.stringify(columnConfigs.map((c) => ({ key: c.key, sortable: c.sortable }))), selectable, expandable, showDragHandleColumn]
   )
 
@@ -220,8 +220,8 @@ export function DataTable<T extends object>({
               : col.id,
           isVisible: col.getIsVisible()
         })),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [columnVisibility, columns]
+    // eslint-disable-next-line react/exhaustive-deps
+    [table, columnVisibility, columns]
   )
 
   /* --- Derived from table instance --- */

@@ -1,7 +1,7 @@
 'use server'
 
+import type { MessageWithReplies } from '@/types'
 import { revalidatePath } from 'next/cache'
-
 import { messageDb } from '@/db/messages'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin, getSession } from '@/lib/auth'
@@ -9,7 +9,7 @@ import { checkAdmin, getSession } from '@/lib/auth'
 export async function getMessagesAction() {
   try {
     const result = await messageDb.queryAll()
-    return actionSuccess(result)
+    return actionSuccess<MessageWithReplies[]>(result)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -29,7 +29,7 @@ export async function sendMessageAction(message: string) {
     })
 
     revalidatePath('/message')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -41,7 +41,7 @@ export async function deleteMessageAction(id: string) {
     await messageDb.delete(id)
     revalidatePath('/admin/messages')
     revalidatePath('/message')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -53,7 +53,7 @@ export async function batchDeleteMessagesAction(ids: string[]) {
     const count = await messageDb.deleteMany(ids)
     revalidatePath('/admin/messages')
     revalidatePath('/message')
-    return actionSuccess(count)
+    return actionSuccess<number>(count)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -73,7 +73,7 @@ export async function createMessageAction(message: string, userId?: string) {
     })
     revalidatePath('/admin/messages')
     revalidatePath('/message')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -85,7 +85,7 @@ export async function updateMessageAction(id: string, message: string) {
     await messageDb.update(id, message)
     revalidatePath('/admin/messages')
     revalidatePath('/message')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -103,7 +103,7 @@ export async function replyToMessageAction(parentId: string, message: string) {
     })
     revalidatePath('/admin/messages')
     revalidatePath('/message')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }

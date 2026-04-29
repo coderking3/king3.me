@@ -1,8 +1,9 @@
 'use server'
 
+import type { UserWithRole } from 'better-auth/plugins'
 import { revalidatePath } from 'next/cache'
-import { headers } from 'next/headers'
 
+import { headers } from 'next/headers'
 import { actionError, actionSuccess } from '@/lib/action'
 import { auth, checkAdmin } from '@/lib/auth'
 
@@ -13,7 +14,7 @@ export async function getUsersAction() {
       headers: await headers(),
       query: { limit: 100 }
     })
-    return actionSuccess(result.users)
+    return actionSuccess<UserWithRole[]>(result.users)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -27,7 +28,7 @@ export async function banUserAction(userId: string, reason?: string) {
       body: { userId, banReason: reason }
     })
     revalidatePath('/admin/users')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -41,7 +42,7 @@ export async function unbanUserAction(userId: string) {
       body: { userId }
     })
     revalidatePath('/admin/users')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -56,7 +57,7 @@ export async function setUserRoleAction(userId: string, role: Role | Role[]) {
       body: { userId, role }
     })
     revalidatePath('/admin/users')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -69,7 +70,7 @@ export async function getUserAction(userId: string) {
       headers: await headers(),
       query: { id: userId }
     })
-    return actionSuccess(result)
+    return actionSuccess<UserWithRole>(result)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -86,7 +87,7 @@ export async function updateUserAction(
       body: { userId, data }
     })
     revalidatePath('/admin/users')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -100,7 +101,7 @@ export async function removeUserAction(userId: string) {
       body: { userId }
     })
     revalidatePath('/admin/users')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }

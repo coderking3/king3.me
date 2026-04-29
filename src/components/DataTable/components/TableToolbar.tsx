@@ -136,7 +136,7 @@ export function TableToolbar({
   /* --- Render --- */
 
   return (
-    <div className="mb-4 flex items-end justify-between gap-4">
+    <div className="mb-4 flex flex-wrap items-end justify-between gap-4">
       {hasFilterFields && (
         <div className="flex flex-wrap items-end gap-x-3 gap-y-2">
           {filterFields.map((field) => (
@@ -208,7 +208,7 @@ export function TableToolbar({
       )}
 
       {showRightSide && (
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto flex flex-wrap items-center gap-2">
           {actions}
 
           {enableExport && (

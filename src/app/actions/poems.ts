@@ -2,8 +2,9 @@
 
 import type { PoemInput } from '@/lib/schemas'
 
-import { revalidatePath } from 'next/cache'
+import type { Poem } from '@/types'
 
+import { revalidatePath } from 'next/cache'
 import { poemDb } from '@/db/poems'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
@@ -12,7 +13,7 @@ import { poemSchema } from '@/lib/schemas'
 export async function getPoemsAction() {
   try {
     const result = await poemDb.queryAll()
-    return actionSuccess(result)
+    return actionSuccess<Poem[]>(result)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -25,7 +26,7 @@ export async function createPoemAction(data: PoemInput) {
     await poemDb.create(parsed)
     revalidatePath('/admin/poems')
     revalidatePath('/poems')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -38,7 +39,7 @@ export async function updatePoemAction(id: string, data: PoemInput) {
     await poemDb.update(id, parsed)
     revalidatePath('/admin/poems')
     revalidatePath('/poems')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -50,7 +51,7 @@ export async function deletePoemAction(id: string) {
     await poemDb.delete(id)
     revalidatePath('/admin/poems')
     revalidatePath('/poems')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }

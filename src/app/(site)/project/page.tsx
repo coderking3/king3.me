@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { projectDb } from '@/db/projects'
+import { getProjectsAction } from '@/actions/projects'
 import { getT } from '@/i18n/server'
 import { ProjectPage } from '@/views/project'
 
@@ -14,8 +14,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const projects = await projectDb.queryAll()
-  return <ProjectPage projects={projects} />
+  const result = await getProjectsAction()
+
+  return <ProjectPage projects={result.data || []} />
 }
 
 export const revalidate = 3600

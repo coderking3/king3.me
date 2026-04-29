@@ -1,11 +1,7 @@
 import type { Metadata } from 'next'
 
-import fs from 'node:fs/promises'
-import path from 'node:path'
-import process from 'node:process'
-
 import { getT } from '@/i18n/server'
-import { extractHeadings } from '@/lib/posts'
+import { getUseContent } from '@/lib/posts'
 import { UsePage } from '@/views/use'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,13 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function Page() {
   const { lang } = await getT('common')
-  const filename = lang === 'en' ? 'use.md' : 'use_zh.md'
-  const content = await fs.readFile(
-    path.join(process.cwd(), 'content', filename),
-    'utf-8'
-  )
-
-  const headings = extractHeadings(content)
+  const { content, headings } = await getUseContent(lang)
 
   return <UsePage content={content} headings={headings} />
 }

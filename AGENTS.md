@@ -30,7 +30,7 @@ This file provides guidance to AI coding agents when working with code in this r
 | i18n            | i18next, react-i18next, i18next-browser-languagedetector                                                      |
 | Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                                                   |
 | MDX             | next-mdx-remote, gray-matter, rehype-pretty-code, rehype-slug, rehype-autolink-headings, remark-gfm, shiki    |
-| Utilities       | kedash, react-day-picker, react-textarea-autosize, github-slugger                                             |
+| Utilities       | date-dns, react-day-picker, react-textarea-autosize, github-slugger                                           |
 | Linting         | ESLint 9 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)                               |
 | Package Manager | pnpm                                                                                                          |
 | Hosting         | Vercel                                                                                                        |
@@ -106,7 +106,7 @@ This file provides guidance to AI coding agents when working with code in this r
 │   │   ├── font.ts              # Font definitions (Roboto Mono, Audiowide)
 │   │   ├── date.ts              # relativeTime() with i18n support
 │   │   ├── math.ts              # Math utilities (clamp, range, roundTo, randomList)
-│   │   └── utils.ts             # cn() (clsx + tailwind-merge), capitalize()
+│   │   └── utils.ts             # cn() (clsx + tailwind-merge)
 │   ├── i18n/                    # Internationalization setup
 │   │   ├── settings.ts          # Languages (en, zh), namespaces, constants
 │   │   ├── server.ts            # getT() for Server Components (header-based lang detection)

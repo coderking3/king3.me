@@ -39,8 +39,8 @@ export type SongInput = z.infer<typeof songSchema>
 export const photoSchema = z.object({
   name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
   url: z.url('Please enter a valid URL'),
-  width: z.number().int().positive('Width must be positive'),
-  height: z.number().int().positive('Height must be positive'),
+  width: z.coerce.number().int().positive('Width must be positive'),
+  height: z.coerce.number().int().positive('Height must be positive'),
   date: z.coerce.date()
 })
 

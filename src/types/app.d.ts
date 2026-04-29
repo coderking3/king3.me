@@ -9,6 +9,6 @@ export interface TocItem {
   level: number
 }
 
-export type ActionResult<T = void> =
-  | { success: true; data: T }
-  | { success: false; error: string }
+export type ActionResult<T = any> =
+  | { success: true; data: T; error: null; message: string }
+  | { success: false; data: null; error: string; message: string }

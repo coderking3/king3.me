@@ -4,7 +4,8 @@ import type { FieldValues } from 'react-hook-form'
 
 import type { ControlProps, DatePickerControlConfig } from '../types'
 
-import { formatDate } from 'kedash'
+import { format } from 'date-fns'
+
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 
@@ -55,7 +56,7 @@ export function DatePickerControl<TFV extends FieldValues>({
         }
       >
         <CalendarIcon className="mr-2 size-4" />
-        {value ? formatDate(value, 'yyyy-MM-dd') : <span>Pick a date</span>}
+        {value ? format(value, 'yyyy-MM-dd') : <span>Pick a date</span>}
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
         <Calendar

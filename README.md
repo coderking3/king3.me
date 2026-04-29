@@ -1,46 +1,30 @@
-# king3.me
+<h1 align="center">king3.me</h1>
 
-[中文版](./README_zh.md)
+<p align="center"><a href="./README_zh.md">简体中文</a></p>
 
-A modern personal website and blog built with Next.js 16, featuring a bilingual interface, admin dashboard, and rich content management capabilities.
+<p align="center">My personal website project</p>
 
-## ✨ Features
-
-- 📝 **Blog System** — MDX-powered blog with syntax highlighting, table of contents, and RSS feed
-- 🎨 **Project Showcase** — Display your portfolio with rich media support
-- 💬 **Message Board** — Interactive guestbook for visitors
-- 📸 **Photo Gallery** — Beautiful image gallery with lightbox
-- 🎵 **Playlist & Poems** — Share your favorite music and poetry
-- 🔍 **Global Search** — Command palette (⌘K) for instant navigation
-- 🔐 **Admin Dashboard** — Full CRUD management with OAuth authentication (GitHub / Google)
-- 🌍 **i18n** — English and Chinese language support
-- 🌓 **Dark Mode** — Seamless theme switching
-- ⚡ **Performance** — React 19 with React Compiler optimization
+<!-- ![home page picture](./public/images/home.png) -->
 
 ## 🛠️ Tech Stack
 
-| Layer           | Technology                                      |
-| --------------- | ----------------------------------------------- |
-| Framework       | Next.js 16, React 19, React Compiler            |
-| Language        | TypeScript (strict mode)                        |
-| Styling         | Tailwind CSS v4, CSS Modules, PostCSS           |
-| UI Components   | shadcn/ui (base-nova style), Lucide icons, cmdk |
-| Animation       | Framer Motion, @react-spring/web                |
-| Auth            | better-auth (GitHub + Google OAuth)             |
-| Database        | PostgreSQL via Prisma ORM                       |
-| Forms           | react-hook-form + Zod v4                        |
-| State           | Zustand                                         |
-| i18n            | i18next, react-i18next                          |
-| MDX             | next-mdx-remote, rehype-pretty-code, shiki      |
-| Linting         | ESLint 9, Stylelint, Prettier                   |
-| Package Manager | pnpm                                            |
-| Hosting         | Vercel                                          |
+| Layer          | Technology                                 |
+| -------------- | ------------------------------------------ |
+| Framework      | Next.js 16, React 19, React Compiler       |
+| Styling        | Tailwind CSS v4, CSS Modules, PostCSS      |
+| UI Components  | shadcn/ui (base-nova style), Lucide icons  |
+| Animation      | Framer Motion, @react-spring/web           |
+| Database       | PostgreSQL (Neon)                          |
+| ORM            | Prisma ORM                                 |
+| Authentication | better-auth (GitHub + Google OAuth)        |
+| i18n           | i18next, react-i18next                     |
+| MDX            | next-mdx-remote, rehype-pretty-code, shiki |
+| Deployment     | Vercel                                     |
 
 ## 📦 Prerequisites
 
 - Node.js >= 20
 - pnpm >= 9
-- PostgreSQL database (Neon recommended)
 
 ## 🚀 Getting Started
 
@@ -85,58 +69,7 @@ A modern personal website and blog built with Next.js 16, featuring a bilingual 
 
    Open [http://localhost:3060](http://localhost:3060) in your browser.
 
-## 📝 Available Scripts
-
-| Command              | Description                            |
-| -------------------- | -------------------------------------- |
-| `pnpm dev`           | Start dev server on port 3060          |
-| `pnpm build`         | Production build                       |
-| `pnpm start`         | Start production server on port 3080   |
-| `pnpm lint`          | Run ESLint                             |
-| `pnpm lint:fix`      | Run ESLint with auto-fix               |
-| `pnpm stylelint`     | Run Stylelint on CSS files             |
-| `pnpm stylelint:fix` | Run Stylelint with auto-fix            |
-| `pnpm format`        | Format all files with Prettier         |
-| `pnpm db:generate`   | Regenerate Prisma Client from schema   |
-| `pnpm db:push`       | Push Prisma schema changes to database |
-
-## 📂 Project Structure
-
-```
-├── content/          # MDX blog posts and static content
-├── prisma/           # Database schema
-├── public/           # Static assets (fonts, icons, images)
-├── src/
-│   ├── app/          # Next.js App Router
-│   │   ├── (site)/   # Public pages
-│   │   ├── admin/    # Admin dashboard
-│   │   ├── actions/  # Server Actions
-│   │   └── api/      # API routes
-│   ├── components/   # Reusable components
-│   ├── views/        # Page-specific view components
-│   ├── layouts/      # Layout components
-│   ├── hooks/        # Custom React hooks
-│   ├── stores/       # Zustand stores
-│   ├── db/           # Database access layer
-│   ├── lib/          # Core utilities
-│   ├── i18n/         # Internationalization setup
-│   ├── locales/      # Translation files (en / zh)
-│   ├── styles/       # Global styles
-│   └── types/        # TypeScript types
-└── ...
-```
-
-## 🖼️ Screenshots
-
-<!-- TODO: Add screenshots -->
-![Homepage](./docs/screenshots/home.png)
-![Blog](./docs/screenshots/blog.png)
-![Admin Dashboard](./docs/screenshots/admin.png)
-
-## 🌐 Live Demo
-
-[https://king3-me.vercel.app/](https://king3-me.vercel.app/)
-
 ## 📄 License
 
-This project is licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+code is licensed under [MIT](./LICENSE),<br/>
+words and images are licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).

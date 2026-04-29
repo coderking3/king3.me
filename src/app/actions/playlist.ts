@@ -2,8 +2,9 @@
 
 import type { SongInput } from '@/lib/schemas'
 
-import { revalidatePath } from 'next/cache'
+import type { Playlist } from '@/types'
 
+import { revalidatePath } from 'next/cache'
 import { playlistDb } from '@/db/playlist'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
@@ -12,7 +13,7 @@ import { songSchema } from '@/lib/schemas'
 export async function getPlaylistAction() {
   try {
     const result = await playlistDb.queryAll()
-    return actionSuccess(result)
+    return actionSuccess<Playlist[]>(result)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -26,7 +27,7 @@ export async function createSongAction(data: SongInput) {
 
     revalidatePath('/admin/playlist')
     revalidatePath('/')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -39,7 +40,7 @@ export async function updateSongAction(id: string, data: SongInput) {
     await playlistDb.update(id, parsed)
     revalidatePath('/admin/playlist')
     revalidatePath('/')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -51,7 +52,7 @@ export async function deleteSongAction(id: string) {
     await playlistDb.delete(id)
     revalidatePath('/admin/playlist')
     revalidatePath('/')
-    return actionSuccess(undefined)
+    return actionSuccess(null)
   } catch (error: unknown) {
     return actionError(error)
   }
@@ -63,7 +64,7 @@ export async function batchDeleteSongsAction(ids: string[]) {
     const count = await playlistDb.deleteMany(ids)
     revalidatePath('/admin/playlist')
     revalidatePath('/')
-    return actionSuccess(count)
+    return actionSuccess<number>(count)
   } catch (error: unknown) {
     return actionError(error)
   }

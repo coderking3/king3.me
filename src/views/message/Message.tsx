@@ -2,11 +2,13 @@
 
 import type { Message } from '@/types'
 
+import { UserRoundPlus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { Button } from '@/components/ui'
 import { useSession } from '@/lib/auth-client'
+import { cn } from '@/lib/utils'
 import { useAuthModal } from '@/stores/auth'
 
 import MessageInput from './MessageInput'
@@ -47,7 +49,18 @@ function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
             {session ? (
               <MessageInput user={session.user} />
             ) : (
-              <Button variant="outline" size="lg" onClick={openModal}>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={openModal}
+                className={cn(
+                  'h-12 gap-2.5 rounded-xl border-dashed px-6 text-base',
+                  'border-border bg-muted/50',
+                  'hover:border-primary/30 hover:bg-muted hover:text-primary',
+                  'transition-colors duration-200'
+                )}
+              >
+                <UserRoundPlus className="size-5" />
                 {t('loginPrompt')}
               </Button>
             )}

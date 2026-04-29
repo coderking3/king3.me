@@ -4,6 +4,8 @@ export type Message = Omit<PrismaMessage, 'createdAt'> & {
   createdAt: string
 }
 
+export type MessageWithReplies = Message & { replies: Message[] }
+
 export type { PrismaMessage }
 
 export interface CreateMessageInput {

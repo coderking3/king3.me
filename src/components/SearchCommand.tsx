@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { getSearchData } from '@/app/actions/search'
+import { getSearchData } from '@/actions/search'
 import {
   Command,
   CommandDialog,
@@ -49,6 +49,7 @@ export function SearchCommand() {
   const { open, openSearch, closeSearch } = useSearchStore()
   const { t } = useTranslation('common')
   const [data, setData] = useState<SearchData | null>(null)
+  // eslint-disable-next-line react-naming-convention/ref-name
   const fetched = useRef(false)
 
   // Keyboard shortcut: Cmd+K / Ctrl+K
