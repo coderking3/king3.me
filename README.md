@@ -4,7 +4,7 @@
 
 <p align="center">My personal website project</p>
 
-<!-- ![home page picture](./public/images/home.png) -->
+![home page picture](./public/images/home.png)
 
 ## 🛠️ Tech Stack
 

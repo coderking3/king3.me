@@ -4,7 +4,7 @@
 
 <p align="center">我的个人官网项目</p>
 
-<!-- ![home page picture](./public/images/home.png) -->
+![home page picture](./public/images/home.png)
 
 ## 🛠️ 技术栈
 
