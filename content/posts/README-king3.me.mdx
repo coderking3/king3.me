@@ -1,197 +1,330 @@
 ---
-  title: How I Built My Blog?
-  description: How to create this website? Let's check out Readme for king3.me!
-  image: /images/avatar.png
-  date: "2025-12-03 14:26:04"
-  lang: 中文
-  tags:
-    - NextJs
-    - React
-  published: true
+title: '如何复刻这个网站？'
+description: '如何基于 king3.me 项目搭建你自己的 Next.js 个人博客？从环境配置到 Vercel 部署的完整教程。'
+image: /images/home.png
+date: '2026-05-07'
+lang: 中文
+tags:
+  - Next.js
+  - 个人博客
+published: true
 ---
 
-## ⚙️ Tech Stack
+## 为什么选择这个模板？
 
-- Framework: **React + Next.js**
-- Styling: **Tailwind CSS** + **Shadcn UI**
-- Animation: **Framer Motion**
-- Database: **Supabase**
-- ORM: **Prisma**
-- Deployment: **Vercel**
+你是否也曾梦想拥有一个完全属于自己的个人博客？
 
-```typescript showLineNumbers
-type DeepReadonly<T> = {
-  readonly [P in keyof T]: T[P] extends object ? DeepReadonly<T[P]> : T[P]
+- 不仅能写文章，还能展示项目、照片，甚至分享你喜欢的音乐
+- 完全自定义，想要什么功能就加什么
+
+**king3.me** 是一个基于 Next.js 16 + React 19 的高性能个人博客模板，帮你快速搭建属于自己的线上名片。
+
+> 如果你只是想找一个博客平台（如 WordPress、Hexo），那这篇文章不适合你。这是一个面向开发者的「从零开始搭建完整博客系统」的教程。
+
+---
+
+## 功能特性一览 ⭐
+
+| 功能     | 技术实现                   | 说明                            |
+| -------- | -------------------------- | ------------------------------- |
+| 用户鉴权 | better-auth                | 支持 GitHub / Google OAuth 登录 |
+| 数据库   | Neon (PostgreSQL)          | 5GB 免费额度，无服务器架构      |
+| 部署平台 | Vercel                     | 零配置部署，全球 CDN            |
+| 博客系统 | MDX + next-mdx-remote      | 支持 React 组件的 Markdown      |
+| 国际化   | i18next                    | 中英文双语支持                  |
+| UI 组件  | shadcn/ui + Tailwind CSS   | 现代极简设计，暗色模式          |
+| 代码高亮 | Shiki + rehype-pretty-code | 精美的代码块样式                |
+
+---
+
+## 项目初始化
+
+### 1. 克隆项目
+
+```bash
+# 方式一：Fork 后 clone 自己的仓库
+git clone https://github.com/你的用户名/king3.me.git
+cd king3.me
+
+# 或方式二：直接 clone（后续需要删除 .git 重新初始化）
+git clone https://github.com/king3/king3.me.git
+cd king3.me
+```
+
+### 2. 安装依赖
+
+本项目使用 **pnpm** 作为包管理器（如未安装，请先安装）：
+
+```bash
+# 安装 pnpm（如果没用过）
+npm install -g pnpm
+
+# 安装项目依赖
+pnpm install
+```
+
+---
+
+## 数据库配置（Neon）
+
+Neon 是一个无服务器的 PostgreSQL 数据库，5GB 存储空间免费，足以满足个人博客需求。
+
+### 步骤 1：创建 Neon 项目
+
+1. 访问 [neon.tech](https://neon.tech) 注册账号
+2. 创建新项目，命名为 `king3-me` 或任意名称
+3. 创建完成后，在 Dashboard 获取连接字符串
+
+### 步骤 2：配置环境变量
+
+复制 `.env.example` 为 `.env`：
+
+```bash
+cp .env.example .env
+```
+
+编辑 `.env`，填入数据库连接字符串：
+
+```env
+# Neon 数据库连接
+DATABASE_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
+DIRECT_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
+```
+
+### 步骤 3：同步数据库 Schema
+
+```bash
+# 生成 Prisma Client
+pnpm db:generate
+
+# 推送 Schema 到数据库
+pnpm db:push
+```
+
+---
+
+## 认证配置（better-auth）
+
+### 步骤 1：生成 Secret Key
+
+```bash
+# 生成 32 位随机密钥
+openssl rand -base64 32
+```
+
+### 步骤 2：配置 GitHub OAuth
+
+1. 访问 [GitHub Developer Settings](https://github.com/settings/developers)
+2. 点击「New OAuth App」
+3. 填写信息：
+   - Application name：你的博客名
+   - Homepage URL：https://your-domain.com
+   - Authorization callback URL：https://your-domain.com/api/auth/callback/github
+4. 获取 `Client ID` 和 `Client Secret`
+
+### 步骤 3：（可选）配置 Google OAuth
+
+如果需要 Google 登录，访问 [Google Cloud Console](https://console.cloud.google.com/) 创建 OAuth 凭据。
+
+### 步骤 4：完善 .env 环境变量
+
+```env
+# better-auth 配置
+BETTER_AUTH_URL="https://your-domain.com"
+BETTER_AUTH_API_KEY="your-api-key"
+BETTER_AUTH_SECRET="生成的随机密钥"
+
+# GitHub OAuth
+GITHUB_CLIENT_ID="your-client-id"
+GITHUB_CLIENT_SECRET="your-client-secret"
+
+# Google OAuth
+GOOGLE_CLIENT_ID="your-google-client-id"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# 站点 URL
+SITE_URL="https://your-domain.com"
+```
+
+> 提示：本地开发时 `BETTER_AUTH_URL` 填 `http://localhost:3060`，部署后改为正式域名。
+
+---
+
+## 本地开发与运行
+
+### 启动开发服务器
+
+```bash
+pnpm dev
+```
+
+访问 http://localhost:3060 即可看到博客首页。
+
+### 首次登录
+
+1. 点击右上角登录，使用 GitHub 或 Google 账号授权
+2. 首次登录会自动创建管理员账户
+3. 访问 /admin 进入管理后台
+
+---
+
+## 内容配置与定制化
+
+### 修改基本信息
+
+编辑 `src/constants.ts`：
+
+```typescript
+// 作者信息
+export const AUTHOR_INFO = {
+  name: '你的名字',
+  bio: '你的简介',
+  email: 'your@email.com'
+  // ...
 }
 
-const name = 'king3'
+// 导航栏配置
+export const NAVIGATION_ITEMS = [
+  { title: '首页', path: '/' },
+  { title: '博客', path: '/blog' }
+  // ...
+]
 
-// 一个测试的 function 函数
-const aa = () => {
-  console.log('666')
+// 社交链接
+export const SOCIAL_URLS = {
+  github: 'https://github.com/你的用户名',
+  twitter: 'https://twitter.com/你的用户名'
+  // ...
 }
 ```
 
-```tsx
-const el = (
-  <header className="mb-8">
-    <h1 className="mb-4 text-4xl font-bold">aaa</h1>
-    <div className="text-sm text-gray-500">
-      <time>20260203</time>
-      <span className="ml-4" style={{ margin: 222, display: 'flex' }}>
-        King3
-      </span>
-    </div>
-  </header>
-)
+### 添加博客文章
+
+在 `content/posts/` 目录下创建 `.mdx` 文件：
+
+```mdx
+---
+title: '我的第一篇文章'
+description: '文章简介'
+date: '2025-01-01'
+published: true
+---
+
+这里是文章正文...
+
+## 第一章
+
+内容...
+
+## 第二章
+
+内容...
 ```
 
-### 你啊后
+Front matter 字段说明：
 
-- asd
-- 2
-- 3
-- 4
-- 5
-- 5
+| 字段        | 说明                     | 必填 |
+| ----------- | ------------------------ | ---- |
+| title       | 文章标题                 | 是   |
+| description | 文章描述（用于 SEO）     | 是   |
+| date        | 发布日期                 | 是   |
+| published   | 是否发布（false 为草稿） | 是   |
+| image       | 封面图路径               | 否   |
+| lang        | 语言（中文/English）     | 否   |
+| tags        | 标签数组                 | 否   |
 
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
+### 添加 Use 页面
 
-## 😊 haohaohao
+编辑 `content/use.md`（英文）或 `content/use_zh.md`（中文），展示你使用的工具、软件、设备等。
 
-- asd
-- 2
-- 3
-- 4
-- 5
-- 5
+---
 
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
+## 部署上线（Vercel）
 
-### 222
+### 步骤 1：推送代码到 GitHub
 
-- asd
-- 2
-- 3
-- 4
-- 5
-- 5
+```bash
+# 如果是 Fork 的，直接推送即可
+git add .
+git commit -m "feat: 初始化博客"
+git push origin main
+```
 
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
-sidcnaspdchipk13ndp9813uepdn
+### 步骤 2：Vercel 导入项目
 
-## title2
+1. 访问 [Vercel](https://vercel.com) 并登录
+2. 点击「Add New...」→「Project」
+3. 选择刚刚推送的 GitHub 仓库
+4. 在「Environment Variables」中填入所有 `.env` 变量
+5. 点击「Deploy」等待部署完成
 
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
+### 步骤 3：配置域名（可选）
 
-### title3
+1. 在 Vercel 项目设置中添加自定义域名
+2. 在域名服务商处配置 CNAME 记录
+3. 等待 DNS 生效（通常几分钟到几小时）
 
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
+---
 
-#### title4
+## 后续维护
 
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
+### 添加新文章流程
 
-##### title5
+1. 在 `content/posts/` 创建 `.mdx` 文件
+2. 填写 front matter 信息
+3. 编写文章内容（支持 MDX 语法）
+4. 提交到 GitHub，Vercel 会自动部署
 
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
+### 管理后台功能
 
-###### title6
+访问 `/admin` 可以管理：
 
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
-<p>内容</p>
+- **用户列表** — 查看和管理用户
+- **项目展示** — 在 Project 页面展示的项目
+- **留言板** — 查看和删除用户留言
+- **照片墙** — 管理相册图片
+- **诗集** — 管理诗词内容
+- **播放器** — 管理喜欢的音乐
+
+### 版本更新
+
+```bash
+# 拉取最新代码
+git pull origin main
+
+# 更新依赖
+pnpm install
+
+# 重新生成 Prisma（如有 Schema 变更）
+pnpm db:generate
+pnpm db:push
+```
+
+---
+
+## 常见问题
+
+### Q: 本地端口为什么是 3060？
+
+这个项目使用 3060 端口是为了避免与可能存在的其他 Next.js 项目（默认 3000）冲突。
+
+### Q: 如何修改主题颜色？
+
+编辑 `src/styles/global.css`，修改 CSS 变量：
+
+```css
+:root {
+  --primary: oklch(70% 0.2 250);
+  /* 其他颜色变量... */
+}
+```
+
+### Q: 如何添加 Google 统计？
+
+可以在 `src/app/layout.tsx` 中添加 Google Analytics 脚本。
+
+---
+
+如果你在搭建过程中遇到问题，欢迎在留言板提出，或者提交 GitHub Issue。
+
+祝你搭建成功！
