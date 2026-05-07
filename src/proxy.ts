@@ -11,7 +11,7 @@ import {
   HEADER_NAME,
   LANGUAGES
 } from '@/i18n/settings'
-import { getSession } from '@/lib/auth'
+import { ADMIN_ROLE, getSession } from '@/lib/auth'
 
 acceptLanguage.languages([...LANGUAGES])
 
@@ -33,7 +33,7 @@ export async function proxy(request: NextRequest) {
   if (pathname.startsWith('/admin')) {
     const session = await getSession()
 
-    if (!session || session?.user.role !== 'admin') {
+    if (!session || session?.user.role !== ADMIN_ROLE) {
       return NextResponse.redirect(new URL('/auth', request.url))
     }
   }
@@ -43,7 +43,7 @@ export async function proxy(request: NextRequest) {
     const session = await getSession()
 
     if (session) {
-      const redirectPath = session.user.role === 'admin' ? '/admin' : '/'
+      const redirectPath = session.user.role === ADMIN_ROLE ? '/admin' : '/'
       return NextResponse.redirect(new URL(redirectPath, request.url))
     }
   }

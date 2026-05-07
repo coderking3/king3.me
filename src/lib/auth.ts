@@ -1,5 +1,4 @@
 /* eslint-disable perfectionist/sort-imports */
-import 'dotenv/config'
 
 import process from 'node:process'
 
@@ -12,8 +11,10 @@ import { dash } from '@better-auth/infra'
 import { prisma } from '@/lib/prisma'
 import { headers } from 'next/headers'
 
+export const ADMIN_ROLE = 'admin' as const
+
 export const auth = betterAuth({
-  secret: process.env.BETTER_AUTH_SECRET!,
+  secret: process.env.BETTER_AUTH_SECRET,
 
   database: prismaAdapter(prisma, {
     provider: 'postgresql'
@@ -51,7 +52,7 @@ export async function getSession() {
 export async function checkAdmin() {
   const session = await getSession()
 
-  if (!session || session.user.role !== 'admin') {
+  if (!session || session.user.role !== ADMIN_ROLE) {
     throw new Error('No permission to perform this operation')
   }
 

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
-import * as React from 'react'
 
+import * as React from 'react'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AdminHeader, AdminSidebar } from '@/layouts/admin'
 import { getSession } from '@/lib/auth'
