@@ -27,7 +27,9 @@ function normalizeMetadata(
   slug: string,
   options?: { dateFormat?: boolean }
 ) {
-  const date = options?.dateFormat ? format(data.date, 'yyyy-MM-dd') : data.date
+  let date = data.date ?? new Date().toISOString()
+
+  if (options?.dateFormat) date = format(new Date(date), 'yyyy-MM-dd')
 
   return {
     ...data,

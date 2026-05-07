@@ -54,7 +54,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           <Animated
             as="article"
             preset={{ mode: 'fadeIn', delay: 0.15 }}
-            className="w-full max-w-3xl min-w-0"
+            className="w-full lg:max-w-3xl lg:min-w-0"
           >
             <header className="mb-8 sm:mb-12">
               {metadata.image && (
@@ -142,7 +142,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           </Animated>
 
           {/* Right - Table of contents */}
-          <aside className="hidden w-48 shrink-0 pl-2 xl:block">
+          <aside className="hidden w-48 shrink-0 pl-2 lg:block">
             <div className="sticky top-24">
               <Animated preset={{ mode: 'slideInRight', delay: 0.15 }}>
                 <PostsTableOfContents headings={headings} />

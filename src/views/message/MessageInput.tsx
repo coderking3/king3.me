@@ -33,8 +33,8 @@ function MessageInput({ user }: MessageInputProps) {
       if (result.success) {
         setText('')
       } else {
-        console.error(result.error)
-        throw new Error(result.error)
+        console.error(result.message)
+        throw new Error(result.message)
       }
     } catch (error) {
       const errorMsg = (error as Error).message || 'Failed to send message'
