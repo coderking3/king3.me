@@ -104,7 +104,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
     if (result.success) {
       toast.success('Photo deleted')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setDeleteId(null)
   }
@@ -116,7 +116,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
       toast.success(`${result.data} photos deleted`)
       tableRef.current?.toggleAllRowsSelected(false)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setShowBatchDelete(false)
   }
@@ -140,7 +140,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
       toast.success(editPhoto ? 'Photo updated' : 'Photo added')
       handleCloseForm()
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 
@@ -164,7 +164,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
         setShowImport(false)
         setImportJson('')
       } else {
-        toast.error(result.error)
+        toast.error(result.message)
       }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Invalid JSON format')

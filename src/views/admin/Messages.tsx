@@ -151,7 +151,7 @@ export default function Messages({
     if (result.success) {
       toast.success('Message deleted')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setDeleteId(null)
   }
@@ -168,7 +168,7 @@ export default function Messages({
       toast.success(`${result.data} messages deleted`)
       tableRef.current?.toggleAllRowsSelected(false)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setShowBatchDelete(false)
   }
@@ -180,7 +180,7 @@ export default function Messages({
       toast.success('Reply sent')
       setReplyTo(null)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 
@@ -195,7 +195,7 @@ export default function Messages({
       toast.success('Message updated')
       setEditMessage(null)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 
@@ -209,7 +209,7 @@ export default function Messages({
       toast.success('Message created')
       setShowCreate(false)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 

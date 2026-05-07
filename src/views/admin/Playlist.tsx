@@ -132,7 +132,7 @@ export default function PlaylistComponent({
     if (result.success) {
       toast.success('Song deleted')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setDeleteId(null)
   }
@@ -144,7 +144,7 @@ export default function PlaylistComponent({
       toast.success(`${result.data} songs deleted`)
       tableRef.current?.toggleAllRowsSelected(false)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setShowBatchDelete(false)
   }
@@ -168,7 +168,7 @@ export default function PlaylistComponent({
     if (result.success) {
       handleCloseForm()
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 

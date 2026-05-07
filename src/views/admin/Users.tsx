@@ -136,7 +136,7 @@ export default function Users({ users }: { users: UserItem[] }) {
       setBanReason('')
       setBanTarget(null)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setBanLoading(false)
   }
@@ -152,7 +152,7 @@ export default function Users({ users }: { users: UserItem[] }) {
     if (result.success) {
       toast.success('User unbanned')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setUnbanId(null)
   }
@@ -166,7 +166,7 @@ export default function Users({ users }: { users: UserItem[] }) {
     if (result.success) {
       toast.success(`Role set to ${newRole}`)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 
@@ -176,7 +176,7 @@ export default function Users({ users }: { users: UserItem[] }) {
     if (result.success) {
       toast.success('User deleted')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setDeleteId(null)
   }
@@ -188,7 +188,7 @@ export default function Users({ users }: { users: UserItem[] }) {
       toast.success('User updated')
       setEditUser(null)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 

@@ -114,7 +114,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     if (result.success) {
       toast.success('Project deleted')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setDeleteId(null)
   }
@@ -126,7 +126,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
       toast.success(`${result.data} projects deleted`)
       tableRef.current?.toggleAllRowsSelected(false)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setShowBatchDelete(false)
   }
@@ -143,7 +143,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     if (result.success) {
       handleCloseForm()
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 
@@ -161,7 +161,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     }
 
     setProjectRows(previousProjects)
-    toast.error(result.error)
+    toast.error(result.message)
   }
 
   const handleReorder = async (nextProjects: Project[]) => {

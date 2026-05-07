@@ -102,7 +102,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
     if (result.success) {
       toast.success('Poem deleted')
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setDeleteId(null)
   }
@@ -114,7 +114,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
       toast.success(`${result.data} poems deleted`)
       tableRef.current?.toggleAllRowsSelected(false)
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
     setShowBatchDelete(false)
   }
@@ -132,7 +132,7 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
       toast.success(editPoem ? 'Poem updated' : 'Poem created')
       handleCloseForm()
     } else {
-      toast.error(result.error)
+      toast.error(result.message)
     }
   }
 
