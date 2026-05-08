@@ -215,7 +215,7 @@
 
 .dark {
   --background: oklch(16.83% 0.0061 248.19deg); /* #0d0f11 */
-  --foreground: oklch(92.12% 0.0046 258.33deg); /* #e3e5e8 */
+  --foreground: oklch(92.32% 0.0042 236.5deg); /* #e3e6e8 */
 
   --card: var(--background);
   --card-foreground: var(--foreground);

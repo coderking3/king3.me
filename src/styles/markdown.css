@@ -26,14 +26,18 @@
     @apply list-none;
 
     & > input[type='checkbox'] {
-      @apply mr-[0.625em] -ml-[1.625em];
+      @apply mr-[0.625em] ml-[-1.625em];
     }
   }
 
   /* Headings */
   & :is(:where(h1, h2, h3, h4, h5, h6)) {
-    @apply text-brand relative scroll-mt-20 sm:scroll-mt-24;
+    @apply text-accent-foreground relative scroll-mt-20 sm:scroll-mt-24;
     @apply before:text-muted-foreground before:absolute before:right-full before:mr-2 before:hidden before:opacity-0 before:transition-opacity before:content-["#"] hover:before:opacity-100 sm:before:block;
+
+    &:where(h2) {
+      @apply text-brand!;
+    }
 
     & code {
       @apply text-[0.9em]!;
@@ -54,7 +58,7 @@
 
   /* Inline code (exclude code blocks inside figure > pre) */
   & :not(pre) > code {
-    @apply text-primary bg-secondary border-border rounded-md border px-1.5 py-0.5 text-sm font-medium before:content-none after:content-none sm:text-sm;
+    @apply text-accent-foreground bg-secondary border-border rounded-md border px-1.5 py-0.5 text-sm font-medium before:content-none after:content-none sm:text-sm;
   }
 
   /* Code block — shared pre styles */

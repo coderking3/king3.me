@@ -1,6 +1,6 @@
 ---
-title: '如何复刻这个网站？'
-description: '如何基于 king3.me 项目搭建你自己的 Next.js 个人博客？从环境配置到 Vercel 部署的完整教程。'
+title: '如何复刻本网站？'
+description: '从克隆到 Vercel 部署，30 分钟搭建属于你自己的个人博客。含数据库、OAuth、管理后台完整配置教程。'
 image: /images/home.png
 date: '2026-05-07'
 lang: 中文
@@ -10,53 +10,61 @@ tags:
 published: true
 ---
 
-## 为什么选择这个模板？
+**king3.me** 是一个基于 Next.js 16 + React 19 的高性能全栈个人博客模板，帮你从零搭建属于自己的线上名片。
 
-你是否也曾梦想拥有一个完全属于自己的个人博客？
+这个模板包含了：
 
-- 不仅能写文章，还能展示项目、照片，甚至分享你喜欢的音乐
-- 完全自定义，想要什么功能就加什么
+- **博客系统** — 基于 MDX 的文章管理，支持封面图、标签、草稿
+- **项目展示** — 展示你的开源项目和作品
+- **留言板** — 让用户给你留言互动
+- **相册 & 诗集** — 展示照片和个人创作
+- **音乐播放器** — 分享你喜欢的歌曲（支持网易云）
+- **管理后台** — 完整 CRUD，用户、内容、评论一键管理
+- **OAuth 登录** — GitHub / Google 一键登录，首次登录自动授予管理员权限
+- **中英文双语** — i18next 支持，开箱即用
+- **暗色模式** — Tailwind CSS + shadcn/ui，现代极简设计
 
-**king3.me** 是一个基于 Next.js 16 + React 19 的高性能个人博客模板，帮你快速搭建属于自己的线上名片。
-
-> 如果你只是想找一个博客平台（如 WordPress、Hexo），那这篇文章不适合你。这是一个面向开发者的「从零开始搭建完整博客系统」的教程。
+**适合谁**：有一定前端基础、想快速拥有一个可自部署的个人博客的开发者。如果你只是想找一个托管平台（如 WordPress、Hexo），那这篇文章不适合你——这里是从零搭建完整系统的教程。
 
 ---
 
-## 功能特性一览 ⭐
+## 功能特性一览
 
 | 功能     | 技术实现                   | 说明                            |
 | -------- | -------------------------- | ------------------------------- |
 | 用户鉴权 | better-auth                | 支持 GitHub / Google OAuth 登录 |
-| 数据库   | Neon (PostgreSQL)          | 5GB 免费额度，无服务器架构      |
+| 数据库   | Neon (PostgreSQL) + Prisma | Serverless PostgreSQL，按量计费 |
 | 部署平台 | Vercel                     | 零配置部署，全球 CDN            |
 | 博客系统 | MDX + next-mdx-remote      | 支持 React 组件的 Markdown      |
 | 国际化   | i18next                    | 中英文双语支持                  |
 | UI 组件  | shadcn/ui + Tailwind CSS   | 现代极简设计，暗色模式          |
 | 代码高亮 | Shiki + rehype-pretty-code | 精美的代码块样式                |
 
+> 完整技术栈详见文末。
+
 ---
 
-## 项目初始化
+## 项目克隆与本地配置
 
 ### 1. 克隆项目
 
 ```bash
-# 方式一：Fork 后 clone 自己的仓库
+# Fork 方式（推荐）：先 Fork 到自己的仓库，然后 clone
 git clone https://github.com/你的用户名/king3.me.git
 cd king3.me
 
-# 或方式二：直接 clone（后续需要删除 .git 重新初始化）
-git clone https://github.com/king3/king3.me.git
+# 或直接 Clone（会保留原仓库的 .git，建议删除后重新初始化）
+git clone https://github.com/coderking3/king3.me.git
 cd king3.me
+rm -rf .git && git init
 ```
 
 ### 2. 安装依赖
 
-本项目使用 **pnpm** 作为包管理器（如未安装，请先安装）：
+本项目使用 **pnpm** 作为包管理器。pnpm 比 npm/yarn 更快且节省磁盘空间：
 
 ```bash
-# 安装 pnpm（如果没用过）
+# 安装 pnpm（如果还没有）
 npm install -g pnpm
 
 # 安装项目依赖
@@ -65,17 +73,17 @@ pnpm install
 
 ---
 
-## 数据库配置（Neon）
+### 3. 数据库配置（Neon）
 
-Neon 是一个无服务器的 PostgreSQL 数据库，5GB 存储空间免费，足以满足个人博客需求。
+Neon 是一个 Serverless PostgreSQL 数据库，按量计费，个人博客完全够用。
 
-### 步骤 1：创建 Neon 项目
+**步骤 1：创建 Neon 项目**
 
 1. 访问 [neon.tech](https://neon.tech) 注册账号
 2. 创建新项目，命名为 `king3-me` 或任意名称
-3. 创建完成后，在 Dashboard 获取连接字符串
+3. 创建完成后，在 **Project Dashboard → Connection String** 区域获取连接字符串
 
-### 步骤 2：配置环境变量
+**步骤 2：配置环境变量**
 
 复制 `.env.example` 为 `.env`：
 
@@ -87,11 +95,11 @@ cp .env.example .env
 
 ```env
 # Neon 数据库连接
-DATABASE_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
 DIRECT_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
+DATABASE_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
 ```
 
-### 步骤 3：同步数据库 Schema
+**步骤 3：同步数据库 Schema**
 
 ```bash
 # 生成 Prisma Client
@@ -103,16 +111,16 @@ pnpm db:push
 
 ---
 
-## 认证配置（better-auth）
+### 4. 认证配置（better-auth）
 
-### 步骤 1：生成 Secret Key
+**步骤 1：生成密钥**
 
-```bash
-# 生成 32 位随机密钥
+```bash {2}
+# 生成 BETTER_AUTH_SECRET
 openssl rand -base64 32
 ```
 
-### 步骤 2：配置 GitHub OAuth
+**步骤 2：配置 GitHub OAuth**
 
 1. 访问 [GitHub Developer Settings](https://github.com/settings/developers)
 2. 点击「New OAuth App」
@@ -122,17 +130,17 @@ openssl rand -base64 32
    - Authorization callback URL：https://your-domain.com/api/auth/callback/github
 4. 获取 `Client ID` 和 `Client Secret`
 
-### 步骤 3：（可选）配置 Google OAuth
+**步骤 3：（可选）配置 Google OAuth**
 
 如果需要 Google 登录，访问 [Google Cloud Console](https://console.cloud.google.com/) 创建 OAuth 凭据。
 
-### 步骤 4：完善 .env 环境变量
+**步骤 4：完善 .env 环境变量**
 
 ```env
-# better-auth 配置
+# better-auth 核心配置
+BETTER_AUTH_API_KEY="your-api-key"           # better-auth api 密钥 用于事件跟踪和平台功能。
+BETTER_AUTH_SECRET="生成的随机密钥"           # 运行 openssl rand -base64 32
 BETTER_AUTH_URL="https://your-domain.com"
-BETTER_AUTH_API_KEY="your-api-key"
-BETTER_AUTH_SECRET="生成的随机密钥"
 
 # GitHub OAuth
 GITHUB_CLIENT_ID="your-client-id"
@@ -150,9 +158,9 @@ SITE_URL="https://your-domain.com"
 
 ---
 
-## 本地开发与运行
+### 5. 本地开发与运行
 
-### 启动开发服务器
+**启动开发服务器**
 
 ```bash
 pnpm dev
@@ -160,11 +168,13 @@ pnpm dev
 
 访问 http://localhost:3060 即可看到博客首页。
 
-### 首次登录
+**首次登录**
 
-1. 点击右上角登录，使用 GitHub 或 Google 账号授权
-2. 首次登录会自动创建管理员账户
-3. 访问 /admin 进入管理后台
+1. 先点击右上角登录，使用 GitHub 或 Google 账号授权
+2. better-auth 的 admin 插件会将**第一个通过 OAuth 登录的用户**自动提升为管理员（`role: 'admin'`）
+3. 访问 `/admin` 进入管理后台，你可以看到用户、项目、留言板、相册、音乐等管理模块
+
+> **注意**：首次运行 `pnpm dev` 前请确保已完成 `pnpm db:push`，否则会报数据库连接错误。
 
 ---
 
@@ -175,32 +185,32 @@ pnpm dev
 编辑 `src/constants.ts`：
 
 ```typescript
-// 作者信息
+// 作者信息（字段: name / email / link）
 export const AUTHOR_INFO = {
   name: '你的名字',
-  bio: '你的简介',
-  email: 'your@email.com'
-  // ...
+  email: 'your@email.com',
+  link: 'https://github.com/你的用户名'
 }
 
-// 导航栏配置
+// 导航栏（首页不需要在此处配置，它是默认路由）
 export const NAVIGATION_ITEMS = [
-  { title: '首页', path: '/' },
-  { title: '博客', path: '/blog' }
-  // ...
+  { key: 'blog', href: '/blog' },
+  { key: 'project', href: '/project' },
+  { key: 'message', href: '/message' },
+  { key: 'about', href: '/about' }
 ]
 
-// 社交链接
+// 社交链接（支持任意 key）
 export const SOCIAL_URLS = {
   github: 'https://github.com/你的用户名',
-  twitter: 'https://twitter.com/你的用户名'
-  // ...
+  x: 'https://x.com/你的用户名',
+  bilibili: 'https://space.bilibili.com/你的ID'
 }
 ```
 
 ### 添加博客文章
 
-在 `content/posts/` 目录下创建 `.mdx` 文件：
+在 `content/posts/` 目录下创建 `.mdx` 文件，**文件名即是 URL slug**（例如 `hello-world.mdx` → 访问路径 `/blog/hello-world`）：
 
 ```mdx
 ---
@@ -208,6 +218,11 @@ title: '我的第一篇文章'
 description: '文章简介'
 date: '2025-01-01'
 published: true
+image: /images/cover.png # 封面图（必填，否则封面显示异常）
+lang: 中文 # 可选，EN 或 中文
+tags:
+  - React
+  - 教程
 ---
 
 这里是文章正文...
@@ -223,19 +238,19 @@ published: true
 
 Front matter 字段说明：
 
-| 字段        | 说明                     | 必填 |
-| ----------- | ------------------------ | ---- |
-| title       | 文章标题                 | 是   |
-| description | 文章描述（用于 SEO）     | 是   |
-| date        | 发布日期                 | 是   |
-| published   | 是否发布（false 为草稿） | 是   |
-| image       | 封面图路径               | 否   |
-| lang        | 语言（中文/English）     | 否   |
-| tags        | 标签数组                 | 否   |
+| 字段        | 说明                                    | 必填 |
+| ----------- | --------------------------------------- | ---- |
+| title       | 文章标题                                | 是   |
+| description | 文章描述（用于 SEO 摘要）               | 是   |
+| date        | 发布日期（YYYY-MM-DD 格式）             | 是   |
+| published   | 是否发布（设为 `false` 为草稿，不展示） | 否   |
+| image       | 封面图路径（不填会导致封面图显示异常）  | 是   |
+| lang        | 语言（`中文` 或 `EN`）                  | 否   |
+| tags        | 标签数组                                | 否   |
 
 ### 添加 Use 页面
 
-编辑 `content/use.md`（英文）或 `content/use_zh.md`（中文），展示你使用的工具、软件、设备等。
+编辑 `content/use.mdx`（英文）或 `content/use_zh.mdx`（中文），展示你使用的工具、软件、设备等。
 
 ---
 
@@ -244,10 +259,16 @@ Front matter 字段说明：
 ### 步骤 1：推送代码到 GitHub
 
 ```bash
-# 如果是 Fork 的，直接推送即可
 git add .
 git commit -m "feat: 初始化博客"
+
+# Fork 方式直接推送
 git push origin main
+
+# 直接 clone 方式需要先添加远程地址
+# git remote add origin https://github.com/你的用户名/king3.me.git
+# git branch -M main
+# git push -u origin main
 ```
 
 ### 步骤 2：Vercel 导入项目
@@ -255,7 +276,7 @@ git push origin main
 1. 访问 [Vercel](https://vercel.com) 并登录
 2. 点击「Add New...」→「Project」
 3. 选择刚刚推送的 GitHub 仓库
-4. 在「Environment Variables」中填入所有 `.env` 变量
+4. 在「Environment Variables」中填入所有 `.env` 变量（键名与本地 `.env` 完全一致，直接复制即可）
 5. 点击「Deploy」等待部署完成
 
 ### 步骤 3：配置域名（可选）
@@ -263,17 +284,11 @@ git push origin main
 1. 在 Vercel 项目设置中添加自定义域名
 2. 在域名服务商处配置 CNAME 记录
 3. 等待 DNS 生效（通常几分钟到几小时）
+4. **重要**：部署后更新 `.env` 中的 `BETTER_AUTH_URL` 和 `SITE_URL` 为你的正式域名，并同步更新 GitHub OAuth App 的 callback URL
 
 ---
 
 ## 后续维护
-
-### 添加新文章流程
-
-1. 在 `content/posts/` 创建 `.mdx` 文件
-2. 填写 front matter 信息
-3. 编写文章内容（支持 MDX 语法）
-4. 提交到 GitHub，Vercel 会自动部署
 
 ### 管理后台功能
 
@@ -304,27 +319,41 @@ pnpm db:push
 
 ## 常见问题
 
-### Q: 本地端口为什么是 3060？
+### Q: `pnpm db:push` 报错连接失败？
 
-这个项目使用 3060 端口是为了避免与可能存在的其他 Next.js 项目（默认 3000）冲突。
+检查 `.env` 中的 `DATABASE_URL` 和 `DIRECT_URL` 是否已正确填入，并确保 Neon 项目的 IP 白名单允许访问（Neon 默认允许所有 IP）。
 
-### Q: 如何修改主题颜色？
+### Q: 本地能登录、部署后 OAuth 白屏？
 
-编辑 `src/styles/global.css`，修改 CSS 变量：
+`BETTER_AUTH_URL` 和 `SITE_URL` 必须和你部署后的域名一致。比如部署在 `https://myblog.vercel.app`，则：
+
+```env
+BETTER_AUTH_URL="https://myblog.vercel.app"
+SITE_URL="https://myblog.vercel.app"
+```
+
+### Q: 如何修改字体和主题颜色？
+
+编辑 `src/styles/global.css`，修改 `:root`（亮色）和 `.dark`（暗色）块中的 CSS 变量：
 
 ```css
 :root {
-  --primary: oklch(70% 0.2 250);
-  /* 其他颜色变量... */
+  --primary: oklch(21.03% 0.0059 285.89deg);
+  /* 修改亮色主题的颜色变量... */
+}
+
+.dark {
+  --primary: oklch(90% 0.005 248.19deg);
+  /* 修改暗色主题的颜色变量... */
 }
 ```
 
-### Q: 如何添加 Google 统计？
-
-可以在 `src/app/layout.tsx` 中添加 Google Analytics 脚本。
+> 字体在 `src/styles/global.css` 中定义，全局字体变量统一在 `@theme inline` 块中配置。
 
 ---
 
-如果你在搭建过程中遇到问题，欢迎在留言板提出，或者提交 GitHub Issue。
+## 结语
 
-祝你搭建成功！
+如果你在搭建过程中遇到困难，欢迎在 [GitHub Issues](https://github.com/coderking3/king3.me/issues) 提问，或者在 [king3.me](https://king3.me/) 的留言板留言。
+
+祝你搭建顺利！

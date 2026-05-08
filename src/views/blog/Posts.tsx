@@ -12,7 +12,7 @@ import remarkGfm from 'remark-gfm'
 import { Animated } from '@/components'
 import { MdxLink } from '@/components/mdx/MdxLink'
 import { getT } from '@/i18n/server'
-import { extractHeadings } from '@/lib/posts'
+import { getPostsHeadings } from '@/lib/posts'
 
 import PostsActions from './PostsActions'
 import PostsFloatingBar from './PostsFloatingBar'
@@ -34,7 +34,7 @@ async function PostsPage({ posts }: PostsPageProps) {
   const { metadata, content } = posts
   const { lang } = await getT()
 
-  const headings = extractHeadings(content)
+  const headings = getPostsHeadings(content)
   const date = new Date(metadata.date)
 
   return (

@@ -99,7 +99,7 @@ This file provides guidance to AI coding agents when working with code in this r
 │   │   ├── auth.ts              # better-auth config, getSession(), checkAdmin()
 │   │   ├── auth-client.ts       # Client-side auth (signIn, signOut, useSession)
 │   │   ├── prisma.ts            # Prisma Client singleton (PrismaPg adapter)
-│   │   ├── posts.ts             # MDX post loading (getAllPosts, getPostsBySlug, extractHeadings)
+│   │   ├── posts.ts             # MDX post loading (getAllPosts, getPostsBySlug, getPostsHeadings)
 │   │   ├── schemas.ts           # Zod validation schemas (poem, project, song, photo)
 │   │   ├── action.ts            # Server Action result helpers (actionSuccess / actionError)
 │   │   ├── rss.ts               # RSS feed generation (feed library)
@@ -214,7 +214,7 @@ page.tsx (RSC) → Server Action / db layer → Prisma → PostgreSQL
 - Posts are `.mdx` files in `content/posts/` with front matter fields: `title`, `description`, `date`, `published`.
 - `getAllPosts()` scans the directory with fast-glob, filters `published !== false`, sorts by date descending.
 - `getPostsBySlug()` reads a single post, returns metadata + raw MDX content.
-- `extractHeadings()` parses heading elements from MDX content for table of contents.
+- `getPostsHeadings()` parses heading elements from MDX content for table of contents.
 - Posts are rendered via `next-mdx-remote` with rehype-pretty-code (shiki) for syntax highlighting.
 
 ### i18n System
