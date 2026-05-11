@@ -1,41 +1,26 @@
-import type { Options as RehypePrettyCodeOptions } from 'rehype-pretty-code'
-
 import type { Posts } from '@/types'
 
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import Image from 'next/image'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypePrettyCode from 'rehype-pretty-code'
-import rehypeSlug from 'rehype-slug'
-import remarkGfm from 'remark-gfm'
 
 import { Animated } from '@/components'
-import { MdxLink } from '@/components/mdx/MdxLink'
+import { evaluateMdx } from '@/components/mdx'
 import { getT } from '@/i18n/server'
-import { getPostsHeadings } from '@/lib/posts'
 
 import PostsActions from './PostsActions'
 import PostsFloatingBar from './PostsFloatingBar'
 import PostsTableOfContents, { ARTICLE_TITLE } from './PostsTableOfContents'
-
-const rehypePrettyCodeOptions: RehypePrettyCodeOptions = {
-  grid: true,
-  theme: {
-    dark: 'catppuccin-frappe',
-    light: 'catppuccin-latte'
-  }
-}
 
 interface PostsPageProps {
   posts: Posts
 }
 
 async function PostsPage({ posts }: PostsPageProps) {
-  const { metadata, content } = posts
   const { lang } = await getT()
 
-  const headings = getPostsHeadings(content)
+  const { metadata, content } = posts
   const date = new Date(metadata.date)
+
+  const { mdx, toc } = await evaluateMdx({ content })
 
   return (
     <div className="mt-14 sm:mt-18">
@@ -58,7 +43,7 @@ async function PostsPage({ posts }: PostsPageProps) {
           >
             <header className="mb-8 sm:mb-12">
               {metadata.image && (
-                <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl shadow-xl">
+                <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl shadow-xl dark:shadow-white/5">
                   <Image
                     src={metadata.image}
                     alt={metadata.title}
@@ -114,38 +99,14 @@ async function PostsPage({ posts }: PostsPageProps) {
             </header>
 
             {/* Content */}
-            <main className="prose-mdx">
-              <MDXRemote
-                source={content}
-                components={{ a: MdxLink }}
-                options={{
-                  parseFrontmatter: false,
-                  mdxOptions: {
-                    remarkPlugins: [remarkGfm],
-                    rehypePlugins: [
-                      rehypeSlug,
-                      [
-                        rehypeAutolinkHeadings,
-                        {
-                          behavior: 'wrap',
-                          properties: {
-                            className: ['anchor']
-                          }
-                        }
-                      ],
-                      [rehypePrettyCode, rehypePrettyCodeOptions]
-                    ]
-                  }
-                }}
-              />
-            </main>
+            <main className="prose-mdx">{mdx}</main>
           </Animated>
 
           {/* Right - Table of contents */}
           <aside className="hidden w-48 shrink-0 pl-2 lg:block">
             <div className="sticky top-24">
               <Animated preset={{ mode: 'slideInRight', delay: 0.15 }}>
-                <PostsTableOfContents headings={headings} />
+                <PostsTableOfContents headings={toc} />
               </Animated>
             </div>
           </aside>
@@ -153,7 +114,7 @@ async function PostsPage({ posts }: PostsPageProps) {
       </div>
 
       {/* Mobile floating bar (below xl) */}
-      <PostsFloatingBar headings={headings} />
+      <PostsFloatingBar headings={toc} />
     </div>
   )
 }

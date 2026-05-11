@@ -6,7 +6,7 @@ import { Check } from 'lucide-react'
 import { useState } from 'react'
 
 import { Back, ChevronUp, Link } from '@/icons'
-import { cn } from '@/lib/utils'
+import { cn, copyToClipboard } from '@/lib/utils'
 
 const actionButtonClass = [
   'group flex h-10 w-10 items-center justify-center rounded-lg',
@@ -31,7 +31,7 @@ function PostsActions() {
   const handleCopyLink = () => {
     if (copied) return
 
-    navigator.clipboard.writeText(window.location.href)
+    copyToClipboard(window.location.href)
     setCopied(true)
     setTimeout(setCopied, 2000, false)
   }

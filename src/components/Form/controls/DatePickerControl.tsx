@@ -5,7 +5,6 @@ import type { FieldValues } from 'react-hook-form'
 import type { ControlProps, DatePickerControlConfig } from '../types'
 
 import { format } from 'date-fns'
-
 import { Calendar as CalendarIcon } from 'lucide-react'
 import { useState } from 'react'
 

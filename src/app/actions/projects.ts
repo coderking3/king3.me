@@ -1,10 +1,10 @@
 'use server'
 
 import type { ProjectInput } from '@/lib/schemas'
-
 import type { Project } from '@/types'
 
 import { revalidatePath } from 'next/cache'
+
 import { projectDb } from '@/db/projects'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'

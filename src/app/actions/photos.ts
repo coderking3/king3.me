@@ -1,10 +1,10 @@
 'use server'
 
 import type { PhotoInput } from '@/lib/schemas'
-
 import type { Photo } from '@/types'
 
 import { revalidatePath } from 'next/cache'
+
 import { photoDb } from '@/db/photos'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'

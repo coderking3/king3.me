@@ -10,7 +10,7 @@ function isExternalLink(href?: string) {
   return EXTERNAL_LINK_RE.test(href)
 }
 
-export function MdxLink({
+function MdxLink({
   href,
   children,
   className,
@@ -43,3 +43,5 @@ export function MdxLink({
     </a>
   )
 }
+
+export default MdxLink

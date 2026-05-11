@@ -19,7 +19,7 @@ But what if you just want a language toggle on your personal blog? Same URLs, la
 
 Instead of URL prefixes, we store the user's language preference in a cookie. The data flow looks like this:
 
-```
+```txt
 Browser Request
     │
     ▼
@@ -107,7 +107,7 @@ The `HEADER_NAME` is how the proxy communicates the detected language to Server 
 
 Organize translations by **namespace** — one JSON file per page/feature area. This enables code-splitting: each page only loads the translations it needs.
 
-```
+```txt
 src/locales/
 ├── en/
 │   ├── common.json    # Nav, footer, shared UI
@@ -488,7 +488,7 @@ For a personal blog or internal tool, this is rarely an issue.
 ```txt
 src/
 ├── i18n/
-│   ├── settings.ts    # Shared config (languages, cookie name, header name)xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+│   ├── settings.ts    # Shared config (languages, cookie name, header name)
 │   ├── server.ts      # getT() for Server Components
 │   └── client.ts      # useTranslation for Client Components
 ├── locales/

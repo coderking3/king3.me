@@ -1,23 +1,15 @@
-import type { TocItem } from '@/types'
-
-import { MDXRemote } from 'next-mdx-remote/rsc'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
-import rehypeSlug from 'rehype-slug'
-import remarkGfm from 'remark-gfm'
-
 import { Animated } from '@/components'
+import { evaluateMdx } from '@/components/mdx'
 import { getT } from '@/i18n/server'
+import { getUseContent } from '@/lib/posts'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from '../blog/PostsTableOfContents'
 
-interface UsePageProps {
-  content: string
-  headings: TocItem[]
-}
-
-async function UsePage({ content, headings }: UsePageProps) {
-  const { t } = await getT('use')
+async function UsePage() {
+  const { t, lang } = await getT('use')
+  const { content } = await getUseContent(lang)
+  const { mdx, toc } = await evaluateMdx({ content })
 
   return (
     <div className="mt-14 sm:mt-24">
@@ -53,27 +45,7 @@ async function UsePage({ content, headings }: UsePageProps) {
                 '[&>h2:first-of-type]:mt-0!'
               )}
             >
-              <MDXRemote
-                source={content}
-                options={{
-                  parseFrontmatter: false,
-                  mdxOptions: {
-                    remarkPlugins: [remarkGfm],
-                    rehypePlugins: [
-                      rehypeSlug,
-                      [
-                        rehypeAutolinkHeadings,
-                        {
-                          behavior: 'wrap',
-                          properties: {
-                            className: ['anchor']
-                          }
-                        }
-                      ]
-                    ]
-                  }
-                }}
-              />
+              {mdx}
             </main>
           </Animated>
 
@@ -81,7 +53,7 @@ async function UsePage({ content, headings }: UsePageProps) {
           <aside className="hidden w-48 shrink-0 pl-2 xl:block">
             <div className="sticky top-24">
               <Animated preset={{ mode: 'slideInRight', delay: 0.15 }}>
-                <PostsTableOfContents headings={headings} />
+                <PostsTableOfContents headings={toc} />
               </Animated>
             </div>
           </aside>

@@ -1,5 +1,7 @@
 import type { Posts } from '@/types'
+
 import { notFound } from 'next/navigation'
+
 import { getAllPosts, getPostsBySlug } from '@/lib/posts'
 import { PostsPage } from '@/views/blog'
 

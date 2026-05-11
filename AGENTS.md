@@ -214,7 +214,6 @@ page.tsx (RSC) → Server Action / db layer → Prisma → PostgreSQL
 - Posts are `.mdx` files in `content/posts/` with front matter fields: `title`, `description`, `date`, `published`.
 - `getAllPosts()` scans the directory with fast-glob, filters `published !== false`, sorts by date descending.
 - `getPostsBySlug()` reads a single post, returns metadata + raw MDX content.
-- `getPostsHeadings()` parses heading elements from MDX content for table of contents.
 - Posts are rendered via `next-mdx-remote` with rehype-pretty-code (shiki) for syntax highlighting.
 
 ### i18n System

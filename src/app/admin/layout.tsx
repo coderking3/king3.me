@@ -1,16 +1,16 @@
 import { redirect } from 'next/navigation'
-
 import * as React from 'react'
+
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { AdminHeader, AdminSidebar } from '@/layouts/admin'
-import { getSession } from '@/lib/auth'
+import { getAuthSession } from '@/lib/auth'
 
 export default async function AdminLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  const session = await getSession()
+  const session = await getAuthSession()
   if (!session) redirect('/auth')
 
   return (

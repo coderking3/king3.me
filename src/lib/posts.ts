@@ -1,14 +1,11 @@
 import type { Posts, PostsMetadata } from '../types'
 
-import type { TocItem } from '@/types'
-
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
 
 import { format } from 'date-fns'
 import fg from 'fast-glob'
-import GithubSlugger from 'github-slugger'
 import matter from 'gray-matter'
 
 import { AUTHOR_INFO } from '@/constants'
@@ -85,49 +82,11 @@ export async function getAllPosts() {
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
 
-export function extractHeadings(content: string): TocItem[] {
-  const headingRegex = /^(#{1,6})\s+(\S.*)$/gm
-  const headings: TocItem[] = []
-  const slugger = new GithubSlugger()
-  let match
-
-  while ((match = headingRegex.exec(content)) !== null) {
-    const level = match[1].length
-    const text = match[2].trim()
-    // Matches rehype-slug output
-    const id = slugger.slug(text)
-
-    headings.push({ id, text, level })
-  }
-
-  return headings
-}
-
-export function getPostsHeadings(content: string): TocItem[] {
-  const stripped = content
-    .replace(/^```[\s\S]+?^```/gm, '')
-    .replace(/^~~~[\s\S]+?^~~~/gm, '')
-
-  const headingRegex = /^(#{2,6})\s+(\S.*)$/gm
-  const headings: TocItem[] = []
-  const slugger = new GithubSlugger()
-
-  for (const match of stripped.matchAll(headingRegex)) {
-    const level = match[1].length
-    const text = match[2].trim()
-    const id = slugger.slug(text)
-    headings.push({ id, text, level })
-  }
-
-  return headings
-}
-
 export async function getUseContent(lang: string) {
   const filename = lang === 'en' ? 'use.mdx' : 'use_zh.mdx'
   const content = await fs.readFile(
     path.join(process.cwd(), 'content', filename),
     'utf-8'
   )
-  const headings = getPostsHeadings(content)
-  return { content, headings }
+  return { content }
 }

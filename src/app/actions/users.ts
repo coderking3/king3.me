@@ -1,9 +1,10 @@
 'use server'
 
 import type { UserWithRole } from 'better-auth/plugins'
-import { revalidatePath } from 'next/cache'
 
+import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
+
 import { actionError, actionSuccess } from '@/lib/action'
 import { auth, checkAdmin } from '@/lib/auth'
 

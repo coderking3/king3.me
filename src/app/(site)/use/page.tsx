@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 
 import { getT } from '@/i18n/server'
-import { getUseContent } from '@/lib/posts'
 import { UsePage } from '@/views/use'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,8 +13,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const { lang } = await getT('common')
-  const { content, headings } = await getUseContent(lang)
-
-  return <UsePage content={content} headings={headings} />
+  return <UsePage />
 }

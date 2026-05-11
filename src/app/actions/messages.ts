@@ -1,10 +1,12 @@
 'use server'
 
 import type { MessageWithReplies } from '@/types'
+
 import { revalidatePath } from 'next/cache'
+
 import { messageDb } from '@/db/messages'
 import { actionError, actionSuccess } from '@/lib/action'
-import { checkAdmin, getSession } from '@/lib/auth'
+import { checkAdmin, getAuthSession } from '@/lib/auth'
 
 export async function getMessagesAction() {
   try {
@@ -17,7 +19,7 @@ export async function getMessagesAction() {
 
 export async function sendMessageAction(message: string) {
   try {
-    const session = await getSession()
+    const session = await getAuthSession()
     if (!session) throw new Error('Not authenticated')
     if (session.user.banned) throw new Error('You are banned')
 

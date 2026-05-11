@@ -40,9 +40,20 @@ published: true
 | UI 组件  | shadcn/ui + Tailwind CSS   | 现代极简设计，暗色模式          |
 | 代码高亮 | Shiki + rehype-pretty-code | 精美的代码块样式                |
 
-> 完整技术栈详见文末。
-
 ---
+
+## shiki
+
+```ts title="shiki-code.tsx"
+// diff
+console.log('hewwo') // [!code --]
+console.log('hello') // [!code ++]
+
+// highlight
+console.log('Not highlighted')
+console.log('Highlighted') // [!code highlight]
+console.log('Not highlighted')
+```
 
 ## 项目克隆与本地配置
 
@@ -93,7 +104,7 @@ cp .env.example .env
 
 编辑 `.env`，填入数据库连接字符串：
 
-```env
+```dotenv
 # Neon 数据库连接
 DIRECT_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
 DATABASE_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
@@ -136,7 +147,7 @@ openssl rand -base64 32
 
 **步骤 4：完善 .env 环境变量**
 
-```env
+```dotenv title=".env.local"
 # better-auth 核心配置
 BETTER_AUTH_API_KEY="your-api-key"           # better-auth api 密钥 用于事件跟踪和平台功能。
 BETTER_AUTH_SECRET="生成的随机密钥"           # 运行 openssl rand -base64 32
@@ -327,7 +338,7 @@ pnpm db:push
 
 `BETTER_AUTH_URL` 和 `SITE_URL` 必须和你部署后的域名一致。比如部署在 `https://myblog.vercel.app`，则：
 
-```env
+```dotenv
 BETTER_AUTH_URL="https://myblog.vercel.app"
 SITE_URL="https://myblog.vercel.app"
 ```

@@ -1,4 +1,4 @@
-import { randomList } from '@/lib/math'
+import { randomArr } from '@/lib/math'
 import { getAllPosts } from '@/lib/posts'
 import { HomePage } from '@/views/home'
 
@@ -10,7 +10,7 @@ export default async function Page() {
     getAllPosts()
   ])
 
-  const songs = result.success ? randomList(result.data, 5) : []
+  const songs = result.success ? randomArr(result.data, 5) : []
   const posts = allPosts.slice(0, 10)
 
   return <HomePage songs={songs} posts={posts} />

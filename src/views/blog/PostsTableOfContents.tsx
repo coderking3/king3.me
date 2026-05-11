@@ -140,7 +140,7 @@ function PostsTableOfContents({ headings }: PostsDirectoryProps) {
     <nav
       ref={navRef}
       aria-label={t('toc')}
-      className="scrollbar-none max-h-[calc(100vh-8rem)] overflow-y-auto"
+      className="max-h-[calc(100vh-8rem)] scrollbar-none overflow-y-auto"
     >
       <a
         className="hidden sm:inline-block"

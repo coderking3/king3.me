@@ -21,6 +21,20 @@
   /* Strikethrough */
   @apply [&_del]:text-muted-foreground;
 
+  /* Dividers */
+  hr {
+    @apply border-border;
+  }
+
+  /* Blockquote */
+
+  & blockquote {
+    @apply bg-brand/15 rounded-xs not-italic!;
+
+    quotes: none;
+    border-inline-start-color: var(--brand);
+  }
+
   /* Task list — checkbox aligns with bullet markers */
   & .task-list-item {
     @apply list-none;
@@ -46,47 +60,105 @@
     & strong {
       @apply text-inherit;
     }
+
+    .anchor {
+      @apply text-inherit opacity-100 shadow-none hover:shadow-none;
+    }
+  }
+
+  /* Inline code (exclude code blocks inside figure > pre) */
+  & :not(pre) code {
+    @apply text-accent-foreground bg-secondary border-border rounded-md border px-1.5 py-0.5 text-sm font-medium before:content-none after:content-none sm:text-sm;
   }
 
   & a:has(code) {
     @apply shadow-none hover:shadow-none;
   }
 
-  & .anchor {
-    @apply font-bold text-inherit opacity-100 shadow-none hover:shadow-none;
-  }
+  /* Code block */
+  & .code-block {
+    @apply relative my-4 sm:my-6;
 
-  /* Inline code (exclude code blocks inside figure > pre) */
-  & :not(pre) > code {
-    @apply text-accent-foreground bg-secondary border-border rounded-md border px-1.5 py-0.5 text-sm font-medium before:content-none after:content-none sm:text-sm;
-  }
-
-  /* Code block — shared pre styles */
-  & pre {
-    @apply mx-0 my-6 p-0 sm:my-8;
-    @apply border-border/50 dark:border-border/70 overflow-hidden rounded-xl border;
-    @apply font-code text-base leading-[1.6] font-medium sm:text-lg sm:leading-[1.5];
-
-    & code {
-      @apply block px-4 py-3 sm:px-6 sm:py-4;
-      @apply overflow-x-auto;
-    }
-  }
-
-  /* Code block with title */
-  & figure {
-    @apply mx-0 my-6 sm:my-8;
-
-    & figcaption {
-      @apply font-code text-muted-foreground bg-secondary border-border/50 dark:border-border/70 inline-block rounded-t-lg border border-b-0 px-3 py-1 text-sm sm:px-4 sm:py-1.5;
+    /* VS Code-style editor tab */
+    & .code-title {
+      @apply text-muted-foreground inline-block rounded-t-lg border border-b-0 px-3 py-1 text-sm sm:px-4 sm:py-1.5 sm:text-[15px];
+      @apply bg-muted border-border/50 dark:border-border/70 border-t-2;
     }
 
-    & pre {
-      @apply m-0;
-    }
-
-    & figcaption + pre {
+    & .code-title ~ .code-wrapper {
       @apply rounded-tl-none;
+    }
+
+    & .code-title ~ .copy-btn {
+      @apply top-11;
+    }
+
+    /* Language label (fallback when no title) */
+    & .code-lang {
+      @apply text-muted-foreground/60! absolute top-1.5 right-2.5 z-1 bg-transparent! text-xs sm:top-2.5 sm:right-3;
+    }
+
+    /* Copy button */
+    & .copy-btn {
+      @apply absolute top-2 right-2 z-10;
+      @apply flex items-center justify-center;
+      @apply size-7 rounded-md;
+      @apply text-muted-foreground border-border/50 dark:border-border/70 bg-muted border;
+      @apply cursor-pointer;
+    }
+
+    & .code-wrapper {
+      @apply border-border/50 dark:border-border/70 overflow-hidden rounded-xl border;
+
+      pre {
+        @apply relative m-0! px-0 py-3 sm:py-4;
+        @apply overflow-x-auto;
+      }
+
+      pre > code {
+        @apply block w-fit min-w-full border-0 px-4 py-0 sm:px-6;
+        @apply font-code text-sm leading-[1.5] font-medium sm:text-base sm:leading-[1.6];
+      }
+
+      pre > code .line {
+        @apply -mx-4 inline-block w-[calc(100%+32px)] px-4 sm:-mx-6 sm:w-[calc(100%+48px)] sm:px-6;
+      }
+    }
+  }
+
+  /* Code block diff notation (shiki transformerNotationDiff) */
+  & .line.diff {
+    span {
+      @apply bg-transparent!;
+    }
+
+    &.add {
+      @apply relative bg-green-500/12!;
+
+      &::before {
+        @apply absolute left-1 text-green-600 sm:left-2;
+
+        content: '-';
+      }
+    }
+
+    &.remove {
+      @apply relative bg-red-500/12!;
+
+      &::before {
+        @apply absolute left-1 text-red-600 sm:left-2;
+
+        content: '-';
+      }
+    }
+  }
+
+  /* Code block highlighted notation (shiki transformerNotationHighlight) */
+  & .line.highlighted {
+    @apply relative bg-black/5! dark:bg-white/10!;
+
+    span {
+      @apply bg-transparent!;
     }
   }
 }
@@ -94,15 +166,16 @@
 /* --- Shiki syntax highlight themes --- */
 
 /* Light theme */
-.prose-mdx pre,
-.prose-mdx pre span {
-  color: var(--shiki-light) !important;
+html .shiki,
+html .shiki code,
+html .shiki span {
   background-color: #f9fafb !important;
 }
 
 /* Dark theme */
-html.dark .prose-mdx pre,
-html.dark .prose-mdx pre span {
+html.dark .shiki,
+html.dark .shiki code,
+html.dark .shiki span {
   color: var(--shiki-dark) !important;
   background-color: #0e1017 !important;
 }

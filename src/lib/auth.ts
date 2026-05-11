@@ -40,7 +40,7 @@ export const auth = betterAuth({
 export type Auth = typeof auth
 
 // Retrieve auth session
-export async function getSession() {
+export async function getAuthSession() {
   const session = await auth.api.getSession({
     headers: await headers()
   })
@@ -50,7 +50,7 @@ export async function getSession() {
 
 // Check if it is an administrator
 export async function checkAdmin() {
-  const session = await getSession()
+  const session = await getAuthSession()
 
   if (!session || session.user.role !== ADMIN_ROLE) {
     throw new Error('No permission to perform this operation')
