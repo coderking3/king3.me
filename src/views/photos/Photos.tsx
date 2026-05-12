@@ -6,9 +6,9 @@ import { AnimatePresence } from 'framer-motion'
 import { Grid2x2, LayoutGrid } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
+import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 import PhotoPreview from './PhotoPreview'

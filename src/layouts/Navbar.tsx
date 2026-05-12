@@ -5,9 +5,9 @@ import type { MotionOptions } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { NAVIGATION_ITEMS } from '@/constants'
+import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 interface NavbarProps {

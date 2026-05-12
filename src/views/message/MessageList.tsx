@@ -1,9 +1,9 @@
 import type { Message } from '@/types'
 
 import Image from 'next/image'
-import { useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
+import { useTranslation } from '@/i18n/client'
 import { relativeTime } from '@/lib/date'
 
 type MessageWithReplies = Message & { replies: Message[] }

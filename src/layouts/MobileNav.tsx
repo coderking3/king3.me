@@ -4,7 +4,6 @@ import { Menu } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import {
   Sheet,
@@ -14,6 +13,7 @@ import {
   SheetTrigger
 } from '@/components/ui'
 import { NAVIGATION_ITEMS } from '@/constants'
+import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 const MOBILE_NAV_ITEMS = [

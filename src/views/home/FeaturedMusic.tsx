@@ -3,8 +3,8 @@
 import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
+import { useTranslation } from '@/i18n/client'
 import { Equalizer, NetEaseMusicIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 

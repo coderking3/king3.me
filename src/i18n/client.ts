@@ -3,7 +3,10 @@
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import resourcesToBackend from 'i18next-resources-to-backend'
-import { initReactI18next, useTranslation } from 'react-i18next'
+import {
+  initReactI18next,
+  useTranslation as useI18nextTranslation
+} from 'react-i18next'
 
 import { COOKIE_NAME, getI18nOptions, LANGUAGES } from './settings'
 
@@ -28,6 +31,8 @@ i18next
     },
     preload: runsOnServer ? (LANGUAGES as unknown as string[]) : []
   })
+
+const useTranslation = useI18nextTranslation
 
 export { useTranslation }
 export default i18next

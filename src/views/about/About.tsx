@@ -3,10 +3,11 @@
 import { Toolbox } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Trans, useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { SOCIAL_URLS } from '@/constants'
+import { useTranslation } from '@/i18n/client'
 import {
   BrowserIcon,
   CameraIcon,

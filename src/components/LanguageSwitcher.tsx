@@ -5,8 +5,8 @@ import type { InteractiveIconProps, SvgIcon } from '@/icons'
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
+import { useTranslation } from '@/i18n/client'
 import { COOKIE_NAME } from '@/i18n/settings'
 import { InteractiveIcon, LanguageIcon } from '@/icons'
 

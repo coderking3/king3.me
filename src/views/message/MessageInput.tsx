@@ -4,11 +4,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { SendHorizontal } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import TextareaAutosize from 'react-textarea-autosize'
 import { toast } from 'sonner'
 
 import { sendMessageAction } from '@/actions/messages'
+import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 const MAX_LENGTH = 600

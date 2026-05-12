@@ -3,8 +3,8 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { useTranslation } from 'react-i18next'
 
+import { useTranslation } from '@/i18n/client'
 import { useInteractive } from '@/icons'
 import { ArrowLeftIcon } from '@/icons/ArrowLeft'
 

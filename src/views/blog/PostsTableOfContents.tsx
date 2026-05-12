@@ -4,8 +4,8 @@ import type { TocItem } from '@/types'
 
 import { ChevronRight } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
+import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 interface PostsDirectoryProps {

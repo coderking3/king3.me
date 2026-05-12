@@ -6,9 +6,9 @@ import { useScroll } from '@react-spring/web'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronsRight, List, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui'
+import { useTranslation } from '@/i18n/client'
 import { Back, ChevronUp, LinkIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 

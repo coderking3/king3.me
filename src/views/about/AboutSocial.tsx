@@ -1,10 +1,11 @@
 'use client'
 
 import Link from 'next/link'
-import { Trans, useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
+import { useTranslation } from '@/i18n/client'
 import { BiliBiliIcon, GithubIcon, XIcon, YoutubeIcon } from '@/icons'
 
 const SOCIAL_LINKS = [

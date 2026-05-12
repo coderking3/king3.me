@@ -2,10 +2,10 @@
 
 import Image from 'next/image'
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
 import { Spinner } from '@/components/ui'
+import { useTranslation } from '@/i18n/client'
 import { ArrowRightIcon, GithubCircleIcon, GoogleIcon } from '@/icons'
 import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'

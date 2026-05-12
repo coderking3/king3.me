@@ -3,10 +3,10 @@
 import type { Message } from '@/types'
 
 import { UserRoundPlus } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
 
 import { Animated } from '@/components'
 import { Button } from '@/components/ui'
+import { useTranslation } from '@/i18n/client'
 import { useSession } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { useAuthModal } from '@/stores/auth'

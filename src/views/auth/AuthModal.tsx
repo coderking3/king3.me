@@ -1,7 +1,5 @@
 'use client'
 
-import { useTranslation } from 'react-i18next'
-
 import {
   Dialog,
   DialogContent,
@@ -9,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui'
+import { useTranslation } from '@/i18n/client'
 
 import AuthForm from './AuthForm'
 
