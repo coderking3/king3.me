@@ -8,4 +8,5 @@ allowBuilds:
   prisma: true
   sharp: true
   simple-git-hooks: true
-onlyBuiltDependencies: '@prisma/engines'
+onlyBuiltDependencies:
+  - '@prisma/engines'
