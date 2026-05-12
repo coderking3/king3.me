@@ -1,4 +1,4 @@
-import type { PhotoInput } from '@/lib/schemas'
+import type { PhotoInput } from '@/actions/photos'
 import type { Photo, PrismaPhoto } from '@/types'
 
 import { prisma } from '@/lib/prisma'

@@ -16,14 +16,26 @@ import '@/styles/global.css'
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT('common')
 
+  const title = 'King3 | Developer、Storyteller'
+  const description = t('metadata.root.description')
+
   return {
     title: {
-      default: 'King3',
+      default: title,
       template: '%s - King3'
     },
-    description: t('metadata.root.description'),
-    icons: {
-      icon: '/icons/favicon.svg'
+    description,
+    keywords: 'King3,CoderKing3,Developer,Storyteller',
+    openGraph: {
+      title: {
+        default: title,
+        template: '%s - King3'
+      },
+      description,
+      siteName: 'King3',
+      locale: 'en',
+      type: 'website',
+      url: 'https://king3-me.vercel.app'
     }
   }
 }

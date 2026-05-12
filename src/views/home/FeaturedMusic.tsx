@@ -1,5 +1,7 @@
 'use client'
 
+import type { Playlist } from '@/types'
+
 import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
@@ -8,15 +10,7 @@ import { useTranslation } from '@/i18n/client'
 import { Equalizer, NetEaseMusicIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
-interface Song {
-  name: string
-  author: string[]
-  cover: string
-  url: string
-  duration: string
-}
-
-function FeaturedMusic({ songs }: { songs: Song[] }) {
+function FeaturedMusic({ songs }: { songs: Playlist[] }) {
   const { t } = useTranslation('home')
 
   const [playingUrl, setPlayingUrl] = useState<string | null>(null)
@@ -30,7 +24,7 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
     }
   }, [])
 
-  const handlePlay = (song: Song) => {
+  const handlePlay = (song: Playlist) => {
     if (playingUrl === song.url && audioRef.current) {
       if (isPlaying) {
         audioRef.current?.pause()

@@ -2,14 +2,8 @@ import type { Posts } from '@/types'
 
 import { notFound } from 'next/navigation'
 
-import { getAllPosts, getPostsBySlug } from '@/lib/posts'
+import { getPostsBySlug } from '@/lib/posts'
 import { PostsPage } from '@/views/blog'
-
-// Generate static pages for all posts at build time
-export async function generateStaticParams() {
-  const posts = await getAllPosts()
-  return posts.map((post) => ({ slug: post.slug }))
-}
 
 export default async function Page({
   params
@@ -27,3 +21,5 @@ export default async function Page({
 
   return <PostsPage posts={posts} />
 }
+
+export const revalidate = 60

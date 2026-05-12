@@ -1,14 +1,23 @@
 'use server'
 
-import type { PhotoInput } from '@/lib/schemas'
 import type { Photo } from '@/types'
 
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod/v4'
 
 import { photoDb } from '@/db/photos'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
-import { photoSchema } from '@/lib/schemas'
+
+export const photoSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
+  url: z.url('Please enter a valid URL'),
+  width: z.coerce.number().int().positive('Width must be positive'),
+  height: z.coerce.number().int().positive('Height must be positive'),
+  date: z.coerce.date()
+})
+
+export type PhotoInput = z.infer<typeof photoSchema>
 
 export async function getPhotosAction() {
   try {

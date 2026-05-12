@@ -1,4 +1,4 @@
-import type { SongInput } from '@/lib/schemas'
+import type { SongInput } from '@/actions/playlist'
 import type { Playlist, PrismaPlaylist } from '@/types'
 
 import { prisma } from '@/lib/prisma'

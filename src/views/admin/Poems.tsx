@@ -2,8 +2,8 @@
 
 import type { Table } from '@tanstack/react-table'
 
+import type { PoemInput } from '@/actions/poems'
 import type { ColumnConfig, FormFieldConfig } from '@/components'
-import type { PoemInput } from '@/lib/schemas'
 import type { Poem } from '@/types'
 
 import { format } from 'date-fns'
@@ -15,11 +15,11 @@ import {
   batchDeletePoemsAction,
   createPoemAction,
   deletePoemAction,
+  poemSchema,
   updatePoemAction
 } from '@/actions/poems'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button } from '@/components/ui'
-import { poemSchema } from '@/lib/schemas'
 
 // ──── Form Config ────
 

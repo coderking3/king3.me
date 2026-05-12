@@ -18,3 +18,5 @@ export default async function Page() {
 
   return <PoemsPage poems={result.data || []} />
 }
+
+export const revalidate = 3600

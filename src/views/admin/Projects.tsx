@@ -2,8 +2,8 @@
 
 import type { Table } from '@tanstack/react-table'
 
+import type { ProjectInput } from '@/actions/projects'
 import type { ColumnConfig, FormFieldConfig } from '@/components'
-import type { ProjectInput } from '@/lib/schemas'
 import type { Project } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
@@ -15,12 +15,12 @@ import {
   batchDeleteProjectsAction,
   createProjectAction,
   deleteProjectAction,
+  projectSchema,
   reorderProjectsAction,
   updateProjectAction
 } from '@/actions/projects'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button } from '@/components/ui'
-import { projectSchema } from '@/lib/schemas'
 
 // ──── Form Config ────
 

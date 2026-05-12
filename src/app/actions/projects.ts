@@ -1,14 +1,22 @@
 'use server'
 
-import type { ProjectInput } from '@/lib/schemas'
 import type { Project } from '@/types'
 
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod/v4'
 
 import { projectDb } from '@/db/projects'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
-import { projectSchema } from '@/lib/schemas'
+
+export const projectSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
+  description: z.string().max(500, 'Description is too long'),
+  link: z.union([z.url('Please enter a valid URL'), z.literal('')]),
+  icon: z.union([z.url('Please enter a valid URL'), z.literal('')])
+})
+
+export type ProjectInput = z.infer<typeof projectSchema>
 
 export async function getProjectsAction() {
   try {

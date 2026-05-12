@@ -1,4 +1,4 @@
-import type { PoemInput } from '@/lib/schemas'
+import type { PoemInput } from '@/actions/poems'
 import type { Poem, PrismaPoem } from '@/types'
 
 import { prisma } from '@/lib/prisma'

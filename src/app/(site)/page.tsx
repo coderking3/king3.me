@@ -15,3 +15,5 @@ export default async function Page() {
 
   return <HomePage songs={songs} posts={posts} />
 }
+
+export const revalidate = 60

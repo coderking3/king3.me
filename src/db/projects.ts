@@ -1,4 +1,4 @@
-import type { ProjectInput } from '@/lib/schemas'
+import type { ProjectInput } from '@/actions/projects'
 import type { PrismaProject, Project } from '@/types'
 
 import { prisma } from '@/lib/prisma'

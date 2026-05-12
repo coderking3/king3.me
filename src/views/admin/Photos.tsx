@@ -2,8 +2,8 @@
 
 import type { Table } from '@tanstack/react-table'
 
+import type { PhotoInput } from '@/actions/photos'
 import type { ColumnConfig, FormFieldConfig } from '@/components'
-import type { PhotoInput } from '@/lib/schemas'
 import type { Photo } from '@/types'
 
 import { format } from 'date-fns'
@@ -17,11 +17,11 @@ import {
   batchDeletePhotosAction,
   createPhotoAction,
   deletePhotoAction,
+  photoSchema,
   updatePhotoAction
 } from '@/actions/photos'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
 import { Button, DialogClose, DialogFooter, Textarea } from '@/components/ui'
-import { photoSchema } from '@/lib/schemas'
 
 // ──── Form Config ────
 

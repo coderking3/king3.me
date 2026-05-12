@@ -13,12 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title, description, openGraph: { title, description } }
 }
 
-// Force static generation for blog list
-export const dynamic = 'force-static'
-
 export default async function Page() {
   const allPosts = await getAllPosts()
   const posts = allPosts.slice(0, 12)
 
   return <BlogPage posts={posts} />
 }
+
+export const revalidate = 60

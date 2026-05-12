@@ -1,4 +1,4 @@
-import type { PostsMetadata } from '@/types'
+import type { Playlist, PostsMetadata } from '@/types'
 
 import { PencilLine } from 'lucide-react'
 
@@ -10,19 +10,11 @@ import FeaturedMusic from './FeaturedMusic'
 import Gallery from './Gallery'
 import Hero from './Hero'
 
-interface Song {
-  name: string
-  author: string[]
-  cover: string
-  url: string
-  duration: string
-}
-
 export default async function Home({
   songs,
   posts
 }: {
-  songs: Song[]
+  songs: Playlist[]
   posts: PostsMetadata[]
 }) {
   const { t } = await getT('home')

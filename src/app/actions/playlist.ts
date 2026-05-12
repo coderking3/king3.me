@@ -1,14 +1,25 @@
 'use server'
 
-import type { SongInput } from '@/lib/schemas'
 import type { Playlist } from '@/types'
 
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod/v4'
 
 import { playlistDb } from '@/db/playlist'
 import { actionError, actionSuccess } from '@/lib/action'
 import { checkAdmin } from '@/lib/auth'
-import { songSchema } from '@/lib/schemas'
+
+export const songSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
+  author: z.array(z.string().min(1)).min(1, 'Artist is required'),
+  cover: z.union([z.url('Please enter a valid URL'), z.literal('')]),
+  url: z.union([z.url('Please enter a valid URL'), z.literal('')]),
+  duration: z
+    .string()
+    .regex(/^(\d{1,2}:)?\d{2}:\d{2}$|^$/, 'Format: MM:SS or HH:MM:SS')
+})
+
+export type SongInput = z.infer<typeof songSchema>
 
 export async function getPlaylistAction() {
   try {
