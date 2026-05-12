@@ -184,7 +184,7 @@ This file provides guidance to AI coding agents when working with code in this r
 - **Database access**: Never call Prisma directly from actions or pages. Use the class-based Db layer in `src/db/` (e.g., `dashboardDb`, `messageDb`, `photoDb`, `playlistDb`, `poemDb`, `projectDb`). Each Db class has a private `serialize()` method that converts Date fields to ISO strings.
 - **Form validation**: Define Zod schemas in `src/lib/schemas.ts`. Use the `<Form>` component from `src/components/Form/` which integrates react-hook-form + Zod resolver automatically.
 - **View components**: Page-specific logic goes in `src/views/{pageName}/`. Each folder has an `index.ts` barrel export. App Router page files (`page.tsx`) should be thin — fetch data and delegate to view components.
-- **i18n**: Server Components use `getT(namespace)` from `src/i18n/server.ts`. Client Components use `useTranslation` from `src/i18n/client.ts`. Translation files are in `src/locales/{en,zh}/{namespace}.json`. When adding a new namespace, also update `src/i18n/settings.ts` (NAMESPACES array) and `src/types/i18next.d.ts`.
+- **i18n**: Server Components use `getT(namespace)` from `src/i18n/server.ts`. Client Components use `useTranslation` from `src/i18n/client.ts`. Translation files are in `src/locales/{en,zh}/{namespace}.json`. When adding a new namespace, also update `src/types/i18next.d.ts`.
 - **Type definitions**: Domain model types go in `src/types/{model}.ts` with barrel export from `src/types/index.ts`. Prisma-generated types are aliased as `PrismaXxx` alongside serialized `Xxx` types.
 - **Animations**: Use the `<Animated>` component from `src/components/Animated/` with preset configs or custom Framer Motion options. Respect `usePrefersReducedMotion` for accessibility.
 
@@ -236,7 +236,7 @@ page.tsx (RSC) → Server Action / db layer → Prisma → PostgreSQL
 1. Create `src/app/(site)/{name}/page.tsx` — keep it thin (data fetching only).
 2. Create `src/views/{name}/` with view components and `index.ts` barrel export.
 3. Add translation files: `src/locales/en/{name}.json` and `src/locales/zh/{name}.json`.
-4. Add namespace to `NAMESPACES` in `src/i18n/settings.ts` and `src/types/i18next.d.ts`.
+4. Add namespace to `src/types/i18next.d.ts`.
 5. Add navigation entry in `src/constants.ts` (`NAVIGATION_ITEMS`) if needed.
 
 ### New Database Entity
