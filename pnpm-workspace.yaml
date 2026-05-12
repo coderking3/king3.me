@@ -1,0 +1,11 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
+allowBuilds:
+  '@prisma/engines': true
+  msw: true
+  prisma: true
+  sharp: true
+  simple-git-hooks: true
+onlyBuiltDependencies: '@prisma/engines'
