@@ -1,9 +1,9 @@
 ---
-title: 'Next.js 16 + i18next: Cookie-based i18n Without Changing a Single Route'
-description: A practical guide to adding cookie-based internationalization to a Next.js 16 App Router project using i18next — zero route restructuring, zero URL prefixes, full TypeScript support.
+title: 'Next.js 16 + i18next: 不改路由的 Cookie 国际化方案'
+description: 一个在 Next.js 16 App Router 项目中使用 i18next 添加 Cookie 国际化方案的实战指南 — 零路由改造，零 URL 前缀，完整的 TypeScript 类型支持。
 image: /images/avatar.png
 date: '2026-05-12'
-lang: en
+lang: 中文
 tags:
   - NextJs
   - React
@@ -11,77 +11,77 @@ tags:
 published: true
 ---
 
-Most i18n guides for Next.js assume you want URL-based locale routing: `/en/about`, `/zh/about`, etc. That means wrapping your entire app in a `[locale]` dynamic segment, rewriting every page file, and potentially breaking existing links.
+大多数 Next.js 的 i18n 教程都假设你需要 URL-based 的区域路由：`/en/about`、`/zh/about` 等。这意味着你需要把整个应用塞进一个 `[locale]` 动态段，改写每个页面文件，还可能破坏已有链接。
 
-But what if you just want a language toggle on your personal blog? Same URLs, language stored in a cookie, no SEO complexity. That's exactly what this guide covers.
+但如果你的个人博客只是想加一个语言切换按钮呢？URL 不变，语言偏好存在 Cookie 里，也没有 SEO 额外开销。这正是本文要讨论的方案。
 
-## The Approach: Cookie-based i18n
+## 方案原理：Cookie-based i18n
 
-Instead of URL prefixes, we store the user's language preference in a cookie. The flow looks like this:
+不使用 URL 前缀，我们将用户的语言偏好存在 Cookie 中。数据流如下：
 
 ```txt
-Browser Request
+浏览器请求
     │
     ▼
-proxy.ts (Next.js 16 request interceptor)
-  ├── Read Cookie (i18n_lang)
-  ├── Fallback: parse Accept-Language header
-  └── Inject custom Header: x-i18n-lang = "zh"
+proxy.ts（Next.js 16 请求拦截器）
+  ├── 读取 Cookie（i18n_lang）
+  ├── 降级：解析 Accept-Language 请求头
+  └── 注入自定义请求头：x-i18n-lang = "zh"
     │
     ├──────────────────────┐
     ▼                      ▼
-Server Component        Client Component
+服务端组件              客户端组件
   getT()                  i18next + LanguageDetector
-  reads Header            reads Cookie
-  creates instance        global singleton
-  loads JSON              dynamic import JSON
-  returns { t, lang }    useTranslation() → t()
+  读取请求头              读取 Cookie
+  创建实例                全局单例
+  加载 JSON               动态 import JSON
+  返回 { t, lang }       useTranslation() → t()
 
-Language Switch → write Cookie → router.refresh() → full re-render
+语言切换 → 写入 Cookie → router.refresh() → 全量重新渲染
 ```
 
-**Key principles:**
+**核心原则：**
 
-- Server reads language from a **custom header** (injected by proxy)
-- Client reads language from the **cookie** (via LanguageDetector)
-- Language switch: **write cookie + `router.refresh()`**
-- URLs **never change** — `/blog` is always `/blog`
+- 服务端从**自定义请求头**（由 proxy 注入）读取语言
+- 客户端从**Cookie** 读取语言（通过 LanguageDetector）
+- 语言切换：**写入 Cookie + `router.refresh()`**
+- URL **永不改变** — `/blog` 永远是 `/blog`
 
-## Cookie-based i18n vs. URL-based
+## Cookie 方案 vs URL 方案
 
-The trade-off is straightforward:
+取舍非常直接：
 
-- **URL-based** (`/en/about`, `/zh/about`): works with search engines (hreflang, separate indexed pages), but requires `[locale]` directory restructuring, middleware guards, and broken existing links.
-- **Cookie-based**: requires zero routing changes, one URL for all languages, but search engines see only one language version. No `hreflang` tags possible.
+- **URL 方式**（`/en/about`、`/zh/about`）：搜索引擎友好（hreflang、独立索引页面），但需要 `[locale]` 目录重构、全局 middleware 守卫、破坏已有链接。
+- **Cookie 方式**：不需要任何路由改动，一个 URL 对应所有语言，但搜索引擎只能看到一种语言版本。无法使用 `hreflang` 标签。
 
-For a personal blog or internal tool this is rarely an issue.
+对于个人博客或内部工具，这通常不是问题。
 
-## Prerequisites
+## 前置条件
 
-This guide assumes:
+本教程假设你已具备：
 
-- Next.js 16 with App Router (uses `proxy.ts` instead of `middleware.ts`)
+- Next.js 16 with App Router（使用 `proxy.ts` 替代了 `middleware.ts`）
 - React 19
 - TypeScript
 
-## Install Dependencies
+## 安装依赖
 
 ```bash
 pnpm add i18next react-i18next i18next-resources-to-backend \
          i18next-browser-languagedetector accept-language
 ```
 
-| Package                            | Purpose                                                  |
-| ---------------------------------- | -------------------------------------------------------- |
-| `i18next`                          | Core translation engine                                  |
-| `react-i18next`                    | React bindings — `useTranslation` hook                   |
-| `i18next-resources-to-backend`     | Lazy-load JSON translation files via dynamic `import()`  |
-| `i18next-browser-languagedetector` | Auto-detect language from cookie / browser on the client |
-| `accept-language`                  | Parse `Accept-Language` header in proxy                  |
+| 包名                               | 作用                                       |
+| ---------------------------------- | ------------------------------------------ |
+| `i18next`                          | 核心翻译引擎                               |
+| `react-i18next`                    | React 绑定 — `useTranslation` hook         |
+| `i18next-resources-to-backend`     | 通过动态 `import()` 延迟加载 JSON 翻译文件 |
+| `i18next-browser-languagedetector` | 从 Cookie / 浏览器自动检测语言             |
+| `accept-language`                  | 在 proxy 中解析 `Accept-Language` 请求头   |
 
-## Shared Configuration and Type Safety
+## 共享配置与类型安全
 
-Create a single source of truth for i18n settings, shared between server and client.
+为 i18n 设置创建唯一的配置中心，服务端和客户端共用。
 
 ```ts title="src/i18n/settings.ts"
 export const LANGUAGES = ['en', 'zh'] as const
@@ -111,7 +111,7 @@ export function getI18nOptions(
 }
 ```
 
-`Namespace` is defined as `keyof CustomTypeOptions['resources']`, which means it is automatically derived from your `i18next.d.ts` type augmentation. When you add a new translation JSON file, you only need to add one `typeof import(...)` line — the `Namespace` type and the generic `getT<N extends Namespace>()` will pick it up automatically.
+`Namespace` 定义为 `keyof CustomTypeOptions['resources']`，意味着它自动从你的 `i18next.d.ts` 类型增强中推导。当你添加新翻译 JSON 文件时，只需在 `i18next.d.ts` 加一行 `typeof import(...)`，`Namespace` 类型和泛型 `getT<N extends Namespace>()` 会自动识别。
 
 ```ts title="src/types/i18next.d.ts"
 import 'i18next'
@@ -135,45 +135,29 @@ declare module 'i18next' {
 }
 ```
 
-Add a new namespace — just two steps:
+添加新 namespace — 只需两步：
 
-1. Create `src/locales/en/{name}.json` and `src/locales/zh/{name}.json`
-2. Add `typeof import(...)` line in `i18next.d.ts`
+1. 创建 `src/locales/en/{name}.json` 和 `src/locales/zh/{name}.json`
+2. 在 `i18next.d.ts` 加 `typeof import(...)` 行
 
-That's it. No manual union type updates required.
+搞定。无需手动修改 union type。
 
-## Translation File Structure
+## 翻译文件结构
 
-Organize translations by **namespace** — one JSON file per page or feature area. This enables code-splitting: each page only loads the translations it needs. Visit home → loads `common.json` + `home.json`. Visit about → loads `common.json` + `about.json`. Translations for pages you haven't visited are never downloaded.
+按 **namespace** 组织翻译 — 每个页面或功能区域对应一个 JSON 文件。这样可以启用代码分割：每个页面只加载它需要的翻译文件。
 
 ```txt
 src/locales/
 ├── en/
-│   ├── common.json    # Nav, footer, shared UI
-│   ├── home.json      # Home page
-│   ├── about.json     # About page
+│   ├── common.json    # 导航、页脚、共享 UI
+│   ├── home.json      # 首页
+│   ├── about.json     # 关于页
 │   └── ...
 └── zh/
     ├── common.json
     ├── home.json
     ├── about.json
     └── ...
-```
-
-```json title="src/locales/en/common.json"
-{
-  "nav": {
-    "blog": "Blog",
-    "project": "Project",
-    "about": "About"
-  },
-  "footer": {
-    "copyright": "© 2025-present King3. All Rights Reserved."
-  },
-  "localeSwitcher": {
-    "label": "Switch Language"
-  }
-}
 ```
 
 ```json title="src/locales/zh/common.json"
@@ -192,11 +176,11 @@ src/locales/
 }
 ```
 
-## proxy.ts — Language Detection
+## proxy.ts — 语言检测的入口
 
-In Next.js 16, `proxy.ts` replaces the old `middleware.ts`. It is a request interceptor (not a WebSocket proxy or build-time proxy) that runs before every matched request.
+在 Next.js 16 中，`proxy.ts` 替代了旧的 `middleware.ts`。它是一个请求拦截器（不是 WebSocket ���理也不是构建时代理），在每个匹配的请求之前执行。
 
-We add language detection **before** any other logic.
+我们将语言检测逻辑放在**任何**其他逻辑之前。
 
 ```ts title="src/proxy.ts"
 import type { NextRequest } from 'next/server'
@@ -243,13 +227,13 @@ export const config = {
 }
 ```
 
-The `config.matcher` should cover all page routes while excluding static assets and API routes.
+`config.matcher` 需覆盖所有页面路由，同时排除静态资源和 API 路由。
 
-The language precedence is **Cookie → Accept-Language header → fallback `en`**. The explicit range validation (`!LANGUAGES.includes(...)`) prevents user-controlled values from leaking into the header. After detection, the proxy injects a custom header (`x-i18n-lang`) that Server Components can read via the `headers()` API.
+语言优先级为 **Cookie → Accept-Language 请求头 → fallback `en`**。显式的范围校验（`!LANGUAGES.includes(...)`）防止用户可控值泄露到请求��中。检测完成后，proxy 注入一个自定义请求头（`x-i18n-lang`），服务端组件可通过 `headers()` API 读取。
 
-## Server-side Translation — getT()
+## 服务端翻译 — getT()
 
-Server Components can't use React hooks, so we need an async utility function. Every call to `getT()` creates a fresh i18next instance. This prevents language state from leaking between concurrent requests on the server.
+服务端组件无法使用 React hooks，因此需要一个异步工具函数。每次 `getT()` 调用都会创建一个全新的 i18next 实例，防止服务端并发请求间的语言状态泄漏。
 
 ```ts title="src/i18n/server.ts"
 import type { Language, Namespace } from './settings'
@@ -274,6 +258,16 @@ async function initI18next(lng: Language, ns: Namespace) {
   return instance
 }
 
+/**
+ * Get the translation function for Server Components and generateMetadata.
+ *
+ * Every call creates a fresh instance to prevent language state leaking
+ * between concurrent requests on the server.
+ *
+ * @example
+ * const { t, lang } = await getT('about')
+ * return <h1>{t('title')}</h1>
+ */
 export async function getT<N extends Namespace = 'common'>(
   ns: N = 'common' as N
 ) {
@@ -289,18 +283,19 @@ export async function getT<N extends Namespace = 'common'>(
 }
 ```
 
-The generic `N extends Namespace` ensures namespace arguments are type-checked at compile time. `getFixedT(lang, ns)` receives the namespace directly — i18next supports both string and string[] forms.
+泛型 `N extends Namespace` 确保 namespace 参数在编译时即可被类型检查。`getFixedT(lang, ns)` 直接接收 namespace — i18next 同时支持 `string` 和 `string[]` 两种形式。
 
-## Root Layout — Dynamic `lang` Attribute
+## 根布局 — 动态 `lang` 属性
 
-The root layout reads the proxy-injected header to set `<html lang>` and `generateMetadata`:
+根布局读取 proxy 注入的请求头来设置 `<html lang>` 和 `generateMetadata`：
 
 ```tsx title="src/app/layout.tsx"
 import type { Metadata } from 'next'
 
 import { headers } from 'next/headers'
 
-import { FALLBACK_LNG, HEADER_NAME } from '@/i18n/settings'
+import { ROBOTO_MONO, AUDIO_WIDE } from '@/styles/global.css'
+import { FALLBACK_LNG, HEADER_NAME, getT } from '@/i18n/settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT('common')
@@ -329,7 +324,7 @@ export default async function RootLayout({
     <html
       lang={lang}
       suppressHydrationWarning
-      className={cn(robotoMono.variable, audioWide.variable)}
+      className={`${robotoMono.variable} ${audioWide.variable}`}
     >
       <body className="min-h-screen scroll-smooth antialiased">
         {/* Providers ... */}
@@ -340,11 +335,11 @@ export default async function RootLayout({
 }
 ```
 
-Both `generateMetadata()` and `RootLayout` read the same header, so `<html lang>`, `<meta description>`, and the rendered page text are all synchronized.
+`generateMetadata()` 和 `RootLayout` 都读取同一个请求头，所以 `<html lang>`、`<meta description>` 和渲染的页面文本全部同步。
 
-## Client-side Initialization
+## 客户端初始化
 
-Client Components use a global i18next singleton with `LanguageDetector` to auto-detect the language from the cookie.
+客户端组件使用全局 i18next 单例配合 `LanguageDetector` 来从 Cookie 自动检测语言。
 
 ```ts title="src/i18n/client.ts"
 'use client'
@@ -372,13 +367,13 @@ i18next
   )
   .init({
     ...getI18nOptions(),
-    lng: undefined,
+    lng: undefined, // Let LanguageDetector decide
     detection: {
       order: ['cookie', 'navigator'],
       lookupCookie: COOKIE_NAME,
       caches: ['cookie']
     },
-    // During SSR, preload all languages to match hydration output.
+    // During SSR, preload all languages so hydration output matches.
     // During CSR, leave empty — languages load dynamically on demand.
     preload: runsOnServer ? (LANGUAGES as unknown as string[]) : []
   })
@@ -389,13 +384,13 @@ export { useTranslation }
 export default i18next
 ```
 
-`lng: undefined` is crucial — it tells i18next to rely entirely on the LanguageDetector instead of a hardcoded value.
+`lng: undefined` 非常关键 — 这告诉 i18next 完全依赖 LanguageDetector 来决定语言，而不是使用硬编码值。
 
-The `useTranslation` alias (`const useTranslation = useI18nextTranslation`) lets every component import from one path (`@/i18n/client`) regardless of whether the singleton has been initialized. This is a single source of truth for the hook.
+`useTranslation` 别名（`const useTranslation = useI18nextTranslation`）让所有组件从统一路径（`@/i18n/client`）导入，无论单例���否已经初始化。这是 hook 的唯一入口点。
 
-## Language Switcher Component
+## 语言切换组件
 
-A component that handles cookie persistence, client-side i18next update, and server re-render.
+一个处理 Cookie 持久化、客户端 i18next 更新和服务端重新渲染的组件。
 
 ```tsx title="src/components/LanguageSwitcher.tsx"
 'use client'
@@ -468,17 +463,17 @@ export function LanguageSwitcher({
 }
 ```
 
-The three-step language switch:
+语言切换三步骤：
 
-1. **`document.cookie`** — so the proxy can detect the language on the next request
-2. **`changeLanguage()`** — so Client Components update immediately
-3. **`router.refresh()`** — so Server Components re-render with the new language
+1. **`document.cookie`** — 让 proxy 在下一次请求时检测到新语言
+2. **`changeLanguage()`** — 让客户端组件立即更新
+3. **`router.refresh()`** — 让服务端组件用新语言重新渲染
 
-During SSR the component doesn't know the user's language (no cookie exists yet on first visit). Without a `mounted` guard the server renders `isEN = true` while the client may detect `zh`, causing a hydration mismatch. The `mounted` state ensures the client re-renders with the correct language after hydration.
+SSR 阶段组件不知道用户的语言（首次访问还不存在 cookie）。如果没有 `mounted` 保护，服务器端会按 `isEN = true` 渲染，而客户端可能检测到 `zh`，导致 hydration 不匹配。`mounted` 状态确保客户端在 hydration 完成后重新渲染为正确语言。
 
-## Using Translations
+## 使用翻译
 
-In Server Components:
+### 在服务端组件中：
 
 ```tsx
 import { getT } from '@/i18n/server'
@@ -495,7 +490,7 @@ export default async function Home() {
 }
 ```
 
-In Client Components:
+### 在客户端组件中：
 
 ```tsx
 'use client'
@@ -505,11 +500,11 @@ import { useTranslation } from '@/i18n/client'
 function ErrorComponent() {
   const { t } = useTranslation('common')
 
-  return <h1>{t('error.title', 'Something went wrong')}</h1>
+  return <h1>{t('error.title', '出错了')}</h1>
 }
 ```
 
-In `generateMetadata`:
+### 在 `generateMetadata` 中：
 
 ```tsx
 import type { Metadata } from 'next'
@@ -526,49 +521,49 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 ```
 
-Quick reference:
+速查表：
 
-| Context            | Usage                                |
+| 场景               | 用法                                 |
 | ------------------ | ------------------------------------ |
-| Server Component   | `const { t } = await getT('ns')`     |
-| Client Component   | `const { t } = useTranslation('ns')` |
+| 服务端组件         | `const { t } = await getT('ns')`     |
+| 客户端组件         | `const { t } = useTranslation('ns')` |
 | `generateMetadata` | `const { t } = await getT('ns')`     |
 | Server Action      | `const { t } = await getT('ns')`     |
 
-## Hydration Consistency
+## Hydration 一致性
 
-A common pitfall with i18n is hydration mismatch — the server renders one language but the client detects another. In this setup, both sides read from the **same cookie**:
+i18n 最常见的坑之一就是 hydration mismatch — 服务端渲染了 A 语言而客户端检测到了 B 语言。在这个方案中，服务端和客户端都从**同一个 Cookie** 读取：
 
-- **Server:** proxy reads `i18n_lang` cookie → injects `x-i18n-lang` header → `getT()` reads it
-- **Client:** LanguageDetector reads `i18n_lang` cookie → initializes i18next
+- **服务端**：proxy 读取 `i18n_lang` Cookie → 注入 `x-i18n-lang` 请求头 → `getT()` 读取
+- **客户端**：LanguageDetector 读取 `i18n_lang` Cookie → 初始化 i18next
 
-Since both derive from the same cookie value, they always agree.
+因为两端都从同一个 Cookie 值派生，所以天然一致。
 
-## First Visit Behavior
+## 首次访问行为
 
-When a user visits for the first time (no cookie):
+当用户在第一次访问（还没有 Cookie）时：
 
-1. Proxy reads `Accept-Language` from the browser
-2. If the browser language is Chinese → auto-detect `zh`
-3. Otherwise → fall back to `en`
-4. After manual switch, the cookie persists the choice
+1. Proxy 从浏览器读取 `Accept-Language` 请求头
+2. 如果浏览器语言为中文即检测 `zh`
+3. 否则 fallback 到 `en`
+4. 切换语言后 cookie 保存选择
 
-## Lazy Loading
+## 按需加载
 
-The `i18next-resources-to-backend` plugin uses dynamic `import()` to load translation files on demand:
+`i18next-resources-to-backend` 插件通过动态 `import()` 按需加载翻译文件：
 
-- Visit home → loads `common.json` + `home.json`
-- Visit about → loads `common.json` + `about.json`
-- Translations for pages you haven't visited are never downloaded
+- 访问首页 → 加载 `common.json` + `home.json`
+- 访问 about → 加载 `common.json` + `about.json`
+- 没访问过的页面翻译文件永远不会被下载
 
 ## Summary
 
 ```txt
 src/
 ├── i18n/
-│   ├── settings.ts    # Shared config (languages, cookie name, header name)
-│   ├── server.ts      # getT() for Server Components
-│   └── client.ts      # useTranslation for Client Components
+│   ├── settings.ts    # 共享配置（语言列表、Cookie 名、请求头名）
+│   ├── server.ts      # getT() 用于服务端组件
+│   └── client.ts      # useTranslation 用于客户端组件
 ├── locales/
 │   ├── en/
 │   │   ├── common.json
@@ -577,10 +572,10 @@ src/
 │       ├── common.json
 │       └── about.json
 ├── types/
-│   └── i18next.d.ts   # TypeScript type augmentation
+│   └── i18next.d.ts   # TypeScript 类型增强
 ├── components/
 │   └── LanguageSwitcher.tsx
-└── proxy.ts           # Language detection + header injection
+└── proxy.ts           # 语言检测 + 请求头注入
 ```
 
-Zero changes to your routing structure. Zero new route segments. The entire i18n layer sits alongside your existing code, not wrapped around it.
+零路由改造，零新路由段。整个 i18n 层放在你现有代码旁边，而不是包裹在代码之上。
