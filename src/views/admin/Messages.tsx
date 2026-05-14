@@ -2,14 +2,14 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components/common'
+import type { MessageInput, ReplyInput } from '@/lib/validations/messages'
 import type { Message } from '@/types'
 
 import { Pencil, Plus, Reply, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod/v4'
 
 import {
   batchDeleteMessagesAction,
@@ -17,21 +17,16 @@ import {
   deleteMessageAction,
   replyToMessageAction,
   updateMessageAction
-} from '@/actions/messages'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
+} from '@/app/actions/messages'
+import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Badge, Button } from '@/components/ui'
+import { messageSchema, replySchema } from '@/lib/validations/messages'
 
 type MessageWithReplies = Message & { replies: Message[] }
 
 // ──── Form Config ────
 
-const replySchema = z.object({
-  reply: z.string().min(1, 'Reply is required').max(1000, 'Reply is too long')
-})
-
-type ReplyFormValues = z.infer<typeof replySchema>
-
-const replyFields: FormFieldConfig<ReplyFormValues>[] = [
+const replyFields: FormFieldConfig<ReplyInput>[] = [
   {
     name: 'reply',
     label: 'Reply',
@@ -41,42 +36,15 @@ const replyFields: FormFieldConfig<ReplyFormValues>[] = [
   }
 ]
 
-const createSchema = z.object({
-  message: z
-    .string()
-    .min(1, 'Message is required')
-    .max(1000, 'Message is too long')
-})
+const messageField: FormFieldConfig<MessageInput> = {
+  name: 'message',
+  label: 'Message',
+  type: 'textarea',
+  rows: 4
+}
 
-type CreateFormValues = z.infer<typeof createSchema>
-
-const createFields: FormFieldConfig<CreateFormValues>[] = [
-  {
-    name: 'message',
-    label: 'Message',
-    type: 'textarea',
-    placeholder: 'Type a new message...',
-    rows: 4
-  }
-]
-
-const editSchema = z.object({
-  message: z
-    .string()
-    .min(1, 'Message is required')
-    .max(1000, 'Message is too long')
-})
-
-type EditFormValues = z.infer<typeof editSchema>
-
-const editFields: FormFieldConfig<EditFormValues>[] = [
-  {
-    name: 'message',
-    label: 'Message',
-    type: 'textarea',
-    placeholder: 'Edit message...',
-    rows: 4
-  }
+const messageFields: FormFieldConfig<MessageInput>[] = [
+  { ...messageField, placeholder: 'Type a message...' }
 ]
 
 // ──── Table Columns ────
@@ -143,7 +111,7 @@ export default function Messages({
   const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const replyOpen = !!replyTo
-  const createOpen = showCreate
+  const formOpen = showCreate || !!editMessage
 
   const handleDelete = async () => {
     if (!deleteId) return
@@ -173,7 +141,7 @@ export default function Messages({
     setShowBatchDelete(false)
   }
 
-  const handleReplySubmit = async (data: ReplyFormValues) => {
+  const handleReplySubmit = async (data: ReplyInput) => {
     if (!replyTo) return
     const result = await replyToMessageAction(replyTo.id, data.reply)
     if (result.success) {
@@ -188,44 +156,28 @@ export default function Messages({
     setReplyTo(null)
   }
 
-  const handleEditSubmit = async (data: EditFormValues) => {
-    if (!editMessage) return
-    const result = await updateMessageAction(editMessage.id, data.message)
-    if (result.success) {
-      toast.success('Message updated')
-      setEditMessage(null)
-    } else {
-      toast.error(result.message)
-    }
-  }
-
-  const handleEditClose = () => {
+  const handleCloseForm = () => {
+    setShowCreate(false)
     setEditMessage(null)
   }
 
-  const handleCreateSubmit = async (data: CreateFormValues) => {
-    const result = await createMessageAction(data.message)
+  const handleSubmit = async (data: MessageInput) => {
+    const result = editMessage
+      ? await updateMessageAction(editMessage.id, data.message)
+      : await createMessageAction(data.message)
     if (result.success) {
-      toast.success('Message created')
-      setShowCreate(false)
+      toast.success(editMessage ? 'Message updated' : 'Message created')
+      handleCloseForm()
     } else {
       toast.error(result.message)
     }
   }
 
-  const handleCreateClose = () => {
-    setShowCreate(false)
-  }
-
-  const replyDefaultValues: ReplyFormValues = {
+  const replyDefaultValues: ReplyInput = {
     reply: ''
   }
 
-  const createDefaultValues: CreateFormValues = {
-    message: ''
-  }
-
-  const editDefaultValues: EditFormValues = {
+  const formDefaultValues: MessageInput = {
     message: editMessage?.message || ''
   }
 
@@ -237,11 +189,6 @@ export default function Messages({
         pagination
         rowKey="id"
         loading={!messages.length}
-        // Tree mode (commented out for panel mode testing)
-        // expandable={{
-        //   getChildren: (msg) => msg.replies as MessageWithReplies[],
-        //   indentSize: 24
-        // }}
         expandable={{
           rowExpandable: (record) => record.replies?.length > 0,
           render: (record) => (
@@ -385,33 +332,19 @@ export default function Messages({
         />
       </Modal>
 
-      {/* Create Modal */}
+      {/* Create / Edit Modal */}
       <Modal
-        open={createOpen}
-        onClose={handleCreateClose}
-        title="Add Message"
+        open={formOpen}
+        onClose={handleCloseForm}
+        title={editMessage ? 'Edit Message' : 'Add Message'}
         showFooter={false}
       >
         <Form
-          schema={createSchema}
-          fields={createFields}
-          defaultValues={createDefaultValues}
-          onSubmit={handleCreateSubmit}
-        />
-      </Modal>
-
-      {/* Edit Modal */}
-      <Modal
-        open={!!editMessage}
-        onClose={handleEditClose}
-        title="Edit Message"
-        showFooter={false}
-      >
-        <Form
-          schema={editSchema}
-          fields={editFields}
-          defaultValues={editDefaultValues}
-          onSubmit={handleEditSubmit}
+          key={editMessage?.id || 'new'}
+          schema={messageSchema}
+          fields={messageFields}
+          defaultValues={formDefaultValues}
+          onSubmit={handleSubmit}
         />
       </Modal>
 

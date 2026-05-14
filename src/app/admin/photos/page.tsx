@@ -1,8 +1,8 @@
-import { getPhotosAction } from '@/actions/photos'
+import { getPhotos } from '@/data/photos'
 import { PhotosPage } from '@/views/admin'
 
 export default async function Page() {
-  const result = await getPhotosAction()
+  const photos = (await getPhotos()) || []
 
-  return <PhotosPage photos={result.data || []} />
+  return <PhotosPage photos={photos} />
 }

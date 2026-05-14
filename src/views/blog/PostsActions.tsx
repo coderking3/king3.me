@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Check } from 'lucide-react'
 import { useState } from 'react'
 
-import { Back, ChevronUp, Link } from '@/icons'
+import { Back, ChevronUp, Link } from '@/components/icons'
 import { cn, copyToClipboard } from '@/lib/utils'
 
 const actionButtonClass = [

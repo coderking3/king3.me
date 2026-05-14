@@ -1,112 +1,128 @@
 'use server'
 
-import type { MessageWithReplies } from '@/types'
+import type { AuthenticatedServerSession } from '@/lib/auth-session'
 
-import { revalidatePath } from 'next/cache'
+import {
+  createMessage,
+  deleteMessage,
+  deleteMessages,
+  updateMessage
+} from '@/data/messages'
+import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
+import { failure, success } from '@/lib/result'
+import { revalidatePaths } from '@/lib/revalidate'
+import { idSchema, idsSchema } from '@/validations/common'
+import { messageSchema } from '@/validations/messages'
 
-import { messageDb } from '@/db/messages'
-import { actionError, actionSuccess } from '@/lib/action'
-import { checkAdmin, getAuthSession } from '@/lib/auth'
+const revalidUrls = ['/admin/messages', '/message']
 
-export async function getMessagesAction() {
-  try {
-    const result = await messageDb.queryAll()
-    return actionSuccess<MessageWithReplies[]>(result)
-  } catch (error: unknown) {
-    return actionError(error)
+interface InsertMessageParam {
+  message: string
+  parentId?: string
+}
+
+function buildMessageData(
+  param: InsertMessageParam,
+  session: AuthenticatedServerSession
+) {
+  return {
+    message: param.message,
+    userId: session.user.id,
+    userName: session.user.name,
+    userImg: session.user.image ?? '',
+
+    ...(param.parentId ? { parentId: param.parentId } : {})
   }
 }
 
 export async function sendMessageAction(message: string) {
   try {
-    const session = await getAuthSession()
+    const session = await getServerSession()
     if (!session) throw new Error('Not authenticated')
     if (session.user.banned) throw new Error('You are banned')
 
-    await messageDb.create({
-      message,
-      userId: session.user.id,
-      userName: session.user.name,
-      userImg: session.user.image ?? ''
-    })
+    messageSchema.parse({ message })
+    await createMessage(buildMessageData({ message }, session))
 
-    revalidatePath('/message')
-    return actionSuccess(null)
+    revalidatePaths('/message')
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function deleteMessageAction(id: string) {
   try {
-    await checkAdmin()
-    await messageDb.delete(id)
-    revalidatePath('/admin/messages')
-    revalidatePath('/message')
-    return actionSuccess(null)
+    await requireServerAdminSession()
+
+    idSchema.parse(id)
+    await deleteMessage(id)
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function batchDeleteMessagesAction(ids: string[]) {
   try {
-    await checkAdmin()
-    const count = await messageDb.deleteMany(ids)
-    revalidatePath('/admin/messages')
-    revalidatePath('/message')
-    return actionSuccess<number>(count)
+    await requireServerAdminSession()
+
+    idsSchema.parse(ids)
+    const count = await deleteMessages(ids)
+
+    revalidatePaths(...revalidUrls)
+    return success<number>(count)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
-export async function createMessageAction(message: string, userId?: string) {
+export async function createMessageAction(
+  message: string,
+  options: { parentId?: string } = {}
+) {
   try {
-    const session = await checkAdmin()
-    const name = userId ? `User (${userId})` : session.user.name
-    const img = userId ? '' : (session.user.image ?? '')
+    const session = await requireServerAdminSession()
 
-    await messageDb.create({
-      message,
-      userId: userId ?? session.user.id,
-      userName: name,
-      userImg: img
-    })
-    revalidatePath('/admin/messages')
-    revalidatePath('/message')
-    return actionSuccess(null)
+    const { parentId } = options
+    messageSchema.parse({ message })
+    await createMessage(buildMessageData({ message, parentId }, session))
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function updateMessageAction(id: string, message: string) {
   try {
-    await checkAdmin()
-    await messageDb.update(id, message)
-    revalidatePath('/admin/messages')
-    revalidatePath('/message')
-    return actionSuccess(null)
+    await requireServerAdminSession()
+
+    idSchema.parse(id)
+    messageSchema.parse({ message })
+    await updateMessage(id, message)
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function replyToMessageAction(parentId: string, message: string) {
   try {
-    const session = await checkAdmin()
-    await messageDb.create({
-      message,
-      userId: session.user.id,
-      userName: session.user.name,
-      userImg: session.user.image ?? '',
-      parentId
-    })
-    revalidatePath('/admin/messages')
-    revalidatePath('/message')
-    return actionSuccess(null)
+    const session = await requireServerAdminSession()
+
+    idSchema.parse(parentId)
+    messageSchema.parse({ message })
+    await createMessage(buildMessageData({ message, parentId }, session))
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }

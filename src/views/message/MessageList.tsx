@@ -2,7 +2,7 @@ import type { Message } from '@/types'
 
 import Image from 'next/image'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { useTranslation } from '@/i18n/client'
 import { relativeTime } from '@/lib/date'
 

@@ -1,8 +1,8 @@
-import { getUsersAction } from '@/actions/users'
+import { getUsers } from '@/data/users'
 import { UsersPage } from '@/views/admin'
 
 export default async function Page() {
-  const result = await getUsersAction()
+  const users = (await getUsers()) || []
 
-  return <UsersPage users={result.data || []} />
+  return <UsersPage users={users} />
 }

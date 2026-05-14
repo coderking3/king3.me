@@ -7,7 +7,7 @@ import { useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { toast } from 'sonner'
 
-import { sendMessageAction } from '@/actions/messages'
+import { sendMessageAction } from '@/app/actions/messages'
 import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 

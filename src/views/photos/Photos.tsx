@@ -7,7 +7,7 @@ import { Grid2x2, LayoutGrid } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 

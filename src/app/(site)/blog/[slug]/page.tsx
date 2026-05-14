@@ -2,7 +2,7 @@ import type { Posts } from '@/types'
 
 import { notFound } from 'next/navigation'
 
-import { getPostsBySlug } from '@/lib/posts'
+import { getPostsBySlug } from '@/lib/content'
 import { PostsPage } from '@/views/blog'
 
 export default async function Page({

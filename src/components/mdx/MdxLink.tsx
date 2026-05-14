@@ -1,7 +1,7 @@
 'use client'
 
-import { useInteractive } from '@/icons'
-import { ExternalLinkIcon } from '@/icons/ExternalLink'
+import { useInteractive } from '@/components/icons'
+import { ExternalLinkIcon } from '@/components/icons/ExternalLink'
 
 const EXTERNAL_LINK_RE = /^https?:\/\//
 

@@ -1,7 +1,7 @@
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
+import { BiliBili, Email, Feed, Github, X, Youtube } from '@/components/icons'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
 import { getT } from '@/i18n/server'
-import { BiliBili, Email, Feed, Github, X, Youtube } from '@/icons'
 
 import Typewriter from './Typewriter'
 

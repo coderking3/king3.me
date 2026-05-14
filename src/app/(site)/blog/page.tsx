@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 
 import { getT } from '@/i18n/server'
-import { getAllPosts } from '@/lib/posts'
+import { getAllPosts } from '@/lib/content'
 import { BlogPage } from '@/views/blog'
 
 export async function generateMetadata(): Promise<Metadata> {

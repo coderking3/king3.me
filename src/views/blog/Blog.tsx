@@ -1,6 +1,6 @@
 import type { PostsMetadata } from '@/types'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { STAGGER } from '@/constants'
 import { getT } from '@/i18n/server'
 

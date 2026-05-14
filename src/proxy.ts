@@ -11,7 +11,8 @@ import {
   HEADER_NAME,
   LANGUAGES
 } from '@/i18n/settings'
-import { ADMIN_ROLE, getAuthSession } from '@/lib/auth'
+import { ADMIN_USER_ROLE } from '@/lib/auth'
+import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
 
 acceptLanguage.languages([...LANGUAGES])
 
@@ -31,19 +32,20 @@ export async function proxy(request: NextRequest) {
 
   // ── 2. Admin auth guard ──
   if (pathname.startsWith('/admin')) {
-    const session = await getAuthSession()
-
-    if (!session || session?.user.role !== ADMIN_ROLE) {
-      return NextResponse.redirect(new URL('/auth', request.url))
+    try {
+      await requireServerAdminSession(requestHeaders)
+    } catch {
+      return NextResponse.redirect(new URL('/', request.url))
     }
   }
 
   // ── 3. Auth page redirect if already logged in ──
   if (pathname === '/auth') {
-    const session = await getAuthSession()
+    const session = await getServerSession(requestHeaders)
 
     if (session) {
-      const redirectPath = session.user.role === ADMIN_ROLE ? '/admin' : '/'
+      const redirectPath =
+        session.user.role === ADMIN_USER_ROLE ? '/admin' : '/'
       return NextResponse.redirect(new URL(redirectPath, request.url))
     }
   }

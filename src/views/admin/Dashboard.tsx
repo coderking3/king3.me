@@ -1,4 +1,4 @@
-import type { DashboardData } from '@/db'
+import type { DashboardData } from '@/data/dashboard'
 
 import {
   ArrowRight,
@@ -10,7 +10,7 @@ import {
 import Image from 'next/image'
 import Link from 'next/link'
 
-/* --- Stat Card --- */
+// ──── Stat Card ────
 
 interface StatCardProps {
   title: string
@@ -36,7 +36,7 @@ function StatCard({ title, value, newThisMonth, icon }: StatCardProps) {
   )
 }
 
-/* --- Section Card --- */
+//  ---- Section Card ----
 
 interface SectionCardProps {
   title: string
@@ -63,7 +63,7 @@ function SectionCard({ title, href, linkText, children }: SectionCardProps) {
   )
 }
 
-/* --- Dashboard --- */
+// ---- Dashboard ----
 
 interface DashboardProps {
   data: DashboardData

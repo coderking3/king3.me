@@ -4,16 +4,16 @@ declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'common'
     resources: {
-      common: typeof import('@/locales/en/common.json')
-      home: typeof import('@/locales/en/home.json')
-      about: typeof import('@/locales/en/about.json')
-      blog: typeof import('@/locales/en/blog.json')
-      project: typeof import('@/locales/en/project.json')
-      message: typeof import('@/locales/en/message.json')
-      poems: typeof import('@/locales/en/poems.json')
-      photos: typeof import('@/locales/en/photos.json')
-      use: typeof import('@/locales/en/use.json')
-      auth: typeof import('@/locales/en/auth.json')
+      common: typeof import('@/i18n/language/en/common.json')
+      home: typeof import('@/i18n/language/en/home.json')
+      about: typeof import('@/i18n/language/en/about.json')
+      blog: typeof import('@/i18n/language/en/blog.json')
+      project: typeof import('@/i18n/language/en/project.json')
+      message: typeof import('@/i18n/language/en/message.json')
+      poems: typeof import('@/i18n/language/en/poems.json')
+      photos: typeof import('@/i18n/language/en/photos.json')
+      use: typeof import('@/i18n/language/en/use.json')
+      auth: typeof import('@/i18n/language/en/auth.json')
     }
   }
 }

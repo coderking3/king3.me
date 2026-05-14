@@ -1,8 +1,8 @@
-import { getMessagesAction } from '@/actions/messages'
+import { getMessages } from '@/data/messages'
 import { MessagesPage } from '@/views/admin'
 
 export default async function Page() {
-  const result = await getMessagesAction()
+  const messages = (await getMessages()) || []
 
-  return <MessagesPage messages={result.data || []} />
+  return <MessagesPage messages={messages} />
 }

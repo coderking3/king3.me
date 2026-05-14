@@ -1,8 +1,8 @@
-import { getPoemsAction } from '@/actions/poems'
+import { getPoems } from '@/data/poems'
 import { PoemsPage } from '@/views/admin'
 
 export default async function Page() {
-  const result = await getPoemsAction()
+  const poems = (await getPoems()) || []
 
-  return <PoemsPage poems={result.data || []} />
+  return <PoemsPage poems={poems} />
 }

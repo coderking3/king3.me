@@ -3,8 +3,7 @@ import process from 'node:process'
 import { Feed } from 'feed'
 
 import { AUTHOR_INFO, COPYRIGHT } from '@/constants'
-
-import { getAllPosts } from './posts'
+import { getAllPosts } from '@/lib/content'
 
 const DOMAIN = process.env.SITE_URL || 'https://king3-me.vercel.app'
 const AUTHOR = {

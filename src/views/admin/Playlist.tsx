@@ -2,39 +2,28 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components/common'
+import type { SongFormInput } from '@/lib/validations/playlist'
 import type { Playlist } from '@/types'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod/v4'
 
 import {
   batchDeleteSongsAction,
   createSongAction,
   deleteSongAction,
   updateSongAction
-} from '@/actions/playlist'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
+} from '@/app/actions/playlist'
+import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
+import { songFormSchema } from '@/lib/validations/playlist'
 
 // ──── Form Config ────
 
-const songFormSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
-  author: z.string().min(1, 'Artist is required'),
-  cover: z.union([z.url('Please enter a valid URL'), z.literal('')]),
-  url: z.union([z.url('Please enter a valid URL'), z.literal('')]),
-  duration: z
-    .string()
-    .regex(/^(\d{1,2}:)?\d{2}:\d{2}$|^$/, 'Format: MM:SS or HH:MM:SS')
-})
-
-type SongFormValues = z.infer<typeof songFormSchema>
-
-const songFields: FormFieldConfig<SongFormValues>[] = [
+const songFields: FormFieldConfig<SongFormInput>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'Song name' },
   {
     name: 'author',
@@ -46,13 +35,15 @@ const songFields: FormFieldConfig<SongFormValues>[] = [
     name: 'cover',
     label: 'Cover URL',
     type: 'input',
-    placeholder: 'https://...'
+    placeholder: 'https://...',
+    required: true
   },
   {
     name: 'url',
     label: 'Audio URL',
     type: 'input',
-    placeholder: 'https://...'
+    placeholder: 'https://...',
+    required: true
   },
   {
     name: 'duration',
@@ -154,7 +145,7 @@ export default function PlaylistComponent({
     setEditSong(null)
   }
 
-  const handleSubmit = async (data: SongFormValues) => {
+  const handleSubmit = async (data: SongFormInput) => {
     const payload = {
       ...data,
       author: data.author
@@ -172,7 +163,7 @@ export default function PlaylistComponent({
     }
   }
 
-  const formDefaultValues: SongFormValues = {
+  const formDefaultValues: SongFormInput = {
     name: editSong?.name || '',
     author: editSong?.author.join(', ') || '',
     cover: editSong?.cover || '',

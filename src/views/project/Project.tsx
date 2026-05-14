@@ -1,6 +1,6 @@
 import type { Project } from '@/types'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { getT } from '@/i18n/server'
 
 import ProjectCard from './ProjectCard'

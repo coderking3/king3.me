@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Background, Footer, Header } from '@/layouts'
+import { Background, Footer, Header } from '@/components/layout'
 
 export default function SiteLayout({
   children

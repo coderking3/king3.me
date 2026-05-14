@@ -7,9 +7,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronsRight, List, X } from 'lucide-react'
 import { useCallback, useRef, useState } from 'react'
 
+import { Back, ChevronUp, LinkIcon } from '@/components/icons'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
-import { Back, ChevronUp, LinkIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from './PostsTableOfContents'

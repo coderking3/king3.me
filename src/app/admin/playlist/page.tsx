@@ -1,8 +1,8 @@
-import { getPlaylistAction } from '@/actions/playlist'
+import { getPlaylist } from '@/data/playlist'
 import { PlaylistPage } from '@/views/admin'
 
 export default async function Page() {
-  const result = await getPlaylistAction()
+  const playlist = (await getPlaylist()) || []
 
-  return <PlaylistPage playlist={result.data || []} />
+  return <PlaylistPage playlist={playlist} />
 }

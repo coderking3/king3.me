@@ -1,8 +1,8 @@
-import { getProjectsAction } from '@/actions/projects'
+import { getProjects } from '@/data/projects'
 import { ProjectsPage } from '@/views/admin'
 
 export default async function Page() {
-  const result = await getProjectsAction()
+  const projects = (await getProjects()) || []
 
-  return <ProjectsPage projects={result.data || []} />
+  return <ProjectsPage projects={projects} />
 }

@@ -1,92 +1,89 @@
 'use server'
 
-import type { Photo } from '@/types'
+import type { PhotoInput } from '@/validations/photos'
 
-import { revalidatePath } from 'next/cache'
-import { z } from 'zod/v4'
+import {
+  createPhoto,
+  createPhotos,
+  deletePhoto,
+  deletePhotos,
+  updatePhoto
+} from '@/data/photos'
+import { requireServerAdminSession } from '@/lib/auth-session'
+import { failure, success } from '@/lib/result'
+import { revalidatePaths } from '@/lib/revalidate'
+import { idSchema, idsSchema } from '@/validations/common'
+import { photoSchema } from '@/validations/photos'
 
-import { photoDb } from '@/db/photos'
-import { actionError, actionSuccess } from '@/lib/action'
-import { checkAdmin } from '@/lib/auth'
+const revalidUrls = ['/admin/photos', '/photos']
 
-export const photoSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(200, 'Name is too long'),
-  url: z.url('Please enter a valid URL'),
-  width: z.coerce.number().int().positive('Width must be positive'),
-  height: z.coerce.number().int().positive('Height must be positive'),
-  date: z.coerce.date()
-})
-
-export type PhotoInput = z.infer<typeof photoSchema>
-
-export async function getPhotosAction() {
+export async function createPhotoAction(photo: PhotoInput) {
   try {
-    const result = await photoDb.queryAll()
-    return actionSuccess<Photo[]>(result)
+    await requireServerAdminSession()
+
+    const parsed = photoSchema.parse(photo)
+    await createPhoto(parsed)
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
-export async function createPhotoAction(data: PhotoInput) {
+export async function batchCreatePhotosAction(photos: PhotoInput[]) {
   try {
-    await checkAdmin()
-    const parsed = photoSchema.parse(data)
-    await photoDb.create(parsed)
-    revalidatePath('/admin/photos')
-    revalidatePath('/photos')
-    return actionSuccess(null)
+    await requireServerAdminSession()
+
+    const parsed = photos.map((photo) => photoSchema.parse(photo))
+    const count = await createPhotos(parsed)
+
+    revalidatePaths(...revalidUrls)
+    return success<number>(count)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
-export async function batchCreatePhotosAction(items: PhotoInput[]) {
+export async function updatePhotoAction(id: string, photo: PhotoInput) {
   try {
-    await checkAdmin()
-    const parsed = items.map((item) => photoSchema.parse(item))
-    const count = await photoDb.batchCreate(parsed)
-    revalidatePath('/admin/photos')
-    revalidatePath('/photos')
-    return actionSuccess<number>(count)
-  } catch (error: unknown) {
-    return actionError(error)
-  }
-}
+    await requireServerAdminSession()
 
-export async function updatePhotoAction(id: string, data: PhotoInput) {
-  try {
-    await checkAdmin()
-    const parsed = photoSchema.parse(data)
-    await photoDb.update(id, parsed)
-    revalidatePath('/admin/photos')
-    revalidatePath('/photos')
-    return actionSuccess(null)
+    idSchema.parse(id)
+    const parsed = photoSchema.parse(photo)
+    await updatePhoto(id, parsed)
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function deletePhotoAction(id: string) {
   try {
-    await checkAdmin()
-    await photoDb.delete(id)
-    revalidatePath('/admin/photos')
-    revalidatePath('/photos')
-    return actionSuccess(null)
+    await requireServerAdminSession()
+
+    idSchema.parse(id)
+    await deletePhoto(id)
+
+    revalidatePaths(...revalidUrls)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function batchDeletePhotosAction(ids: string[]) {
   try {
-    await checkAdmin()
-    const count = await photoDb.deleteMany(ids)
-    revalidatePath('/admin/photos')
-    revalidatePath('/photos')
-    return actionSuccess<number>(count)
+    await requireServerAdminSession()
+
+    idsSchema.parse(ids)
+    const count = await deletePhotos(ids)
+
+    revalidatePaths(...revalidUrls)
+    return success<number>(count)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }

@@ -1,17 +1,15 @@
-import { redirect } from 'next/navigation'
 import * as React from 'react'
 
+import { AdminHeader, AdminSidebar } from '@/components/layout'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
-import { AdminHeader, AdminSidebar } from '@/layouts/admin'
-import { getAuthSession } from '@/lib/auth'
+import { requireServerAdminSession } from '@/lib/auth-session'
 
 export default async function AdminLayout({
   children
 }: {
   children: React.ReactNode
 }) {
-  const session = await getAuthSession()
-  if (!session) redirect('/auth')
+  const session = await requireServerAdminSession()
 
   return (
     <SidebarProvider

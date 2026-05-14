@@ -3,11 +3,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
+import { useInteractive } from '@/components/icons'
+import { ExternalLinkIcon } from '@/components/icons/ExternalLink'
 import { STAGGER } from '@/constants'
 import { useTranslation } from '@/i18n/client'
-import { useInteractive } from '@/icons'
-import { ExternalLinkIcon } from '@/icons/ExternalLink'
 
 interface Project {
   name: string

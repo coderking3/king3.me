@@ -2,7 +2,7 @@ import type { Posts } from '@/types'
 
 import Image from 'next/image'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { evaluateMdx } from '@/components/mdx'
 import { getT } from '@/i18n/server'
 

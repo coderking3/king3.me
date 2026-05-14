@@ -4,7 +4,7 @@ import type { Message } from '@/types'
 
 import { UserRoundPlus } from 'lucide-react'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { Button } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
 import { useSession } from '@/lib/auth-client'

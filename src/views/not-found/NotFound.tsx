@@ -3,10 +3,10 @@
 import { useTheme } from 'next-themes'
 import Link from 'next/link'
 
-import { Animated } from '@/components/Animated'
+import { Animated } from '@/components/common/Animated'
+import { ArtStarry } from '@/components/layout'
 import { Button } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
-import ArtStarry from '@/layouts/ArtStarry'
 import { cn } from '@/lib/utils'
 
 export default function NotFound() {

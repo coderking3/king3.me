@@ -9,6 +9,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/actions/*": ["./src/app/actions/*"],
+      "@/validations/*": ["./src/lib/validations/*"],
       "~/*": ["./*"]
     },
     "resolveJsonModule": true,

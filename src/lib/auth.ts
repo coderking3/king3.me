@@ -9,9 +9,9 @@ import { admin } from 'better-auth/plugins'
 import { dash } from '@better-auth/infra'
 
 import { prisma } from '@/lib/prisma'
-import { headers } from 'next/headers'
+import { getServerSession } from './auth-session'
 
-export const ADMIN_ROLE = 'admin' as const
+export const ADMIN_USER_ROLE = 'admin' as const
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
@@ -39,20 +39,11 @@ export const auth = betterAuth({
 
 export type Auth = typeof auth
 
-// Retrieve auth session
-export async function getAuthSession() {
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
-
-  return session
-}
-
 // Check if it is an administrator
 export async function checkAdmin() {
-  const session = await getAuthSession()
+  const session = await getServerSession()
 
-  if (!session || session.user.role !== ADMIN_ROLE) {
+  if (!session || session.user.role !== ADMIN_USER_ROLE) {
     throw new Error('No permission to perform this operation')
   }
 

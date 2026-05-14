@@ -5,9 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Trans } from 'react-i18next'
 
-import { Animated } from '@/components'
-import { SOCIAL_URLS } from '@/constants'
-import { useTranslation } from '@/i18n/client'
+import { Animated } from '@/components/common'
 import {
   BrowserIcon,
   CameraIcon,
@@ -15,7 +13,9 @@ import {
   LogoIcon,
   PictureIcon,
   ServeIcon
-} from '@/icons'
+} from '@/components/icons'
+import { SOCIAL_URLS } from '@/constants'
+import { useTranslation } from '@/i18n/client'
 
 import AboutSocial from './AboutSocial'
 

@@ -1,79 +1,78 @@
 'use server'
 
-import type { UserWithRole } from 'better-auth/plugins'
-
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
-import { actionError, actionSuccess } from '@/lib/action'
-import { auth, checkAdmin } from '@/lib/auth'
-
-export async function getUsersAction() {
-  try {
-    await checkAdmin()
-    const result = await auth.api.listUsers({
-      headers: await headers(),
-      query: { limit: 100 }
-    })
-    return actionSuccess<UserWithRole[]>(result.users)
-  } catch (error: unknown) {
-    return actionError(error)
-  }
-}
+import {
+  banUser,
+  getUser,
+  removeUser,
+  setUserRole,
+  unbanUser,
+  updateUser
+} from '@/data/users'
+import { requireServerAdminSession } from '@/lib/auth-session'
+import { failure, success } from '@/lib/result'
+import { idSchema } from '@/validations/common'
+import {
+  banUserSchema,
+  setUserRoleSchema,
+  updateUserSchema
+} from '@/validations/users'
 
 export async function banUserAction(userId: string, reason?: string) {
   try {
-    await checkAdmin()
-    await auth.api.banUser({
-      headers: await headers(),
-      body: { userId, banReason: reason }
-    })
+    await requireServerAdminSession()
+
+    banUserSchema.parse({ userId, reason })
+    await banUser(await headers(), userId, reason)
+
     revalidatePath('/admin/users')
-    return actionSuccess(null)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function unbanUserAction(userId: string) {
   try {
-    await checkAdmin()
-    await auth.api.unbanUser({
-      headers: await headers(),
-      body: { userId }
-    })
+    await requireServerAdminSession()
+
+    idSchema.parse(userId)
+    await unbanUser(await headers(), userId)
+
     revalidatePath('/admin/users')
-    return actionSuccess(null)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 type Role = 'user' | 'admin'
 export async function setUserRoleAction(userId: string, role: Role | Role[]) {
   try {
-    await checkAdmin()
-    await auth.api.setRole({
-      headers: await headers(),
-      body: { userId, role }
-    })
+    await requireServerAdminSession()
+
+    setUserRoleSchema.parse({ userId, role })
+    await setUserRole(await headers(), userId, role)
+
     revalidatePath('/admin/users')
-    return actionSuccess(null)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function getUserAction(userId: string) {
   try {
-    await checkAdmin()
-    const result = await auth.api.getUser({
-      headers: await headers(),
-      query: { id: userId }
-    })
-    return actionSuccess<UserWithRole>(result)
+    await requireServerAdminSession()
+
+    idSchema.parse(userId)
+    const result = await getUser(await headers(), userId)
+
+    return success(result)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
@@ -82,28 +81,29 @@ export async function updateUserAction(
   data: { name?: string; image?: string }
 ) {
   try {
-    await checkAdmin()
-    await auth.api.adminUpdateUser({
-      headers: await headers(),
-      body: { userId, data }
-    })
+    await requireServerAdminSession()
+
+    idSchema.parse(userId)
+    updateUserSchema.parse(data)
+    await updateUser(await headers(), userId, data)
+
     revalidatePath('/admin/users')
-    return actionSuccess(null)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }
 
 export async function removeUserAction(userId: string) {
   try {
-    await checkAdmin()
-    await auth.api.removeUser({
-      headers: await headers(),
-      body: { userId }
-    })
+    await requireServerAdminSession()
+
+    idSchema.parse(userId)
+    await removeUser(await headers(), userId)
+
     revalidatePath('/admin/users')
-    return actionSuccess(null)
+    return success(null)
   } catch (error: unknown) {
-    return actionError(error)
+    return failure(error)
   }
 }

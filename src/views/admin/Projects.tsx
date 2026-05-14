@@ -2,9 +2,9 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { ProjectInput } from '@/actions/projects'
-import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components/common'
 import type { Project } from '@/types'
+import type { ProjectInput } from '@/validations/projects'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
@@ -15,12 +15,12 @@ import {
   batchDeleteProjectsAction,
   createProjectAction,
   deleteProjectAction,
-  projectSchema,
   reorderProjectsAction,
   updateProjectAction
-} from '@/actions/projects'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
+} from '@/app/actions/projects'
+import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
+import { projectSchema } from '@/validations/projects'
 
 // ──── Form Config ────
 
@@ -32,8 +32,20 @@ const projectFields: FormFieldConfig<ProjectInput>[] = [
     type: 'textarea',
     placeholder: 'Project description'
   },
-  { name: 'link', label: 'Link', type: 'input', placeholder: 'https://...' },
-  { name: 'icon', label: 'Icon URL', type: 'input', placeholder: 'https://...' }
+  {
+    name: 'link',
+    label: 'Link',
+    type: 'input',
+    placeholder: 'https://...',
+    required: true
+  },
+  {
+    name: 'icon',
+    label: 'Icon URL',
+    type: 'input',
+    placeholder: 'https://...',
+    required: true
+  }
 ]
 
 // ──── Table Columns ────

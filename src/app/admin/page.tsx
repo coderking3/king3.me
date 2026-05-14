@@ -1,8 +1,8 @@
-import { dashboardDb } from '@/db'
+import { getDashboardData } from '@/data/dashboard'
 import { DashboardPage } from '@/views/admin'
 
 export default async function Page() {
-  const data = await dashboardDb.query()
+  const data = await getDashboardData()
 
   return <DashboardPage data={data} />
 }

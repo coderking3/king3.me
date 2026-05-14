@@ -1,3 +1,5 @@
+'use server'
+
 import type { Language, Namespace } from './settings'
 
 import { createInstance } from 'i18next'
@@ -13,7 +15,7 @@ async function initI18next(lng: Language, ns: Namespace) {
   instance.use(
     resourcesToBackend(
       (language: string, namespace: string) =>
-        import(`@/locales/${language}/${namespace}.json`)
+        import(`@/i18n/language/${language}/${namespace}.json`)
     )
   )
   await instance.init(getI18nOptions(lng, ns))

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { getPoemsAction } from '@/actions/poems'
+import { getPoems } from '@/data/poems'
 import { getT } from '@/i18n/server'
 import { PoemsPage } from '@/views/poems'
 
@@ -14,9 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const result = await getPoemsAction()
+  const poems = await getPoems()
 
-  return <PoemsPage poems={result.data || []} />
+  return <PoemsPage poems={poems} />
 }
-
-export const revalidate = 3600

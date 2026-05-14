@@ -2,9 +2,9 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { PoemInput } from '@/actions/poems'
-import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components/common'
 import type { Poem } from '@/types'
+import type { PoemInput } from '@/validations/poems'
 
 import { format } from 'date-fns'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
@@ -15,11 +15,11 @@ import {
   batchDeletePoemsAction,
   createPoemAction,
   deletePoemAction,
-  poemSchema,
   updatePoemAction
-} from '@/actions/poems'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
+} from '@/app/actions/poems'
+import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
+import { poemSchema } from '@/validations/poems'
 
 // ──── Form Config ────
 

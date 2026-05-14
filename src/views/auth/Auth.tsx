@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
+import { useInteractive } from '@/components/icons'
+import { ArrowLeftIcon } from '@/components/icons/ArrowLeft'
 import { useTranslation } from '@/i18n/client'
-import { useInteractive } from '@/icons'
-import { ArrowLeftIcon } from '@/icons/ArrowLeft'
 
 import AuthForm from './AuthForm'
 

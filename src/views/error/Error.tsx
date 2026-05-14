@@ -3,10 +3,10 @@
 import { AlertTriangle, RefreshCcw } from 'lucide-react'
 import { useEffect } from 'react'
 
-import { Animated } from '@/components/Animated'
+import { Animated } from '@/components/common/Animated'
+import { ArtStarry } from '@/components/layout'
 import { Button } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
-import ArtStarry from '@/layouts/ArtStarry'
 import { cn } from '@/lib/utils'
 
 interface ErrorComponentProps {

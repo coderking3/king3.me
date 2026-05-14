@@ -3,10 +3,15 @@
 import Link from 'next/link'
 import { Trans } from 'react-i18next'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
+import {
+  BiliBiliIcon,
+  GithubIcon,
+  XIcon,
+  YoutubeIcon
+} from '@/components/icons'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
 import { useTranslation } from '@/i18n/client'
-import { BiliBiliIcon, GithubIcon, XIcon, YoutubeIcon } from '@/icons'
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', icon: <GithubIcon size={18} />, href: SOCIAL_URLS.github },

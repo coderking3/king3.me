@@ -2,9 +2,9 @@
 
 import type { Table } from '@tanstack/react-table'
 
-import type { PhotoInput } from '@/actions/photos'
-import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { ColumnConfig, FormFieldConfig } from '@/components/common'
 import type { Photo } from '@/types'
+import type { PhotoInput } from '@/validations/photos'
 
 import { format } from 'date-fns'
 import { FileJson, Pencil, Plus, Trash2 } from 'lucide-react'
@@ -17,11 +17,11 @@ import {
   batchDeletePhotosAction,
   createPhotoAction,
   deletePhotoAction,
-  photoSchema,
   updatePhotoAction
-} from '@/actions/photos'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
+} from '@/app/actions/photos'
+import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button, DialogClose, DialogFooter, Textarea } from '@/components/ui'
+import { photoSchema } from '@/validations/photos'
 
 // ──── Form Config ────
 

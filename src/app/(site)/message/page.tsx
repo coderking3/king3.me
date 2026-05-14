@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-import { getMessagesAction } from '@/actions/messages'
+import { getMessages } from '@/data/messages'
 import { getT } from '@/i18n/server'
 import { MessagePage } from '@/views/message'
 
@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Page() {
-  const result = await getMessagesAction()
+  const messages = (await getMessages()) || []
 
-  return <MessagePage messages={result.data || []} />
+  return <MessagePage messages={messages} />
 }

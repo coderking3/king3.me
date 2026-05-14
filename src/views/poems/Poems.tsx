@@ -1,6 +1,6 @@
 import type { Poem } from '@/types'
 
-import { Animated } from '@/components'
+import { Animated } from '@/components/common'
 import { getT } from '@/i18n/server'
 
 async function PoemsPage({ poems }: { poems: Poem[] }) {

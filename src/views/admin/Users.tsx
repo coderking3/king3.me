@@ -1,12 +1,14 @@
 'use client'
 
-import type { ColumnConfig, FormFieldConfig } from '@/components'
+import type { UserWithRole } from 'better-auth/plugins'
+
+import type { ColumnConfig, FormFieldConfig } from '@/components/common'
+import type { UpdateUserInput } from '@/lib/validations/users'
 
 import { Pencil, Shield, ShieldOff, Trash2, UserX } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
-import { z } from 'zod/v4'
 
 import {
   banUserAction,
@@ -14,38 +16,19 @@ import {
   setUserRoleAction,
   unbanUserAction,
   updateUserAction
-} from '@/actions/users'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components'
+} from '@/app/actions/users'
+import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import {
   AlertDialogAction,
   AlertDialogCancel,
   Badge,
   Input
 } from '@/components/ui'
-
-/* --- Types --- */
-
-interface UserItem {
-  id: string
-  name: string
-  email: string
-  image?: string | null
-  role?: string | null
-  banned?: boolean | null
-  banReason?: string | null
-  createdAt: Date
-}
+import { updateUserSchema } from '@/lib/validations/users'
 
 // ──── Form Config ────
 
-const userSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name is too long'),
-  image: z.union([z.url('Please enter a valid URL'), z.literal('')])
-})
-
-type UserFormValues = z.infer<typeof userSchema>
-
-const userFields: FormFieldConfig<UserFormValues>[] = [
+const userFields: FormFieldConfig<UpdateUserInput>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'User name' },
   {
     name: 'image',
@@ -55,9 +38,9 @@ const userFields: FormFieldConfig<UserFormValues>[] = [
   }
 ]
 
-/* --- Table Columns --- */
+// ──── Table Columns ────
 
-const columns: ColumnConfig<UserItem>[] = [
+const columns: ColumnConfig<UserWithRole>[] = [
   {
     key: 'name',
     title: 'User',
@@ -115,14 +98,14 @@ const columns: ColumnConfig<UserItem>[] = [
   }
 ]
 
-/* --- Component --- */
+// ──── Component ────
 
-export default function Users({ users }: { users: UserItem[] }) {
-  const [banTarget, setBanTarget] = useState<UserItem | null>(null)
+export default function Users({ users }: { users: UserWithRole[] }) {
+  const [banTarget, setBanTarget] = useState<UserWithRole | null>(null)
   const [banReason, setBanReason] = useState('')
   const [banLoading, setBanLoading] = useState(false)
   const [unbanId, setUnbanId] = useState<string | null>(null)
-  const [editUser, setEditUser] = useState<UserItem | null>(null)
+  const [editUser, setEditUser] = useState<UserWithRole | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
   const formOpen = !!editUser
@@ -181,7 +164,7 @@ export default function Users({ users }: { users: UserItem[] }) {
     setDeleteId(null)
   }
 
-  const handleEditSubmit = async (data: UserFormValues) => {
+  const handleEditSubmit = async (data: UpdateUserInput) => {
     if (!editUser) return
     const result = await updateUserAction(editUser.id, data)
     if (result.success) {
@@ -196,7 +179,7 @@ export default function Users({ users }: { users: UserItem[] }) {
     setEditUser(null)
   }
 
-  const formDefaultValues: UserFormValues = {
+  const formDefaultValues: UpdateUserInput = {
     name: editUser?.name || '',
     image: editUser?.image || ''
   }
@@ -322,7 +305,7 @@ export default function Users({ users }: { users: UserItem[] }) {
         showFooter={false}
       >
         <Form
-          schema={userSchema}
+          schema={updateUserSchema}
           fields={userFields}
           defaultValues={formDefaultValues}
           onSubmit={handleEditSubmit}

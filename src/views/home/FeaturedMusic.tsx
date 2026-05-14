@@ -6,8 +6,8 @@ import { Pause, Play } from 'lucide-react'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
+import { Equalizer, NetEaseMusicIcon } from '@/components/icons'
 import { useTranslation } from '@/i18n/client'
-import { Equalizer, NetEaseMusicIcon } from '@/icons'
 import { cn } from '@/lib/utils'
 
 function FeaturedMusic({ songs }: { songs: Playlist[] }) {
