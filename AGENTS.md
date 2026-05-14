@@ -85,7 +85,7 @@ This file provides guidance to AI coding agents when working with code in this r
 - **Server Actions pattern**: All exported server actions in `src/app/actions/` use an `Action` suffix (for example, `createProjectAction`) and follow the same structure:
   - Wrap logic in `try/catch`
   - Check auth in the action (`requireServerAdminSession()` for admin mutations)
-  - Validate inputs with Zod schemas from `src/lib/validations/`
+  - Validate inputs with Zod schemas from `@/validations/`
   - Call a DAL function from `src/data/`
   - Call `revalidatePath()` / `revalidatePaths()` after mutations
   - Return `success(data)` on success, `failure(error)` on failure

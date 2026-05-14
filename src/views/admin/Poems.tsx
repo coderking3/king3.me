@@ -16,7 +16,7 @@ import {
   createPoemAction,
   deletePoemAction,
   updatePoemAction
-} from '@/app/actions/poems'
+} from '@/actions/poems'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
 import { poemSchema } from '@/validations/poems'

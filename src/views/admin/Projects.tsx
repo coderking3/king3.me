@@ -17,7 +17,7 @@ import {
   deleteProjectAction,
   reorderProjectsAction,
   updateProjectAction
-} from '@/app/actions/projects'
+} from '@/actions/projects'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
 import { projectSchema } from '@/validations/projects'

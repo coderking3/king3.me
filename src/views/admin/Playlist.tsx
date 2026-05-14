@@ -3,8 +3,8 @@
 import type { Table } from '@tanstack/react-table'
 
 import type { ColumnConfig, FormFieldConfig } from '@/components/common'
-import type { SongFormInput } from '@/lib/validations/playlist'
 import type { Playlist } from '@/types'
+import type { SongFormInput } from '@/validations/playlist'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import Image from 'next/image'
@@ -16,10 +16,10 @@ import {
   createSongAction,
   deleteSongAction,
   updateSongAction
-} from '@/app/actions/playlist'
+} from '@/actions/playlist'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button } from '@/components/ui'
-import { songFormSchema } from '@/lib/validations/playlist'
+import { songFormSchema } from '@/validations/playlist'
 
 // ──── Form Config ────
 

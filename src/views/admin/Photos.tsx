@@ -18,7 +18,7 @@ import {
   createPhotoAction,
   deletePhotoAction,
   updatePhotoAction
-} from '@/app/actions/photos'
+} from '@/actions/photos'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Button, DialogClose, DialogFooter, Textarea } from '@/components/ui'
 import { photoSchema } from '@/validations/photos'

@@ -3,7 +3,7 @@
 import type { UserWithRole } from 'better-auth/plugins'
 
 import type { ColumnConfig, FormFieldConfig } from '@/components/common'
-import type { UpdateUserInput } from '@/lib/validations/users'
+import type { UpdateUserInput } from '@/validations/users'
 
 import { Pencil, Shield, ShieldOff, Trash2, UserX } from 'lucide-react'
 import Image from 'next/image'
@@ -16,7 +16,7 @@ import {
   setUserRoleAction,
   unbanUserAction,
   updateUserAction
-} from '@/app/actions/users'
+} from '@/actions/users'
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import {
   AlertDialogAction,
@@ -24,7 +24,7 @@ import {
   Badge,
   Input
 } from '@/components/ui'
-import { updateUserSchema } from '@/lib/validations/users'
+import { updateUserSchema } from '@/validations/users'
 
 // ──── Form Config ────
 
