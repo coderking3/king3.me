@@ -89,9 +89,6 @@ importers:
       i18next-resources-to-backend:
         specifier: ^1.2.1
         version: 1.2.1
-      kedash:
-        specifier: ^0.3.1
-        version: 0.3.1
       lucide-react:
         specifier: ^1.8.0
         version: 1.14.0(react@19.2.1)
@@ -3508,9 +3505,6 @@ packages:
   katex@0.16.45:
     resolution: {integrity: sha512-pQpZbdBu7wCTmQUh7ufPmLr0pFoObnGUoL/yhtwJDgmmQpbkg/0HSVti25Fu4rmd1oCR6NGWe9vqTWuWv3GcNA==}
     hasBin: true
-
-  kedash@0.3.1:
-    resolution: {integrity: sha512-3vjIxoU/P/dIhL1TtdAO8jSjeUD3Yn203jBBvhZmPPKDUMJgPQcKslom0S+q2SzaAYeVyJeduJsW6T5YkkQ3vw==}
 
   keyv@4.5.4:
     resolution: {integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==}
@@ -8608,8 +8602,6 @@ snapshots:
   katex@0.16.45:
     dependencies:
       commander: 8.3.0
-
-  kedash@0.3.1: {}
 
   keyv@4.5.4:
     dependencies:

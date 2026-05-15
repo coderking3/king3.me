@@ -1,6 +1,6 @@
 import { z } from 'zod/v4'
 
-import { idSchema, optionalUrlSchema } from './common'
+import { idSchema, optionalHttpUrlSchema } from './common'
 
 export const banUserSchema = z.object({
   userId: idSchema,
@@ -18,7 +18,7 @@ export const setUserRoleSchema = z.object({
 
 export const updateUserSchema = z.object({
   name: z.string().min(1).max(100).optional(),
-  image: optionalUrlSchema
+  image: optionalHttpUrlSchema
 })
 
 export type UpdateUserInput = z.infer<typeof updateUserSchema>

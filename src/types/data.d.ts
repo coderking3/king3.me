@@ -7,6 +7,25 @@ import type {
   User as PrismaUser
 } from '~/prisma/generated/client'
 
+/* Dashboard */
+
+interface DashboardStats {
+  totalUsers: number
+  totalMessages: number
+  totalProjects: number
+  totalSongs: number
+  newUsersThisMonth: number
+  newMessagesThisMonth: number
+}
+
+interface DashboardData {
+  stats: DashboardStats
+  recentMessages: Message[]
+  recentUsers: User[]
+  projects: Project[]
+  recentSongs: Playlist[]
+}
+
 /* Message  */
 
 type Message = Omit<PrismaMessage, 'createdAt'> & {
@@ -65,54 +84,29 @@ interface SearchData {
 type UserRole = 'admin' | 'user'
 
 type User = Omit<PrismaUser, 'createdAt' | 'updatedAt' | 'banExpires'> & {
-  role: UserRole
   createdAt: string
   updatedAt: string
-  banExpires: string
-}
-
-/* Dashboard */
-interface DashboardStats {
-  totalUsers: number
-  totalMessages: number
-  totalProjects: number
-  totalSongs: number
-  newUsersThisMonth: number
-  newMessagesThisMonth: number
-}
-
-interface DashboardData {
-  stats: DashboardStats
-  recentMessages: Message[]
-  recentUsers: User[]
-  projects: Project[]
-  recentSongs: Playlist[]
+  banExpires: string | null
 }
 
 export type {
+  // Part: Dashboard
+  DashboardData,
   // Part: Message
   CreateMessageInput,
   Message,
   MessageWithReplies,
-  PrismaMessage,
   // Part: Photo
   Photo,
-  PrismaPhoto,
   // Part: Playlist
   Playlist,
-  PrismaPlaylist,
   // Part: Poem
   Poem,
-  PrismaPoem,
   // Part: Project
-  PrismaProject,
   Project,
   // Part: Search
   SearchData,
-  // Part: Dashboard
-  DashboardData,
   // Part: User
-  PrismaUser,
   User,
   UserRole
 }

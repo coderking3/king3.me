@@ -1,7 +1,10 @@
 'use client'
 
+import * as React from 'react'
+
 import { useInteractive } from '@/components/icons'
 import { ExternalLinkIcon } from '@/components/icons/ExternalLink'
+import { cn } from '@/lib/utils'
 
 const EXTERNAL_LINK_RE = /^https?:\/\//
 
@@ -18,18 +21,21 @@ function MdxLink({
 }: React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   const { isHovered, handlers } = useInteractive()
 
-  const external = isExternalLink(href)
+  const isExternal = isExternalLink(href)
+  const isHeading = className?.includes('anchor')
+  const isChildCode = React.isValidElement(children) && children.type === 'code'
+  const showExternal = isExternal && !isHeading && !isChildCode
 
   return (
     <a
       href={href}
-      {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
-      className={external ? `group/link ${className ?? ''}` : className}
+      {...(isExternal && { target: '_blank', rel: 'noopener noreferrer' })}
+      className={cn(className, isExternal && `group/link external`)}
       {...handlers}
       {...props}
     >
       {children}
-      {external && (
+      {showExternal && (
         <ExternalLinkIcon
           size={12}
           isHovered={isHovered}

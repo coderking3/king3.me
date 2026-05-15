@@ -1,4 +1,4 @@
-import type { DashboardData } from '@/data/dashboard'
+import type { DashboardData } from '@/types'
 
 import {
   ArrowRight,

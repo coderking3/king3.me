@@ -1,10 +1,10 @@
 import { z } from 'zod/v4'
 
-import { nameSchema, urlSchema } from './common'
+import { httpUrlSchema, nameSchema } from './common'
 
 export const photoSchema = z.object({
   name: nameSchema,
-  url: urlSchema,
+  url: httpUrlSchema,
   width: z.coerce.number().int().positive('Width must be positive'),
   height: z.coerce.number().int().positive('Height must be positive'),
   date: z.coerce.date()

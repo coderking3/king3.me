@@ -1,4 +1,4 @@
-import type { Message, Playlist, Project } from '@/types'
+import type { DashboardData } from '@/types'
 
 import { cache } from 'react'
 
@@ -6,33 +6,6 @@ import { requireServerAdminSession } from '@/lib/auth-session'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
-
-export interface DashboardData {
-  stats: {
-    totalUsers: number
-    totalMessages: number
-    totalProjects: number
-    totalSongs: number
-    newUsersThisMonth: number
-    newMessagesThisMonth: number
-  }
-  recentMessages: Message[]
-  recentUsers: {
-    id: string
-    name: string
-    email: string
-    emailVerified: boolean
-    image: string | null
-    role: string | null
-    banned: boolean | null
-    banReason: string | null
-    createdAt: string
-    updatedAt: string
-    banExpires: string | null
-  }[]
-  projects: Project[]
-  recentSongs: Playlist[]
-}
 
 export const getDashboardData = cache(async (): Promise<DashboardData> => {
   await requireServerAdminSession()

@@ -9,15 +9,12 @@ import { Button } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
-interface ErrorComponentProps {
+interface ErrorViewProps {
   error: Error & { digest?: string }
   unstable_retry: () => void
 }
 
-export default function ErrorComponent({
-  error,
-  unstable_retry
-}: ErrorComponentProps) {
+export default function ErrorView({ error, unstable_retry }: ErrorViewProps) {
   const { t } = useTranslation('common')
 
   useEffect(() => {

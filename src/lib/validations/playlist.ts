@@ -1,11 +1,11 @@
 import { z } from 'zod/v4'
 
-import { nameSchema, urlSchema } from './common'
+import { httpUrlSchema, nameSchema } from './common'
 
 const SONG_SCHEMA_CONFIG = {
   name: nameSchema,
-  cover: urlSchema,
-  url: urlSchema,
+  cover: httpUrlSchema,
+  url: httpUrlSchema,
   duration: z
     .string()
     .regex(/^(\d{1,2}:)?\d{2}:\d{2}$|^$/, 'Format: MM:SS or HH:MM:SS')

@@ -45,22 +45,22 @@ const PAGES = [
   { key: 'uses', href: '/use' }
 ] as const
 
-const useSearchData = () => {
+const useSearchData = (open: boolean) => {
   // eslint-disable-next-line react-naming-convention/ref-name
   const fetched = useRef(false)
   const [searchData, setSearchData] = useState<SearchData | null>(null)
 
+  // Fetch search data on first open
   useEffect(() => {
-    if (fetched.current) return
+    if (!open || fetched.current) return
 
     fetched.current = true
-
     fetch('/api/search')
       .then((res) => res.json())
       .then(({ success, data }: ResponseResult) => {
         success && setSearchData(data)
       })
-  }, [])
+  }, [open])
 
   return { searchData }
 }
@@ -69,7 +69,7 @@ export function SearchCommand() {
   const router = useRouter()
   const { open, openSearch, closeSearch } = useSearchStore()
   const { t } = useTranslation('common')
-  const { searchData } = useSearchData()
+  const { searchData } = useSearchData(open)
 
   // Keyboard shortcut: Cmd+K / Ctrl+K
   useEffect(() => {

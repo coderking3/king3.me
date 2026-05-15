@@ -27,12 +27,15 @@
   }
 
   /* Blockquote */
-
   & blockquote {
-    @apply bg-brand/15 rounded-xs not-italic!;
+    @apply bg-brand/15 min-h-8 rounded-xs pr-1 not-italic!;
 
     quotes: none;
     border-inline-start-color: var(--brand);
+
+    p {
+      @apply min-h-8 leading-8;
+    }
   }
 
   /* Task list — checkbox aligns with bullet markers */
@@ -71,8 +74,16 @@
     @apply text-accent-foreground bg-secondary border-border rounded-md border px-1.5 py-0.5 text-sm font-medium before:content-none after:content-none sm:text-sm;
   }
 
+  & a.external code {
+    @apply hover:border-muted-foreground/70! transition-colors duration-200;
+  }
+
   & a:has(code) {
     @apply shadow-none hover:shadow-none;
+  }
+
+  & blockquote code {
+    @apply text-brand!;
   }
 
   /* Code block */
