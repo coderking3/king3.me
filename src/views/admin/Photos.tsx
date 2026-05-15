@@ -25,9 +25,7 @@ import { photoSchema } from '@/validations/photos'
 
 // ──── Form Config ────
 
-type PhotoFormValues = PhotoInput
-
-const photoFields: FormFieldConfig<PhotoFormValues>[] = [
+const photoFields: FormFieldConfig<PhotoInput>[] = [
   { name: 'name', label: 'Name', type: 'input', placeholder: 'Photo name' },
   {
     name: 'url',
@@ -126,7 +124,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
     setEditPhoto(null)
   }
 
-  const handleSubmit = async (data: PhotoFormValues) => {
+  const handleSubmit = async (data: PhotoInput) => {
     const payload: PhotoInput = {
       ...data,
       width: Number(data.width),
@@ -172,7 +170,7 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
     setImportLoading(false)
   }
 
-  const formDefaultValues: PhotoFormValues = {
+  const formDefaultValues: PhotoInput = {
     name: editPhoto?.name || '',
     url: editPhoto?.url || '',
     width: editPhoto?.width || 0,

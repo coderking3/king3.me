@@ -1,12 +1,10 @@
-import type { Message } from '@/types'
+import type { Message, MessageWithReplies } from '@/types'
 
 import Image from 'next/image'
 
 import { Animated } from '@/components/common'
 import { useTranslation } from '@/i18n/client'
 import { relativeTime } from '@/lib/date'
-
-type MessageWithReplies = Message & { replies: Message[] }
 
 /* --- Single Reply --- */
 

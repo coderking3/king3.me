@@ -1,6 +1,6 @@
 'use client'
 
-import type { Message } from '@/types'
+import type { MessageWithReplies } from '@/types'
 
 import { UserRoundPlus } from 'lucide-react'
 
@@ -13,8 +13,6 @@ import { useAuthStore } from '@/stores/auth'
 
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
-
-type MessageWithReplies = Message & { replies: Message[] }
 
 function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
   const { t } = useTranslation('message')

@@ -3,7 +3,7 @@
 import type { Table } from '@tanstack/react-table'
 
 import type { ColumnConfig, FormFieldConfig } from '@/components/common'
-import type { Message } from '@/types'
+import type { Message, MessageWithReplies } from '@/types'
 import type { MessageInput, ReplyInput } from '@/validations/messages'
 
 import { Pencil, Plus, Reply, Trash2 } from 'lucide-react'
@@ -21,8 +21,6 @@ import {
 import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
 import { Badge, Button } from '@/components/ui'
 import { messageSchema, replySchema } from '@/validations/messages'
-
-type MessageWithReplies = Message & { replies: Message[] }
 
 // ──── Form Config ────
 
