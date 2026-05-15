@@ -9,7 +9,7 @@ import { Button } from '@/components/ui'
 import { useTranslation } from '@/i18n/client'
 import { useSession } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
-import { useAuthModal } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
 import MessageInput from './MessageInput'
 import MessageList from './MessageList'
@@ -19,7 +19,7 @@ type MessageWithReplies = Message & { replies: Message[] }
 function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
   const { t } = useTranslation('message')
   const { data: session } = useSession()
-  const { openModal } = useAuthModal()
+  const { openModal } = useAuthStore()
 
   return (
     <div className="mt-14 sm:mt-24">

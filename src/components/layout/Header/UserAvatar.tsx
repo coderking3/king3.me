@@ -20,7 +20,7 @@ import {
 } from '@/components/ui'
 import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
-import { useAuthModal } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 import { AuthModal } from '@/views/auth'
 
 interface UserAvatarUser {
@@ -42,7 +42,7 @@ const triggerClass = cn(
 )
 
 function UserAvatar({ user }: UserAvatarProps) {
-  const { open, openModal, closeModal } = useAuthModal()
+  const { isOpen, openModal, closeModal } = useAuthStore()
   const pathname = usePathname()
   const { isHovered, handlers } = useInteractive({ trigger: 'hover' })
 
@@ -76,7 +76,7 @@ function UserAvatar({ user }: UserAvatarProps) {
           </animated.span>
         </button>
         <AuthModal
-          open={open}
+          open={isOpen}
           onOpenChange={(v) => (v ? openModal() : closeModal())}
           callbackURL={pathname}
         />
