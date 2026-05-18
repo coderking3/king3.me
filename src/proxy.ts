@@ -6,9 +6,9 @@ import acceptLanguage from 'accept-language'
 import { NextResponse } from 'next/server'
 
 import {
-  COOKIE_NAME,
   FALLBACK_LNG,
-  HEADER_NAME,
+  isValidLocale,
+  LANGUAGE_COOKIE,
   LANGUAGES
 } from '@/i18n/settings'
 import { ADMIN_USER_ROLE } from '@/lib/auth'
@@ -16,43 +16,70 @@ import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
 
 acceptLanguage.languages([...LANGUAGES])
 
+// ── Locale ──
+
+function detectLocale(request: NextRequest): {
+  locale: Language
+  persisted: boolean
+} {
+  const saved = request.cookies.get(LANGUAGE_COOKIE)?.value
+  if (saved && LANGUAGES.includes(saved as Language)) {
+    return { locale: saved as Language, persisted: true }
+  }
+  const matched = acceptLanguage.get(request.headers.get('Accept-Language'))
+  return {
+    locale: isValidLocale(matched) ? matched : FALLBACK_LNG,
+    persisted: false
+  }
+}
+
+function withLocale(
+  response: NextResponse,
+  locale: Language,
+  persisted: boolean
+) {
+  if (!persisted) {
+    response.cookies.set(LANGUAGE_COOKIE, locale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: 'lax'
+    })
+  }
+  return response
+}
+
+// ── Proxy ──
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
+  const { locale, persisted } = detectLocale(request)
 
-  // ── 1. Language detection: Cookie → Accept-Language → fallback ──
-  let lang = request.cookies.get(COOKIE_NAME)?.value
+  const reply = (response: NextResponse) =>
+    withLocale(response, locale, persisted)
+  const redirect = (path: string) =>
+    reply(NextResponse.redirect(new URL(path, request.url)))
 
-  if (!lang || !LANGUAGES.includes(lang as Language)) {
-    lang =
-      acceptLanguage.get(request.headers.get('Accept-Language')) ?? FALLBACK_LNG
-  }
-
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set(HEADER_NAME, lang)
-
-  // ── 2. Admin auth guard ──
+  // Admin auth guard
   if (pathname.startsWith('/admin')) {
     try {
-      await requireServerAdminSession(requestHeaders)
+      await requireServerAdminSession(request.headers)
     } catch {
-      return NextResponse.redirect(new URL('/', request.url))
+      return redirect('/')
     }
   }
 
-  // ── 3. Auth page redirect if already logged in ──
+  // Auth page: redirect if already signed in
   if (pathname === '/auth') {
-    const session = await getServerSession(requestHeaders)
+    const session = await getServerSession(request.headers)
 
     if (session) {
       const redirectPath =
         session.user.role === ADMIN_USER_ROLE ? '/admin' : '/'
-      return NextResponse.redirect(new URL(redirectPath, request.url))
+      return redirect(redirectPath)
     }
   }
 
-  return NextResponse.next({
-    request: { headers: requestHeaders }
-  })
+  return reply(NextResponse.next())
 }
 
 export const config = {

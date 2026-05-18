@@ -1,13 +1,11 @@
 import type { Metadata } from 'next'
 
 import { ThemeProvider } from 'next-themes'
-import { headers } from 'next/headers'
 import * as React from 'react'
 
 import { Toaster } from '@/components/ui'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { getT } from '@/i18n/server'
-import { FALLBACK_LNG, HEADER_NAME } from '@/i18n/settings'
+import { getLang, getT } from '@/i18n/server'
 import { audioWide, robotoMono } from '@/lib/font'
 import { cn } from '@/lib/utils'
 
@@ -45,8 +43,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const headerList = await headers()
-  const lang = headerList.get(HEADER_NAME) ?? FALLBACK_LNG
+  const lang = await getLang()
 
   return (
     <html

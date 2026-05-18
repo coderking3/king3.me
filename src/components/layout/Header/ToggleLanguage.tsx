@@ -5,10 +5,11 @@ import type { Language } from '@/i18n/settings'
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
+import { switchLocaleAction } from '@/app/actions/i18n'
 import { InteractiveIcon, LanguageIcon } from '@/components/icons'
 import { useTranslation } from '@/i18n/client'
-import { COOKIE_NAME } from '@/i18n/settings'
 
 function ToggleLanguage({
   size,
@@ -23,13 +24,18 @@ function ToggleLanguage({
 
   useEffect(() => setMounted(true), [])
 
-  const switchLang = (event: React.MouseEvent) => {
+  const switchLang = async (event: React.MouseEvent) => {
     event.preventDefault()
-    const nextLang: Language = currentLang === 'en' ? 'zh' : 'en'
-    const maxAge = 60 * 60 * 24 * 365
-    document.cookie = `${COOKIE_NAME}=${nextLang};path=/;max-age=${maxAge};SameSite=Lax`
-    i18n.changeLanguage(nextLang)
-    router.refresh()
+    const lang: Language = currentLang === 'en' ? 'zh' : 'en'
+
+    const result = await switchLocaleAction(lang)
+    i18n.changeLanguage(lang)
+
+    if (result.success) {
+      router.refresh()
+    } else {
+      toast.error(result.message)
+    }
   }
 
   if (!mounted) {
