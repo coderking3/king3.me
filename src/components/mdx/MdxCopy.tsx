@@ -6,13 +6,7 @@ import { useCallback, useState } from 'react'
 
 import { cn, copyToClipboard } from '@/lib/utils'
 
-function CopyButton({
-  value,
-  className
-}: {
-  value: string
-  className?: string
-}) {
+function MdxCopy({ value, className }: { value: string; className?: string }) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(async () => {
@@ -52,4 +46,4 @@ function CopyButton({
   )
 }
 
-export default CopyButton
+export default MdxCopy

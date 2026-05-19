@@ -2,7 +2,7 @@
 title: 'Next.js 16 + i18next: Cookie-based i18n Without Changing a Single Route'
 description: A practical guide to adding cookie-based internationalization to a Next.js 16 App Router project using i18next — zero route restructuring, zero URL prefixes, full TypeScript support.
 image: /images/avatar.png
-date: '2026-05-12'
+date: '2026-05-19'
 lang: en
 tags:
   - NextJs
@@ -15,39 +15,53 @@ Most i18n guides for Next.js assume you want URL-based locale routing: `/en/abou
 
 But what if you just want a language toggle on your personal blog? Same URLs, language stored in a cookie, no SEO complexity. That's exactly what this guide covers.
 
-## The Approach: Cookie-based i18n
+## The Approach: Cookie as Single Source of Truth
 
-Instead of URL prefixes, we store the user's language preference in a cookie. The flow looks like this:
+Instead of URL prefixes, the user's language preference lives in a single `i18n_lang` cookie. Every layer — proxy, server, client — reads from and writes to the same cookie. No custom headers, no duplicated state.
 
 ```txt
-Browser Request
-    │
-    ▼
-proxy.ts (Next.js 16 request interceptor)
-  ├── Read Cookie (i18n_lang)
-  ├── Fallback: parse Accept-Language header
-  └── Inject custom Header: x-i18n-lang = "zh"
-    │
-    ├──────────────────────┐
-    ▼                      ▼
-Server Component        Client Component
-  getT()                  i18next + LanguageDetector
-  reads Header            reads Cookie
-  creates instance        global singleton
-  loads JSON              dynamic import JSON
-  returns { t, lang }    useTranslation() → t()
+                      First Visit (no cookie)
+    ┌──────────────────────────────────────────────────────┐
+    │  proxy.ts                                            │
+    │  detectLocale()                                      │
+    │    → cookie absent → Accept-Language → "zh"          │
+    │    → persisted: false                                │
+    │  withLocale()                                        │
+    │    → Set-Cookie: i18n_lang=zh  ◄── write-back        │
+    └──────────────────────────┬───────────────────────────┘
+                               │ cookie now exists
+             ┌─────────────────┼─────────────────┐
+             ▼                                   ▼
+     ┌──────────────────┐             ┌───────────────────┐
+     │  server.ts       │             │  client.ts        │
+     │  getLang()       │             │  LanguageDetector │
+     │  cookies().get() │             │  order:           │
+     │  → "zh"          │             │  ['cookie',       │
+     │  getT('about')   │             │   'navigator']    │
+     │  → Chinese text  │             │  → "zh" (cookie)  │
+     └──────────────────┘             └───────────────────┘
 
-Language Switch → write Cookie → router.refresh() → full re-render
+                      Language Switch
+    ┌──────────────────────────────────────────────────────┐
+    │  ToggleLanguage.tsx                                  │
+    │  switchLocaleAction('zh')  // Server Action          │
+    │    → cookies().set('i18n_lang', 'zh')                │
+    │  i18n.changeLanguage('zh') // Client-side immediate  │
+    │  router.refresh()           // RSC re-render         │
+    │    → server.ts getLang() → "zh"                      │
+    └──────────────────────────────────────────────────────┘
 ```
 
 **Key principles:**
 
-- Server reads language from a **custom header** (injected by proxy)
-- Client reads language from the **cookie** (via LanguageDetector)
-- Language switch: **write cookie + `router.refresh()`**
+- The cookie is the **only** language carrier — no custom headers
+- Server reads the cookie directly via `cookies()`
+- Client reads the cookie via `LanguageDetector`
+- Language switch uses a **Server Action** (not `document.cookie`)
+- The proxy **writes the cookie back** on first visits to guarantee consistency
 - URLs **never change** — `/blog` is always `/blog`
 
-## Cookie-based i18n vs. URL-based
+## Cookie-based vs. URL-based
 
 The trade-off is straightforward:
 
@@ -57,8 +71,6 @@ The trade-off is straightforward:
 For a personal blog or internal tool this is rarely an issue.
 
 ## Prerequisites
-
-This guide assumes:
 
 - Next.js 16 with App Router (uses `proxy.ts` instead of `middleware.ts`)
 - React 19
@@ -79,39 +91,62 @@ pnpm add i18next react-i18next i18next-resources-to-backend \
 | `i18next-browser-languagedetector` | Auto-detect language from cookie / browser on the client |
 | `accept-language`                  | Parse `Accept-Language` header in proxy                  |
 
-## Shared Configuration and Type Safety
+## Shared Configuration Hub
 
-Create a single source of truth for i18n settings, shared between server and client.
+`settings.ts` is the single source of truth imported by every other i18n file. It defines constants, types, a shared `resourcesToBackend` instance, and utility functions.
 
 ```ts title="src/i18n/settings.ts"
+import type { CustomTypeOptions, InitOptions } from 'i18next'
+
+import resourcesToBackend from 'i18next-resources-to-backend'
+
 export const LANGUAGES = ['en', 'zh'] as const
 export type Language = (typeof LANGUAGES)[number]
 export type Namespace = keyof CustomTypeOptions['resources']
 
 export const FALLBACK_LNG: Language = 'en'
 export const DEFAULT_NS: Namespace = 'common'
-export const COOKIE_NAME = 'i18n_lang'
-export const HEADER_NAME = 'x-i18n-lang'
+export const LANGUAGE_COOKIE = 'i18n_lang'
 
+// Shared backend — server.ts and client.ts reuse the same instance
+export const backend = resourcesToBackend(
+  (locale: string, namespace: string) =>
+    import(`@/i18n/language/${locale}/${namespace}.json`)
+)
+
+// Type guard — validates unknown input at runtime
+export function isValidLocale(value: unknown): value is Language {
+  return LANGUAGES.includes(value as Language)
+}
+
+// Unified i18next init options — server and client share the same config
 export function getI18nOptions(
   lng: Language = FALLBACK_LNG,
   ns: Namespace = DEFAULT_NS
-) {
+): InitOptions {
   return {
-    supportedLngs: LANGUAGES as unknown as string[],
-    fallbackLng: FALLBACK_LNG,
     lng,
+    fallbackLng: FALLBACK_LNG,
+    supportedLngs: LANGUAGES as unknown as string[],
+    ns,
     fallbackNS: DEFAULT_NS,
     defaultNS: DEFAULT_NS,
-    ns,
-    interpolation: {
-      escapeValue: false // React handles XSS protection
-    }
+    interpolation: { escapeValue: false },
+    returnNull: false // Missing keys → show the key string, not blank
   }
 }
 ```
 
-`Namespace` is defined as `keyof CustomTypeOptions['resources']`, which means it is automatically derived from your `i18next.d.ts` type augmentation. When you add a new translation JSON file, you only need to add one `typeof import(...)` line — the `Namespace` type and the generic `getT<N extends Namespace>()` will pick it up automatically.
+**Design decisions packed into this file:**
+
+- **Shared `backend`**: A single `resourcesToBackend` instance, exported once. `server.ts` and `client.ts` both import it — no duplicated instantiation.
+- **`isValidLocale()`**: A TypeScript type guard (`value is Language`) that validates runtime input in the proxy and the Server Action.
+- **`returnNull: false`**: When a translation key is missing, i18next returns the key string itself (e.g. `"nav.missingKey"`) rather than `null`. This prevents blank UI areas and makes untranslated keys visible during development.
+- **`Namespace` type**: Derived from `keyof CustomTypeOptions['resources']` — when you add a namespace to `i18next.d.ts`, the type automatically includes it everywhere `getT<N>()` or `useTranslation()` is called.
+
+## Type Safety
+
+TypeScript module augmentation enables IDE autocompletion and compile-time validation of all translation keys.
 
 ```ts title="src/types/i18next.d.ts"
 import 'i18next'
@@ -120,47 +155,49 @@ declare module 'i18next' {
   interface CustomTypeOptions {
     defaultNS: 'common'
     resources: {
-      common: typeof import('@/locales/en/common.json')
-      home: typeof import('@/locales/en/home.json')
-      about: typeof import('@/locales/en/about.json')
-      blog: typeof import('@/locales/en/blog.json')
-      project: typeof import('@/locales/en/project.json')
-      message: typeof import('@/locales/en/message.json')
-      poems: typeof import('@/locales/en/poems.json')
-      photos: typeof import('@/locales/en/photos.json')
-      use: typeof import('@/locales/en/use.json')
-      auth: typeof import('@/locales/en/auth.json')
+      common: typeof import('@/i18n/language/en/common.json')
+      home: typeof import('@/i18n/language/en/home.json')
+      about: typeof import('@/i18n/language/en/about.json')
+      blog: typeof import('@/i18n/language/en/blog.json')
+      project: typeof import('@/i18n/language/en/project.json')
+      message: typeof import('@/i18n/language/en/message.json')
+      poems: typeof import('@/i18n/language/en/poems.json')
+      photos: typeof import('@/i18n/language/en/photos.json')
+      use: typeof import('@/i18n/language/en/use.json')
+      auth: typeof import('@/i18n/language/en/auth.json')
     }
   }
 }
 ```
 
-Add a new namespace — just two steps:
+Adding a new namespace — two steps:
 
-1. Create `src/locales/en/{name}.json` and `src/locales/zh/{name}.json`
-2. Add `typeof import(...)` line in `i18next.d.ts`
+1. Create `src/i18n/language/en/{name}.json` and `src/i18n/language/zh/{name}.json`
+2. Add one `typeof import(...)` line in `i18next.d.ts`
 
-That's it. No manual union type updates required.
+No manual union type updates. The `Namespace` type in `settings.ts` picks it up automatically.
 
 ## Translation File Structure
 
-Organize translations by **namespace** — one JSON file per page or feature area. This enables code-splitting: each page only loads the translations it needs. Visit home → loads `common.json` + `home.json`. Visit about → loads `common.json` + `about.json`. Translations for pages you haven't visited are never downloaded.
+Organize translations by **namespace** — one JSON file per page or feature area. This enables code-splitting: each page only loads the translations it needs.
 
 ```txt
-src/locales/
+src/i18n/language/
 ├── en/
-│   ├── common.json    # Nav, footer, shared UI
+│   ├── common.json    # Nav, footer, search, 404, shared UI
 │   ├── home.json      # Home page
 │   ├── about.json     # About page
+│   ├── blog.json      # Blog listing
 │   └── ...
 └── zh/
     ├── common.json
     ├── home.json
     ├── about.json
+    ├── blog.json
     └── ...
 ```
 
-```json title="src/locales/en/common.json"
+```json title="src/i18n/language/en/common.json"
 {
   "nav": {
     "blog": "Blog",
@@ -176,7 +213,7 @@ src/locales/
 }
 ```
 
-```json title="src/locales/zh/common.json"
+```json title="src/i18n/language/zh/common.json"
 {
   "nav": {
     "blog": "博客",
@@ -192,11 +229,20 @@ src/locales/
 }
 ```
 
-## proxy.ts — Language Detection
+## proxy.ts — Language Detection and Cookie Write-Back
 
-In Next.js 16, `proxy.ts` replaces the old `middleware.ts`. It is a request interceptor (not a WebSocket proxy or build-time proxy) that runs before every matched request.
+In Next.js 16, `proxy.ts` replaces the old `middleware.ts`. It is the **first touchpoint** for every matched request.
 
-We add language detection **before** any other logic.
+Our proxy does three things: detect the language, persist it via cookie, and guard admin routes.
+
+### The Key Insight: `persisted` Flag
+
+Every i18n middleware needs to answer: _what language should this request use?_ But there's a subtler question: _was this language already saved, or did we just infer it?_
+
+If the user already has a cookie → use it, do nothing else.  
+If the user has no cookie → infer from `Accept-Language`, then **write the cookie back** so the server and client both see the same value on this very first request.
+
+Without this write-back, the proxy would detect `zh` from `Accept-Language`, but `server.ts` (reading `cookies()`) would find nothing and fall back to `en` — causing a language mismatch on the first page load.
 
 ```ts title="src/proxy.ts"
 import type { NextRequest } from 'next/server'
@@ -207,33 +253,82 @@ import acceptLanguage from 'accept-language'
 import { NextResponse } from 'next/server'
 
 import {
-  COOKIE_NAME,
   FALLBACK_LNG,
-  HEADER_NAME,
+  isValidLocale,
+  LANGUAGE_COOKIE,
   LANGUAGES
 } from '@/i18n/settings'
+import { ADMIN_USER_ROLE } from '@/lib/auth'
+import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
 
 acceptLanguage.languages([...LANGUAGES])
 
-export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
+// ── Locale Detection ──
 
-  // 1. Language detection: Cookie → Accept-Language → fallback
-  let lang = request.cookies.get(COOKIE_NAME)?.value
-
-  if (!lang || !LANGUAGES.includes(lang as Language)) {
-    lang =
-      acceptLanguage.get(request.headers.get('Accept-Language')) ?? FALLBACK_LNG
+function detectLocale(request: NextRequest): {
+  locale: Language
+  persisted: boolean
+} {
+  // 1. Cookie takes priority
+  const saved = request.cookies.get(LANGUAGE_COOKIE)?.value
+  if (saved && LANGUAGES.includes(saved as Language)) {
+    return { locale: saved as Language, persisted: true }
   }
 
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set(HEADER_NAME, lang)
+  // 2. Fall back to Accept-Language header
+  const matched = acceptLanguage.get(request.headers.get('Accept-Language'))
+  return {
+    locale: isValidLocale(matched) ? matched : FALLBACK_LNG,
+    persisted: false // ← Needs write-back
+  }
+}
 
-  // ← Other logic (auth guards, redirects, etc.) goes below
+function withLocale(
+  response: NextResponse,
+  locale: Language,
+  persisted: boolean
+) {
+  if (!persisted) {
+    response.cookies.set(LANGUAGE_COOKIE, locale, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      sameSite: 'lax'
+    })
+  }
+  return response
+}
 
-  return NextResponse.next({
-    request: { headers: requestHeaders }
-  })
+// ── Proxy ──
+
+export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  const { locale, persisted } = detectLocale(request)
+
+  const reply = (response: NextResponse) =>
+    withLocale(response, locale, persisted)
+  const redirect = (path: string) =>
+    reply(NextResponse.redirect(new URL(path, request.url)))
+
+  // Admin auth guard
+  if (pathname.startsWith('/admin')) {
+    try {
+      await requireServerAdminSession(request.headers)
+    } catch {
+      return redirect('/')
+    }
+  }
+
+  // Auth page: redirect if already signed in
+  if (pathname === '/auth') {
+    const session = await getServerSession(request.headers)
+    if (session) {
+      const redirectPath =
+        session.user.role === ADMIN_USER_ROLE ? '/admin' : '/'
+      return redirect(redirectPath)
+    }
+  }
+
+  return reply(NextResponse.next())
 }
 
 export const config = {
@@ -243,42 +338,58 @@ export const config = {
 }
 ```
 
-The `config.matcher` should cover all page routes while excluding static assets and API routes.
+**Language precedence:** Cookie → `Accept-Language` header → fallback `en`.
 
-The language precedence is **Cookie → Accept-Language header → fallback `en`**. The explicit range validation (`!LANGUAGES.includes(...)`) prevents user-controlled values from leaking into the header. After detection, the proxy injects a custom header (`x-i18n-lang`) that Server Components can read via the `headers()` API.
+**Why `persisted` matters:** On a first visit, the proxy detects `zh` from the browser's `Accept-Language`. Without writing the cookie, `server.ts`'s `getLang()` (which reads `cookies()`) would find nothing and return `en`. The proxy would use `zh` but server-rendered content would be `en` — a mismatch on the very first page load. The write-back eliminates this race entirely.
 
-## Server-side Translation — getT()
+Unlike many i18n middleware implementations, this one does **not** inject a custom `x-i18n-lang` header. The cookie is the only carrier — server components read it directly.
 
-Server Components can't use React hooks, so we need an async utility function. Every call to `getT()` creates a fresh i18next instance. This prevents language state from leaking between concurrent requests on the server.
+## Server-side Translation — `getT()`
+
+Server Components can't use React hooks, so we need an async utility. Every call creates a **fresh i18next instance**.
+
+### Why Per-Request Instance Creation?
+
+Next.js App Router handles multiple concurrent requests on the server. If two requests arrive simultaneously — one from a Chinese user, one from an English user — and both share a singleton i18next instance, the instance's internal language state would be overwritten by whichever request runs last. This is a classic shared-mutable-state bug in concurrent server environments.
+
+`createInstance()` gives each request its own isolated i18next instance. The overhead is negligible — i18next instances are lightweight, and the expensive part (loading translation JSON) is already cached by the module system.
 
 ```ts title="src/i18n/server.ts"
+'use server'
+
 import type { Language, Namespace } from './settings'
 
 import { createInstance } from 'i18next'
-import resourcesToBackend from 'i18next-resources-to-backend'
-import { headers } from 'next/headers'
+import { cookies } from 'next/headers'
 import { initReactI18next } from 'react-i18next/initReactI18next'
 
-import { FALLBACK_LNG, getI18nOptions, HEADER_NAME } from './settings'
+import {
+  backend,
+  DEFAULT_NS,
+  FALLBACK_LNG,
+  getI18nOptions,
+  LANGUAGE_COOKIE
+} from './settings'
 
 async function initI18next(lng: Language, ns: Namespace) {
   const instance = createInstance()
   instance.use(initReactI18next)
-  instance.use(
-    resourcesToBackend(
-      (language: string, namespace: string) =>
-        import(`@/locales/${language}/${namespace}.json`)
-    )
-  )
+  instance.use(backend) // Shared backend from settings.ts
   await instance.init(getI18nOptions(lng, ns))
   return instance
 }
 
-export async function getT<N extends Namespace = 'common'>(
-  ns: N = 'common' as N
+/**
+ * Get translation function for Server Components / generateMetadata.
+ *
+ * @example
+ * const { t, lang } = await getT('about')
+ * return <h1>{t('title')}</h1>
+ */
+export async function getT<N extends Namespace = typeof DEFAULT_NS>(
+  ns: N = typeof DEFAULT_NS as N
 ) {
-  const headerList = await headers()
-  const lang = (headerList.get(HEADER_NAME) as Language) ?? FALLBACK_LNG
+  const lang = await getLang()
   const i18next = await initI18next(lang, ns)
 
   return {
@@ -287,20 +398,30 @@ export async function getT<N extends Namespace = 'common'>(
     i18next
   }
 }
+
+// Utility — know the current language without a full i18next instance.
+// Useful for generateMetadata or conditional server logic.
+export async function getLang() {
+  const cookie = await cookies()
+  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? FALLBACK_LNG) as Language
+  return lang
+}
 ```
 
-The generic `N extends Namespace` ensures namespace arguments are type-checked at compile time. `getFixedT(lang, ns)` receives the namespace directly — i18next supports both string and string[] forms.
+**Key points:**
+
+- Reads the cookie **directly** via `cookies()`, not a custom header. The proxy already wrote the cookie — server just reads it.
+- `getLang()` is exposed separately so `generateMetadata` and other server utilities can know the language without spinning up an i18next instance.
+- Each `getT()` call creates an isolated i18next instance via `createInstance()` — no cross-request contamination.
 
 ## Root Layout — Dynamic `lang` Attribute
 
-The root layout reads the proxy-injected header to set `<html lang>` and `generateMetadata`:
+Both `generateMetadata()` and `RootLayout` call `getLang()` to set the HTML `lang` attribute and translated metadata:
 
 ```tsx title="src/app/layout.tsx"
 import type { Metadata } from 'next'
 
-import { headers } from 'next/headers'
-
-import { FALLBACK_LNG, HEADER_NAME } from '@/i18n/settings'
+import { getLang, getT } from '@/i18n/server'
 
 export async function generateMetadata(): Promise<Metadata> {
   const { t } = await getT('common')
@@ -311,9 +432,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: '%s - King3'
     },
     description: t('metadata.root.description'),
-    icons: {
-      icon: '/icons/favicon.svg'
-    }
+    icons: { icon: '/icons/favicon.svg' }
   }
 }
 
@@ -322,15 +441,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const headerList = await headers()
-  const lang = headerList.get(HEADER_NAME) ?? FALLBACK_LNG
+  const lang = await getLang()
 
   return (
-    <html
-      lang={lang}
-      suppressHydrationWarning
-      className={cn(robotoMono.variable, audioWide.variable)}
-    >
+    <html lang={lang} suppressHydrationWarning>
       <body className="min-h-screen scroll-smooth antialiased">
         {/* Providers ... */}
         {children}
@@ -340,7 +454,7 @@ export default async function RootLayout({
 }
 ```
 
-Both `generateMetadata()` and `RootLayout` read the same header, so `<html lang>`, `<meta description>`, and the rendered page text are all synchronized.
+`<html lang>` and `<meta description>` are synchronized because both derive from the same cookie.
 
 ## Client-side Initialization
 
@@ -351,35 +465,29 @@ Client Components use a global i18next singleton with `LanguageDetector` to auto
 
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import resourcesToBackend from 'i18next-resources-to-backend'
 import {
   initReactI18next,
   useTranslation as useI18nextTranslation
 } from 'react-i18next'
 
-import { COOKIE_NAME, getI18nOptions, LANGUAGES } from './settings'
+import { backend, getI18nOptions, LANGUAGE_COOKIE, LANGUAGES } from './settings'
 
 const runsOnServer = typeof window === 'undefined'
 
 i18next
   .use(initReactI18next)
   .use(LanguageDetector)
-  .use(
-    resourcesToBackend(
-      (language: string, namespace: string) =>
-        import(`@/locales/${language}/${namespace}.json`)
-    )
-  )
+  .use(backend) // Shared backend from settings.ts
   .init({
     ...getI18nOptions(),
-    lng: undefined,
+    lng: undefined, // Let LanguageDetector decide — don't hardcode
     detection: {
       order: ['cookie', 'navigator'],
-      lookupCookie: COOKIE_NAME,
-      caches: ['cookie']
+      lookupCookie: LANGUAGE_COOKIE,
+      caches: ['cookie'] // Cache detected result back to cookie
     },
-    // During SSR, preload all languages to match hydration output.
-    // During CSR, leave empty — languages load dynamically on demand.
+    // SSR: preload all languages so hydration output matches.
+    // CSR: leave empty — languages load dynamically on demand.
     preload: runsOnServer ? (LANGUAGES as unknown as string[]) : []
   })
 
@@ -389,33 +497,68 @@ export { useTranslation }
 export default i18next
 ```
 
-`lng: undefined` is crucial — it tells i18next to rely entirely on the LanguageDetector instead of a hardcoded value.
+**Detection order:**
 
-The `useTranslation` alias (`const useTranslation = useI18nextTranslation`) lets every component import from one path (`@/i18n/client`) regardless of whether the singleton has been initialized. This is a single source of truth for the hook.
+1. **Cookie** (`i18n_lang`) — set by the proxy on first visit, or by the language switcher
+2. **Navigator** (`navigator.language`) — browser's preferred language as ultimate fallback
 
-## Language Switcher Component
+**`lng: undefined`** is crucial — it tells i18next to rely entirely on the LanguageDetector. Setting a hardcoded value would override the detection chain.
 
-A component that handles cookie persistence, client-side i18next update, and server re-render.
+**`useTranslation` alias** ensures every component imports from one path (`@/i18n/client`) regardless of singleton initialization state.
 
-```tsx title="src/components/LanguageSwitcher.tsx"
+## Language Switcher — Server Action + Client Update + RSC Refresh
+
+The language switcher orchestrates three things: persist the preference server-side (Server Action), update client components immediately (i18n API), and re-render server components (router.refresh).
+
+### Why Server Action Instead of `document.cookie`?
+
+`document.cookie` is synchronous, string-manipulation heavy, and operates entirely client-side. It can race with Next.js's own cookie handling in the App Router. A Server Action writes the cookie via the `cookies()` API — the same API the proxy and server components use — guaranteeing consistency. It also enables input validation (`isValidLocale()`) and structured error handling (`ResponseResult`).
+
+```ts title="src/app/actions/i18n.ts"
+'use server'
+
+import { cookies } from 'next/headers'
+
+import { isValidLocale, LANGUAGE_COOKIE } from '@/i18n/settings'
+import { failure, success } from '@/lib/result'
+
+export async function switchLocaleAction(value: unknown) {
+  if (!isValidLocale(value)) {
+    return failure(new Error(`Unsupported locale: "${value}"`))
+  }
+
+  try {
+    const cookie = await cookies()
+    cookie.set(LANGUAGE_COOKIE, value, {
+      path: '/',
+      maxAge: 60 * 60 * 24 * 7,
+      sameSite: 'lax'
+    })
+    return success(null)
+  } catch (error: unknown) {
+    return failure(error)
+  }
+}
+```
+
+**Why `value: unknown` instead of `value: Language`?** Server Actions can be called from anywhere — including `fetch()` requests and third-party scripts. TypeScript types are erased at runtime. The `unknown` parameter + `isValidLocale()` type guard ensures the function validates at runtime, not just compile time.
+
+The cookie parameters (`path`, `maxAge`, `sameSite`) match exactly what the proxy's `withLocale()` sets — consistency across all cookie writes.
+
+```tsx title="src/components/layout/Header/ToggleLanguage.tsx"
 'use client'
 
 import type { Language } from '@/i18n/settings'
-import type { InteractiveIconProps, SvgIcon } from '@/icons'
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
+import { switchLocaleAction } from '@/app/actions/i18n'
+import { InteractiveIcon, LanguageIcon } from '@/components/icons'
 import { useTranslation } from '@/i18n/client'
-import { COOKIE_NAME } from '@/i18n/settings'
-import { InteractiveIcon, LanguageIcon } from '@/icons'
 
-export function LanguageSwitcher({
-  size,
-  color,
-  strokeWidth,
-  ...delegated
-}: InteractiveIconProps<SvgIcon>) {
+function ToggleLanguage() {
   const router = useRouter()
   const { i18n, t } = useTranslation()
   const currentLang = (i18n.language ?? 'en') as Language
@@ -423,26 +566,29 @@ export function LanguageSwitcher({
 
   useEffect(() => setMounted(true), [])
 
-  const switchLang = (event: React.MouseEvent) => {
+  const switchLang = async (event: React.MouseEvent) => {
     event.preventDefault()
-    const nextLang: Language = currentLang === 'en' ? 'zh' : 'en'
-    const maxAge = 60 * 60 * 24 * 365
-    document.cookie = `${COOKIE_NAME}=${nextLang};path=/;max-age=${maxAge};SameSite=Lax`
-    i18n.changeLanguage(nextLang)
-    router.refresh()
+    const lang: Language = currentLang === 'en' ? 'zh' : 'en'
+
+    // 1. Server Action: persist to cookie server-side
+    const result = await switchLocaleAction(lang)
+
+    // 2. Client i18next: update immediately (no waiting for re-render)
+    i18n.changeLanguage(lang)
+
+    // 3. RSC refresh: server components re-render with new cookie
+    if (result.success) {
+      router.refresh()
+    } else {
+      toast.error(result.message)
+    }
   }
 
   // SSR phase: render a static icon to avoid hydration mismatch
   if (!mounted) {
     return (
-      <InteractiveIcon {...delegated} trigger="hover">
-        {() => (
-          <LanguageIcon
-            isEN
-            isHovered={false}
-            {...{ size, color, strokeWidth }}
-          />
-        )}
+      <InteractiveIcon trigger="hover">
+        {() => <LanguageIcon isEN isHovered={false} />}
       </InteractiveIcon>
     )
   }
@@ -451,30 +597,25 @@ export function LanguageSwitcher({
 
   return (
     <InteractiveIcon
-      {...delegated}
       alt={t('localeSwitcher.label')}
       trigger="hover"
       onClick={switchLang}
     >
-      {({ isHovered }) => (
-        <LanguageIcon
-          isEN={isEN}
-          isHovered={isHovered}
-          {...{ size, color, strokeWidth }}
-        />
-      )}
+      {({ isHovered }) => <LanguageIcon isEN={isEN} isHovered={isHovered} />}
     </InteractiveIcon>
   )
 }
 ```
 
-The three-step language switch:
+**The three-step switch:**
 
-1. **`document.cookie`** — so the proxy can detect the language on the next request
-2. **`changeLanguage()`** — so Client Components update immediately
-3. **`router.refresh()`** — so Server Components re-render with the new language
+1. **Server Action** — persist the choice server-side via `cookies().set()`
+2. **`i18n.changeLanguage()`** — client components update immediately
+3. **`router.refresh()`** — RSC tree re-renders, `server.ts` reads the new cookie
 
-During SSR the component doesn't know the user's language (no cookie exists yet on first visit). Without a `mounted` guard the server renders `isEN = true` while the client may detect `zh`, causing a hydration mismatch. The `mounted` state ensures the client re-renders with the correct language after hydration.
+**SSR safety (`mounted` guard):** During SSR, `i18n.language` is not yet resolved (no cookie exists in the Node environment on first render). Without the guard, the server would render `isEN = true` while the client might detect `zh`, causing a hydration mismatch. The `mounted` state renders a fixed `isEN` placeholder during SSR, then the correct language-dependent icon after hydration.
+
+**Error handling:** The Server Action returns a `ResponseResult`. If cookie write fails, `toast.error()` shows a user-visible message — the switch doesn't silently fail.
 
 ## Using Translations
 
@@ -534,24 +675,28 @@ Quick reference:
 | Client Component   | `const { t } = useTranslation('ns')` |
 | `generateMetadata` | `const { t } = await getT('ns')`     |
 | Server Action      | `const { t } = await getT('ns')`     |
+| Just need language | `const lang = await getLang()`       |
 
 ## Hydration Consistency
 
-A common pitfall with i18n is hydration mismatch — the server renders one language but the client detects another. In this setup, both sides read from the **same cookie**:
+A common pitfall with i18n is hydration mismatch — the server renders one language but the client detects another. In this setup, both sides derive from the **same cookie**:
 
-- **Server:** proxy reads `i18n_lang` cookie → injects `x-i18n-lang` header → `getT()` reads it
-- **Client:** LanguageDetector reads `i18n_lang` cookie → initializes i18next
+- **Server**: `getLang()` reads `i18n_lang` cookie via `cookies()`
+- **Client**: `LanguageDetector` reads `i18n_lang` cookie with `order: ['cookie', 'navigator']`
 
-Since both derive from the same cookie value, they always agree.
+Since both derive from the same cookie value, they always agree — no custom headers, no separate state channels, no mismatch.
 
-## First Visit Behavior
+## First Visit Walkthrough
 
-When a user visits for the first time (no cookie):
+When a user visits for the first time (no `i18n_lang` cookie):
 
-1. Proxy reads `Accept-Language` from the browser
-2. If the browser language is Chinese → auto-detect `zh`
-3. Otherwise → fall back to `en`
-4. After manual switch, the cookie persists the choice
+1. **proxy.ts**: `detectLocale()` finds no cookie → parses `Accept-Language` → matches `zh` → `persisted: false`
+2. **proxy.ts**: `withLocale()` writes `Set-Cookie: i18n_lang=zh` to the response
+3. **RSC**: `getLang()` reads `cookies()` → finds `zh` → renders Chinese content
+4. **Client hydration**: `LanguageDetector` reads cookie → finds `zh` → initializes in Chinese
+5. **Result**: the first page load is fully Chinese, from server render through client hydration
+
+Without step 2 (the write-back), step 3 would find no cookie and fall back to `en`, while step 4 might independently detect `zh` from `navigator.language` — producing a server-`en` / client-`zh` mismatch on the very first load.
 
 ## Lazy Loading
 
@@ -561,26 +706,34 @@ The `i18next-resources-to-backend` plugin uses dynamic `import()` to load transl
 - Visit about → loads `common.json` + `about.json`
 - Translations for pages you haven't visited are never downloaded
 
+Since `server.ts` and `client.ts` share the same `backend` instance from `settings.ts`, the lazy-loading behavior is consistent across both environments.
+
 ## Summary
 
 ```txt
 src/
 ├── i18n/
-│   ├── settings.ts    # Shared config (languages, cookie name, header name)
-│   ├── server.ts      # getT() for Server Components
-│   └── client.ts      # useTranslation for Client Components
-├── locales/
-│   ├── en/
-│   │   ├── common.json
-│   │   └── about.json
-│   └── zh/
-│       ├── common.json
-│       └── about.json
+│   ├── settings.ts          # Shared config, backend, type guard, init options
+│   ├── server.ts            # getT() + getLang() for Server Components
+│   └── client.ts            # useTranslation for Client Components
+├── i18n/language/
+│   ├── en/{namespace}.json  # English translations (10 namespaces)
+│   └── zh/{namespace}.json  # Chinese translations (10 namespaces)
 ├── types/
-│   └── i18next.d.ts   # TypeScript type augmentation
-├── components/
-│   └── LanguageSwitcher.tsx
-└── proxy.ts           # Language detection + header injection
+│   └── i18next.d.ts         # TypeScript module augmentation
+├── app/actions/
+│   └── i18n.ts              # switchLocaleAction — Server Action for cookie write
+├── components/layout/Header/
+│   └── ToggleLanguage.tsx   # Language switch UI
+└── proxy.ts                 # detectLocale + withLocale + persisted flag
 ```
 
-Zero changes to your routing structure. Zero new route segments. The entire i18n layer sits alongside your existing code, not wrapped around it.
+**What this architecture gives you:**
+
+- Zero routing changes — no `[locale]` segments, no URL restructuring
+- Cookie as the single source of truth — no custom headers, no duplicated state
+- First-visit consistency — the proxy writes the cookie back so server and client agree from the very first request
+- Per-request isolation — `createInstance()` prevents cross-request language contamination on the server
+- Reliable language switching — Server Action for cookie persistence, with error handling
+- Full TypeScript support — compile-time validation of all translation keys
+- Lazy loading — only the current page's translations are downloaded

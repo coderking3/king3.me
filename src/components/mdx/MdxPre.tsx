@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import CopyButton from './CopyButton'
+import CopyButton from './MdxCopy'
 
 type MdxPreProps = React.ComponentPropsWithoutRef<'pre'> & {
   'data-title'?: string

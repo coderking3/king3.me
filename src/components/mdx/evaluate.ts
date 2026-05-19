@@ -32,7 +32,7 @@ interface EvaluateMdxProps {
 
 const mdxConfig: EvaluateOptions<Scope> = {
   mdxOptions: {
-    remarkPlugins: [remarkGfm, remarkFlexibleToc],
+    remarkPlugins: [remarkGfm, remarkFlexibleToc as () => any],
     rehypePlugins: [
       rehypeSlug,
       [
@@ -45,7 +45,7 @@ const mdxConfig: EvaluateOptions<Scope> = {
         }
       ],
       [
-        rehypeShiki,
+        rehypeShiki as () => any,
         {
           themes: {
             dark: 'catppuccin-frappe',
