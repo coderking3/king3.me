@@ -1,7 +1,3 @@
-shellEmulator: true
-
-trustPolicy: no-downgrade
-
 allowBuilds:
   '@prisma/engines': true
   msw: true
