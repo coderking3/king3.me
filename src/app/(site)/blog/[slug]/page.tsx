@@ -2,8 +2,15 @@ import type { Posts } from '@/types'
 
 import { notFound } from 'next/navigation'
 
-import { getPostsBySlug } from '@/lib/content'
+import { getAllPostSlugs, getPostsBySlug } from '@/lib/content'
 import { PostsPage } from '@/views/blog'
+
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs()
+  return slugs.map((slug) => ({ slug }))
+}
+
+export const dynamic = 'force-static'
 
 export default async function Page({
   params
@@ -22,4 +29,4 @@ export default async function Page({
   return <PostsPage posts={posts} />
 }
 
-export const revalidate = 60
+export const revalidate = 3600

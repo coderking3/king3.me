@@ -98,6 +98,7 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
       <AnimatePresence>
         {activePhoto && (
           <PhotoPreview
+            key={activePhoto.id}
             photo={activePhoto}
             lang={i18n.language}
             onClose={() => setActivePhoto(null)}

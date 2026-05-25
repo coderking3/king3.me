@@ -81,3 +81,27 @@ export async function getAllPosts() {
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
+
+export async function getAllPostSlugs() {
+  const files = await fg('**/*.{md,mdx}', {
+    cwd: postsDirectory,
+    absolute: false
+  })
+
+  const slugs = await Promise.all(
+    files.map(async (file) => {
+      const slug = file.replace(MDX_SLUG_RE, '').replace(/\\/g, '/')
+      const filePath = path.join(postsDirectory, file)
+      const fileContents = await fs.readFile(filePath, 'utf-8')
+      const { data } = matter(fileContents)
+
+      if (data.published === false || !data.title || !data.date) {
+        return null
+      }
+
+      return slug
+    })
+  )
+
+  return slugs.filter(Boolean) as string[]
+}
