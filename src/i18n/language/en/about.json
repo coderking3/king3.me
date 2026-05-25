@@ -12,7 +12,6 @@
   "paragraph2": "I write <blog>blog posts</blog> about open source, programming, and things I learn along the way, and occasionally share them on <bilibili>哔哩哔哩</bilibili>.",
   "paragraph3": "Outside of code, I enjoy <photos>photography</photos>, compose <poems>poems</poems>, reading novels, and <music>listening to music</music>. In case you are interested, here are the <use>hardware/software I use</use>.",
   "paragraph4": "I'm based in <strong>{{city}}</strong>, if you are around, please <contact>reach out</contact> and let's grab a coffee or work on something together.",
-  "exploreMore": "Explore more",
   "social": {
     "findMeOn": "Find me on",
     "orMailMe": "Or mail me at <email>{{email}}</email>"

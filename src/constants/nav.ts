@@ -5,6 +5,17 @@ export const NAVIGATION_ITEMS = [
   { key: 'about', href: '/about' }
 ] as const
 
+export const EXPLORE_LINKS = [
+  { key: 'photos', href: '/photos' },
+  { key: 'poems', href: '/poems' },
+  { key: 'use', href: '/use' }
+] as const
+
+export const MOBILE_NAVIGATION_ITEMS = [
+  ...NAVIGATION_ITEMS,
+  ...EXPLORE_LINKS
+] as const
+
 export const ADMIN_NAVIGATION_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: 'dashboard' },
   { href: '/admin/messages', label: 'Messages', icon: 'messages' },

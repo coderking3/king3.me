@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "incremental": true,
+    "tsBuildInfoFile": "node_modules/.cache/tsconfig.tsbuildinfo",
     "target": "ES2017",
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],

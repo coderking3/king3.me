@@ -12,6 +12,7 @@ function Logo() {
   return (
     <Link
       href="/"
+      prefetch={true}
       className="text-accent-foreground/85 hover:text-accent-foreground mx-1 flex items-center transition-colors duration-200 select-none"
       {...handlers}
     >

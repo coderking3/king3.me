@@ -1,6 +1,5 @@
 'use client'
 
-import { Toolbox } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Trans } from 'react-i18next'
@@ -8,8 +7,6 @@ import { Trans } from 'react-i18next'
 import { Animated } from '@/components/common'
 import {
   BrowserIcon,
-  CameraIcon,
-  FeatherIcon,
   LogoIcon,
   PictureIcon,
   ServeIcon
@@ -18,12 +15,6 @@ import { SOCIAL_URLS } from '@/constants'
 import { useTranslation } from '@/i18n/client'
 
 import AboutSocial from './AboutSocial'
-
-const EXPLORE_LINKS = [
-  { key: 'photos', href: '/photos', icon: <CameraIcon size={18} /> },
-  { key: 'poems', href: '/poems', icon: <FeatherIcon size={18} /> },
-  { key: 'use', href: '/use', icon: <Toolbox size={18} /> }
-] as const
 
 const NOW_LINKS = [
   {
@@ -65,13 +56,6 @@ const badgeClass =
 
 function AboutPage() {
   const { t } = useTranslation('about')
-
-  const { t: commonT } = useTranslation('common')
-
-  const exploreLinks = EXPLORE_LINKS.map((item) => ({
-    ...item,
-    name: commonT(`nav.${item.key}`)
-  }))
 
   return (
     <div className="mt-14 sm:mt-24">
@@ -234,31 +218,6 @@ function AboutPage() {
 
         {/* ── Social ── */}
         <AboutSocial />
-
-        <Animated
-          preset={{ mode: 'fadeInUp', delay: 0.36 }}
-          className="flex justify-center"
-        >
-          <hr className="border-border my-8 w-16" />
-        </Animated>
-
-        {/* ── Explore ── */}
-        <Animated preset={{ mode: 'fadeInUp', delay: 0.44 }}>
-          <h2 className="text-muted-foreground mb-6 text-base font-medium">
-            {t('exploreMore')}
-          </h2>
-          <div className="-mt-2 flex flex-wrap gap-2">
-            {exploreLinks.map(({ name, href, icon }) => (
-              <Link
-                key={name}
-                href={href}
-                className="border-border hover:border-foreground inline-flex items-center justify-center gap-1.5 border-b pb-0.5 text-base transition-colors duration-200"
-              >
-                {icon} {name}
-              </Link>
-            ))}
-          </div>
-        </Animated>
       </div>
     </div>
   )

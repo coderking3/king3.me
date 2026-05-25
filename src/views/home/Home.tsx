@@ -6,6 +6,7 @@ import { GALLERYS } from '@/constants'
 import { getT } from '@/i18n/server'
 
 import PostsCard from '../blog/PostsCard'
+import Explore from './Explore'
 import FeaturedMusic from './FeaturedMusic'
 import Gallery from './Gallery'
 import Hero from './Hero'
@@ -47,6 +48,7 @@ export default async function Home({
         {/* Right: sidebar */}
         <aside className="sticky hidden h-fit w-full space-y-8 md:block lg:top-21 lg:w-90">
           <FeaturedMusic songs={songs} />
+          <Explore />
         </aside>
       </div>
     </div>

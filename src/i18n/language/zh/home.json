@@ -1,6 +1,12 @@
 {
   "latestUpdates": "近期文章",
   "featuredMusic": "精选音乐",
+  "exploreMore": "发现更多",
+  "explore": {
+    "photos": "记录生活的瞬间",
+    "poems": "古诗词收藏",
+    "use": "常用工具与软件"
+  },
   "hero": {
     "description": "我是一名前端开发者，热衷于开源并打造自己的项目。",
     "descriptionLine2": "不写代码的时候，我会记录瞬间 📷，玩游戏 🎮，或沉浸在音乐 🎵 中。"

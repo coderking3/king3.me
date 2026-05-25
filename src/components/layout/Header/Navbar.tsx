@@ -15,7 +15,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui'
-import { NAVIGATION_ITEMS } from '@/constants'
+import { MOBILE_NAVIGATION_ITEMS, NAVIGATION_ITEMS } from '@/constants'
 import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
@@ -29,11 +29,6 @@ export function Navbar({ page, className }: NavbarProps) {
   const [prevActiveIndex, setPrevActiveIndex] = useState<number>(-1)
 
   const { t } = useTranslation('common')
-
-  const navigationItems = NAVIGATION_ITEMS.map((item) => ({
-    ...item,
-    name: t(`nav.${item.key}`)
-  }))
 
   const commonMotion: MotionOptions = {
     initial: { opacity: 0, scale: 0.8 },
@@ -101,7 +96,7 @@ export function Navbar({ page, className }: NavbarProps) {
   return (
     <nav className={cn('relative h-11 overflow-hidden', className)}>
       <ul className="flex h-full items-center justify-center text-sm">
-        {navigationItems.map(({ key, href, name }, i) => {
+        {NAVIGATION_ITEMS.map(({ key, href }, i) => {
           const isActive = activeIndex === i
           const isHovered = hoveredItem === href
 
@@ -159,7 +154,7 @@ export function Navbar({ page, className }: NavbarProps) {
                   )}
                   {...linkTextMotion}
                 >
-                  {name}
+                  {t(`nav.${key}`)}
                 </motion.span>
               </Link>
             </motion.li>
@@ -178,11 +173,8 @@ export function MobileNavbar() {
 
   const navigationItems = [
     { key: 'home' as const, href: '/' },
-    ...NAVIGATION_ITEMS
-  ].map((item) => ({
-    ...item,
-    name: t(`nav.${item.key}`)
-  }))
+    ...MOBILE_NAVIGATION_ITEMS
+  ]
 
   // Close sheet on route change
   useEffect(() => setOpen(false), [pathname])
@@ -196,7 +188,11 @@ export function MobileNavbar() {
       <SheetContent side="left" className="w-72 sm:max-w-72">
         <SheetHeader>
           <SheetTitle>
-            <Link href="/" className="font-logo text-xl font-normal">
+            <Link
+              href="/"
+              prefetch={true}
+              className="font-logo text-xl font-normal"
+            >
               King3
             </Link>
           </SheetTitle>
@@ -204,7 +200,7 @@ export function MobileNavbar() {
 
         <nav className="flex-1 px-4">
           <ul className="space-y-1">
-            {navigationItems.map(({ key, name, href }) => {
+            {navigationItems.map(({ key, href }) => {
               const isActive =
                 (page.includes(href) && href !== '/') || page === href
 
@@ -220,7 +216,7 @@ export function MobileNavbar() {
                         : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                     )}
                   >
-                    {name}
+                    {t(`nav.${key}`)}
                   </Link>
                 </li>
               )

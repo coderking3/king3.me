@@ -12,7 +12,6 @@
   "paragraph2": "我撰写关于开源、编程以及学习过程中所获心得的<blog>博客文章</blog>，偶尔也会在<bilibili>哔哩哔哩</bilibili>上分享。",
   "paragraph3": "除了写代码，我还喜欢<photos>摄影</photos>、攥写<poems>诗词</poems>、阅读小说和<music>听音乐</music>。如果你感兴趣，这里是我使用的<use>硬件和软件</use>。",
   "paragraph4": "我在<strong>{{city}}</strong>，如果你也在附近，欢迎<contact>联系我</contact>，一起喝杯咖啡或交流一下心得。",
-  "exploreMore": "探索更多",
   "social": {
     "findMeOn": "在这里找到我",
     "orMailMe": "或通过 <email>{{email}}</email> 给我发邮件"
