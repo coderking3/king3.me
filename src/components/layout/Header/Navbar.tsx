@@ -150,7 +150,7 @@ export function Navbar({ page, className }: NavbarProps) {
                 )}
               </AnimatePresence>
 
-              <Link href={href} className="block px-3 py-2.5">
+              <Link href={href} prefetch={true} className="block px-3 py-2.5">
                 <motion.span
                   className={cn(
                     'text-muted-foreground relative font-bold transition-colors',
@@ -212,6 +212,7 @@ export function MobileNavbar() {
                 <li key={key}>
                   <Link
                     href={href}
+                    prefetch={true}
                     className={cn(
                       'flex items-center rounded-lg px-3 py-2.5 text-base font-medium transition-colors',
                       isActive
