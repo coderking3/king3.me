@@ -1,17 +1,8 @@
-import type { Metadata } from 'next'
-
 import { getPhotos } from '@/data/photos'
-import { getT } from '@/i18n/server'
+import { createPageMetadata } from '@/lib/metadata'
 import { PhotosPage } from '@/views/photos'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const { t } = await getT('common')
-
-  const title = t('metadata.photos.title')
-  const description = t('metadata.photos.description')
-
-  return { title, description, openGraph: { title, description } }
-}
+export const metadata = createPageMetadata('photos')
 
 export default async function Page() {
   const photos = await getPhotos()

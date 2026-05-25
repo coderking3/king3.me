@@ -3,7 +3,7 @@ title: 'Next.js 16 + i18next: 不改路由的 Cookie 国际化方案'
 description: 实操指南：在 Next.js 16 App Router 项目中用 i18next 实现 Cookie 驱动的国际化——零路由改造、零 URL 前缀、完整 TypeScript 类型支持，涵盖首次访问 Cookie 回写、per-request 实例隔离、Server Action 写 Cookie 等生产级细节。
 image: /images/avatar.png
 date: '2026-05-19'
-lang: zh
+lang: 中文
 tags:
   - NextJs
   - React
@@ -96,7 +96,7 @@ export const LANGUAGES = ['en', 'zh'] as const
 export type Language = (typeof LANGUAGES)[number]
 export type Namespace = keyof CustomTypeOptions['resources']
 
-export const FALLBACK_LNG: Language = 'en'
+export const DEFAULT_LNG: Language = 'en'
 export const DEFAULT_NS: Namespace = 'common'
 export const LANGUAGE_COOKIE = 'i18n_lang'
 
@@ -113,12 +113,12 @@ export function isValidLocale(value: unknown): value is Language {
 
 // 统一的 i18next 初始化配置——服务端和客户端共享
 export function getI18nOptions(
-  lng: Language = FALLBACK_LNG,
+  lng: Language = DEFAULT_LNG,
   ns: Namespace = DEFAULT_NS
 ): InitOptions {
   return {
     lng,
-    fallbackLng: FALLBACK_LNG,
+    fallbackLng: DEFAULT_LNG,
     supportedLngs: LANGUAGES as unknown as string[],
     ns,
     fallbackNS: DEFAULT_NS,
@@ -229,7 +229,7 @@ import acceptLanguage from 'accept-language'
 import { NextResponse } from 'next/server'
 
 import {
-  FALLBACK_LNG,
+  DEFAULT_LNG,
   isValidLocale,
   LANGUAGE_COOKIE,
   LANGUAGES
@@ -254,7 +254,7 @@ function detectLocale(request: NextRequest): {
   // 2. 降级到 Accept-Language
   const matched = acceptLanguage.get(request.headers.get('Accept-Language'))
   return {
-    locale: isValidLocale(matched) ? matched : FALLBACK_LNG,
+    locale: isValidLocale(matched) ? matched : DEFAULT_LNG,
     persisted: false // ← 需要回写
   }
 }
@@ -340,7 +340,7 @@ import { initReactI18next } from 'react-i18next/initReactI18next'
 import {
   backend, // 共享 backend
   DEFAULT_NS,
-  FALLBACK_LNG,
+  DEFAULT_LNG,
   getI18nOptions,
   LANGUAGE_COOKIE
 } from './settings'
@@ -377,7 +377,7 @@ export async function getT<N extends Namespace = typeof DEFAULT_NS>(
 // 适合 generateMetadata 或服务端条件逻辑。
 export async function getLang() {
   const cookie = await cookies()
-  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? FALLBACK_LNG) as Language
+  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? DEFAULT_LNG) as Language
   return lang
 }
 ```

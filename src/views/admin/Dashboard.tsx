@@ -1,5 +1,6 @@
 import type { DashboardData } from '@/types'
 
+import { format } from 'date-fns'
 import {
   ArrowRight,
   FolderKanban,
@@ -122,7 +123,7 @@ function Dashboard({ data }: DashboardProps) {
                       {msg.userName ?? 'Unknown'}
                     </span>
                     <span className="text-muted-foreground text-xs">
-                      {new Date(msg.createdAt).toLocaleDateString()}
+                      {format(msg.createdAt, 'yyyy-MM-dd')}
                     </span>
                   </div>
                   <p className="text-muted-foreground mt-0.5 truncate text-sm">
@@ -165,7 +166,7 @@ function Dashboard({ data }: DashboardProps) {
                   </p>
                 </div>
                 <span className="text-muted-foreground shrink-0 text-xs">
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {format(user.createdAt, 'yyyy-MM-dd')}
                 </span>
               </div>
             ))}

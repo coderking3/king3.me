@@ -1,5 +1,3 @@
-import { cache } from 'react'
-
 import { getAllPosts } from '@/lib/content'
 
 import { getProjects } from './projects'
@@ -16,7 +14,7 @@ interface SearchData {
   projects: SearchItem[]
 }
 
-export const getSearchData = cache(async (): Promise<SearchData> => {
+export const getSearchData = async (): Promise<SearchData> => {
   const [posts, projects] = await Promise.all([getAllPosts(), getProjects()])
 
   return {
@@ -29,4 +27,4 @@ export const getSearchData = cache(async (): Promise<SearchData> => {
       href: project.link
     }))
   }
-})
+}

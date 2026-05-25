@@ -6,7 +6,7 @@ import acceptLanguage from 'accept-language'
 import { NextResponse } from 'next/server'
 
 import {
-  FALLBACK_LNG,
+  DEFAULT_LNG,
   isValidLocale,
   LANGUAGE_COOKIE,
   LANGUAGES
@@ -28,7 +28,7 @@ function detectLocale(request: NextRequest): {
   }
   const matched = acceptLanguage.get(request.headers.get('Accept-Language'))
   return {
-    locale: isValidLocale(matched) ? matched : FALLBACK_LNG,
+    locale: isValidLocale(matched) ? matched : DEFAULT_LNG,
     persisted: false
   }
 }

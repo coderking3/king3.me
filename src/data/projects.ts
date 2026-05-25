@@ -1,13 +1,12 @@
 import type { Project } from '@/types'
 import type { ProjectInput } from '@/validations/projects'
 
-import { cache } from 'react'
-
+import { createCachedQuery } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
 
-export const getProjects = cache(async (): Promise<Project[]> => {
+const getProjectsFn = async (): Promise<Project[]> => {
   const projects = await prisma.project.findMany({
     select: {
       id: true,
@@ -27,7 +26,10 @@ export const getProjects = cache(async (): Promise<Project[]> => {
     createdAt: project.createdAt.toISOString(),
     updatedAt: project.updatedAt.toISOString()
   }))
-})
+}
+
+export const { query: getProjects, revalidate: revalidateProjects } =
+  createCachedQuery(getProjectsFn, 'projects', 'days')
 
 export async function createProject(data: ProjectInput) {
   const maxOrder = await prisma.project.aggregate({ _max: { order: true } })

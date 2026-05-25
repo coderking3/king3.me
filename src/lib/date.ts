@@ -12,8 +12,28 @@ const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['minute', 60 * 1000]
 ]
 
-export function relativeTime(date: string | Date, locale = 'en'): string {
+export type DateInput = string | number | Date
+
+export const LONG_DATE: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}
+
+function toDate(date: DateInput) {
   const target = date instanceof Date ? date : new Date(date)
+  return target
+}
+
+export function formatLocalDate(
+  date: DateInput,
+  locale?: Intl.LocalesArgument
+) {
+  return toDate(date).toLocaleDateString(locale, LONG_DATE)
+}
+
+export function relativeTime(date: DateInput, locale = 'en'): string {
+  const target = toDate(date)
   const diff = target.getTime() - Date.now()
 
   if (Math.abs(diff) < 60 * 1000) {

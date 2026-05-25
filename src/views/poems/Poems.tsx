@@ -2,6 +2,7 @@ import type { Poem } from '@/types'
 
 import { Animated } from '@/components/common'
 import { getT } from '@/i18n/server'
+import { formatLocalDate } from '@/lib/date'
 
 async function PoemsPage({ poems }: { poems: Poem[] }) {
   const { t, lang } = await getT('poems')
@@ -44,11 +45,7 @@ async function PoemsPage({ poems }: { poems: Poem[] }) {
                 {poem.content}
               </div>
               <time className="text-muted-foreground/60 mt-3 block text-xs">
-                {new Date(poem.createdAt).toLocaleDateString(lang, {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
+                {formatLocalDate(poem.createdAt, lang)}
               </time>
             </Animated>
           ))}

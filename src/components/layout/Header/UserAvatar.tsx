@@ -1,6 +1,7 @@
 'use client'
 
 import { animated, useSpring } from '@react-spring/web'
+import { format } from 'date-fns'
 import { CalendarDays, LogOut, UserRoundPlus } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 
@@ -119,7 +120,7 @@ function UserAvatar({ user }: UserAvatarProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem disabled className="text-muted-foreground">
             <CalendarDays className="mr-2 size-4" />
-            Joined {new Date(user.createdAt).toLocaleDateString()}
+            Joined {format(user.createdAt, 'yyyy/MM/dd')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

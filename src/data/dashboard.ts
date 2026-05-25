@@ -1,13 +1,11 @@
 import type { DashboardData } from '@/types'
 
-import { cache } from 'react'
-
 import { requireServerAdminSession } from '@/lib/auth-session'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
 
-export const getDashboardData = cache(async (): Promise<DashboardData> => {
+export const getDashboardData = async (): Promise<DashboardData> => {
   await requireServerAdminSession()
 
   const now = new Date()
@@ -124,4 +122,4 @@ export const getDashboardData = cache(async (): Promise<DashboardData> => {
       updatedAt: song.updatedAt.toISOString()
     }))
   }
-})
+}

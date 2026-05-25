@@ -1,13 +1,13 @@
 import type { UserWithRole } from 'better-auth/plugins'
 
+import type { UserRole } from '@/types'
+
 import { headers } from 'next/headers'
 
 import { auth } from '@/lib/auth'
 import { requireServerAdminSession } from '@/lib/auth-session'
 
 import 'server-only'
-
-type Role = 'user' | 'admin'
 
 export async function getUsers() {
   await requireServerAdminSession()
@@ -41,7 +41,7 @@ export async function unbanUser(requestHeaders: Headers, userId: string) {
 export async function setUserRole(
   requestHeaders: Headers,
   userId: string,
-  role: Role | Role[]
+  role: UserRole | UserRole[]
 ) {
   return auth.api.setRole({
     headers: requestHeaders,

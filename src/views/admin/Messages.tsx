@@ -6,6 +6,7 @@ import type { ColumnConfig, FormFieldConfig } from '@/components/common'
 import type { Message, MessageWithReplies } from '@/types'
 import type { MessageInput, ReplyInput } from '@/validations/messages'
 
+import { format } from 'date-fns'
 import { Pencil, Plus, Reply, Trash2 } from 'lucide-react'
 import Image from 'next/image'
 import { useRef, useState } from 'react'
@@ -78,7 +79,7 @@ const columns: ColumnConfig<MessageWithReplies>[] = [
     sortable: true,
     render: (value) => (
       <span className="text-muted-foreground text-xs">
-        {new Date(value).toLocaleDateString()}
+        {format(value, 'yyyy-MM-dd')}
       </span>
     )
   },

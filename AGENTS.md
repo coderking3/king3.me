@@ -87,7 +87,7 @@ This file provides guidance to AI coding agents when working with code in this r
   - Check auth in the action (`requireServerAdminSession()` for admin mutations)
   - Validate inputs with Zod schemas from `@/validations/`
   - Call a DAL function from `src/data/`
-  - Call `revalidatePath()` / `revalidatePaths()` after mutations
+  - Call the DAL-layer `revalidateXxx()` (created by `createCachedQuery`) after mutations; only fall back to `revalidatePath()` when the data layer has no tag-based revalidation (e.g. `users.ts`)
   - Return `success(data)` on success, `failure(error)` on failure
 - **Data access**: Never call Prisma directly from actions, pages, or client components. Use server-only DAL functions in `src/data/`. Read functions serialize Date fields to ISO strings before passing data to Client Components; write functions perform database mutations only and do not do auth checks.
 - **Form validation**: Define Zod schemas in `src/lib/validations/{domain}.ts`. Use the `<Form>` component from `src/components/common/Form/` which integrates react-hook-form + Zod resolver automatically.
@@ -109,15 +109,16 @@ client view → Server Action → src/data write function → Prisma → Postgre
 ```
 
 - **Pages** are async React Server Components that fetch data via `src/data/` read functions, then render view components.
-- **Server Actions** (`src/app/actions/`) handle mutations only. They validate auth and input, call `src/data/` write functions, revalidate paths, and return `ResponseResult<T>` via `success()` / `failure()`.
-- **DAL functions** (`src/data/`) are server-only. Reads may use React `cache()` and must return JSON-safe data for Client Components. Writes may call Prisma or better-auth APIs but must not perform auth checks; authorization stays in Server Actions or protected layouts.
+- **Server Actions** (`src/app/actions/`) handle mutations only. They validate auth and input, call `src/data/` write functions, revalidate via the DAL-layer `revalidateXxx()` (or `revalidatePath()` as fallback), and return `ResponseResult<T>` via `success()` / `failure()`.
+- **DAL functions** (`src/data/`) are server-only. Reads use `createCachedQuery` from `src/lib/cache.ts` (wraps `unstable_cache` + `revalidateTag`) and must return JSON-safe data for Client Components. Writes may call Prisma or better-auth APIs but must not perform auth checks; authorization stays in Server Actions or protected layouts.
 - **Route Handlers** are used for HTTP-style endpoints such as `/api/search` and auth callbacks. Do not use Route Handlers for UI mutations when a Server Action fits better.
 
 ### Auth Flow
 
 - **Server**: `getServerSession()` reads the session from request headers via better-auth. `requireServerSession()` redirects unauthenticated users to `/auth`; `requireServerAdminSession()` verifies `role === 'admin'`.
 - **Client**: `authClient` from `src/lib/auth-client.ts` provides `signIn`, `signOut`, `useSession`. The auth modal state is managed by Zustand (`useAuthModal`).
-- **Admin guard**: `src/app/admin/layout.tsx` calls `requireServerAdminSession()`. The proxy also blocks `/admin` for non-admin sessions.
+- **Admin guard**: `src/app/admin/layout.tsx` calls `requireServerAdminSession()`. The proxy (`src/proxy.ts`) middleware also intercepts all `/admin/*` requests and redirects non-admin users to `/`.
+- **Proxy extra duties**: `src/proxy.ts` also handles locale detection/cookie persistence and redirects already-signed-in users away from `/auth`.
 - **API route**: `src/app/api/auth/[...all]/route.ts` delegates to better-auth's `toNextJsHandler`.
 
 ### Blog System
@@ -131,8 +132,9 @@ client view → Server Action → src/data write function → Prisma → Postgre
 ### i18n System
 
 - Two languages: `en` (fallback), `zh`.
-- Server-side: Language is read from `x-i18n-lang` request header, falling back to `en`.
+- Server-side: Language is read from the `i18n_lang` cookie via `cookies().get(LANGUAGE_COOKIE)` in `src/i18n/server.ts`, falling back to `DEFAULT_LNG` (`en`).
 - Client-side: Detected via cookie (`i18n_lang`) → browser navigator, cached in cookie.
+- Language proxy: `src/proxy.ts` (middleware) detects the locale from the `i18n_lang` cookie first, then falls back to `Accept-Language`. If the cookie is missing, it writes the detected locale back to the cookie (`maxAge: 7 days`).
 - Typed translations: `src/types/i18next.d.ts` augments i18next so `t()` calls are type-checked against the English JSON files.
 
 ### Theming

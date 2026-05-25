@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 import { Animated } from '@/components/common'
 import { evaluateMdx } from '@/components/mdx'
-import { getT } from '@/i18n/server'
+import { formatLocalDate } from '@/lib/date'
 
 import PostsActions from './PostsActions'
 import PostsFloatingBar from './PostsFloatingBar'
@@ -15,10 +15,9 @@ interface PostsPageProps {
 }
 
 async function PostsPage({ posts }: PostsPageProps) {
-  const { lang } = await getT()
-
   const { metadata, content } = posts
   const date = new Date(metadata.date)
+  const lang = metadata.lang === 'EN' ? 'en' : 'zh'
 
   const { mdx, toc } = await evaluateMdx({ content })
 
@@ -70,11 +69,7 @@ async function PostsPage({ posts }: PostsPageProps) {
               {/* Meta */}
               <div className="text-muted-foreground flex flex-wrap items-center gap-4 text-sm">
                 <time dateTime={date.toISOString()}>
-                  {date.toLocaleDateString(lang, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                  {formatLocalDate(date, lang)}
                 </time>
                 <span>·</span>
                 <span>{metadata.author?.name}</span>

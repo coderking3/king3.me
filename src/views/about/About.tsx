@@ -23,7 +23,7 @@ const EXPLORE_LINKS = [
   { key: 'photos', href: '/photos', icon: <CameraIcon size={18} /> },
   { key: 'poems', href: '/poems', icon: <FeatherIcon size={18} /> },
   { key: 'use', href: '/use', icon: <Toolbox size={18} /> }
-]
+] as const
 
 const NOW_LINKS = [
   {
@@ -70,7 +70,7 @@ function AboutPage() {
 
   const exploreLinks = EXPLORE_LINKS.map((item) => ({
     ...item,
-    name: commonT(`metadata.${item.key}.title` as any)
+    name: commonT(`nav.${item.key}`)
   }))
 
   return (

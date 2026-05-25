@@ -2,14 +2,17 @@
 
 import type { PoemInput } from '@/validations/poems'
 
-import { createPoem, deletePoem, deletePoems, updatePoem } from '@/data/poems'
+import {
+  createPoem,
+  deletePoem,
+  deletePoems,
+  revalidatePoems,
+  updatePoem
+} from '@/data/poems'
 import { requireServerAdminSession } from '@/lib/auth-session'
 import { failure, success } from '@/lib/result'
-import { revalidatePaths } from '@/lib/revalidate'
 import { idSchema, idsSchema } from '@/validations/common'
 import { poemSchema } from '@/validations/poems'
-
-const revalidUrls = ['/admin/poems', '/poems']
 
 export async function createPoemAction(data: PoemInput) {
   try {
@@ -18,7 +21,7 @@ export async function createPoemAction(data: PoemInput) {
     const parsed = poemSchema.parse(data)
     await createPoem(parsed)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePoems()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -33,7 +36,7 @@ export async function updatePoemAction(id: string, data: PoemInput) {
     const parsed = poemSchema.parse(data)
     await updatePoem(id, parsed)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePoems()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -47,7 +50,7 @@ export async function deletePoemAction(id: string) {
     idSchema.parse(id)
     await deletePoem(id)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePoems()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -61,7 +64,7 @@ export async function batchDeletePoemsAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deletePoems(ids)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePoems()
     return success(count)
   } catch (error: unknown) {
     return failure(error)

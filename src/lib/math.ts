@@ -19,11 +19,27 @@ export const range = (start: number, end?: number, step: number = 1) => {
 export const roundTo = (value: number, places = 0) =>
   Math.round(value * 10 ** places) / 10 ** places
 
-export const randomArr = <T = any>(list: T[], count = 5) => {
+function lcg(seed: number) {
+  const a = 9301
+  const c = 49297
+  const m = 233280
+
+  seed = (seed * a + c) % m
+  return seed / m
+}
+
+export const seededShuffle = <T = any>(list: T[], seed: number) => {
   const arr = list.slice()
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
+    const j = Math.floor(lcg(seed + i) * (i + 1))
     ;[arr[i], arr[j]] = [arr[j], arr[i]]
   }
-  return arr.slice(0, Math.min(count, arr.length))
+  return arr
+}
+
+export function getDailySeed(date = new Date()) {
+  const y = date.getFullYear()
+  const m = date.getMonth() + 1
+  const d = date.getDate()
+  return y * 10000 + m * 100 + d
 }

@@ -8,8 +8,8 @@ import { initReactI18next } from 'react-i18next/initReactI18next'
 
 import {
   backend,
+  DEFAULT_LNG,
   DEFAULT_NS,
-  FALLBACK_LNG,
   getI18nOptions,
   LANGUAGE_COOKIE
 } from './settings'
@@ -45,8 +45,8 @@ export async function getT<N extends Namespace = typeof DEFAULT_NS>(
 }
 
 // Utility function to get the locale from server components
-export async function getLang() {
+export async function getLang(): Promise<Language> {
   const cookie = await cookies()
-  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? FALLBACK_LNG) as Language
+  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? DEFAULT_LNG) as Language
   return lang
 }

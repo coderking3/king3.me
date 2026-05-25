@@ -6,7 +6,7 @@ export const LANGUAGES = ['en', 'zh'] as const
 export type Language = (typeof LANGUAGES)[number]
 export type Namespace = keyof CustomTypeOptions['resources']
 
-export const FALLBACK_LNG: Language = 'en'
+export const DEFAULT_LNG: Language = 'en'
 export const DEFAULT_NS: Namespace = 'common'
 export const LANGUAGE_COOKIE = 'i18n_lang'
 
@@ -20,12 +20,12 @@ export function isValidLocale(value: unknown): value is Language {
 }
 
 export function getI18nOptions(
-  lng: Language = FALLBACK_LNG,
+  lng: Language = DEFAULT_LNG,
   ns: Namespace = DEFAULT_NS
 ): InitOptions {
   return {
     lng,
-    fallbackLng: FALLBACK_LNG,
+    fallbackLng: DEFAULT_LNG,
     supportedLngs: LANGUAGES as unknown as string[],
     ns,
     fallbackNS: DEFAULT_NS,

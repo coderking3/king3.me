@@ -3,7 +3,7 @@ title: 'Next.js 16 + i18next: Cookie-based i18n Without Changing a Single Route'
 description: A practical guide to adding cookie-based internationalization to a Next.js 16 App Router project using i18next — zero route restructuring, zero URL prefixes, full TypeScript support.
 image: /images/avatar.png
 date: '2026-05-19'
-lang: en
+lang: EN
 tags:
   - NextJs
   - React
@@ -104,7 +104,7 @@ export const LANGUAGES = ['en', 'zh'] as const
 export type Language = (typeof LANGUAGES)[number]
 export type Namespace = keyof CustomTypeOptions['resources']
 
-export const FALLBACK_LNG: Language = 'en'
+export const DEFAULT_LNG: Language = 'en'
 export const DEFAULT_NS: Namespace = 'common'
 export const LANGUAGE_COOKIE = 'i18n_lang'
 
@@ -121,12 +121,12 @@ export function isValidLocale(value: unknown): value is Language {
 
 // Unified i18next init options — server and client share the same config
 export function getI18nOptions(
-  lng: Language = FALLBACK_LNG,
+  lng: Language = DEFAULT_LNG,
   ns: Namespace = DEFAULT_NS
 ): InitOptions {
   return {
     lng,
-    fallbackLng: FALLBACK_LNG,
+    fallbackLng: DEFAULT_LNG,
     supportedLngs: LANGUAGES as unknown as string[],
     ns,
     fallbackNS: DEFAULT_NS,
@@ -253,7 +253,7 @@ import acceptLanguage from 'accept-language'
 import { NextResponse } from 'next/server'
 
 import {
-  FALLBACK_LNG,
+  DEFAULT_LNG,
   isValidLocale,
   LANGUAGE_COOKIE,
   LANGUAGES
@@ -278,7 +278,7 @@ function detectLocale(request: NextRequest): {
   // 2. Fall back to Accept-Language header
   const matched = acceptLanguage.get(request.headers.get('Accept-Language'))
   return {
-    locale: isValidLocale(matched) ? matched : FALLBACK_LNG,
+    locale: isValidLocale(matched) ? matched : DEFAULT_LNG,
     persisted: false // ← Needs write-back
   }
 }
@@ -366,7 +366,7 @@ import { initReactI18next } from 'react-i18next/initReactI18next'
 import {
   backend,
   DEFAULT_NS,
-  FALLBACK_LNG,
+  DEFAULT_LNG,
   getI18nOptions,
   LANGUAGE_COOKIE
 } from './settings'
@@ -403,7 +403,7 @@ export async function getT<N extends Namespace = typeof DEFAULT_NS>(
 // Useful for generateMetadata or conditional server logic.
 export async function getLang() {
   const cookie = await cookies()
-  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? FALLBACK_LNG) as Language
+  const lang = (cookie.get(LANGUAGE_COOKIE)?.value ?? DEFAULT_LNG) as Language
   return lang
 }
 ```

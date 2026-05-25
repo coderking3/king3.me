@@ -42,7 +42,7 @@ const PAGES = [
   { key: 'about', href: '/about' },
   { key: 'photos', href: '/photos' },
   { key: 'poems', href: '/poems' },
-  { key: 'uses', href: '/use' }
+  { key: 'use', href: '/use' }
 ] as const
 
 const useSearchData = (open: boolean) => {

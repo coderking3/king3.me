@@ -1,5 +1,6 @@
 'use client'
 
+import { format } from 'date-fns'
 import {
   CalendarDays,
   Ellipsis,
@@ -180,7 +181,7 @@ function NavUser({ user }: { user: AdminSidebarUser }) {
             <DropdownMenuGroup>
               <DropdownMenuItem disabled className="text-muted-foreground">
                 <CalendarDays className="mr-2 size-4" />
-                Joined {new Date(user.createdAt).toLocaleDateString()}
+                Joined {format(user.createdAt, 'yyyy/MM/dd')}
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

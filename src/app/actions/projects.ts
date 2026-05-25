@@ -8,15 +8,13 @@ import {
   deleteProject,
   deleteProjects,
   reorderProjects,
+  revalidateProjects,
   updateProject
 } from '@/data/projects'
 import { requireServerAdminSession } from '@/lib/auth-session'
 import { failure, success } from '@/lib/result'
-import { revalidatePaths } from '@/lib/revalidate'
 import { idSchema, idsSchema } from '@/validations/common'
 import { projectSchema } from '@/validations/projects'
-
-const revalidUrls = ['/admin/projects', '/project']
 
 export async function createProjectAction(data: ProjectInput) {
   try {
@@ -25,7 +23,7 @@ export async function createProjectAction(data: ProjectInput) {
     const parsed = projectSchema.parse(data)
     await createProject(parsed)
 
-    revalidatePaths(...revalidUrls)
+    revalidateProjects()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -40,7 +38,7 @@ export async function updateProjectAction(id: string, data: ProjectInput) {
     const parsed = projectSchema.parse(data)
     await updateProject(id, parsed)
 
-    revalidatePaths(...revalidUrls)
+    revalidateProjects()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -54,7 +52,7 @@ export async function reorderProjectsAction(ids: string[]) {
     idsSchema.parse(ids)
     const result = await reorderProjects(ids)
 
-    revalidatePaths(...revalidUrls)
+    revalidateProjects()
     return success<Project[]>(result)
   } catch (error: unknown) {
     return failure(error)
@@ -68,7 +66,7 @@ export async function deleteProjectAction(id: string) {
     idSchema.parse(id)
     await deleteProject(id)
 
-    revalidatePaths(...revalidUrls)
+    revalidateProjects()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -82,7 +80,7 @@ export async function batchDeleteProjectsAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deleteProjects(ids)
 
-    revalidatePaths(...revalidUrls)
+    revalidateProjects()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)

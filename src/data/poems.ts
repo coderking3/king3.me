@@ -1,13 +1,12 @@
 import type { Poem } from '@/types'
 import type { PoemInput } from '@/validations/poems'
 
-import { cache } from 'react'
-
+import { createCachedQuery } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
 
-export const getPoems = cache(async (): Promise<Poem[]> => {
+const getPoemsFn = async (): Promise<Poem[]> => {
   const poems = await prisma.poem.findMany({
     select: {
       id: true,
@@ -27,7 +26,10 @@ export const getPoems = cache(async (): Promise<Poem[]> => {
     createdAt: poem.createdAt.toISOString(),
     updatedAt: poem.updatedAt.toISOString()
   }))
-})
+}
+
+export const { query: getPoems, revalidate: revalidatePoems } =
+  createCachedQuery(getPoemsFn, 'poems', 'days')
 
 export async function createPoem(data: PoemInput) {
   return prisma.poem.create({ data })

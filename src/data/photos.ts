@@ -1,13 +1,12 @@
 import type { Photo } from '@/types'
 import type { PhotoInput } from '@/validations/photos'
 
-import { cache } from 'react'
-
+import { createCachedQuery } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
 
-export const getPhotos = cache(async (): Promise<Photo[]> => {
+const getPhotosFn = async (): Promise<Photo[]> => {
   const photos = await prisma.photo.findMany({
     select: {
       id: true,
@@ -28,7 +27,10 @@ export const getPhotos = cache(async (): Promise<Photo[]> => {
     createdAt: photo.createdAt.toISOString(),
     updatedAt: photo.updatedAt.toISOString()
   }))
-})
+}
+
+export const { query: getPhotos, revalidate: revalidatePhotos } =
+  createCachedQuery(getPhotosFn, 'photos', 'days')
 
 export async function createPhoto(data: PhotoInput) {
   return prisma.photo.create({ data })

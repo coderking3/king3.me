@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import { Spinner } from '@/components/ui/spinner'
+import { formatLocalDate } from '@/lib/date'
 
 interface PhotoPreviewProps {
   photo: Photo
@@ -77,11 +78,7 @@ export default function PhotoPreview({
         <span className="text-sm font-medium text-white">{photo.name}</span>
         <span className="text-xs text-white/50">
           {photo.width} x {photo.height} &middot;{' '}
-          {new Date(photo.date).toLocaleDateString(lang, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-          })}
+          {formatLocalDate(photo.date, lang)}
         </span>
       </div>
     </motion.div>

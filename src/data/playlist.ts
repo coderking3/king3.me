@@ -1,13 +1,12 @@
 import type { Playlist } from '@/types'
 import type { SongInput } from '@/validations/playlist'
 
-import { cache } from 'react'
-
+import { createCachedQuery } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
 
-export const getPlaylist = cache(async (): Promise<Playlist[]> => {
+const getPlaylistFn = async (): Promise<Playlist[]> => {
   const songs = await prisma.playlist.findMany({
     select: {
       id: true,
@@ -28,7 +27,10 @@ export const getPlaylist = cache(async (): Promise<Playlist[]> => {
     createdAt: song.createdAt.toISOString(),
     updatedAt: song.updatedAt.toISOString()
   }))
-})
+}
+
+export const { query: getPlaylist, revalidate: revalidatePlaylist } =
+  createCachedQuery(getPlaylistFn, 'playlist', 'days')
 
 export async function createSong(data: SongInput) {
   const maxOrder = await prisma.playlist.aggregate({ _max: { order: true } })

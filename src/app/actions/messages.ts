@@ -6,15 +6,13 @@ import {
   createMessage,
   deleteMessage,
   deleteMessages,
+  revalidateMessages,
   updateMessage
 } from '@/data/messages'
 import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
 import { failure, success } from '@/lib/result'
-import { revalidatePaths } from '@/lib/revalidate'
 import { idSchema, idsSchema } from '@/validations/common'
 import { messageSchema } from '@/validations/messages'
-
-const revalidUrls = ['/admin/messages', '/message']
 
 interface InsertMessageParam {
   message: string
@@ -44,7 +42,7 @@ export async function sendMessageAction(message: string) {
     messageSchema.parse({ message })
     await createMessage(buildMessageData({ message }, session))
 
-    revalidatePaths('/message')
+    revalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -58,7 +56,7 @@ export async function deleteMessageAction(id: string) {
     idSchema.parse(id)
     await deleteMessage(id)
 
-    revalidatePaths(...revalidUrls)
+    revalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -72,7 +70,7 @@ export async function batchDeleteMessagesAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deleteMessages(ids)
 
-    revalidatePaths(...revalidUrls)
+    revalidateMessages()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)
@@ -90,7 +88,7 @@ export async function createMessageAction(
     messageSchema.parse({ message })
     await createMessage(buildMessageData({ message, parentId }, session))
 
-    revalidatePaths(...revalidUrls)
+    revalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -105,7 +103,7 @@ export async function updateMessageAction(id: string, message: string) {
     messageSchema.parse({ message })
     await updateMessage(id, message)
 
-    revalidatePaths(...revalidUrls)
+    revalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -120,7 +118,7 @@ export async function replyToMessageAction(parentId: string, message: string) {
     messageSchema.parse({ message })
     await createMessage(buildMessageData({ message, parentId }, session))
 
-    revalidatePaths(...revalidUrls)
+    revalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)

@@ -1,5 +1,7 @@
 'use server'
 
+import type { UserRole } from '@/types'
+
 import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
@@ -20,6 +22,10 @@ import {
   updateUserSchema
 } from '@/validations/users'
 
+const revalidateUsers = () => {
+  revalidatePath('/admin/users')
+}
+
 export async function banUserAction(userId: string, reason?: string) {
   try {
     await requireServerAdminSession()
@@ -27,7 +33,7 @@ export async function banUserAction(userId: string, reason?: string) {
     banUserSchema.parse({ userId, reason })
     await banUser(await headers(), userId, reason)
 
-    revalidatePath('/admin/users')
+    revalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -41,22 +47,24 @@ export async function unbanUserAction(userId: string) {
     idSchema.parse(userId)
     await unbanUser(await headers(), userId)
 
-    revalidatePath('/admin/users')
+    revalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
   }
 }
 
-type Role = 'user' | 'admin'
-export async function setUserRoleAction(userId: string, role: Role | Role[]) {
+export async function setUserRoleAction(
+  userId: string,
+  role: UserRole | UserRole[]
+) {
   try {
     await requireServerAdminSession()
 
     setUserRoleSchema.parse({ userId, role })
     await setUserRole(await headers(), userId, role)
 
-    revalidatePath('/admin/users')
+    revalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -87,7 +95,7 @@ export async function updateUserAction(
     updateUserSchema.parse(data)
     await updateUser(await headers(), userId, data)
 
-    revalidatePath('/admin/users')
+    revalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -101,7 +109,7 @@ export async function removeUserAction(userId: string) {
     idSchema.parse(userId)
     await removeUser(await headers(), userId)
 
-    revalidatePath('/admin/users')
+    revalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)

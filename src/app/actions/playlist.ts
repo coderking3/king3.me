@@ -6,15 +6,13 @@ import {
   createSong,
   deleteSong,
   deleteSongs,
+  revalidatePlaylist,
   updateSong
 } from '@/data/playlist'
 import { requireServerAdminSession } from '@/lib/auth-session'
 import { failure, success } from '@/lib/result'
-import { revalidatePaths } from '@/lib/revalidate'
 import { idSchema, idsSchema } from '@/validations/common'
 import { songSchema } from '@/validations/playlist'
-
-const revalidUrls = ['/admin/playlist', '/']
 
 export async function createSongAction(data: SongInput) {
   try {
@@ -23,7 +21,7 @@ export async function createSongAction(data: SongInput) {
     const parsed = songSchema.parse(data)
     await createSong(parsed)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePlaylist()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -38,7 +36,7 @@ export async function updateSongAction(id: string, data: SongInput) {
     const parsed = songSchema.parse(data)
     await updateSong(id, parsed)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePlaylist()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -52,7 +50,7 @@ export async function deleteSongAction(id: string) {
     idSchema.parse(id)
     await deleteSong(id)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePlaylist()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -66,7 +64,7 @@ export async function batchDeleteSongsAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deleteSongs(ids)
 
-    revalidatePaths(...revalidUrls)
+    revalidatePlaylist()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)

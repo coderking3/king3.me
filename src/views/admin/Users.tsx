@@ -5,6 +5,7 @@ import type { UserWithRole } from 'better-auth/plugins'
 import type { ColumnConfig, FormFieldConfig } from '@/components/common'
 import type { UpdateUserInput } from '@/validations/users'
 
+import { format } from 'date-fns'
 import { Pencil, Shield, ShieldOff, Trash2, UserX } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -92,7 +93,7 @@ const columns: ColumnConfig<UserWithRole>[] = [
     sortable: true,
     render: (value) => (
       <span className="text-muted-foreground text-xs">
-        {new Date(value).toLocaleDateString()}
+        {format(value, 'yyyy-MM-dd')}
       </span>
     )
   }

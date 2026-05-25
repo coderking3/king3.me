@@ -1,12 +1,11 @@
 import type { CreateMessageInput, MessageWithReplies } from '@/types'
 
-import { cache } from 'react'
-
+import { createCachedQuery } from '@/lib/cache'
 import { prisma } from '@/lib/prisma'
 
 import 'server-only'
 
-export const getMessages = cache(async (): Promise<MessageWithReplies[]> => {
+const getMessagesFn = async (): Promise<MessageWithReplies[]> => {
   const messages = await prisma.message.findMany({
     where: { parentId: null },
     select: {
@@ -41,7 +40,10 @@ export const getMessages = cache(async (): Promise<MessageWithReplies[]> => {
       createdAt: reply.createdAt.toISOString()
     }))
   })) as MessageWithReplies[]
-})
+}
+
+export const { query: getMessages, revalidate: revalidateMessages } =
+  createCachedQuery(getMessagesFn, 'messages', 'minutes')
 
 export async function createMessage(data: CreateMessageInput) {
   return prisma.message.create({ data })
