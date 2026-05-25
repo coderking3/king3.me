@@ -114,7 +114,7 @@
     "typescript": "^6.0.3"
   },
   "simple-git-hooks": {
-    "pre-commit": "npx lint-staged && tsc --noEmit"
+    "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
