@@ -21,9 +21,9 @@ export default async function RootLayout({
     <html
       lang={DEFAULT_LNG}
       suppressHydrationWarning
-      className={cn(robotoMono.variable, audioWide.variable)}
+      className={cn(robotoMono.variable, audioWide.variable, 'scroll-smooth')}
     >
-      <body className="min-h-screen scroll-smooth antialiased">
+      <body className="min-h-screen">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
