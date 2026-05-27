@@ -48,7 +48,7 @@
    ```
 
    Required variables:
-   - `DATABASE_URL` / `DIRECT_URL` — PostgreSQL connection strings
+   - `DATABASE_URL` — PostgreSQL connection strings
    - `BETTER_AUTH_SECRET` — Generate with `openssl rand -base64 32`
    - `BETTER_AUTH_URL` — Your app URL (e.g., `http://localhost:3060`)
    - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth app credentials

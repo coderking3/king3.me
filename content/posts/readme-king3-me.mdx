@@ -93,7 +93,6 @@ cp .env.example .env
 
 ```dotenv
 # Neon 数据库连接
-DIRECT_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
 DATABASE_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require"
 ```
 
@@ -319,7 +318,7 @@ pnpm db:push
 
 ### Q: `pnpm db:push` 报错连接失败？
 
-检查 `.env` 中的 `DATABASE_URL` 和 `DIRECT_URL` 是否已正确填入，并确保 Neon 项目的 IP 白名单允许访问（Neon 默认允许所有 IP）。
+检查 `.env` 中的 `DATABASE_URL` 是否已正确填入，并确保 Neon 项目的 IP 白名单允许访问（Neon 默认允许所有 IP）。
 
 ### Q: 本地能登录、部署后 OAuth 白屏？
 

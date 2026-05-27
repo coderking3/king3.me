@@ -38,7 +38,7 @@ This file provides guidance to AI coding agents when working with code in this r
 ## Development Setup
 
 1. Copy `.env.example` to `.env` and fill in the values:
-   - `DATABASE_URL` / `DIRECT_URL` — PostgreSQL connection strings (Neon recommended)
+   - `DATABASE_URL` — PostgreSQL connection strings (Neon recommended)
    - `BETTER_AUTH_API_KEY` — API key for better-auth
    - `BETTER_AUTH_SECRET` — generate with `openssl rand -base64 32`
    - `BETTER_AUTH_URL` — app URL

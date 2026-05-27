@@ -48,7 +48,7 @@
    ```
 
    必需的变量：
-   - `DATABASE_URL` / `DIRECT_URL` — PostgreSQL 连接字符串
+   - `DATABASE_URL` — PostgreSQL 连接字符串
    - `BETTER_AUTH_SECRET` — 使用 `openssl rand -base64 32` 生成
    - `BETTER_AUTH_URL` — 应用 URL（例如 `http://localhost:3060`）
    - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth 应用凭证
