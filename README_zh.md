@@ -15,7 +15,7 @@
 | UI 组件  | shadcn/ui (base-nova 风格), Lucide 图标    |
 | 动画     | Framer Motion, @react-spring/web           |
 | 数据库   | PostgreSQL (Neon)                          |
-| ORM      | Prisma ORM                                 |
+| ORM      | Drizzle ORM                                |
 | 身份认证 | better-auth (GitHub + Google OAuth)        |
 | 国际化   | i18next, react-i18next                     |
 | MDX      | next-mdx-remote, rehype-pretty-code, shiki |
@@ -57,7 +57,7 @@
 4. **初始化数据库**
 
    ```bash
-   pnpm db:generate   # 生成 Prisma Client
+   pnpm db:generate   # 从 schema 生成迁移文件
    pnpm db:push       # 将 schema 推送到数据库
    ```
 

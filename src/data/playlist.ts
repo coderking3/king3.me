@@ -1,26 +1,29 @@
 import type { Playlist } from '@/types'
 import type { SongInput } from '@/validations/playlist'
 
+import { asc, eq, inArray, max } from 'drizzle-orm'
+
 import { createCachedQuery } from '@/lib/cache'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
+import { playlist } from '@/lib/db/schema'
 
 import 'server-only'
 
 const getPlaylistFn = async (): Promise<Playlist[]> => {
-  const songs = await prisma.playlist.findMany({
-    select: {
-      id: true,
-      name: true,
-      author: true,
-      cover: true,
-      url: true,
-      duration: true,
-      order: true,
-      createdAt: true,
-      updatedAt: true
-    },
-    orderBy: { order: 'asc' }
-  })
+  const songs = await db
+    .select({
+      id: playlist.id,
+      name: playlist.name,
+      author: playlist.author,
+      cover: playlist.cover,
+      url: playlist.url,
+      duration: playlist.duration,
+      order: playlist.order,
+      createdAt: playlist.createdAt,
+      updatedAt: playlist.updatedAt
+    })
+    .from(playlist)
+    .orderBy(asc(playlist.order))
 
   return songs.map((song) => ({
     ...song,
@@ -33,25 +36,39 @@ export const { query: getPlaylist, revalidate: revalidatePlaylist } =
   createCachedQuery(getPlaylistFn, 'playlist', 'days')
 
 export async function createSong(data: SongInput) {
-  const maxOrder = await prisma.playlist.aggregate({ _max: { order: true } })
+  const [{ maxOrder }] = await db
+    .select({ maxOrder: max(playlist.order) })
+    .from(playlist)
 
-  return prisma.playlist.create({
-    data: { ...data, order: (maxOrder._max.order ?? -1) + 1 }
-  })
+  const [created] = await db
+    .insert(playlist)
+    .values({ ...data, order: (maxOrder ?? -1) + 1 })
+    .returning()
+
+  return created
 }
 
 export async function updateSong(id: string, data: SongInput) {
-  return prisma.playlist.update({ where: { id }, data })
+  const [updated] = await db
+    .update(playlist)
+    .set(data)
+    .where(eq(playlist.id, id))
+    .returning()
+  return updated
 }
 
 export async function deleteSong(id: string) {
-  return prisma.playlist.delete({ where: { id } })
+  const [deleted] = await db
+    .delete(playlist)
+    .where(eq(playlist.id, id))
+    .returning()
+  return deleted
 }
 
 export async function deleteSongs(ids: string[]) {
-  const { count } = await prisma.playlist.deleteMany({
-    where: { id: { in: ids } }
-  })
-
-  return count
+  const deleted = await db
+    .delete(playlist)
+    .where(inArray(playlist.id, ids))
+    .returning({ id: playlist.id })
+  return deleted.length
 }

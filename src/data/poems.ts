@@ -1,30 +1,33 @@
 import type { Poem } from '@/types'
 import type { PoemInput } from '@/validations/poems'
 
+import { desc, eq, inArray } from 'drizzle-orm'
+
 import { createCachedQuery } from '@/lib/cache'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
+import { poem } from '@/lib/db/schema'
 
 import 'server-only'
 
 const getPoemsFn = async (): Promise<Poem[]> => {
-  const poems = await prisma.poem.findMany({
-    select: {
-      id: true,
-      title: true,
-      author: true,
-      content: true,
-      date: true,
-      createdAt: true,
-      updatedAt: true
-    },
-    orderBy: { createdAt: 'desc' }
-  })
+  const poems = await db
+    .select({
+      id: poem.id,
+      title: poem.title,
+      author: poem.author,
+      content: poem.content,
+      date: poem.date,
+      createdAt: poem.createdAt,
+      updatedAt: poem.updatedAt
+    })
+    .from(poem)
+    .orderBy(desc(poem.createdAt))
 
-  return poems.map((poem) => ({
-    ...poem,
-    date: poem.date.toISOString(),
-    createdAt: poem.createdAt.toISOString(),
-    updatedAt: poem.updatedAt.toISOString()
+  return poems.map((p) => ({
+    ...p,
+    date: p.date.toISOString(),
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString()
   }))
 }
 
@@ -32,21 +35,28 @@ export const { query: getPoems, revalidate: revalidatePoems } =
   createCachedQuery(getPoemsFn, 'poems', 'days')
 
 export async function createPoem(data: PoemInput) {
-  return prisma.poem.create({ data })
+  const [created] = await db.insert(poem).values(data).returning()
+  return created
 }
 
 export async function updatePoem(id: string, data: PoemInput) {
-  return prisma.poem.update({ where: { id }, data })
+  const [updated] = await db
+    .update(poem)
+    .set(data)
+    .where(eq(poem.id, id))
+    .returning()
+  return updated
 }
 
 export async function deletePoem(id: string) {
-  return prisma.poem.delete({ where: { id } })
+  const [deleted] = await db.delete(poem).where(eq(poem.id, id)).returning()
+  return deleted
 }
 
 export async function deletePoems(ids: string[]) {
-  const { count } = await prisma.poem.deleteMany({
-    where: { id: { in: ids } }
-  })
-
-  return count
+  const deleted = await db
+    .delete(poem)
+    .where(inArray(poem.id, ids))
+    .returning({ id: poem.id })
+  return deleted.length
 }

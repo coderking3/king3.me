@@ -30,15 +30,15 @@ published: true
 
 ## 功能特性一览
 
-| 功能     | 技术实现                   | 说明                            |
-| -------- | -------------------------- | ------------------------------- |
-| 用户鉴权 | better-auth                | 支持 GitHub / Google OAuth 登录 |
-| 数据库   | Neon (PostgreSQL) + Prisma | Serverless PostgreSQL，按量计费 |
-| 部署平台 | Vercel                     | 零配置部署，全球 CDN            |
-| 博客系统 | MDX + next-mdx-remote      | 支持 React 组件的 Markdown      |
-| 国际化   | i18next                    | 中英文双语支持                  |
-| UI 组件  | shadcn/ui + Tailwind CSS   | 现代极简设计，暗色模式          |
-| 代码高亮 | Shiki + rehype-pretty-code | 精美的代码块样式                |
+| 功能     | 技术实现                    | 说明                            |
+| -------- | --------------------------- | ------------------------------- |
+| 用户鉴权 | better-auth                 | 支持 GitHub / Google OAuth 登录 |
+| 数据库   | Neon (PostgreSQL) + Drizzle | Serverless PostgreSQL，按量计费 |
+| 部署平台 | Vercel                      | 零配置部署，全球 CDN            |
+| 博客系统 | MDX + next-mdx-remote       | 支持 React 组件的 Markdown      |
+| 国际化   | i18next                     | 中英文双语支持                  |
+| UI 组件  | shadcn/ui + Tailwind CSS    | 现代极简设计，暗色模式          |
+| 代码高亮 | Shiki + rehype-pretty-code  | 精美的代码块样式                |
 
 ---
 
@@ -100,7 +100,7 @@ DATABASE_URL="postgresql://username:password@ep-xxx.us-east-1.aws.neon.tech/neon
 **步骤 3：同步数据库 Schema**
 
 ```bash
-# 生成 Prisma Client
+# 从 schema 生成迁移文件
 pnpm db:generate
 
 # 推送 Schema 到数据库
@@ -308,7 +308,7 @@ git pull origin main
 # 更新依赖
 pnpm install
 
-# 重新生成 Prisma（如有 Schema 变更）
+# 重新生成 Drizzle 迁移（如有 Schema 变更）
 pnpm db:generate
 pnpm db:push
 ```

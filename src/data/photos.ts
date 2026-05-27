@@ -1,31 +1,34 @@
 import type { Photo } from '@/types'
 import type { PhotoInput } from '@/validations/photos'
 
+import { desc, eq, inArray } from 'drizzle-orm'
+
 import { createCachedQuery } from '@/lib/cache'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
+import { photo } from '@/lib/db/schema'
 
 import 'server-only'
 
 const getPhotosFn = async (): Promise<Photo[]> => {
-  const photos = await prisma.photo.findMany({
-    select: {
-      id: true,
-      name: true,
-      url: true,
-      width: true,
-      height: true,
-      date: true,
-      createdAt: true,
-      updatedAt: true
-    },
-    orderBy: { date: 'desc' }
-  })
+  const photos = await db
+    .select({
+      id: photo.id,
+      name: photo.name,
+      url: photo.url,
+      width: photo.width,
+      height: photo.height,
+      date: photo.date,
+      createdAt: photo.createdAt,
+      updatedAt: photo.updatedAt
+    })
+    .from(photo)
+    .orderBy(desc(photo.date))
 
-  return photos.map((photo) => ({
-    ...photo,
-    date: photo.date.toISOString(),
-    createdAt: photo.createdAt.toISOString(),
-    updatedAt: photo.updatedAt.toISOString()
+  return photos.map((p) => ({
+    ...p,
+    date: p.date.toISOString(),
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString()
   }))
 }
 
@@ -33,27 +36,36 @@ export const { query: getPhotos, revalidate: revalidatePhotos } =
   createCachedQuery(getPhotosFn, 'photos', 'days')
 
 export async function createPhoto(data: PhotoInput) {
-  return prisma.photo.create({ data })
+  const [created] = await db.insert(photo).values(data).returning()
+  return created
 }
 
 export async function createPhotos(data: PhotoInput[]) {
-  const { count } = await prisma.photo.createMany({ data })
-
-  return count
+  const inserted = await db
+    .insert(photo)
+    .values(data)
+    .returning({ id: photo.id })
+  return inserted.length
 }
 
 export async function updatePhoto(id: string, data: PhotoInput) {
-  return prisma.photo.update({ where: { id }, data })
+  const [updated] = await db
+    .update(photo)
+    .set(data)
+    .where(eq(photo.id, id))
+    .returning()
+  return updated
 }
 
 export async function deletePhoto(id: string) {
-  return prisma.photo.delete({ where: { id } })
+  const [deleted] = await db.delete(photo).where(eq(photo.id, id)).returning()
+  return deleted
 }
 
 export async function deletePhotos(ids: string[]) {
-  const { count } = await prisma.photo.deleteMany({
-    where: { id: { in: ids } }
-  })
-
-  return count
+  const deleted = await db
+    .delete(photo)
+    .where(inArray(photo.id, ids))
+    .returning({ id: photo.id })
+  return deleted.length
 }

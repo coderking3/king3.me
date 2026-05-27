@@ -1,23 +1,29 @@
 import type { CreateMessageInput, MessageWithReplies } from '@/types'
 
+import { eq, inArray } from 'drizzle-orm'
+
 import { createCachedQuery } from '@/lib/cache'
-import { prisma } from '@/lib/prisma'
+import { db } from '@/lib/db'
+import { message } from '@/lib/db/schema'
 
 import 'server-only'
 
 const getMessagesFn = async (): Promise<MessageWithReplies[]> => {
-  const messages = await prisma.message.findMany({
-    where: { parentId: null },
-    select: {
+  // 使用 Relational API 查询嵌套 replies
+  const messages = await db.query.message.findMany({
+    where: (m, { isNull }) => isNull(m.parentId),
+    columns: {
       id: true,
       message: true,
       createdAt: true,
       userId: true,
       userName: true,
       userImg: true,
-      parentId: true,
+      parentId: true
+    },
+    with: {
       replies: {
-        select: {
+        columns: {
           id: true,
           message: true,
           createdAt: true,
@@ -26,10 +32,10 @@ const getMessagesFn = async (): Promise<MessageWithReplies[]> => {
           userImg: true,
           parentId: true
         },
-        orderBy: { createdAt: 'asc' }
+        orderBy: (reply, { asc }) => [asc(reply.createdAt)]
       }
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: (m, { desc }) => [desc(m.createdAt)]
   })
 
   return messages.map((msg) => ({
@@ -46,24 +52,32 @@ export const { query: getMessages, revalidate: revalidateMessages } =
   createCachedQuery(getMessagesFn, 'messages', 'minutes')
 
 export async function createMessage(data: CreateMessageInput) {
-  return prisma.message.create({ data })
+  const [created] = await db.insert(message).values(data).returning()
+  return created
 }
 
-export async function updateMessage(id: string, message: string) {
-  return prisma.message.update({
-    where: { id },
-    data: { message }
-  })
+// ⚠️ 参数名改为 text 避免与导入的 message 表名冲突
+export async function updateMessage(id: string, text: string) {
+  const [updated] = await db
+    .update(message)
+    .set({ message: text })
+    .where(eq(message.id, id))
+    .returning()
+  return updated
 }
 
 export async function deleteMessage(id: string) {
-  return prisma.message.delete({ where: { id } })
+  const [deleted] = await db
+    .delete(message)
+    .where(eq(message.id, id))
+    .returning()
+  return deleted
 }
 
 export async function deleteMessages(ids: string[]) {
-  const { count } = await prisma.message.deleteMany({
-    where: { id: { in: ids } }
-  })
-
-  return count
+  const deleted = await db
+    .delete(message)
+    .where(inArray(message.id, ids))
+    .returning({ id: message.id })
+  return deleted.length
 }

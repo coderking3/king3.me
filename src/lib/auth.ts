@@ -1,23 +1,21 @@
-/* eslint-disable perfectionist/sort-imports */
-
 import process from 'node:process'
 
+import { dash } from '@better-auth/infra'
 import { betterAuth } from 'better-auth'
-import { prismaAdapter } from 'better-auth/adapters/prisma'
+import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
 import { admin } from 'better-auth/plugins'
-import { dash } from '@better-auth/infra'
 
-import { prisma } from '@/lib/prisma'
 import { getServerSession } from './auth-session'
+import { db } from './db'
 
 export const ADMIN_USER_ROLE = 'admin' as const
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET,
 
-  database: prismaAdapter(prisma, {
-    provider: 'postgresql'
+  database: drizzleAdapter(db, {
+    provider: 'pg'
   }),
 
   // OAuth

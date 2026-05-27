@@ -15,7 +15,7 @@
 | UI Components  | shadcn/ui (base-nova style), Lucide icons  |
 | Animation      | Framer Motion, @react-spring/web           |
 | Database       | PostgreSQL (Neon)                          |
-| ORM            | Prisma ORM                                 |
+| ORM            | Drizzle ORM                                |
 | Authentication | better-auth (GitHub + Google OAuth)        |
 | i18n           | i18next, react-i18next                     |
 | MDX            | next-mdx-remote, rehype-pretty-code, shiki |
@@ -57,7 +57,7 @@
 4. **Set up the database**
 
    ```bash
-   pnpm db:generate   # Generate Prisma Client
+   pnpm db:generate   # Generate migration files from schema
    pnpm db:push       # Push schema to database
    ```
 

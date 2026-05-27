@@ -1,11 +1,11 @@
 import type {
-  Message as PrismaMessage,
-  Photo as PrismaPhoto,
-  Playlist as PrismaPlaylist,
-  Poem as PrismaPoem,
-  Project as PrismaProject,
-  User as PrismaUser
-} from '~/prisma/generated/client'
+  message,
+  photo,
+  playlist,
+  poem,
+  project,
+  user
+} from '@/lib/db/schema'
 
 /* Dashboard */
 
@@ -26,9 +26,9 @@ interface DashboardData {
   recentSongs: Playlist[]
 }
 
-/* Message  */
+/* Message */
 
-type Message = Omit<PrismaMessage, 'createdAt'> & {
+type Message = Omit<typeof message.$inferSelect, 'createdAt'> & {
   createdAt: string
 }
 
@@ -42,32 +42,41 @@ interface CreateMessageInput {
   parentId?: string
 }
 
-/* Photo  */
+/* Photo */
 
-type Photo = Omit<PrismaPhoto, 'date' | 'createdAt' | 'updatedAt'> & {
+type Photo = Omit<
+  typeof photo.$inferSelect,
+  'date' | 'createdAt' | 'updatedAt'
+> & {
   date: string
   createdAt: string
   updatedAt: string
 }
 
-/* Playlist  */
+/* Playlist */
 
-type Playlist = Omit<PrismaPlaylist, 'createdAt' | 'updatedAt'> & {
+type Playlist = Omit<
+  typeof playlist.$inferSelect,
+  'createdAt' | 'updatedAt'
+> & {
   createdAt: string
   updatedAt: string
 }
 
-/* Poem  */
+/* Poem */
 
-type Poem = Omit<PrismaPoem, 'date' | 'createdAt' | 'updatedAt'> & {
+type Poem = Omit<
+  typeof poem.$inferSelect,
+  'date' | 'createdAt' | 'updatedAt'
+> & {
   date: string
   createdAt: string
   updatedAt: string
 }
 
-/* Project  */
+/* Project */
 
-type Project = Omit<PrismaProject, 'createdAt' | 'updatedAt'> & {
+type Project = Omit<typeof project.$inferSelect, 'createdAt' | 'updatedAt'> & {
   createdAt: string
   updatedAt: string
 }
@@ -83,7 +92,10 @@ interface SearchData {
 
 type UserRole = 'admin' | 'user'
 
-type User = Omit<PrismaUser, 'createdAt' | 'updatedAt' | 'banExpires'> & {
+type User = Omit<
+  typeof user.$inferSelect,
+  'createdAt' | 'updatedAt' | 'banExpires'
+> & {
   createdAt: string
   updatedAt: string
   banExpires: string | null
