@@ -1,7 +1,9 @@
+'use client'
+
 import { Animated } from '@/components/common'
 import { BiliBili, Email, Feed, Github, X, Youtube } from '@/components/icons'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
-import { getT } from '@/i18n/server'
+import { useTranslation } from '@/i18n/client'
 
 import Typewriter from './Typewriter'
 
@@ -20,18 +22,18 @@ function SelectedText({ text }: { text: string }) {
   return (
     <span className="group relative bg-black/5 p-1 dark:bg-white/5">
       <span className="border-brand/90 dark:border-brand/90 pointer-events-none absolute inset-0 border opacity-70 group-hover:border-dashed group-hover:opacity-100">
-        <span className="border-brand absolute -top-[3.5px] -left-[3.5px] size-1.5 border bg-zinc-50" />
-        <span className="border-brand absolute -right-[3.5px] -bottom-[3.5px] size-1.5 border bg-zinc-50" />
-        <span className="border-brand absolute -bottom-[3.5px] -left-[3.5px] size-1.5 border bg-zinc-50" />
-        <span className="border-brand absolute -top-[3.5px] -right-[3.5px] size-1.5 border bg-zinc-50" />
+        <span className="border-brand absolute top-[-3.5px] left-[-3.5px] size-1.5 border bg-zinc-50" />
+        <span className="border-brand absolute right-[-3.5px] bottom-[-3.5px] size-1.5 border bg-zinc-50" />
+        <span className="border-brand absolute bottom-[-3.5px] left-[-3.5px] size-1.5 border bg-zinc-50" />
+        <span className="border-brand absolute top-[-3.5px] right-[-3.5px] size-1.5 border bg-zinc-50" />
       </span>
       {text}
     </span>
   )
 }
 
-async function Hero() {
-  const { t } = await getT('home')
+function Hero() {
+  const { t } = useTranslation('home')
 
   return (
     <>
@@ -93,10 +95,6 @@ async function Hero() {
       >
         {t('hero.description')}
         <br /> {t('hero.descriptionLine2')}
-        {/* I'm a frontend developer passionate about open source and crafting my
-        own projects.
-        <br /> When not coding, I'm capturing moments 📷, traveling ✈️, or lost
-        in music 🎵. */}
       </Animated>
 
       {/* Socials */}

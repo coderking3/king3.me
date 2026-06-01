@@ -105,7 +105,7 @@ export function AdminSidebar({
                       ? 'bg-accent! text-accent-foreground'
                       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent active:text-accent-foreground'
                   )}
-                  render={<Link href={href} />}
+                  render={<Link href={href} prefetch={true} />}
                 >
                   <Icon size={20} />
                   <span>{label}</span>
