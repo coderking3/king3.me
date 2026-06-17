@@ -1,12 +1,66 @@
+'use client'
+
 import type { Message, MessageWithReplies } from '@/types'
 
+import { useLocale } from 'next-intl'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 import { Animated } from '@/components/common'
-import { useTranslation } from '@/i18n/client'
-import { relativeTime } from '@/lib/date'
 
-/* --- Single Reply --- */
+// ---- relativeTime (moved from @/lib/date to isolate Date.now from Server Component bundles) ----
+
+type DateInput = string | number | Date
+
+const JUST_NOW: Record<string, string> = {
+  en: 'just now',
+  zh: '刚刚'
+}
+
+const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ['year', 365 * 24 * 60 * 60 * 1000],
+  ['month', 30 * 24 * 60 * 60 * 1000],
+  ['week', 7 * 24 * 60 * 60 * 1000],
+  ['day', 24 * 60 * 60 * 1000],
+  ['hour', 60 * 60 * 1000],
+  ['minute', 60 * 1000]
+]
+
+function toDate(date: DateInput) {
+  return date instanceof Date ? date : new Date(date)
+}
+
+function relativeTime(date: DateInput, locale = 'en'): string {
+  const target = toDate(date)
+  const diff = target.getTime() - Date.now()
+
+  if (Math.abs(diff) < 60 * 1000) {
+    return JUST_NOW[locale] ?? JUST_NOW.en
+  }
+
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+  for (const [unit, ms] of UNITS) {
+    if (Math.abs(diff) >= ms) {
+      return rtf.format(Math.round(diff / ms), unit)
+    }
+  }
+
+  return JUST_NOW[locale] ?? JUST_NOW.en
+}
+
+// ---- end relativeTime ----
+function RelativeTime({ date, lang }: { date: string; lang: string }) {
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    setText(relativeTime(date, lang))
+    const timer = setInterval(() => setText(relativeTime(date, lang)), 60_000)
+    return () => clearInterval(timer)
+  }, [date, lang])
+
+  if (!text) return null
+  return <>{text}</>
+}
 
 function Reply({
   reply,
@@ -50,7 +104,7 @@ function Reply({
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold">{reply.userName}</span>
             <time className="text-[11px] opacity-40 select-none">
-              {relativeTime(reply.createdAt, lang)}
+              <RelativeTime date={reply.createdAt} lang={lang} />
             </time>
           </div>
           <p className="mt-0.5 text-sm">{reply.message}</p>
@@ -59,8 +113,6 @@ function Reply({
     </div>
   )
 }
-
-/* --- Single Message --- */
 
 function MessageItem({
   message,
@@ -105,7 +157,7 @@ function MessageItem({
         <div className="-mt-0.5 flex min-w-0 flex-1 items-center gap-2">
           <b className="text-sm font-bold">{message.userName}</b>
           <time className="text-xs opacity-40 select-none">
-            {relativeTime(message.createdAt, lang)}
+            <RelativeTime date={message.createdAt} lang={lang} />
           </time>
         </div>
       </div>
@@ -138,7 +190,7 @@ function MessageItem({
 /* --- Message List --- */
 
 function MessageList({ messages }: { messages: MessageWithReplies[] }) {
-  const { i18n } = useTranslation()
+  const locale = useLocale()
 
   return (
     <div className="relative mt-12">
@@ -149,7 +201,7 @@ function MessageList({ messages }: { messages: MessageWithReplies[] }) {
             message={message}
             isLast={idx === messages.length - 1}
             index={idx}
-            lang={i18n.language}
+            lang={locale}
           />
         ))}
       </ul>

@@ -5,11 +5,11 @@ import type { TocItem } from '@/types'
 import { useScroll } from '@react-spring/web'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Check, ChevronsRight, List, X } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useCallback, useRef, useState } from 'react'
 
 import { Back, ChevronUp, LinkIcon } from '@/components/icons'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui'
-import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from './PostsTableOfContents'
@@ -25,7 +25,7 @@ interface PostsFloatingBarProps {
 }
 
 function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
-  const { t } = useTranslation('blog')
+  const t = useTranslations('page.blog')
 
   const [visible, setVisible] = useState(false)
   const [collapsed, setCollapsed] = useState(false)

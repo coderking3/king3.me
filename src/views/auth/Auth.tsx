@@ -1,17 +1,17 @@
 'use client'
 
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
 
 import { useInteractive } from '@/components/icons'
 import { ArrowLeftIcon } from '@/components/icons/ArrowLeft'
-import { useTranslation } from '@/i18n/client'
+import { Link } from '@/i18n/navigation'
 
 import AuthForm from './AuthForm'
 
 function Back() {
-  const { t } = useTranslation('auth')
+  const t = useTranslations('shared')
   const { isHovered, handlers } = useInteractive({
     trigger: ['hover'],
     duration: 180

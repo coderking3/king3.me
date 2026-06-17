@@ -1,5 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import {
   Dialog,
   DialogContent,
@@ -7,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui'
-import { useTranslation } from '@/i18n/client'
 
 import AuthForm from './AuthForm'
 
@@ -22,7 +23,7 @@ export default function AuthModal({
   onOpenChange,
   callbackURL
 }: AuthModalProps) {
-  const { t } = useTranslation('auth')
+  const t = useTranslations('page.auth')
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

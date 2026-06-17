@@ -3,10 +3,10 @@
 import type { MessageWithReplies } from '@/types'
 
 import { UserRoundPlus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { Animated } from '@/components/common'
 import { Button } from '@/components/ui'
-import { useTranslation } from '@/i18n/client'
 import { useSession } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'
@@ -15,7 +15,7 @@ import MessageInput from './MessageInput'
 import MessageList from './MessageList'
 
 function MessagePage({ messages }: { messages: MessageWithReplies[] }) {
-  const { t } = useTranslation('message')
+  const t = useTranslations('page.message')
   const { data: session } = useSession()
   const { openModal } = useAuthStore()
 

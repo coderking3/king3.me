@@ -1,11 +1,11 @@
 'use client'
 
 import { ArrowRight, Camera, Compass, Feather, Toolbox } from 'lucide-react'
-import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { Suspense } from 'react'
 
 import { EXPLORE_LINKS } from '@/constants/nav'
-import { useTranslation } from '@/i18n/client'
+import { Link } from '@/i18n/navigation'
 
 const ICONS: Record<string, React.FC<{ size?: number; className?: string }>> = {
   photos: Camera,
@@ -14,8 +14,8 @@ const ICONS: Record<string, React.FC<{ size?: number; className?: string }>> = {
 }
 
 export default function Explore() {
-  const { t } = useTranslation('home')
-  const { t: commonT } = useTranslation('common')
+  const t = useTranslations('page.home')
+  const navT = useTranslations('ui.nav')
 
   return (
     <div className="border-border bg-background/30 rounded-2xl border p-6 backdrop-blur-xs">
@@ -45,7 +45,7 @@ export default function Explore() {
                 {/* Label and description */}
                 <div className="relative z-10 min-w-0 flex-1">
                   <p className="text-foreground truncate text-sm font-medium">
-                    {commonT(`nav.${key}`)}
+                    {navT(key)}
                   </p>
                   <p className="text-muted-foreground truncate text-xs">
                     {t(`explore.${key}`)}

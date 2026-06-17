@@ -1,85 +1,41 @@
 import type { NextRequest } from 'next/server'
 
-import type { Language } from '@/i18n/settings'
-
-import acceptLanguage from 'accept-language'
+import createMiddleware from 'next-intl/middleware'
 import { NextResponse } from 'next/server'
 
-import {
-  DEFAULT_LNG,
-  isValidLocale,
-  LANGUAGE_COOKIE,
-  LANGUAGES
-} from '@/i18n/settings'
+import { routing } from '@/i18n/routing'
 import { ADMIN_USER_ROLE } from '@/lib/auth'
 import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
 
-acceptLanguage.languages([...LANGUAGES])
+const intlMiddleware = createMiddleware(routing)
 
-// ── Locale ──
-
-function detectLocale(request: NextRequest): {
-  locale: Language
-  persisted: boolean
-} {
-  const saved = request.cookies.get(LANGUAGE_COOKIE)?.value
-  if (saved && LANGUAGES.includes(saved as Language)) {
-    return { locale: saved as Language, persisted: true }
-  }
-  const matched = acceptLanguage.get(request.headers.get('Accept-Language'))
-  return {
-    locale: isValidLocale(matched) ? matched : DEFAULT_LNG,
-    persisted: false
-  }
-}
-
-function withLocale(
-  response: NextResponse,
-  locale: Language,
-  persisted: boolean
-) {
-  if (!persisted) {
-    response.cookies.set(LANGUAGE_COOKIE, locale, {
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7,
-      sameSite: 'lax'
-    })
-  }
-  return response
-}
-
-// ── Proxy ──
+const ADMIN_GUARD_RE = /^\/(?:zh\/)?admin/
+const AUTH_GUARD_RE = /^\/(?:zh\/)?auth$/
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
-  const { locale, persisted } = detectLocale(request)
 
-  const reply = (response: NextResponse) =>
-    withLocale(response, locale, persisted)
-  const redirect = (path: string) =>
-    reply(NextResponse.redirect(new URL(path, request.url)))
-
-  // Admin auth guard
-  if (pathname.startsWith('/admin')) {
+  // Admin guard
+  if (ADMIN_GUARD_RE.test(pathname)) {
     try {
       await requireServerAdminSession(request.headers)
     } catch {
-      return redirect('/')
+      return NextResponse.redirect(new URL('/', request.url))
     }
   }
 
   // Auth page: redirect if already signed in
-  if (pathname === '/auth') {
+  if (AUTH_GUARD_RE.test(pathname)) {
     const session = await getServerSession(request.headers)
 
     if (session) {
       const redirectPath =
         session.user.role === ADMIN_USER_ROLE ? '/admin' : '/'
-      return redirect(redirectPath)
+      return NextResponse.redirect(new URL(redirectPath, request.url))
     }
   }
 
-  return reply(NextResponse.next())
+  return intlMiddleware(request)
 }
 
 export const config = {

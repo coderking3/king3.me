@@ -1,16 +1,16 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
-import Link from 'next/link'
 
 import { Animated } from '@/components/common/Animated'
 import { ArtStarry } from '@/components/layout'
 import { Button } from '@/components/ui'
-import { useTranslation } from '@/i18n/client'
+import { Link } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 
-export default function NotFound() {
-  const { t } = useTranslation('common')
+export default function NotFoundPage() {
+  const t = useTranslations('page.notFound')
   const { theme } = useTheme()
   const isDark = theme === 'dark'
 
@@ -63,7 +63,7 @@ export default function NotFound() {
           preset={{ mode: 'fadeInUp', delay: 0.3, duration: 0.5 }}
           className="text-foreground text-2xl font-semibold tracking-wide md:text-3xl"
         >
-          {t('notFound.title')}
+          {t('title')}
         </Animated>
 
         {/* Description */}
@@ -72,7 +72,7 @@ export default function NotFound() {
           preset={{ mode: 'fadeInUp', delay: 0.5, duration: 0.5 }}
           className="text-muted-foreground max-w-md text-base"
         >
-          {t('notFound.description')}
+          {t('description')}
         </Animated>
 
         {/* Back home button */}
@@ -83,7 +83,7 @@ export default function NotFound() {
             className="border-border bg-secondary/50 text-muted-foreground hover:border-brand/40 hover:bg-secondary hover:text-foreground mt-4 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(var(--brand),0.15)]"
             render={<Link href="/" />}
           >
-            {t('notFound.backHome')}
+            {t('backHome')}
           </Button>
         </Animated>
       </div>

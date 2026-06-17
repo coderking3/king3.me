@@ -7,8 +7,8 @@ import {
   createProject,
   deleteProject,
   deleteProjects,
+  invalidateProjects,
   reorderProjects,
-  revalidateProjects,
   updateProject
 } from '@/data/projects'
 import { requireServerAdminSession } from '@/lib/auth-session'
@@ -23,7 +23,7 @@ export async function createProjectAction(data: ProjectInput) {
     const parsed = projectSchema.parse(data)
     await createProject(parsed)
 
-    revalidateProjects()
+    invalidateProjects()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -38,7 +38,7 @@ export async function updateProjectAction(id: string, data: ProjectInput) {
     const parsed = projectSchema.parse(data)
     await updateProject(id, parsed)
 
-    revalidateProjects()
+    invalidateProjects()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -52,7 +52,7 @@ export async function reorderProjectsAction(ids: string[]) {
     idsSchema.parse(ids)
     const result = await reorderProjects(ids)
 
-    revalidateProjects()
+    invalidateProjects()
     return success<Project[]>(result)
   } catch (error: unknown) {
     return failure(error)
@@ -66,7 +66,7 @@ export async function deleteProjectAction(id: string) {
     idSchema.parse(id)
     await deleteProject(id)
 
-    revalidateProjects()
+    invalidateProjects()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -80,7 +80,7 @@ export async function batchDeleteProjectsAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deleteProjects(ids)
 
-    revalidateProjects()
+    invalidateProjects()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)

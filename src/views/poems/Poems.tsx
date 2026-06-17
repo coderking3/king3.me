@@ -1,11 +1,19 @@
+import type { Locale } from 'next-intl'
+
 import type { Poem } from '@/types'
 
+import { getTranslations } from 'next-intl/server'
+
 import { Animated } from '@/components/common'
-import { getT } from '@/i18n/server'
 import { formatLocalDate } from '@/lib/date'
 
-async function PoemsPage({ poems }: { poems: Poem[] }) {
-  const { t, lang } = await getT('poems')
+interface PoemsPageProps {
+  poems: Poem[]
+  locale: Locale
+}
+
+async function PoemsPage({ poems, locale }: PoemsPageProps) {
+  const t = await getTranslations('page.poems')
 
   return (
     <div className="mt-14 sm:mt-24">
@@ -45,7 +53,7 @@ async function PoemsPage({ poems }: { poems: Poem[] }) {
                 {poem.content}
               </div>
               <time className="text-muted-foreground/60 mt-3 block text-xs">
-                {formatLocalDate(poem.createdAt, lang)}
+                {formatLocalDate(new Date(poem.createdAt), locale)}
               </time>
             </Animated>
           ))}

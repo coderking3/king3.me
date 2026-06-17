@@ -1,9 +1,10 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
+
 import { Animated } from '@/components/common'
 import { BiliBili, Email, Feed, Github, X, Youtube } from '@/components/icons'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
-import { useTranslation } from '@/i18n/client'
 
 import Typewriter from './Typewriter'
 
@@ -33,7 +34,7 @@ function SelectedText({ text }: { text: string }) {
 }
 
 function Hero() {
-  const { t } = useTranslation('home')
+  const t = useTranslations('page.home')
 
   return (
     <>

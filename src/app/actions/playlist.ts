@@ -6,7 +6,7 @@ import {
   createSong,
   deleteSong,
   deleteSongs,
-  revalidatePlaylist,
+  invalidatePlaylist,
   updateSong
 } from '@/data/playlist'
 import { requireServerAdminSession } from '@/lib/auth-session'
@@ -21,7 +21,7 @@ export async function createSongAction(data: SongInput) {
     const parsed = songSchema.parse(data)
     await createSong(parsed)
 
-    revalidatePlaylist()
+    invalidatePlaylist()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -36,7 +36,7 @@ export async function updateSongAction(id: string, data: SongInput) {
     const parsed = songSchema.parse(data)
     await updateSong(id, parsed)
 
-    revalidatePlaylist()
+    invalidatePlaylist()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -50,7 +50,7 @@ export async function deleteSongAction(id: string) {
     idSchema.parse(id)
     await deleteSong(id)
 
-    revalidatePlaylist()
+    invalidatePlaylist()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -64,7 +64,7 @@ export async function batchDeleteSongsAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deleteSongs(ids)
 
-    revalidatePlaylist()
+    invalidatePlaylist()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)

@@ -7,6 +7,7 @@ import process from 'node:process'
 import { format } from 'date-fns'
 import fg from 'fast-glob'
 import matter from 'gray-matter'
+import { cacheLife, cacheTag } from 'next/cache'
 
 import { AUTHOR_INFO } from '@/constants'
 
@@ -24,7 +25,7 @@ function normalizeMetadata(
   slug: string,
   options?: { dateFormat?: boolean }
 ) {
-  let date = data.date ?? new Date().toISOString()
+  let date = data.date ?? '2026-01-01T00:00:00.000Z'
 
   if (options?.dateFormat) date = format(new Date(date), 'yyyy-MM-dd')
 
@@ -37,6 +38,10 @@ function normalizeMetadata(
 }
 
 export async function getPostsBySlug(slug: string) {
+  'use cache'
+  cacheLife('max') // 文件内容基本不变，用最长缓存
+  cacheTag(`post-${slug}`)
+
   const filePath = path.join(postsDirectory, `${slug}.mdx`)
   const fileContent = await fs.readFile(filePath, 'utf-8')
 
@@ -65,6 +70,10 @@ export async function getPostsMetadata(file: string) {
 }
 
 export async function getAllPosts() {
+  'use cache'
+  cacheLife('max')
+  cacheTag('all-posts')
+
   const files = await fg('**/*.{md,mdx}', {
     cwd: postsDirectory,
     absolute: false

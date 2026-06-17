@@ -4,9 +4,7 @@ export { default as ArtStarry } from './Background/ArtStarry'
 export { default as Background } from './Background/Background'
 
 /* Part: Header */
-export { AdminHeader, Header } from './Header/Header'
-export { default as ToggleLanguage } from './Header/ToggleLanguage'
-export { default as ToggleTheme } from './Header/ToggleTheme'
+export { AdminHeader, Header } from './Header'
 
 /* Part: Footer */
 export { AdminSidebar } from './Sidebar'

@@ -32,5 +32,8 @@
   },
   "[svg]": {
     "editor.defaultFormatter": "jock.svg"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }

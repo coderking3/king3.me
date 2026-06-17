@@ -1,13 +1,14 @@
 import type { PostsMetadata } from '@/types'
 
+import { getTranslations } from 'next-intl/server'
+
 import { Animated } from '@/components/common'
 import { STAGGER } from '@/constants'
-import { getT } from '@/i18n/server'
 
 import PostsCard from './PostsCard'
 
 async function Blog({ posts }: { posts: PostsMetadata[] }) {
-  const { t } = await getT('blog')
+  const t = await getTranslations('page.blog')
 
   return (
     <div className="mt-14 sm:mt-24">

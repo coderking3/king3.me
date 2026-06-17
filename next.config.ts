@@ -1,11 +1,20 @@
 import type { NextConfig } from 'next'
 
+import createNextIntlPlugin from 'next-intl/plugin'
+
+const withNextIntl = createNextIntlPlugin()
+
 const nextConfig: NextConfig = {
   // Turn off React's strict mode
   reactStrictMode: false,
   // Enable React Compiler in Next.js.
   reactCompiler: true,
-  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+
+  cacheComponents: true,
+
+  experimental: {
+    rootParams: true
+  },
 
   images: {
     remotePatterns: [
@@ -64,4 +73,4 @@ const nextConfig: NextConfig = {
   }
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

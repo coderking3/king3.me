@@ -2,14 +2,18 @@ import type { Project } from '@/types'
 import type { ProjectInput } from '@/validations/projects'
 
 import { asc, eq, inArray, max } from 'drizzle-orm'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
-import { createCachedQuery } from '@/lib/cache'
 import { db } from '@/lib/db'
 import { project } from '@/lib/db/schema'
 
 import 'server-only'
 
-const getProjectsFn = async (): Promise<Project[]> => {
+export async function getProjects(): Promise<Project[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag('projects')
+
   const projects = await db
     .select({
       id: project.id,
@@ -31,8 +35,9 @@ const getProjectsFn = async (): Promise<Project[]> => {
   }))
 }
 
-export const { query: getProjects, revalidate: revalidateProjects } =
-  createCachedQuery(getProjectsFn, 'projects', 'days')
+export function invalidateProjects() {
+  updateTag('projects')
+}
 
 export async function createProject(data: ProjectInput) {
   const [{ maxOrder }] = await db

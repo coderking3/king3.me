@@ -1,15 +1,17 @@
 import type { DashboardData } from '@/types'
 
 import { and, asc, count, desc, gte, isNull } from 'drizzle-orm'
+import { cacheLife, cacheTag } from 'next/cache'
 
-import { requireServerAdminSession } from '@/lib/auth-session'
 import { db } from '@/lib/db'
 import { message, playlist, project, user } from '@/lib/db/schema'
 
 import 'server-only'
 
 export const getDashboardData = async (): Promise<DashboardData> => {
-  await requireServerAdminSession()
+  'use cache'
+  cacheLife('minutes')
+  cacheTag('dashboard')
 
   const now = new Date()
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)

@@ -1,7 +1,8 @@
 import type { Project } from '@/types'
 
+import { getTranslations } from 'next-intl/server'
+
 import { Animated } from '@/components/common'
-import { getT } from '@/i18n/server'
 
 import ProjectCard from './ProjectCard'
 
@@ -10,7 +11,7 @@ interface ProjectPageProps {
 }
 
 async function ProjectPage({ projects }: ProjectPageProps) {
-  const { t } = await getT('project')
+  const t = await getTranslations('page.project')
 
   return (
     <div className="mt-14 sm:mt-24">

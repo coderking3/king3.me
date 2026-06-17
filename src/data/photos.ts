@@ -2,14 +2,18 @@ import type { Photo } from '@/types'
 import type { PhotoInput } from '@/validations/photos'
 
 import { desc, eq, inArray } from 'drizzle-orm'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
-import { createCachedQuery } from '@/lib/cache'
 import { db } from '@/lib/db'
 import { photo } from '@/lib/db/schema'
 
 import 'server-only'
 
-const getPhotosFn = async (): Promise<Photo[]> => {
+export async function getPhotos(): Promise<Photo[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag('photos')
+
   const photos = await db
     .select({
       id: photo.id,
@@ -32,8 +36,9 @@ const getPhotosFn = async (): Promise<Photo[]> => {
   }))
 }
 
-export const { query: getPhotos, revalidate: revalidatePhotos } =
-  createCachedQuery(getPhotosFn, 'photos', 'days')
+export function invalidatePhotos() {
+  updateTag('photos')
+}
 
 export async function createPhoto(data: PhotoInput) {
   const [created] = await db.insert(photo).values(data).returning()

@@ -78,7 +78,7 @@ export default function PhotoPreview({
         <span className="text-sm font-medium text-white">{photo.name}</span>
         <span className="text-xs text-white/50">
           {photo.width} x {photo.height} &middot;{' '}
-          {formatLocalDate(photo.date, lang)}
+          {formatLocalDate(new Date(photo.date), lang)}
         </span>
       </div>
     </motion.div>

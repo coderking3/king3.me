@@ -2,14 +2,18 @@ import type { Poem } from '@/types'
 import type { PoemInput } from '@/validations/poems'
 
 import { desc, eq, inArray } from 'drizzle-orm'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
-import { createCachedQuery } from '@/lib/cache'
 import { db } from '@/lib/db'
 import { poem } from '@/lib/db/schema'
 
 import 'server-only'
 
-const getPoemsFn = async (): Promise<Poem[]> => {
+export async function getPoems(): Promise<Poem[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag('poems')
+
   const poems = await db
     .select({
       id: poem.id,
@@ -31,8 +35,9 @@ const getPoemsFn = async (): Promise<Poem[]> => {
   }))
 }
 
-export const { query: getPoems, revalidate: revalidatePoems } =
-  createCachedQuery(getPoemsFn, 'poems', 'days')
+export function invalidatePoems() {
+  updateTag('poems')
+}
 
 export async function createPoem(data: PoemInput) {
   const [created] = await db.insert(poem).values(data).returning()

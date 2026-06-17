@@ -6,7 +6,7 @@ import {
   createMessage,
   deleteMessage,
   deleteMessages,
-  revalidateMessages,
+  invalidateMessages,
   updateMessage
 } from '@/data/messages'
 import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
@@ -42,7 +42,7 @@ export async function sendMessageAction(message: string) {
     messageSchema.parse({ message })
     await createMessage(buildMessageData({ message }, session))
 
-    revalidateMessages()
+    invalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -56,7 +56,7 @@ export async function deleteMessageAction(id: string) {
     idSchema.parse(id)
     await deleteMessage(id)
 
-    revalidateMessages()
+    invalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -70,7 +70,7 @@ export async function batchDeleteMessagesAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deleteMessages(ids)
 
-    revalidateMessages()
+    invalidateMessages()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)
@@ -88,7 +88,7 @@ export async function createMessageAction(
     messageSchema.parse({ message })
     await createMessage(buildMessageData({ message, parentId }, session))
 
-    revalidateMessages()
+    invalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -103,7 +103,7 @@ export async function updateMessageAction(id: string, message: string) {
     messageSchema.parse({ message })
     await updateMessage(id, message)
 
-    revalidateMessages()
+    invalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -118,7 +118,7 @@ export async function replyToMessageAction(parentId: string, message: string) {
     messageSchema.parse({ message })
     await createMessage(buildMessageData({ message, parentId }, session))
 
-    revalidateMessages()
+    invalidateMessages()
     return success(null)
   } catch (error: unknown) {
     return failure(error)

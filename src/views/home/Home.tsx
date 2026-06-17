@@ -1,9 +1,9 @@
 import type { Playlist, PostsMetadata } from '@/types'
 
 import { PencilLine } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
 
 import { GALLERYS } from '@/constants'
-import { getT } from '@/i18n/server'
 
 import PostsCard from '../blog/PostsCard'
 import Explore from './Explore'
@@ -18,7 +18,7 @@ export default async function Home({
   songs: Playlist[]
   posts: PostsMetadata[]
 }) {
-  const { t } = await getT('home')
+  const t = await getTranslations('page.home')
 
   return (
     <div className="mt-14 sm:mt-24">

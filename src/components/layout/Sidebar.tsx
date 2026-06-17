@@ -13,7 +13,6 @@ import {
   Music,
   Users
 } from 'lucide-react'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { LogoIcon } from '@/components/icons'
@@ -38,6 +37,7 @@ import {
   useSidebar
 } from '@/components/ui'
 import { ADMIN_NAVIGATION_ITEMS } from '@/constants'
+import { Link } from '@/i18n/navigation'
 import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 

@@ -1,13 +1,13 @@
 'use client'
 
+import { useLocale } from 'next-intl'
 import Image from 'next/image'
-import Link from 'next/link'
 
 import { Animated } from '@/components/common'
 import { useInteractive } from '@/components/icons'
 import { ExternalLinkIcon } from '@/components/icons/ExternalLink'
 import { STAGGER } from '@/constants'
-import { useTranslation } from '@/i18n/client'
+import { Link } from '@/i18n/navigation'
 
 interface Project {
   name: string
@@ -40,7 +40,7 @@ interface ProjectCardProps {
 function ProjectCard(props: ProjectCardProps) {
   const { idx, project } = props
   const { isHovered, handlers } = useInteractive()
-  const { i18n } = useTranslation()
+  const locale = useLocale()
 
   return (
     <Animated
@@ -65,7 +65,7 @@ function ProjectCard(props: ProjectCardProps) {
           </Link>
         </h2>
         <p className="text-muted-foreground z-20 mt-2 text-sm">
-          {getLocalizedDesc(project.description, i18n.language)}
+          {getLocalizedDesc(project.description, locale)}
         </p>
       </div>
 
