@@ -1,5 +1,9 @@
 import type { AuthorInfo } from '@/types'
 
+import process from 'node:process'
+
+export const SITE_URL = process.env.SITE_URL ?? 'https://king3-me.vercel.app'
+
 export const AUTHOR_INFO: AuthorInfo = {
   name: 'King3',
   email: 'king3.wm@gmail.com',
