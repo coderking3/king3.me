@@ -3,19 +3,28 @@
 import type { Playlist } from '@/types'
 
 import { Pause, Play } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 import { Equalizer, NetEaseMusicIcon } from '@/components/icons'
-import { useTranslation } from '@/i18n/client'
+import { getDailySeed, seededShuffle } from '@/lib/math'
 import { cn } from '@/lib/utils'
 
 function FeaturedMusic({ songs }: { songs: Playlist[] }) {
-  const { t } = useTranslation('home')
+  const t = useTranslations('page.home')
 
   const [playingUrl, setPlayingUrl] = useState<string | null>(null)
   const [isPlaying, setIsPlaying] = useState<boolean>(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+
+  const [dailySongs, setDailySongs] = useState<Playlist[]>([])
+
+  // 只在客户端计算每日随机 5 首歌
+  useEffect(() => {
+    const seed = getDailySeed(new Date())
+    setDailySongs(seededShuffle(songs, seed).slice(0, 5))
+  }, [songs])
 
   useEffect(() => {
     return () => {
@@ -54,7 +63,7 @@ function FeaturedMusic({ songs }: { songs: Playlist[] }) {
       </h2>
 
       <div className="space-y-4">
-        {songs.map((song) => {
+        {dailySongs.map((song) => {
           const isPlay = playingUrl === song.url && isPlaying
 
           return (

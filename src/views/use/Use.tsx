@@ -1,14 +1,23 @@
+import type { Locale } from 'next-intl'
+
+import { getTranslations } from 'next-intl/server'
+import { Suspense } from 'react'
+
 import { Animated } from '@/components/common'
 import { evaluateMdx } from '@/components/mdx'
-import { getT } from '@/i18n/server'
 import { getUseContent } from '@/lib/content'
 import { cn } from '@/lib/utils'
 
 import PostsTableOfContents from '../blog/PostsTableOfContents'
+import UsePageSkeleton from './UseSkeleton'
 
-async function UsePage() {
-  const { t, lang } = await getT('use')
-  const { content } = await getUseContent(lang)
+interface UsePageProps {
+  locale: Locale
+}
+
+async function UsePageContent({ locale }: UsePageProps) {
+  const t = await getTranslations('page.use')
+  const { content } = await getUseContent(locale)
   const { mdx, toc } = await evaluateMdx({ content })
 
   return (
@@ -60,6 +69,14 @@ async function UsePage() {
         </div>
       </div>
     </div>
+  )
+}
+
+function UsePage({ locale }: UsePageProps) {
+  return (
+    <Suspense fallback={<UsePageSkeleton />}>
+      <UsePageContent locale={locale} />
+    </Suspense>
   )
 }
 

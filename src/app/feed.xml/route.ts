@@ -1,7 +1,6 @@
 import { generateFeed } from '@/lib/rss'
 
-// ISR: Revalidation every hour
-export const revalidate = 3600
+const FEED_MAX_AGE = 3600
 
 // RSS 2.0 format
 export async function GET() {
@@ -11,7 +10,7 @@ export async function GET() {
     return new Response(feed.rss2(), {
       headers: {
         'Content-Type': 'application/xml; charset=utf-8',
-        'Cache-Control': `public, max-age=${revalidate}, s-maxage=${revalidate}, stale-while-revalidate=86400`
+        'Cache-Control': `public, max-age=${FEED_MAX_AGE}, s-maxage=${FEED_MAX_AGE}, stale-while-revalidate=86400`
       }
     })
   } catch (error) {

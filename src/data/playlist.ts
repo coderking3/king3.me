@@ -2,14 +2,18 @@ import type { Playlist } from '@/types'
 import type { SongInput } from '@/validations/playlist'
 
 import { asc, eq, inArray, max } from 'drizzle-orm'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
-import { createCachedQuery } from '@/lib/cache'
 import { db } from '@/lib/db'
 import { playlist } from '@/lib/db/schema'
 
 import 'server-only'
 
-const getPlaylistFn = async (): Promise<Playlist[]> => {
+export async function getPlaylist(): Promise<Playlist[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag('playlist')
+
   const songs = await db
     .select({
       id: playlist.id,
@@ -32,8 +36,9 @@ const getPlaylistFn = async (): Promise<Playlist[]> => {
   }))
 }
 
-export const { query: getPlaylist, revalidate: revalidatePlaylist } =
-  createCachedQuery(getPlaylistFn, 'playlist', 'days')
+export function invalidatePlaylist() {
+  updateTag('playlist')
+}
 
 export async function createSong(data: SongInput) {
   const [{ maxOrder }] = await db

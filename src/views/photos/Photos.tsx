@@ -4,17 +4,18 @@ import type { Photo } from '@/types'
 
 import { AnimatePresence } from 'framer-motion'
 import { Grid2x2, LayoutGrid } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useState } from 'react'
 
 import { Animated } from '@/components/common'
-import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 import PhotoPreview from './PhotoPreview'
 
 function PhotosPage({ photos }: { photos: Photo[] }) {
-  const { t, i18n } = useTranslation('photos')
+  const t = useTranslations('page.photos')
+  const locale = useLocale()
   const [activePhoto, setActivePhoto] = useState<Photo | null>(null)
   const [view, setView] = useState<'cover' | 'contain'>('cover')
   const isCover = view === 'cover'
@@ -100,7 +101,7 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
           <PhotoPreview
             key={activePhoto.id}
             photo={activePhoto}
-            lang={i18n.language}
+            lang={locale}
             onClose={() => setActivePhoto(null)}
           />
         )}

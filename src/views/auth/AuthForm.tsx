@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -10,7 +11,6 @@ import {
   GoogleIcon
 } from '@/components/icons'
 import { Spinner } from '@/components/ui'
-import { useTranslation } from '@/i18n/client'
 import { authClient } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 
@@ -81,7 +81,7 @@ function OAuthButton({
 }
 
 function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
-  const { t } = useTranslation('auth')
+  const t = useTranslations('page.auth')
   const [loadingProvider, setLoadingProvider] = useState<Provider | null>(null)
   const anyLoading = loadingProvider !== null
 

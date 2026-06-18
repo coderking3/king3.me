@@ -37,7 +37,7 @@ export const seededShuffle = <T = any>(list: T[], seed: number) => {
   return arr
 }
 
-export function getDailySeed(date = new Date()) {
+export function getDailySeed(date: Date) {
   const y = date.getFullYear()
   const m = date.getMonth() + 1
   const d = date.getDate()

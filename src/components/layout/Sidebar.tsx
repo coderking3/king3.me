@@ -13,7 +13,6 @@ import {
   Music,
   Users
 } from 'lucide-react'
-import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
 import { LogoIcon } from '@/components/icons'
@@ -38,6 +37,7 @@ import {
   useSidebar
 } from '@/components/ui'
 import { ADMIN_NAVIGATION_ITEMS } from '@/constants'
+import { Link } from '@/i18n/navigation'
 import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 
@@ -105,7 +105,7 @@ export function AdminSidebar({
                       ? 'bg-accent! text-accent-foreground'
                       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent active:text-accent-foreground'
                   )}
-                  render={<Link href={href} prefetch={true} />}
+                  render={<Link href={href} />}
                 >
                   <Icon size={20} />
                   <span>{label}</span>

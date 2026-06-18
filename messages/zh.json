@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "site": {
+      "titleDefault": "King3 | Developer, Storyteller",
+      "description": "Frontend Developer & Music Enthusiast"
+    },
+    "home": {
+      "title": "首页",
+      "description": "King3 - 前端开发者与音乐爱好者"
+    },
+    "about": {
+      "title": "关于我",
+      "description": "你好，我是 King3。一个前端开发者、开源爱好者和创作者。"
+    },
+    "blog": {
+      "title": "我的博客",
+      "description": "写博客是我最喜欢的分享和反思方式之一，我希望将有用的技术知识传递给更多人。"
+    },
+    "project": {
+      "title": "我的项目",
+      "description": "我的开源项目、工具与创意实验集合。"
+    },
+    "message": {
+      "title": "留言墙",
+      "description": "在这里，你可以留下想对我说的话、建议或想法。"
+    },
+    "photos": {
+      "title": "照片墙",
+      "description": "用光影捕捉的瞬间 — 视觉日志。"
+    },
+    "poems": {
+      "title": "诗词集",
+      "description": "引起共鸣的文字 — 收集的诗句与原创作品。"
+    },
+    "use": {
+      "title": "装备",
+      "description": "我日常使用的软硬件。"
+    },
+    "auth": {
+      "title": "登录",
+      "description": "登录或创建账号以继续。"
+    }
+  },
+
+  "ui": {
+    "nav": {
+      "home": "首页",
+      "blog": "博客",
+      "project": "项目",
+      "message": "留言",
+      "about": "关于",
+      "photos": "照片",
+      "poems": "诗歌",
+      "use": "装备"
+    },
+    "actions": {
+      "rssFeed": "RSS 订阅",
+      "LocaleSwitcher": "切换语言"
+    },
+    "footer": {
+      "copyright": "© 2025 至今 King3 保留所有权利",
+      "quotes": ["代码即诗", "少写代码，多享人生", "完成比完美更重要"]
+    },
+    "search": {
+      "title": "搜索",
+      "placeholder": "搜索页面、项目、文章...",
+      "hint": "在本站搜索所有博客文章、项目和页面。",
+      "noResults": "没有找到结果。",
+      "posts": "文章",
+      "projects": "项目",
+      "pages": "页面",
+      "shortcut": {
+        "jump": "跳转页面"
+      }
+    }
+  },
+
+  "page": {
+    "home": {
+      "latestUpdates": "近期文章",
+      "featuredMusic": "精选音乐",
+      "exploreMore": "发现更多",
+      "explore": {
+        "photos": "记录生活的瞬间",
+        "poems": "古诗词收藏",
+        "use": "常用工具与软件"
+      },
+      "hero": {
+        "description": "我是一名前端开发者，热衷于开源并打造自己的项目。",
+        "descriptionLine2": "不写代码的时候，我会记录瞬间 📷，玩游戏 🎮，或沉浸在音乐 🎵 中。"
+      }
+    },
+    "about": {
+      "title": "关于我",
+      "description": "你好，我是 King3。一个前端开发者、开源爱好者和创作者。",
+      "heading": "King3.",
+      "subtitle": "前端工程师 · 开源爱好者 · 现居 ",
+      "city": "长沙",
+      "workingAs": "Working as a",
+      "currentJob": "前端开发",
+      "creatorOf": "Creator of",
+      "maintaining": "Maintaining",
+      "paragraphs": {
+        "0": "把脑海中的酷点子变成现实，是我最热爱的事。我喜欢用代码构建有趣好玩的东西，并将它们发布在 <openknights>OpenKnights</openknights> 和 <github>GitHub</github> 上。在这里查看我的<projects>项目列表</projects>。",
+        "1": "我撰写关于开源、编程以及学习过程中所获心得的<blog>博客文章</blog>，偶尔也会在<bilibili>哔哩哔哩</bilibili>上分享。",
+        "2": "除了写代码，我还喜欢<photos>摄影</photos>、攥写<poems>诗词</poems>、阅读小说和<music>听音乐</music>。如果你感兴趣，这里是我使用的<use>硬件和软件</use>。",
+        "3": "我在<strong>{city}</strong>，如果你也在附近，欢迎<contact>联系我</contact>，一起喝杯咖啡或交流一下心得。"
+      },
+      "social": {
+        "findMeOn": "在这里找到我",
+        "orMailMe": "或通过 <mail>{email}</mail> 给我发邮件"
+      }
+    },
+    "blog": {
+      "title": "欢迎来到我的博客",
+      "description": "写博客是我最喜欢的分享和反思方式之一，我希望将有用的技术知识传递给更多人。我偏爱写技术主题，但也会写非技术话题，比如摄影和个人感悟。",
+      "toc": "目录"
+    },
+    "project": {
+      "title": "我的项目",
+      "description": "这些是我所有的项目和库。"
+    },
+    "message": {
+      "title": "欢迎来到我的留言墙",
+      "description": "在这里，你可以留下想对我说的话、建议、想法、批评、赞美、鼓励或者吐槽。",
+      "loginPrompt": "请登录后留言",
+      "inputPlaceholder": "说点什么..."
+    },
+    "photos": {
+      "title": "照片墙",
+      "description": "用光影捕捉的瞬间 — 视觉日志。",
+      "switchView": "切换视图",
+      "noPhotos": "暂无照片。"
+    },
+    "poems": {
+      "title": "诗词集",
+      "description": "引起共鸣的文字 — 收集的诗句与原创作品。",
+      "noPoems": "暂无诗歌。"
+    },
+    "use": {
+      "title": "装备",
+      "description": "我日常使用的软硬件。"
+    },
+    "auth": {
+      "welcomeBack": "欢迎回来",
+      "signInSubtitle": "登录或创建账号以继续",
+      "continueWithGithub": "使用 GitHub 继续",
+      "continueWithGoogle": "使用 Google 继续",
+      "secureLogin": "安全登录",
+      "oauthNotice": "您的数据受 OAuth 2.0 保护",
+      "signIn": "登录",
+      "signInDescription": "使用第三方账号登录"
+    },
+    "notFound": {
+      "title": "迷失太空",
+      "description": "你寻找的页面已漂入虚空。",
+      "backHome": "返回地球"
+    },
+    "error": {
+      "title": "出了点问题",
+      "description": "页面发生了意外错误，你可以尝试重试以恢复当前页面。",
+      "retry": "重试",
+      "errorId": "错误 ID"
+    }
+  },
+
+  "shared": {
+    "back": "返回",
+    "close": "关闭",
+    "open": "打开",
+    "switch": "切换",
+    "loading": "加载中..."
+  }
+}

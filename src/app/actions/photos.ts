@@ -7,7 +7,7 @@ import {
   createPhotos,
   deletePhoto,
   deletePhotos,
-  revalidatePhotos,
+  invalidatePhotos,
   updatePhoto
 } from '@/data/photos'
 import { requireServerAdminSession } from '@/lib/auth-session'
@@ -22,7 +22,7 @@ export async function createPhotoAction(photo: PhotoInput) {
     const parsed = photoSchema.parse(photo)
     await createPhoto(parsed)
 
-    revalidatePhotos()
+    invalidatePhotos()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -36,7 +36,7 @@ export async function batchCreatePhotosAction(photos: PhotoInput[]) {
     const parsed = photos.map((photo) => photoSchema.parse(photo))
     const count = await createPhotos(parsed)
 
-    revalidatePhotos()
+    invalidatePhotos()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)
@@ -51,7 +51,7 @@ export async function updatePhotoAction(id: string, photo: PhotoInput) {
     const parsed = photoSchema.parse(photo)
     await updatePhoto(id, parsed)
 
-    revalidatePhotos()
+    invalidatePhotos()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -65,7 +65,7 @@ export async function deletePhotoAction(id: string) {
     idSchema.parse(id)
     await deletePhoto(id)
 
-    revalidatePhotos()
+    invalidatePhotos()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -79,7 +79,7 @@ export async function batchDeletePhotosAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deletePhotos(ids)
 
-    revalidatePhotos()
+    invalidatePhotos()
     return success<number>(count)
   } catch (error: unknown) {
     return failure(error)

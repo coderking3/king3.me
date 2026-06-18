@@ -1,3 +1,15 @@
+export type DateInput = string | number | Date
+
+export const LONG_DATE: Intl.DateTimeFormatOptions = {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}
+
+export function formatLocalDate(date: Date, locale?: Intl.LocalesArgument) {
+  return date.toLocaleDateString(locale, LONG_DATE)
+}
+
 const JUST_NOW: Record<string, string> = {
   en: 'just now',
   zh: '刚刚'
@@ -12,29 +24,8 @@ const UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
   ['minute', 60 * 1000]
 ]
 
-export type DateInput = string | number | Date
-
-export const LONG_DATE: Intl.DateTimeFormatOptions = {
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-}
-
-function toDate(date: DateInput) {
-  const target = date instanceof Date ? date : new Date(date)
-  return target
-}
-
-export function formatLocalDate(
-  date: DateInput,
-  locale?: Intl.LocalesArgument
-) {
-  return toDate(date).toLocaleDateString(locale, LONG_DATE)
-}
-
-export function relativeTime(date: DateInput, locale = 'en'): string {
-  const target = toDate(date)
-  const diff = target.getTime() - Date.now()
+export function relativeTime(date: Date, locale = 'en'): string {
+  const diff = date.getTime() - Date.now()
 
   if (Math.abs(diff) < 60 * 1000) {
     return JUST_NOW[locale] ?? JUST_NOW.en

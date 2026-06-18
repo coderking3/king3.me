@@ -3,9 +3,9 @@
 import type { TocItem } from '@/types'
 
 import { ChevronRight } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
-import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
 interface PostsDirectoryProps {
@@ -86,7 +86,7 @@ function useActiveHeading(headings: TocItem[]) {
 }
 
 function PostsTableOfContents({ headings }: PostsDirectoryProps) {
-  const { t } = useTranslation('blog')
+  const t = useTranslations('page.blog')
   const activeId = useActiveHeading(headings)
   const navRef = useRef<HTMLElement>(null)
   const sections = useMemo(() => groupHeadings(headings), [headings])

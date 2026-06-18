@@ -1,8 +1,7 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import Link from 'next/link'
-import { Trans } from 'react-i18next'
 
 import { Animated } from '@/components/common'
 import {
@@ -12,14 +11,14 @@ import {
   ServeIcon
 } from '@/components/icons'
 import { SOCIAL_URLS } from '@/constants'
-import { useTranslation } from '@/i18n/client'
+import { Link } from '@/i18n/navigation'
 
 import AboutSocial from './AboutSocial'
 
 const NOW_LINKS = [
   {
     labelKey: 'workingAs',
-    items: [{ nameKey: 'frontendDeveloper', icon: <BrowserIcon size={16} /> }]
+    items: [{ nameKey: 'currentJob', icon: <BrowserIcon size={16} /> }]
   },
   {
     labelKey: 'creatorOf',
@@ -55,7 +54,7 @@ const badgeClass =
   'text-foreground/85 border-border/50 bg-accent/50 hover:text-foreground hover:border-border hover:bg-accent inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-sm no-underline transition-[border-color,background] duration-200'
 
 function AboutPage() {
-  const { t } = useTranslation('about')
+  const t = useTranslations('page.about')
 
   return (
     <div className="mt-14 sm:mt-24">
@@ -96,21 +95,24 @@ function AboutPage() {
                 >
                   {t(group.labelKey)}
                   {group.items.map((item: any) => {
-                    const name: string = item.nameKey
-                      ? t(item.nameKey)
-                      : item.name
-                    return item.href ? (
-                      <Link
-                        key={name}
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={badgeClass}
-                      >
-                        {item.icon}
-                        {name}
-                      </Link>
-                    ) : (
+                    const name: string = item.name ?? t(item.nameKey)
+
+                    if (item.href) {
+                      return (
+                        <Link
+                          key={name}
+                          href={item.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={badgeClass}
+                        >
+                          {item.icon}
+                          {name}
+                        </Link>
+                      )
+                    }
+
+                    return (
                       <span key={name} className={badgeClass}>
                         {item.icon}
                         {name}
@@ -122,89 +124,108 @@ function AboutPage() {
             </Animated>
 
             <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.16 }}>
-              <Trans
-                t={t}
-                i18nKey="paragraph1"
-                components={{
-                  openknights: (
-                    <Link
-                      href={SOCIAL_URLS.openknights}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={linkClass}
-                    />
-                  ),
-                  github: (
-                    <Link
-                      href={SOCIAL_URLS.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={linkClass}
-                    />
-                  ),
-                  projects: <Link href="/project" className={linkClass} />
-                }}
-              />
+              {t.rich('paragraphs.0', {
+                openknights: (chunks) => (
+                  <Link
+                    href={SOCIAL_URLS.openknights}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {chunks}
+                  </Link>
+                ),
+                github: (chunks) => (
+                  <Link
+                    href={SOCIAL_URLS.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {chunks}
+                  </Link>
+                ),
+                projects: (chunks) => (
+                  <Link href="/project" className={linkClass}>
+                    {chunks}
+                  </Link>
+                )
+              })}
             </Animated>
 
             {/* Blog & sharing */}
             <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.2 }}>
-              <Trans
-                t={t}
-                i18nKey="paragraph2"
-                components={{
-                  blog: <Link href="/blog" className={linkClass} />,
-                  bilibili: (
-                    <Link
-                      href={SOCIAL_URLS.bilibili}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={linkClass}
-                    />
-                  )
-                }}
-              />
+              {t.rich('paragraphs.1', {
+                blog: (chunks) => (
+                  <Link href="/blog" className={linkClass}>
+                    {chunks}
+                  </Link>
+                ),
+                bilibili: (chunks) => (
+                  <Link
+                    href={SOCIAL_URLS.bilibili}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {chunks}
+                  </Link>
+                )
+              })}
             </Animated>
 
             {/* Outside of code */}
             <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.24 }}>
-              <Trans
-                t={t}
-                i18nKey="paragraph3"
-                components={{
-                  photos: <Link href="/photos" className={linkClass} />,
-                  poems: <Link href="/poems" className={linkClass} />,
-                  music: (
-                    <Link
-                      href="https://music.163.com/#/playlist?id=2675102592"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={linkClass}
-                    />
-                  ),
-                  use: <Link href="/use" className={linkClass} />
-                }}
-              />
+              {t.rich('paragraphs.2', {
+                photos: (chunks) => (
+                  <Link href="/photos" className={linkClass}>
+                    {chunks}
+                  </Link>
+                ),
+                poems: (chunks) => (
+                  <Link href="/poems" className={linkClass}>
+                    {chunks}
+                  </Link>
+                ),
+                // eslint-disable-next-line react/no-unnecessary-use-prefix, react/component-hook-factories
+                use: (chunks) => (
+                  <Link href="/use" className={linkClass}>
+                    {chunks}
+                  </Link>
+                ),
+                music: (chunks) => (
+                  <Link
+                    href="https://music.163.com/#/playlist?id=2675102592"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {chunks}
+                  </Link>
+                )
+              })}
             </Animated>
 
             {/* Location */}
             <Animated as="p" preset={{ mode: 'fadeInUp', delay: 0.28 }}>
-              <Trans
-                t={t}
-                i18nKey="paragraph4"
-                values={{ city: t('city') }}
-                components={{
-                  strong: <strong className="text-foreground font-medium" />,
-                  contact: (
-                    <Link
-                      href={SOCIAL_URLS.bilibili}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={linkClass}
-                    />
-                  )
-                }}
-              />
+              {t.rich('paragraphs.3', {
+                city: t('city'),
+                strong: (chunks) => (
+                  <strong className="text-foreground font-medium">
+                    {chunks}
+                  </strong>
+                ),
+                contact: (chunks) => (
+                  <Link
+                    href={SOCIAL_URLS.bilibili}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={linkClass}
+                  >
+                    {chunks}
+                  </Link>
+                )
+              })}
             </Animated>
           </div>
         </div>

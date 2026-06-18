@@ -6,7 +6,7 @@ import {
   createPoem,
   deletePoem,
   deletePoems,
-  revalidatePoems,
+  invalidatePoems,
   updatePoem
 } from '@/data/poems'
 import { requireServerAdminSession } from '@/lib/auth-session'
@@ -21,7 +21,7 @@ export async function createPoemAction(data: PoemInput) {
     const parsed = poemSchema.parse(data)
     await createPoem(parsed)
 
-    revalidatePoems()
+    invalidatePoems()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -36,7 +36,7 @@ export async function updatePoemAction(id: string, data: PoemInput) {
     const parsed = poemSchema.parse(data)
     await updatePoem(id, parsed)
 
-    revalidatePoems()
+    invalidatePoems()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -50,7 +50,7 @@ export async function deletePoemAction(id: string) {
     idSchema.parse(id)
     await deletePoem(id)
 
-    revalidatePoems()
+    invalidatePoems()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -64,7 +64,7 @@ export async function batchDeletePoemsAction(ids: string[]) {
     idsSchema.parse(ids)
     const count = await deletePoems(ids)
 
-    revalidatePoems()
+    invalidatePoems()
     return success(count)
   } catch (error: unknown) {
     return failure(error)

@@ -1,12 +1,29 @@
+'use client'
+
 import type { Message, MessageWithReplies } from '@/types'
 
+import { useLocale } from 'next-intl'
 import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 import { Animated } from '@/components/common'
-import { useTranslation } from '@/i18n/client'
 import { relativeTime } from '@/lib/date'
 
-/* --- Single Reply --- */
+function RelativeTime({ date, lang }: { date: string; lang: string }) {
+  const [text, setText] = useState('')
+
+  useEffect(() => {
+    setText(relativeTime(new Date(date), lang))
+    const timer = setInterval(
+      () => setText(relativeTime(new Date(date), lang)),
+      60_000
+    )
+    return () => clearInterval(timer)
+  }, [date, lang])
+
+  if (!text) return null
+  return <>{text}</>
+}
 
 function Reply({
   reply,
@@ -50,7 +67,7 @@ function Reply({
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold">{reply.userName}</span>
             <time className="text-[11px] opacity-40 select-none">
-              {relativeTime(reply.createdAt, lang)}
+              <RelativeTime date={reply.createdAt} lang={lang} />
             </time>
           </div>
           <p className="mt-0.5 text-sm">{reply.message}</p>
@@ -59,8 +76,6 @@ function Reply({
     </div>
   )
 }
-
-/* --- Single Message --- */
 
 function MessageItem({
   message,
@@ -105,7 +120,7 @@ function MessageItem({
         <div className="-mt-0.5 flex min-w-0 flex-1 items-center gap-2">
           <b className="text-sm font-bold">{message.userName}</b>
           <time className="text-xs opacity-40 select-none">
-            {relativeTime(message.createdAt, lang)}
+            <RelativeTime date={message.createdAt} lang={lang} />
           </time>
         </div>
       </div>
@@ -138,7 +153,7 @@ function MessageItem({
 /* --- Message List --- */
 
 function MessageList({ messages }: { messages: MessageWithReplies[] }) {
-  const { i18n } = useTranslation()
+  const locale = useLocale()
 
   return (
     <div className="relative mt-12">
@@ -149,7 +164,7 @@ function MessageList({ messages }: { messages: MessageWithReplies[] }) {
             message={message}
             isLast={idx === messages.length - 1}
             index={idx}
-            lang={i18n.language}
+            lang={locale}
           />
         ))}
       </ul>

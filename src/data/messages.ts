@@ -1,15 +1,19 @@
 import type { CreateMessageInput, MessageWithReplies } from '@/types'
 
 import { eq, inArray } from 'drizzle-orm'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
-import { createCachedQuery } from '@/lib/cache'
 import { db } from '@/lib/db'
 import { message } from '@/lib/db/schema'
 
 import 'server-only'
 
-const getMessagesFn = async (): Promise<MessageWithReplies[]> => {
-  // 使用 Relational API 查询嵌套 replies
+export async function getMessages(): Promise<MessageWithReplies[]> {
+  'use cache'
+  cacheLife('minutes')
+  cacheTag('messages')
+
+  // Query nested replies via the Relational API
   const messages = await db.query.message.findMany({
     where: (m, { isNull }) => isNull(m.parentId),
     columns: {
@@ -48,8 +52,9 @@ const getMessagesFn = async (): Promise<MessageWithReplies[]> => {
   })) as MessageWithReplies[]
 }
 
-export const { query: getMessages, revalidate: revalidateMessages } =
-  createCachedQuery(getMessagesFn, 'messages', 'minutes')
+export function invalidateMessages() {
+  updateTag('messages')
+}
 
 export async function createMessage(data: CreateMessageInput) {
   const [created] = await db.insert(message).values(data).returning()

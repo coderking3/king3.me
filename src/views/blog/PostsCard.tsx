@@ -1,7 +1,8 @@
 import type { PostsMetadata } from '@/types'
 
 import Image from 'next/image'
-import Link from 'next/link'
+
+import { Link } from '@/i18n/navigation'
 
 function PostsCard({ metadata }: { metadata: PostsMetadata }) {
   const { slug, title, description, image, date, lang, tags = [] } = metadata

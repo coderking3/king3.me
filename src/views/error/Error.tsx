@@ -1,21 +1,21 @@
 'use client'
 
 import { AlertTriangle, RefreshCcw } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { useEffect } from 'react'
 
 import { Animated } from '@/components/common/Animated'
 import { ArtStarry } from '@/components/layout'
 import { Button } from '@/components/ui'
-import { useTranslation } from '@/i18n/client'
 import { cn } from '@/lib/utils'
 
-interface ErrorViewProps {
+interface ErrorPageProps {
   error: Error & { digest?: string }
   unstable_retry: () => void
 }
 
-export default function ErrorView({ error, unstable_retry }: ErrorViewProps) {
-  const { t } = useTranslation('common')
+export default function ErrorPage({ error, unstable_retry }: ErrorPageProps) {
+  const t = useTranslations('page.error')
 
   useEffect(() => {
     console.error(error)
@@ -49,7 +49,7 @@ export default function ErrorView({ error, unstable_retry }: ErrorViewProps) {
           preset={{ mode: 'fadeInUp', delay: 0.2, duration: 0.5 }}
           className="text-foreground text-3xl font-semibold tracking-tight md:text-4xl"
         >
-          {t('error.title', 'Something went wrong')}
+          {t('title')}
         </Animated>
 
         {/* Description */}
@@ -58,10 +58,7 @@ export default function ErrorView({ error, unstable_retry }: ErrorViewProps) {
           preset={{ mode: 'fadeInUp', delay: 0.4, duration: 0.5 }}
           className="text-muted-foreground max-w-md text-base"
         >
-          {t(
-            'error.description',
-            'An unexpected error interrupted this page. You can try again to recover the current route.'
-          )}
+          {t('description')}
         </Animated>
 
         {/* Error ID */}
@@ -71,7 +68,7 @@ export default function ErrorView({ error, unstable_retry }: ErrorViewProps) {
             preset={{ mode: 'fadeInUp', delay: 0.5, duration: 0.4 }}
             className="text-muted-foreground/60 text-xs"
           >
-            {t('error.errorId', 'Error ID')}: {error.digest}
+            {t('errorId')}: {error.digest}
           </Animated>
         ) : null}
 
@@ -84,7 +81,7 @@ export default function ErrorView({ error, unstable_retry }: ErrorViewProps) {
             className="border-border bg-secondary/50 text-muted-foreground hover:border-brand/40 hover:bg-secondary hover:text-foreground mt-4 inline-flex items-center gap-2 backdrop-blur-sm transition-all duration-300 hover:shadow-[0_0_20px_rgba(var(--brand),0.15)]"
           >
             <RefreshCcw className="size-4" />
-            {t('error.retry', 'Try again')}
+            {t('retry')}
           </Button>
         </Animated>
       </div>

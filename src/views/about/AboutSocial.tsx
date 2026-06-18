@@ -1,7 +1,6 @@
 'use client'
 
-import Link from 'next/link'
-import { Trans } from 'react-i18next'
+import { useTranslations } from 'next-intl'
 
 import { Animated } from '@/components/common'
 import {
@@ -11,7 +10,7 @@ import {
   YoutubeIcon
 } from '@/components/icons'
 import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
-import { useTranslation } from '@/i18n/client'
+import { Link } from '@/i18n/navigation'
 
 const SOCIAL_LINKS = [
   { label: 'GitHub', icon: <GithubIcon size={18} />, href: SOCIAL_URLS.github },
@@ -32,7 +31,7 @@ const iconLinkClass =
   'border-border hover:border-foreground inline-flex items-center justify-center gap-1.5 border-b pb-0.5 text-base transition-colors duration-200'
 
 function AboutSocial() {
-  const { t } = useTranslation('about')
+  const t = useTranslations('page.about')
 
   return (
     <Animated preset={{ mode: 'fadeInUp', delay: 0.4 }}>
@@ -54,20 +53,18 @@ function AboutSocial() {
       </div>
 
       <p className="text-muted-foreground my-5">
-        <Trans
-          t={t}
-          i18nKey="social.orMailMe"
-          values={{ email: AUTHOR_INFO.email }}
-          components={{
-            email: (
-              <Link
-                href={`mailto:${AUTHOR_INFO.email}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              />
-            )
-          }}
-        />
+        {t.rich('social.orMailMe', {
+          mail: (chunks) => (
+            <Link
+              href={`mailto:${AUTHOR_INFO.email}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {chunks}
+            </Link>
+          ),
+          email: `${AUTHOR_INFO.email}`
+        })}
       </p>
     </Animated>
   )
