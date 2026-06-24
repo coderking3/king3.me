@@ -2,42 +2,27 @@
 
 import type { ComponentType } from 'react'
 
-import dynamic from 'next/dynamic'
-import { Suspense, useState } from 'react'
+import ArtPlum from './ArtPlum'
+import ArtStarry from './ArtStarry'
 
-const ArtPlum = dynamic(() => import('./ArtPlum'))
-const ArtStarry = dynamic(() => import('./ArtStarry'))
-
-type Art = 'random' | 'plum' | 'starry'
-type ArtKey = Exclude<Art, 'random'>
-
-interface BackgroundProps {
-  art?: Art
-}
-
-const ART_COMPONENTS: Record<ArtKey, ComponentType> = {
+const ART_COMPONENTS = {
   plum: ArtPlum,
   starry: ArtStarry
+} as const satisfies Record<string, ComponentType>
+
+type ArtKey = keyof typeof ART_COMPONENTS
+
+interface BackgroundProps {
+  art: ArtKey
 }
 
-const ART_KEYS: ArtKey[] = Object.keys(ART_COMPONENTS) as ArtKey[]
-
-function Background({ art = 'random' }: BackgroundProps) {
-  const [selectedArt] = useState<ArtKey>(() => {
-    if (art !== 'random') return art
-
-    const idx = Math.floor(Math.random() * ART_KEYS.length)
-    return ART_KEYS[idx]
-  })
-
-  const Content = ART_COMPONENTS[selectedArt]
+function Background({ art }: BackgroundProps) {
+  const Content = ART_COMPONENTS[art]
 
   return (
-    <Suspense fallback={null}>
-      <div className="pointer-events-none fixed top-0 left-0 z-0 size-dvw dark:invert">
-        <Content />
-      </div>
-    </Suspense>
+    <div className="pointer-events-none fixed inset-0 z-0 dark:invert">
+      <Content />
+    </div>
   )
 }
 

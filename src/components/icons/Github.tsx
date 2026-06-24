@@ -76,4 +76,3 @@ export function GithubCircleIcon({
 }
 
 export const Github = createInteractiveIcon(GithubIcon)
-export const GithubCircle = createInteractiveIcon(GithubCircleIcon)

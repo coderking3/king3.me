@@ -14,6 +14,7 @@ import {
 } from '@shikijs/transformers'
 import GithubSlugger from 'github-slugger'
 import { evaluate } from 'next-mdx-remote-client/rsc'
+import { cacheLife } from 'next/cache'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeSlug from 'rehype-slug'
 import remarkFlexibleToc from 'remark-flexible-toc'
@@ -85,6 +86,9 @@ const mdxComponents: MDXRemoteProps['components'] = {
 }
 
 export async function evaluateMdx({ content }: EvaluateMdxProps) {
+  'use cache'
+  cacheLife('max')
+
   const { content: mdx, scope } = await evaluate({
     source: content,
     options: mdxConfig,

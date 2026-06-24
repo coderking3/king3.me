@@ -9,6 +9,7 @@ import { ArrowLeftIcon } from '@/components/icons/ArrowLeft'
 import { Link } from '@/i18n/navigation'
 
 import AuthForm from './AuthForm'
+import AuthPageSkeleton from './AuthSkeleton'
 
 function Back() {
   const t = useTranslations('shared')
@@ -29,7 +30,7 @@ function Back() {
   )
 }
 
-function AuthContent() {
+function AuthPageContent() {
   const searchParams = useSearchParams()
   const redirect = searchParams.get('redirect') || '/'
 
@@ -45,8 +46,8 @@ function AuthContent() {
 
 function AuthPage() {
   return (
-    <Suspense>
-      <AuthContent />
+    <Suspense fallback={<AuthPageSkeleton />}>
+      <AuthPageContent />
     </Suspense>
   )
 }

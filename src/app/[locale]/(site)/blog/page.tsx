@@ -1,5 +1,6 @@
+import type { Metadata } from 'next'
+
 import { getTranslations } from 'next-intl/server'
-import { Suspense } from 'react'
 
 import { getAllPosts } from '@/lib/content'
 import { BlogPage } from '@/views/blog'
@@ -21,16 +22,12 @@ export async function generateMetadata() {
       description,
       card: 'summary_large_image'
     }
-  }
+  } satisfies Metadata
 }
 
 export default async function Page() {
   const allPosts = await getAllPosts()
   const posts = allPosts.slice(0, 12)
 
-  return (
-    <Suspense fallback={null}>
-      <BlogPage posts={posts} />
-    </Suspense>
-  )
+  return <BlogPage posts={posts} />
 }

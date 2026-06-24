@@ -9,12 +9,7 @@ import fg from 'fast-glob'
 import matter from 'gray-matter'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { AUTHOR_INFO } from '@/constants'
-
-const AUTHOR = {
-  ...AUTHOR_INFO,
-  link: process.env.SITE_URL || AUTHOR_INFO.link
-}
+import { AUTHOR } from '@/constants'
 
 const MDX_SLUG_RE = /\.mdx?$/
 
@@ -39,7 +34,7 @@ function normalizeMetadata(
 
 export async function getPostsBySlug(slug: string) {
   'use cache'
-  cacheLife('max') // 文件内容基本不变，用最长缓存
+  cacheLife('max')
   cacheTag(`post-${slug}`)
 
   const filePath = path.join(postsDirectory, `${slug}.mdx`)
@@ -92,6 +87,10 @@ export async function getAllPosts() {
 }
 
 export async function getAllPostSlugs() {
+  'use cache'
+  cacheLife('max')
+  cacheTag('all-posts-slugs')
+
   const files = await fg('**/*.{md,mdx}', {
     cwd: postsDirectory,
     absolute: false

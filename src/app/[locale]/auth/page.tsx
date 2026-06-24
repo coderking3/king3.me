@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+
 import { getTranslations } from 'next-intl/server'
 
 import { AuthPage } from '@/views/auth'
@@ -19,7 +21,7 @@ export async function generateMetadata() {
       description,
       card: 'summary_large_image'
     }
-  }
+  } satisfies Metadata
 }
 
 export default function Page() {

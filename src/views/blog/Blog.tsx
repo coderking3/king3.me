@@ -7,7 +7,7 @@ import { STAGGER } from '@/constants'
 
 import PostsCard from './PostsCard'
 
-async function Blog({ posts }: { posts: PostsMetadata[] }) {
+async function BlogPage({ posts }: { posts: PostsMetadata[] }) {
   const t = await getTranslations('page.blog')
 
   return (
@@ -48,4 +48,4 @@ async function Blog({ posts }: { posts: PostsMetadata[] }) {
   )
 }
 
-export default Blog
+export default BlogPage

@@ -1,13 +1,9 @@
+import type { Metadata } from 'next'
 import type { Locale } from 'next-intl'
 
 import { getTranslations } from 'next-intl/server'
 
-import { routing } from '@/i18n/routing'
 import { UsePage } from '@/views/use'
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
-}
 
 export async function generateMetadata() {
   const t = await getTranslations('metadata.use')
@@ -26,7 +22,7 @@ export async function generateMetadata() {
       description,
       card: 'summary_large_image'
     }
-  }
+  } satisfies Metadata
 }
 
 export default async function Page({

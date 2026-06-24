@@ -1,22 +1,16 @@
-import process from 'node:process'
-
 import { Feed } from 'feed'
 
-import { AUTHOR_INFO, COPYRIGHT } from '@/constants'
+import { AUTHOR, COPYRIGHT, PROFILE, SITE_URL } from '@/constants'
 import { getAllPosts } from '@/lib/content'
 
-const DOMAIN = process.env.SITE_URL || 'https://king3-me.vercel.app'
-const AUTHOR = {
-  ...AUTHOR_INFO,
-  link: process.env.SITE_URL || AUTHOR_INFO.link
-}
+const DOMAIN = SITE_URL.href
 
 export async function generateFeed() {
   const posts = await getAllPosts()
 
   const feed = new Feed({
-    title: 'King3',
-    description: "King3's Blog",
+    title: PROFILE.name,
+    description: `${PROFILE.name}s personal website`,
     id: DOMAIN,
     link: DOMAIN,
     copyright: COPYRIGHT,

@@ -1,4 +1,8 @@
-import type { AuthorInfo } from './app'
+export interface AuthorInfo {
+  name: string
+  email?: string
+  link?: string
+}
 
 export interface PostsMetadata {
   title: string

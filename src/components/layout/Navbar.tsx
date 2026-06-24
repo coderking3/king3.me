@@ -144,7 +144,7 @@ export function Navbar({ className }: NavbarProps) {
                 )}
               </AnimatePresence>
 
-              <Link href={href} prefetch={true} className="block px-3 py-2.5">
+              <Link href={href} className="block px-3 py-2.5">
                 <motion.span
                   className={cn(
                     'text-muted-foreground relative font-bold transition-colors',
@@ -186,11 +186,7 @@ export function MobileNavbar() {
       <SheetContent side="left" className="w-72 sm:max-w-72">
         <SheetHeader>
           <SheetTitle>
-            <Link
-              href="/"
-              prefetch={true}
-              className="font-logo text-xl font-normal"
-            >
+            <Link href="/" className="font-logo text-xl font-normal">
               King3
             </Link>
           </SheetTitle>
@@ -206,7 +202,6 @@ export function MobileNavbar() {
                 <li key={key}>
                   <Link
                     href={href}
-                    prefetch={true}
                     className={cn(
                       'flex items-center rounded-lg px-3 py-2.5 text-base font-medium transition-colors',
                       isActive

@@ -1,9 +1,20 @@
+import type { Metadata } from 'next'
+
 import { Suspense } from 'react'
 
-import { AdminHeader, AdminSidebar } from '@/components/layout'
+import {
+  AdminHeader,
+  AdminHeaderSkeleton,
+  AdminSidebar,
+  AdminSidebarSkeleton
+} from '@/components/layout'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Skeleton } from '@/components/ui/skeleton'
 import { requireServerAdminSession } from '@/lib/auth-session'
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false }
+}
 
 interface AdminLayoutProps {
   children: React.ReactNode
@@ -13,47 +24,6 @@ const SIDEBAR_STYLE = {
   '--sidebar-width': '14.5rem',
   '--header-height': '3.5rem'
 } as React.CSSProperties
-
-function AdminSidebarSkeleton() {
-  return (
-    <aside
-      className="border-border bg-background fixed top-0 left-0 z-40 flex h-svh w-[14.5rem] flex-col border-r"
-      aria-hidden="true"
-    >
-      <div className="flex h-[3.5rem] items-center border-b px-4">
-        <Skeleton className="h-6 w-28" />
-      </div>
-      <nav className="flex-1 space-y-2 p-3">
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-9 w-full" />
-        <Skeleton className="h-9 w-full" />
-      </nav>
-      <div className="border-t p-3">
-        <div className="flex items-center gap-3">
-          <Skeleton className="size-8 rounded-full" />
-          <div className="flex-1 space-y-1.5">
-            <Skeleton className="h-3.5 w-24" />
-            <Skeleton className="h-3 w-28" />
-          </div>
-        </div>
-      </div>
-    </aside>
-  )
-}
-
-function AdminHeaderSkeleton() {
-  return (
-    <header className="border-border flex h-[3.5rem] items-center justify-between border-b px-4">
-      <Skeleton className="h-5 w-32" />
-      <div className="flex items-center gap-3">
-        <Skeleton className="size-8" />
-        <Skeleton className="size-8 rounded-full" />
-      </div>
-    </header>
-  )
-}
 
 function AdminLayoutSkeleton() {
   return (

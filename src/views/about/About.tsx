@@ -40,7 +40,7 @@ const NOW_LINKS = [
     items: [
       {
         name: 'OpenKnights',
-        icon: <LogoIcon />,
+        icon: <LogoIcon variant="bold" />,
         href: SOCIAL_URLS.openknights
       }
     ]
