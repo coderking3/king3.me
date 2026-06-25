@@ -53,7 +53,7 @@ async function PoemsPage({ poems, locale }: PoemsPageProps) {
                 {poem.content}
               </div>
               <time className="text-muted-foreground/60 mt-3 block text-xs">
-                {formatLocalDate(new Date(poem.createdAt), locale)}
+                {formatLocalDate(new Date(poem.date), locale)}
               </time>
             </Animated>
           ))}
