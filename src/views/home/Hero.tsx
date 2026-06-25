@@ -1,6 +1,4 @@
-'use client'
-
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 
 import { Animated } from '@/components/common'
 import { BiliBili, Email, Feed, Github, X, Youtube } from '@/components/icons'
@@ -17,7 +15,7 @@ const SOCIALS = [
   { icon: X, href: SOCIAL_URLS.x },
   { icon: Feed, href: '/feed.xml' },
   { icon: Email, href: `mailto:${PROFILE.email}` }
-]
+] as const
 
 function SelectedText({ text }: { text: string }) {
   return (
@@ -33,11 +31,11 @@ function SelectedText({ text }: { text: string }) {
   )
 }
 
-function Hero() {
-  const t = useTranslations('page.home')
+async function Hero() {
+  const t = await getTranslations('page.home')
 
   return (
-    <>
+    <div className="mx-auto max-w-6xl px-4 sm:px-8">
       {/* Title */}
       <Animated
         as="h1"
@@ -122,6 +120,7 @@ function Hero() {
           >
             <Icon
               href={href}
+              linkType={href === '/feed.xml' ? 'native' : 'intl'}
               target="_blank"
               rel="noopener noreferrer"
               className="text-foreground/80 hover:text-foreground"
@@ -129,7 +128,7 @@ function Hero() {
           </Animated>
         ))}
       </Animated>
-    </>
+    </div>
   )
 }
 

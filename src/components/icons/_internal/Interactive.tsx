@@ -3,9 +3,10 @@
 import type { InteractionHandlers } from './hooks'
 import type { InteractionTrigger, InteractiveState, SvgIcon } from './types'
 
+import NextLink from 'next/link'
 import * as React from 'react'
 
-import { Link } from '@/i18n/navigation'
+import { Link as IntlLink } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 
 import { useInteractive } from './hooks'
@@ -23,11 +24,13 @@ type LinkProps = BaseProps &
   Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'children'> & {
     href: string
     prefetch?: boolean
+    linkType?: 'intl' | 'native'
   }
 
 type ButtonProps = BaseProps &
   Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children'> & {
     href?: never
+    linkType?: never
   }
 
 export type InteractiveProps = LinkProps | ButtonProps
@@ -46,6 +49,7 @@ function Interactive({
   duration,
   className,
   href,
+  linkType = 'intl',
   ...delegated
 }: InteractiveProps) {
   const { isHovered, isClicked, handlers } = useInteractive({
@@ -55,6 +59,7 @@ function Interactive({
   })
 
   const isLink = !!href
+  const Link = linkType === 'intl' ? IntlLink : NextLink
   const Component = isLink ? Link : 'button'
 
   return (
