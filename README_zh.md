@@ -8,18 +8,18 @@
 
 ## 🛠️ 技术栈
 
-| 层级     | 技术                                       |
-| -------- | ------------------------------------------ |
-| 框架     | Next.js 16, React 19, React Compiler       |
-| 样式     | Tailwind CSS v4, CSS Modules, PostCSS      |
-| UI 组件  | shadcn/ui (base-nova 风格), Lucide 图标    |
-| 动画     | Framer Motion, @react-spring/web           |
-| 数据库   | PostgreSQL (Neon)                          |
-| ORM      | Drizzle ORM                                |
-| 身份认证 | better-auth (GitHub + Google OAuth)        |
-| 国际化   | i18next, react-i18next                     |
-| MDX      | next-mdx-remote, rehype-pretty-code, shiki |
-| 部署     | Vercel                                     |
+| 层级     | 技术                                    |
+| -------- | --------------------------------------- |
+| 框架     | Next.js 16, React 19                    |
+| 样式     | Tailwind CSS v4, CSS Modules            |
+| UI 组件  | shadcn/ui (base-nova 风格), Lucide 图标 |
+| 动画     | Framer Motion, @react-spring/web        |
+| 数据库   | PostgreSQL (Neon)                       |
+| ORM      | Drizzle ORM                             |
+| 身份认证 | better-auth (GitHub + Google OAuth)     |
+| 国际化   | next-intl                               |
+| MDX      | next-mdx-remote-client, shiki           |
+| 部署     | Vercel                                  |
 
 ## 📦 前置要求
 

@@ -8,18 +8,18 @@
 
 ## 🛠️ Tech Stack
 
-| Layer          | Technology                                 |
-| -------------- | ------------------------------------------ |
-| Framework      | Next.js 16, React 19, React Compiler       |
-| Styling        | Tailwind CSS v4, CSS Modules, PostCSS      |
-| UI Components  | shadcn/ui (base-nova style), Lucide icons  |
-| Animation      | Framer Motion, @react-spring/web           |
-| Database       | PostgreSQL (Neon)                          |
-| ORM            | Drizzle ORM                                |
-| Authentication | better-auth (GitHub + Google OAuth)        |
-| i18n           | i18next, react-i18next                     |
-| MDX            | next-mdx-remote, rehype-pretty-code, shiki |
-| Deployment     | Vercel                                     |
+| Layer          | Technology                          |
+| -------------- | ----------------------------------- |
+| Framework      | Next.js 16, React 19                |
+| Styling        | Tailwind CSS v4, CSS Modules        |
+| UI Components  | shadcn/ui, Lucide icons             |
+| Animation      | Framer Motion, @react-spring/web    |
+| Database       | PostgreSQL (Neon)                   |
+| ORM            | Drizzle ORM                         |
+| Authentication | better-auth (GitHub + Google OAuth) |
+| i18n           | next-intl                           |
+| MDX            | next-mdx-remote-client, shiki       |
+| Deployment     | Vercel                              |
 
 ## 📦 Prerequisites
 
