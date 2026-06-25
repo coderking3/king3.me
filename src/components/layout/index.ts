@@ -4,10 +4,10 @@ export { default as ArtStarry } from './Background/ArtStarry'
 export { default as Background } from './Background/Background'
 
 /* Part: Header */
-export { AdminHeader, Header } from './Header'
+export { AdminHeader, AdminHeaderSkeleton, Header } from './Header'
 
 /* Part: Footer */
-export { AdminSidebar } from './Sidebar'
+export { AdminSidebar, AdminSidebarSkeleton } from './Sidebar'
 
 /* Part: Footer */
 export { default as Footer } from './Footer'

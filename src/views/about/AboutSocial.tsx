@@ -9,7 +9,7 @@ import {
   XIcon,
   YoutubeIcon
 } from '@/components/icons'
-import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
+import { PROFILE, SOCIAL_URLS } from '@/constants'
 import { Link } from '@/i18n/navigation'
 
 const SOCIAL_LINKS = [
@@ -56,14 +56,14 @@ function AboutSocial() {
         {t.rich('social.orMailMe', {
           mail: (chunks) => (
             <Link
-              href={`mailto:${AUTHOR_INFO.email}`}
+              href={`mailto:${PROFILE.email}`}
               target="_blank"
               rel="noopener noreferrer"
             >
               {chunks}
             </Link>
           ),
-          email: `${AUTHOR_INFO.email}`
+          email: `${PROFILE.email}`
         })}
       </p>
     </Animated>

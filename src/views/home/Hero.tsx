@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 
 import { Animated } from '@/components/common'
 import { BiliBili, Email, Feed, Github, X, Youtube } from '@/components/icons'
-import { AUTHOR_INFO, SOCIAL_URLS } from '@/constants'
+import { PROFILE, SOCIAL_URLS } from '@/constants'
 
 import Typewriter from './Typewriter'
 
@@ -16,7 +16,7 @@ const SOCIALS = [
   { icon: BiliBili, href: SOCIAL_URLS.bilibili },
   { icon: X, href: SOCIAL_URLS.x },
   { icon: Feed, href: '/feed.xml' },
-  { icon: Email, href: `mailto:${AUTHOR_INFO.email}` }
+  { icon: Email, href: `mailto:${PROFILE.email}` }
 ]
 
 function SelectedText({ text }: { text: string }) {

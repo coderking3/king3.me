@@ -3,7 +3,6 @@
 import { animated, useSpring } from '@react-spring/web'
 import { format } from 'date-fns'
 import { CalendarDays, LogOut, UserRoundPlus } from 'lucide-react'
-import { usePathname } from 'next/navigation'
 
 import { useInteractive } from '@/components/icons/_internal/hooks'
 import {
@@ -19,6 +18,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from '@/components/ui'
+import { usePathname } from '@/i18n/navigation'
 import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores/auth'

@@ -13,7 +13,6 @@ import {
   Music,
   Users
 } from 'lucide-react'
-import { usePathname } from 'next/navigation'
 
 import { LogoIcon } from '@/components/icons'
 import {
@@ -34,10 +33,11 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  Skeleton,
   useSidebar
 } from '@/components/ui'
 import { ADMIN_NAVIGATION_ITEMS } from '@/constants'
-import { Link } from '@/i18n/navigation'
+import { Link, usePathname } from '@/i18n/navigation'
 import { signOut } from '@/lib/auth-client'
 import { cn } from '@/lib/utils'
 
@@ -79,7 +79,7 @@ export function AdminSidebar({
               className="text-primary justify-center gap-2 transition-colors hover:bg-transparent active:bg-transparent [&_svg]:size-[30px]"
               render={<Link href="/" />}
             >
-              <LogoIcon size={30} variant="bold" />
+              <LogoIcon size={28} />
               <span className="text-lg font-semibold">King3 Admin</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -120,6 +120,35 @@ export function AdminSidebar({
         <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
+  )
+}
+
+export function AdminSidebarSkeleton() {
+  return (
+    <aside
+      className="border-border bg-background fixed top-0 left-0 z-40 flex h-svh w-[14.5rem] flex-col border-r"
+      aria-hidden="true"
+    >
+      <div className="flex h-[3.5rem] items-center border-b px-4">
+        <Skeleton className="h-6 w-28" />
+      </div>
+      <nav className="flex-1 space-y-2 p-3">
+        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-9 w-full" />
+        <Skeleton className="h-9 w-full" />
+      </nav>
+      <div className="border-t p-3">
+        <div className="flex items-center gap-3">
+          <Skeleton className="size-8 rounded-full" />
+          <div className="flex-1 space-y-1.5">
+            <Skeleton className="h-3.5 w-24" />
+            <Skeleton className="h-3 w-28" />
+          </div>
+        </div>
+      </div>
+    </aside>
   )
 }
 

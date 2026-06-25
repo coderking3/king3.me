@@ -1,3 +1,5 @@
+import type { Metadata } from 'next'
+
 import { getTranslations } from 'next-intl/server'
 
 import { getProjects } from '@/data/projects'
@@ -20,7 +22,7 @@ export async function generateMetadata() {
       description,
       card: 'summary_large_image'
     }
-  }
+  } satisfies Metadata
 }
 
 export default async function Page() {

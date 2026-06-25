@@ -11,7 +11,7 @@ import FeaturedMusic from './FeaturedMusic'
 import Gallery from './Gallery'
 import Hero from './Hero'
 
-export default async function Home({
+async function HomePage({
   songs,
   posts
 }: {
@@ -54,3 +54,5 @@ export default async function Home({
     </div>
   )
 }
+
+export default HomePage

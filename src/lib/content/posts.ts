@@ -9,12 +9,7 @@ import fg from 'fast-glob'
 import matter from 'gray-matter'
 import { cacheLife, cacheTag } from 'next/cache'
 
-import { AUTHOR_INFO } from '@/constants'
-
-const AUTHOR = {
-  ...AUTHOR_INFO,
-  link: process.env.SITE_URL || AUTHOR_INFO.link
-}
+import { AUTHOR } from '@/constants'
 
 const MDX_SLUG_RE = /\.mdx?$/
 

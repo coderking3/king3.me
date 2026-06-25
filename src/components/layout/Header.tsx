@@ -5,7 +5,7 @@ import { useEffect, useRef } from 'react'
 
 import { LocaleSwitcher, ThemeToggle } from '@/components/common'
 import { Search } from '@/components/icons'
-import { Separator, SidebarTrigger } from '@/components/ui'
+import { Separator, SidebarTrigger, Skeleton } from '@/components/ui'
 import { ADMIN_NAVIGATION_ITEMS } from '@/constants'
 import { useIsMobile } from '@/hooks'
 import { usePathname } from '@/i18n/navigation'
@@ -197,6 +197,18 @@ export function AdminHeader() {
         <div className="ml-auto flex items-center gap-2">
           <ThemeToggle />
         </div>
+      </div>
+    </header>
+  )
+}
+
+export function AdminHeaderSkeleton() {
+  return (
+    <header className="border-border flex h-[3.5rem] items-center justify-between border-b px-4">
+      <Skeleton className="h-5 w-32" />
+      <div className="flex items-center gap-3">
+        <Skeleton className="size-8" />
+        <Skeleton className="size-8 rounded-full" />
       </div>
     </header>
   )

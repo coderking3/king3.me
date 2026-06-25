@@ -15,14 +15,10 @@ function Logo() {
       {...handlers}
     >
       <span className='relative hidden size-8 min-w-8 items-center justify-center rounded-full outline-offset-2 before:absolute before:-inset-1 before:content-[""] md:inline-flex'>
-        <LogoIcon
-          size={30}
-          {...{ isHovered, isClicked }}
-          variant="bold"
-        ></LogoIcon>
+        <LogoIcon size={29} {...{ isHovered, isClicked }}></LogoIcon>
       </span>
 
-      <span className="font-logo ml-1 text-xl font-normal">King3</span>
+      <span className="font-logo ml-[3px] text-xl font-normal">King3</span>
     </Link>
   )
 }
