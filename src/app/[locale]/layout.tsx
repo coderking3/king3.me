@@ -56,11 +56,6 @@ export async function generateMetadata({
     description,
     keywords: 'King3,CoderKing3,Developer,Open Source,开发者,开源作者,细节控',
     manifest: '/site.webmanifest',
-    appleWebApp: {
-      capable: true,
-      statusBarStyle: 'black',
-      title: 'King3'
-    },
     robots: {
       index: true,
       follow: true,
@@ -123,7 +118,7 @@ export default async function RootLayout({
       suppressHydrationWarning
       className={cn(robotoMono.variable, audioWide.variable)}
     >
-      <body className="min-h-screen pt-[env(safe-area-inset-top)]">
+      <body className="min-h-screen">
         <NextIntlClientProvider>
           <ThemeProvider>
             <TooltipProvider>
