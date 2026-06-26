@@ -135,11 +135,11 @@ async function PostsPage({ posts }: PostsPageProps) {
                 </Animated>
               </div>
             </aside>
+
+            {/* Mobile floating bar (below xl) */}
+            <PostsFloatingBar headings={toc} />
           </div>
         </div>
-
-        {/* Mobile floating bar (below xl) */}
-        <PostsFloatingBar headings={toc} />
       </div>
     </>
   )
