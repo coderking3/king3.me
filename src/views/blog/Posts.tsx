@@ -128,7 +128,7 @@ async function PostsPage({ posts }: PostsPageProps) {
             </Animated>
 
             {/* Right - Table of contents */}
-            <aside className="hidden w-48 shrink-0 pl-2 lg:block">
+            <aside className="hidden w-48 shrink-0 lg:block lg:pl-2">
               <div className="sticky top-24">
                 <Animated preset={{ mode: 'slideInRight', delay: 0.15 }}>
                   <PostsTableOfContents headings={toc} />
