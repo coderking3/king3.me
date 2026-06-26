@@ -2,22 +2,47 @@ import type { UserWithRole } from 'better-auth/plugins'
 
 import type { UserRole } from '@/types'
 
-import { headers } from 'next/headers'
+import { desc } from 'drizzle-orm'
+import { cacheLife, cacheTag, updateTag } from 'next/cache'
 
 import { auth } from '@/lib/auth'
-import { requireServerAdminSession } from '@/lib/auth-session'
+import { db } from '@/lib/db'
+import { user } from '@/lib/db/schema'
 
 import 'server-only'
 
-export async function getUsers() {
-  await requireServerAdminSession()
+export async function getUsers(): Promise<UserWithRole[]> {
+  'use cache'
+  cacheLife('days')
+  cacheTag('users')
 
-  const result = await auth.api.listUsers({
-    headers: await headers(),
-    query: { limit: 100 }
-  })
+  const users = await db
+    .select({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      emailVerified: user.emailVerified,
+      image: user.image,
+      role: user.role,
+      banned: user.banned,
+      banReason: user.banReason,
+      banExpires: user.banExpires,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    })
+    .from(user)
+    .orderBy(desc(user.createdAt))
 
-  return result.users
+  return users.map((u) => ({
+    ...u,
+    role: u.role ?? undefined,
+    banReason: u.banReason ?? undefined,
+    banExpires: u.banExpires ?? undefined
+  }))
+}
+
+export function invalidateUsers() {
+  updateTag('users')
 }
 
 export async function banUser(

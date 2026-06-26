@@ -2,12 +2,12 @@
 
 import type { UserRole } from '@/types'
 
-import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 
 import {
   banUser,
   getUser,
+  invalidateUsers,
   removeUser,
   setUserRole,
   unbanUser,
@@ -22,10 +22,6 @@ import {
   updateUserSchema
 } from '@/validations/users'
 
-const revalidateUsers = () => {
-  revalidatePath('/admin/users')
-}
-
 export async function banUserAction(userId: string, reason?: string) {
   try {
     await requireServerAdminSession()
@@ -33,7 +29,7 @@ export async function banUserAction(userId: string, reason?: string) {
     banUserSchema.parse({ userId, reason })
     await banUser(await headers(), userId, reason)
 
-    revalidateUsers()
+    invalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -47,7 +43,7 @@ export async function unbanUserAction(userId: string) {
     idSchema.parse(userId)
     await unbanUser(await headers(), userId)
 
-    revalidateUsers()
+    invalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -64,7 +60,7 @@ export async function setUserRoleAction(
     setUserRoleSchema.parse({ userId, role })
     await setUserRole(await headers(), userId, role)
 
-    revalidateUsers()
+    invalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -95,7 +91,7 @@ export async function updateUserAction(
     updateUserSchema.parse(data)
     await updateUser(await headers(), userId, data)
 
-    revalidateUsers()
+    invalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
@@ -109,7 +105,7 @@ export async function removeUserAction(userId: string) {
     idSchema.parse(userId)
     await removeUser(await headers(), userId)
 
-    revalidateUsers()
+    invalidateUsers()
     return success(null)
   } catch (error: unknown) {
     return failure(error)
