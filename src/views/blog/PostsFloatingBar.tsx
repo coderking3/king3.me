@@ -64,15 +64,14 @@ function PostsFloatingBar({ headings }: PostsFloatingBarProps) {
       <AnimatePresence>
         {visible && (
           <motion.div
-            className="fixed bottom-4 z-40 xl:hidden"
+            className={cn(
+              'fixed bottom-4 z-40 xl:hidden',
+              collapsed ? 'left-4' : 'left-1/2 -translate-x-1/2'
+            )}
             initial={{ y: 80, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 80, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-            style={{
-              left: collapsed ? '1rem' : '50%',
-              x: collapsed ? 0 : '-50%'
-            }}
           >
             <motion.div
               layout
