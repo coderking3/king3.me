@@ -14,31 +14,29 @@ published: true
 
 这个模板包含了：
 
-- **博客系统** — 基于 MDX 的文章管理，支持封面图、标签、草稿
+- **博客系统** — 基于 MDX 的文章管理，支持封面图、标签
 - **项目展示** — 展示你的开源项目和作品
 - **留言板** — 让用户给你留言互动
 - **相册 & 诗集** — 展示照片和个人创作
-- **音乐播放器** — 分享你喜欢的歌曲（支持网易云）
+- **音乐播放器** — 分享你喜欢的歌曲
 - **管理后台** — 完整 CRUD，用户、内容、评论一键管理
 - **OAuth 登录** — GitHub / Google 一键登录，首次登录自动授予管理员权限
-- **中英文双语** — i18next 支持，开箱即用
+- **中英文双语** — next-intl 支持，开箱即用
 - **暗色模式** — Tailwind CSS + shadcn/ui，现代极简设计
-
-**适合谁**：有一定前端基础、想快速拥有一个可自部署的个人博客的开发者。如果你只是想找一个托管平台（如 WordPress、Hexo），那这篇文章不适合你——这里是从零搭建完整系统的教程。
 
 ---
 
 ## 功能特性一览
 
-| 功能     | 技术实现                    | 说明                            |
-| -------- | --------------------------- | ------------------------------- |
-| 用户鉴权 | better-auth                 | 支持 GitHub / Google OAuth 登录 |
-| 数据库   | Neon (PostgreSQL) + Drizzle | Serverless PostgreSQL，按量计费 |
-| 部署平台 | Vercel                      | 零配置部署，全球 CDN            |
-| 博客系统 | MDX + next-mdx-remote       | 支持 React 组件的 Markdown      |
-| 国际化   | i18next                     | 中英文双语支持                  |
-| UI 组件  | shadcn/ui + Tailwind CSS    | 现代极简设计，暗色模式          |
-| 代码高亮 | Shiki + rehype-pretty-code  | 精美的代码块样式                |
+| 功能     | 技术实现                     | 说明                            |
+| -------- | ---------------------------- | ------------------------------- |
+| 用户鉴权 | better-auth                  | 支持 GitHub / Google OAuth 登录 |
+| 数据库   | Neon (PostgreSQL) + Drizzle  | Serverless PostgreSQL，按量计费 |
+| 部署平台 | Vercel                       | 零配置部署，全球 CDN            |
+| 博客系统 | MDX + next-mdx-remote-client | 支持 React 组件的 Markdown      |
+| 国际化   | next-intl                    | 中英文双语支持                  |
+| UI 组件  | shadcn/ui + Tailwind CSS     | 现代极简设计，暗色模式          |
+| 代码高亮 | Shiki + @shikijs/rehype      | 精美的代码块样式                |
 
 ---
 
@@ -179,15 +177,35 @@ pnpm dev
 
 ### 修改基本信息
 
-编辑 `src/constants.ts`：
+编辑 `src/constants/index.ts`：
 
 ```typescript
-// 作者信息（字段: name / email / link）
-export const AUTHOR_INFO = {
+// 社交链接（支持任意 key）
+export const SOCIAL_URLS = {
+  github: 'https://github.com/你的用户名',
+  x: 'https://x.com/你的用户名',
+  bilibili: 'https://space.bilibili.com/你的ID'
+}
+
+// 个人资料（作者信息 AUTHOR 由 PROFILE 派生：name / email / link）
+export const PROFILE = {
   name: '你的名字',
   email: 'your@email.com',
-  link: 'https://github.com/你的用户名'
-}
+  github: {
+    name: '你的用户名',
+    link: SOCIAL_URLS.github
+  },
+  twitter: {
+    name: '@你的用户名',
+    link: SOCIAL_URLS.x
+  }
+} as const
+
+export const AUTHOR: AuthorInfo = {
+  name: PROFILE.name,
+  email: PROFILE.email,
+  link: PROFILE.github.link
+} as const
 
 // 导航栏（首页不需要在此处配置，它是默认路由）
 export const NAVIGATION_ITEMS = [
@@ -196,13 +214,6 @@ export const NAVIGATION_ITEMS = [
   { key: 'message', href: '/message' },
   { key: 'about', href: '/about' }
 ]
-
-// 社交链接（支持任意 key）
-export const SOCIAL_URLS = {
-  github: 'https://github.com/你的用户名',
-  x: 'https://x.com/你的用户名',
-  bilibili: 'https://space.bilibili.com/你的ID'
-}
 ```
 
 ### 添加博客文章
@@ -216,7 +227,7 @@ description: '文章简介'
 date: '2025-01-01'
 published: true
 image: /images/cover.png # 封面图（必填，否则封面显示异常）
-lang: 中文 # 可选，EN 或 中文
+lang: 中文  {/* 可选，EN 或 中文 */}
 tags:
   - React
   - 教程
@@ -263,7 +274,7 @@ git commit -m "feat: 初始化博客"
 git push origin main
 
 # 直接 clone 方式需要先添加远程地址
-# git remote add origin https://github.com/你的用户名/king3.me.git
+# git remote add origin https://github.com/你的用户名/你的仓库名.git
 # git branch -M main
 # git push -u origin main
 ```
@@ -331,7 +342,7 @@ SITE_URL="https://myblog.vercel.app"
 
 ### Q: 如何修改字体和主题颜色？
 
-编辑 `src/styles/global.css`，修改 `:root`（亮色）和 `.dark`（暗色）块中的 CSS 变量：
+主题颜色变量定义在 `src/styles/variables.css`，修改 `:root`（亮色）和 `.dark`（暗色）块中的 CSS 变量：
 
 ```css
 :root {
@@ -345,12 +356,12 @@ SITE_URL="https://myblog.vercel.app"
 }
 ```
 
-> 字体在 `src/styles/global.css` 中定义，全局字体变量统一在 `@theme inline` 块中配置。
+> 字体在 `src/styles/global.css` 中以 `@font-face` 定义；字体与颜色的全局映射统一在 `src/styles/variables.css` 的 `@theme inline` 块中配置。
 
 ---
 
 ## 结语
 
-如果你在搭建过程中遇到困难，欢迎在 [GitHub Issues](https://github.com/coderking3/king3.me/issues) 提问，或者在 [king3.me](https://king3.me/) 的留言板留言。
+如果你在搭建过程中遇到困难，欢迎在 [GitHub Issues](https://github.com/coderking3/king3.me/issues) 提问，或者在 [king3.me](https://king3.me/) 留言。
 
 祝你搭建顺利！
