@@ -58,7 +58,7 @@ export async function generateMetadata({
     manifest: '/site.webmanifest',
     appleWebApp: {
       capable: true,
-      statusBarStyle: 'black-translucent',
+      statusBarStyle: 'black',
       title: 'King3'
     },
     robots: {
