@@ -4,7 +4,7 @@
   "description": "King3's personal website",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d0f11",
+  "background_color": "#ffffff",
   "theme_color": "#0d0f11",
   "icons": [
     {
