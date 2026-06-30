@@ -3,7 +3,7 @@
 import type { Table } from '@tanstack/react-table'
 
 import type { ColumnConfig, FormFieldConfig } from '@/components/common'
-import type { Playlist } from '@/types'
+import type { Song } from '@/types'
 import type { SongFormInput } from '@/validations/playlist'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
@@ -55,7 +55,7 @@ const songFields: FormFieldConfig<SongFormInput>[] = [
 
 // ──── Table Columns ────
 
-const columns: ColumnConfig<Playlist>[] = [
+const columns: ColumnConfig<Song>[] = [
   {
     key: 'cover',
     title: 'Cover',
@@ -101,18 +101,14 @@ const columns: ColumnConfig<Playlist>[] = [
   }
 ]
 
-// ──── Component ────
+// ──── Playlist ────
 
-export default function PlaylistComponent({
-  playlist
-}: {
-  playlist: Playlist[]
-}) {
-  const tableRef = useRef<Table<Playlist>>(null)
-  const [editSong, setEditSong] = useState<Playlist | null>(null)
+function PlaylistPage({ playlist }: { playlist: Song[] }) {
+  const tableRef = useRef<Table<Song>>(null)
+  const [editSong, setEditSong] = useState<Song | null>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [deleteId, setDeleteId] = useState<string | null>(null)
-  const [selectedRows, setSelectedRows] = useState<Playlist[]>([])
+  const [selectedRows, setSelectedRows] = useState<Song[]>([])
   const [showBatchDelete, setShowBatchDelete] = useState(false)
 
   const formOpen = showCreate || !!editSong
@@ -276,3 +272,5 @@ export default function PlaylistComponent({
     </Animated>
   )
 }
+
+export default PlaylistPage

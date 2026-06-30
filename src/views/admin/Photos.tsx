@@ -83,7 +83,7 @@ const columns: ColumnConfig<Photo>[] = [
 
 // ──── Component ────
 
-export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
+function PhotosPage({ photos }: { photos: Photo[] }) {
   const tableRef = useRef<Table<Photo>>(null)
   const [showCreate, setShowCreate] = useState(false)
   const [editPhoto, setEditPhoto] = useState<Photo | null>(null)
@@ -334,3 +334,5 @@ export default function PhotosAdmin({ photos }: { photos: Photo[] }) {
     </Animated>
   )
 }
+
+export default PhotosPage

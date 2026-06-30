@@ -1,55 +1,61 @@
 'use client'
 
-import type { Playlist } from '@/types'
+import type { Song } from '@/types'
 
 import { Pause, Play } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Equalizer, NetEaseMusicIcon } from '@/components/icons'
 import { getDailySeed, seededShuffle } from '@/lib/math'
 import { cn } from '@/lib/utils'
+import { usePlayerStore } from '@/stores/player'
 
-function FeaturedMusic({ songs }: { songs: Playlist[] }) {
+function FeaturedMusic({ songs }: { songs: Song[] }) {
   const t = useTranslations('page.home')
+  const {
+    setQueue,
+    play,
+    togglePlay,
+    currentIndex,
+    isVisible,
+    isPlaying,
+    queue
+  } = usePlayerStore()
 
-  const [playingUrl, setPlayingUrl] = useState<string | null>(null)
-  const [isPlaying, setIsPlaying] = useState<boolean>(false)
-  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [dailySongs, setDailySongs] = useState<Song[]>([])
 
-  const [dailySongs, setDailySongs] = useState<Playlist[]>([])
+  // Set full queue on mount, compute daily display slice client-side
+  useEffect(() => {
+    setQueue(songs)
+  }, [songs, setQueue])
 
-  // 只在客户端计算每日随机 5 首歌
   useEffect(() => {
     const seed = getDailySeed(new Date())
     setDailySongs(seededShuffle(songs, seed).slice(0, 5))
   }, [songs])
 
-  useEffect(() => {
-    return () => {
-      audioRef.current?.pause()
-      audioRef.current = null
-    }
-  }, [])
+  const handlePlay = (song: Song) => {
+    // Find the song's index in the full queue (songs), not in dailySongs
+    const idx = songs.findIndex((s) => s.id === song.id)
+    if (idx === -1) return
 
-  const handlePlay = (song: Playlist) => {
-    if (playingUrl === song.url && audioRef.current) {
-      if (isPlaying) {
-        audioRef.current?.pause()
-        setIsPlaying(false)
-        return
-      }
+    const isCurrentSong =
+      isVisible && queue.length > 0 && queue[currentIndex]?.id === song.id
 
-      audioRef.current?.play()
-      setIsPlaying(true)
+    if (isCurrentSong) {
+      // Same song — toggle play/pause
+      togglePlay()
     } else {
-      const audio = new Audio(song.url)
-      audioRef.current = audio
-      audio.play()
-      setIsPlaying(true)
-      setPlayingUrl(song.url)
+      // Different song — switch and play
+      play(idx)
     }
+  }
+
+  const getIsActive = (song: Song) => {
+    if (!isVisible || queue.length === 0) return false
+    return queue[currentIndex]?.id === song.id
   }
 
   return (
@@ -64,47 +70,55 @@ function FeaturedMusic({ songs }: { songs: Playlist[] }) {
 
       <div className="space-y-4">
         {dailySongs.map((song) => {
-          const isPlay = playingUrl === song.url && isPlaying
+          const isActive = getIsActive(song)
 
           return (
             <div
-              key={song.name}
+              key={song.id}
               onClick={() => handlePlay(song)}
               className="group relative flex cursor-pointer items-center gap-3"
             >
               {/* Cover */}
               <div className="relative z-10 h-12 w-12 shrink-0 overflow-hidden rounded select-none">
                 <Image
-                  src={`${song.cover}?waadw=48y48&type=webp`}
+                  src={`${song.cover}?param=48y48&type=webp`}
                   alt={song.name}
                   fill
                   className={cn(
                     'object-cover transition-all duration-300',
-                    isPlay ? 'brightness-50' : 'group-hover:brightness-50'
+                    isActive ? 'brightness-50' : 'group-hover:brightness-50'
                   )}
                 />
-
                 <div
                   className={cn(
                     'absolute inset-0 flex items-center justify-center text-white transition-opacity duration-200',
-                    isPlay ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+                    isActive
+                      ? 'opacity-100'
+                      : 'opacity-0 group-hover:opacity-100'
                   )}
                 >
-                  {isPlay ? (
-                    <Pause size={16} fill="white" strokeWidth={0} />
+                  {isActive && isPlaying ? (
+                    <Pause fill="currentColor" strokeWidth={0} size={16} />
                   ) : (
-                    <Play size={16} fill="white" strokeWidth={0} />
+                    <Play fill="currentColor" strokeWidth={0} size={16} />
                   )}
                 </div>
               </div>
 
               <div className="z-10 flex w-full items-center justify-between">
                 <div className="flex-1">
-                  <p className="truncate text-sm font-medium">{song.name}</p>
+                  <p
+                    className={cn(
+                      'truncate text-sm font-medium transition-colors',
+                      isActive && 'text-brand'
+                    )}
+                  >
+                    {song.name}
+                  </p>
                   <p className="text-muted-foreground truncate text-xs">
                     {Array.isArray(song.author)
                       ? song.author.join(' / ')
-                      : `${song.author}`}
+                      : song.author}
                   </p>
                 </div>
                 <span className="text-muted-foreground mr-2 shrink-0 text-xs tabular-nums">

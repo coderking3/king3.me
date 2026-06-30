@@ -96,11 +96,7 @@ const columns: ColumnConfig<MessageWithReplies>[] = [
 
 // ──── Component ────
 
-export default function Messages({
-  messages
-}: {
-  messages: MessageWithReplies[]
-}) {
+function MessagesPage({ messages }: { messages: MessageWithReplies[] }) {
   const tableRef = useRef<Table<MessageWithReplies>>(null)
   const [replyTo, setReplyTo] = useState<MessageWithReplies | null>(null)
   const [editMessage, setEditMessage] = useState<Message | null>(null)
@@ -373,3 +369,5 @@ export default function Messages({
     </Animated>
   )
 }
+
+export default MessagesPage

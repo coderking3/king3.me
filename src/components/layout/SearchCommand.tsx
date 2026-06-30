@@ -22,7 +22,7 @@ import {
   CommandList
 } from '@/components/ui/command'
 import { useRouter } from '@/i18n/navigation'
-import { useSearchStore } from '@/stores'
+import { useSearchStore } from '@/stores/search'
 
 interface SearchItem {
   title: string

@@ -1,4 +1,4 @@
-import type { Playlist } from '@/types'
+import type { Song } from '@/types'
 import type { SongInput } from '@/validations/playlist'
 
 import { asc, eq, inArray, max } from 'drizzle-orm'
@@ -9,7 +9,7 @@ import { playlist } from '@/lib/db/schema'
 
 import 'server-only'
 
-export async function getPlaylist(): Promise<Playlist[]> {
+export async function getSongs(): Promise<Song[]> {
   'use cache'
   cacheLife('days')
   cacheTag('playlist')
@@ -36,7 +36,7 @@ export async function getPlaylist(): Promise<Playlist[]> {
   }))
 }
 
-export function invalidatePlaylist() {
+export function invalidateSongs() {
   updateTag('playlist')
 }
 

@@ -1,4 +1,4 @@
-import type { Playlist, PostsMetadata } from '@/types'
+import type { PostsMetadata, Song } from '@/types'
 
 import { PencilLine } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
@@ -15,7 +15,7 @@ async function HomePage({
   songs,
   posts
 }: {
-  songs: Playlist[]
+  songs: Song[]
   posts: PostsMetadata[]
 }) {
   const t = await getTranslations('page.home')

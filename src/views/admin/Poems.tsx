@@ -79,13 +79,13 @@ const columns: ColumnConfig<Poem>[] = [
 
 // ──── Component ────
 
-interface PoemsAdminProps {
+interface PoemsPageProps {
   poems?: Poem[]
 }
 
 const DEFAULT_POEMS: Poem[] = []
 
-export default function PoemsAdmin(props: PoemsAdminProps) {
+function PoemsPage(props: PoemsPageProps) {
   const { poems = DEFAULT_POEMS } = props
   const tableRef = useRef<Table<Poem>>(null)
   const [editPoem, setEditPoem] = useState<Poem | null>(null)
@@ -251,3 +251,5 @@ export default function PoemsAdmin(props: PoemsAdminProps) {
     </Animated>
   )
 }
+
+export default PoemsPage

@@ -23,7 +23,7 @@ interface DashboardData {
   recentMessages: Message[]
   recentUsers: User[]
   projects: Project[]
-  recentSongs: Playlist[]
+  recentSongs: Song[]
 }
 
 /* Message */
@@ -55,10 +55,7 @@ type Photo = Omit<
 
 /* Playlist */
 
-type Playlist = Omit<
-  typeof playlist.$inferSelect,
-  'createdAt' | 'updatedAt'
-> & {
+type Song = Omit<typeof playlist.$inferSelect, 'createdAt' | 'updatedAt'> & {
   createdAt: string
   updatedAt: string
 }
@@ -111,7 +108,7 @@ export type {
   // Part: Photo
   Photo,
   // Part: Playlist
-  Playlist,
+  Song,
   // Part: Poem
   Poem,
   // Part: Project

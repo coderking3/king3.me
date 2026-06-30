@@ -67,11 +67,11 @@ function SectionCard({ title, href, linkText, children }: SectionCardProps) {
 
 // ---- Dashboard ----
 
-interface DashboardProps {
+interface DashboardPageProps {
   data: DashboardData
 }
 
-function Dashboard({ data }: DashboardProps) {
+function DashboardPage({ data }: DashboardPageProps) {
   const { stats, recentMessages, recentUsers, projects, recentSongs } = data
 
   return (
@@ -245,4 +245,4 @@ function Dashboard({ data }: DashboardProps) {
   )
 }
 
-export default Dashboard
+export default DashboardPage

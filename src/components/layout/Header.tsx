@@ -12,7 +12,7 @@ import { usePathname } from '@/i18n/navigation'
 import { useSession } from '@/lib/auth-client'
 import { clamp } from '@/lib/math'
 import { cn } from '@/lib/utils'
-import { useSearchStore } from '@/stores'
+import { useSearchStore } from '@/stores/search'
 
 import Logo from './Logo'
 import { MobileNavbar, Navbar } from './Navbar'

@@ -101,9 +101,9 @@ const columns: ColumnConfig<Project>[] = [
   }
 ]
 
-// ──── Component ────
+// ──── Projects ────
 
-export default function Projects({ projects }: { projects: Project[] }) {
+function ProjectsPage({ projects }: { projects: Project[] }) {
   const tableRef = useRef<Table<Project>>(null)
   const [projectRows, setProjectRows] = useState(projects)
   const [isReordering, startReorderTransition] = useTransition()
@@ -307,3 +307,5 @@ export default function Projects({ projects }: { projects: Project[] }) {
     </Animated>
   )
 }
+
+export default ProjectsPage

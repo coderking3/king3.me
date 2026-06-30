@@ -16,24 +16,24 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Tech Stack
 
-| Layer           | Technology                                                                                                             |
-| --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Framework       | Next.js 16, React 19, React Compiler (Cache Components + root params)                                                 |
-| Language        | TypeScript (strict mode)                                                                                              |
-| Styling         | Tailwind CSS v4, CSS Modules, PostCSS, tw-animate-css, @tailwindcss/typography                                        |
-| UI Components   | shadcn/ui (base-nova style, @base-ui/react primitives, zinc base color), Lucide icons, cmdk (command palette), sonner |
-| Animation       | Framer Motion, @react-spring/web                                                                                      |
-| Auth            | better-auth (GitHub + Google OAuth), @better-auth/infra                                                               |
-| Database        | PostgreSQL via Drizzle ORM (@neondatabase/serverless, neon-http driver)                                               |
-| Forms           | react-hook-form + @hookform/resolvers + Zod v4                                                                        |
-| State           | Zustand                                                                                                               |
-| i18n            | next-intl (locale-prefixed routing via root params)                                                                   |
-| Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                                                           |
+| Layer           | Technology                                                                                                                           |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Framework       | Next.js 16, React 19, React Compiler (Cache Components + root params)                                                                |
+| Language        | TypeScript (strict mode)                                                                                                             |
+| Styling         | Tailwind CSS v4, CSS Modules, PostCSS, tw-animate-css, @tailwindcss/typography                                                       |
+| UI Components   | shadcn/ui (base-nova style, @base-ui/react primitives, zinc base color), Lucide icons, cmdk (command palette), sonner                |
+| Animation       | Framer Motion, @react-spring/web                                                                                                     |
+| Auth            | better-auth (GitHub + Google OAuth), @better-auth/infra                                                                              |
+| Database        | PostgreSQL via Drizzle ORM (@neondatabase/serverless, neon-http driver)                                                              |
+| Forms           | react-hook-form + @hookform/resolvers + Zod v4                                                                                       |
+| State           | Zustand                                                                                                                              |
+| i18n            | next-intl (locale-prefixed routing via root params)                                                                                  |
+| Tables          | @tanstack/react-table, @dnd-kit (drag-sort)                                                                                          |
 | MDX             | next-mdx-remote-client, gray-matter, @shikijs/rehype (shiki), remark-flexible-toc, rehype-slug, rehype-autolink-headings, remark-gfm |
-| Utilities       | date-fns, react-day-picker, react-textarea-autosize, github-slugger, feed (RSS)                                       |
-| Linting         | ESLint 10 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)                                      |
-| Package Manager | pnpm                                                                                                                  |
-| Hosting         | Vercel                                                                                                                |
+| Utilities       | date-fns, react-day-picker, react-textarea-autosize, github-slugger, feed (RSS)                                                      |
+| Linting         | ESLint 10 (@king-3/eslint-config), Stylelint, Prettier (@king-3/prettier-config)                                                     |
+| Package Manager | pnpm                                                                                                                                 |
+| Hosting         | Vercel                                                                                                                               |
 
 ## Development Setup
 
@@ -61,21 +61,21 @@ This file provides guidance to AI coding agents when working with code in this r
 
 ## Build & Commands
 
-| Command              | Description                                      |
-| -------------------- | ------------------------------------------------ |
-| `pnpm dev`           | Start dev server on port 3060                    |
-| `pnpm build`         | Production build (`next build`)                  |
-| `pnpm start`         | Start production server (`next start`)           |
-| `pnpm lint`          | Run ESLint                                       |
-| `pnpm lint:fix`      | Run ESLint with auto-fix                         |
-| `pnpm typecheck`     | Run TypeScript type checking                     |
-| `pnpm stylelint`     | Run Stylelint on CSS files                       |
-| `pnpm stylelint:fix` | Run Stylelint with auto-fix                      |
-| `pnpm format`        | Format all files with Prettier                   |
-| `pnpm db:generate`   | Generate migration SQL files from schema changes |
-| `pnpm db:migrate`    | Run pending migrations against the database      |
-| `pnpm db:push`       | Push schema changes directly to database (dev)   |
-| `pnpm db:studio`     | Open Drizzle Studio (visual database editor)     |
+| Command              | Description                                              |
+| -------------------- | -------------------------------------------------------- |
+| `pnpm dev`           | Start dev server on port 3060                            |
+| `pnpm build`         | Production build (`next build`)                          |
+| `pnpm start`         | Start production server (`next start`)                   |
+| `pnpm lint`          | Run ESLint                                               |
+| `pnpm lint:fix`      | Run ESLint with auto-fix                                 |
+| `pnpm typecheck`     | Run TypeScript type checking                             |
+| `pnpm stylelint`     | Run Stylelint on CSS files                               |
+| `pnpm stylelint:fix` | Run Stylelint with auto-fix                              |
+| `pnpm format`        | Format all files with Prettier                           |
+| `pnpm db:generate`   | Generate migration SQL files from schema changes         |
+| `pnpm db:migrate`    | Run pending migrations against the database              |
+| `pnpm db:push`       | Push schema changes directly to database (dev)           |
+| `pnpm db:studio`     | Open Drizzle Studio (visual database editor)             |
 | `pnpm prepare`       | Install simple-git-hooks (runs automatically on install) |
 
 ## Code Conventions

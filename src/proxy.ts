@@ -9,8 +9,9 @@ import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
 
 const intlMiddleware = createMiddleware(routing)
 
-const ADMIN_GUARD_RE = /^\/(?:zh\/)?admin/
-const AUTH_GUARD_RE = /^\/(?:zh\/)?auth$/
+const localesPattern = routing.locales.join('|')
+const ADMIN_GUARD_RE = new RegExp(`^/(?:(?:${localesPattern})/)?admin`)
+const AUTH_GUARD_RE = new RegExp(`^/(?:(?:${localesPattern})/)?auth$`)
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl

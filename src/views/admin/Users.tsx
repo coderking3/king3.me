@@ -99,9 +99,9 @@ const columns: ColumnConfig<UserWithRole>[] = [
   }
 ]
 
-// ──── Component ────
+// ──── Users ────
 
-export default function Users({ users }: { users: UserWithRole[] }) {
+function UsersPage({ users }: { users: UserWithRole[] }) {
   const [banTarget, setBanTarget] = useState<UserWithRole | null>(null)
   const [banReason, setBanReason] = useState('')
   const [banLoading, setBanLoading] = useState(false)
@@ -327,3 +327,5 @@ export default function Users({ users }: { users: UserWithRole[] }) {
     </Animated>
   )
 }
+
+export default UsersPage

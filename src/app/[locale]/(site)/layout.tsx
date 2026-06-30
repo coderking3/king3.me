@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { Player } from '@/components/common/Player'
 import { Background, Footer, Header } from '@/components/layout'
 
 export default function SiteLayout({
@@ -16,6 +17,8 @@ export default function SiteLayout({
         <main className="flex-1">{children}</main>
         <Footer />
       </div>
+
+      <Player />
     </>
   )
 }
