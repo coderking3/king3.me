@@ -18,6 +18,8 @@ import { MOBILE_NAVIGATION_ITEMS, NAVIGATION_ITEMS } from '@/constants'
 import { Link, usePathname } from '@/i18n/navigation'
 import { cn } from '@/lib/utils'
 
+import Logo from './Logo'
+
 interface NavbarProps {
   className?: string
 }
@@ -183,12 +185,11 @@ export function MobileNavbar() {
         <Menu size={20} />
       </SheetTrigger>
 
-      <SheetContent side="left" className="w-72 sm:max-w-72">
-        <SheetHeader>
-          <SheetTitle>
-            <Link href="/" className="font-logo text-xl font-normal">
-              King3
-            </Link>
+      <SheetContent side="left" showCloseButton={false}>
+        {/* h-11.5 matches the height of Logo's icon wrapper (size-8) to keep vertical rhythm consistent with the header */}
+        <SheetHeader className="mt-6 h-11.5 p-0">
+          <SheetTitle className="flex h-full items-center justify-center">
+            <Logo showIcon />
           </SheetTitle>
         </SheetHeader>
 
