@@ -18,10 +18,10 @@ export const MOBILE_NAVIGATION_ITEMS = [
 
 export const ADMIN_NAVIGATION_ITEMS = [
   { href: '/admin', label: 'Dashboard', icon: 'dashboard' },
-  { href: '/admin/messages', label: 'Messages', icon: 'messages' },
   { href: '/admin/users', label: 'Users', icon: 'user' },
+  { href: '/admin/messages', label: 'Messages', icon: 'messages' },
+  { href: '/admin/projects', label: 'Projects', icon: 'folder' },
   { href: '/admin/playlist', label: 'Playlist', icon: 'music' },
   { href: '/admin/photos', label: 'Photos', icon: 'image' },
-  { href: '/admin/poems', label: 'Poems', icon: 'feather' },
-  { href: '/admin/projects', label: 'Projects', icon: 'folder' }
+  { href: '/admin/poems', label: 'Poems', icon: 'feather' }
 ] as const
