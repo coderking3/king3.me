@@ -5,7 +5,11 @@ import { NextResponse } from 'next/server'
 
 import { routing } from '@/i18n/routing'
 import { ADMIN_USER_ROLE } from '@/lib/auth'
-import { getServerSession, requireServerAdminSession } from '@/lib/auth-session'
+import {
+  getServerSession,
+  getSessionUserRole,
+  requireServerAdminSession
+} from '@/lib/auth-session'
 
 const intlMiddleware = createMiddleware(routing)
 
@@ -31,7 +35,7 @@ export async function proxy(request: NextRequest) {
 
     if (session) {
       const redirectPath =
-        session.user.role === ADMIN_USER_ROLE ? '/admin' : '/'
+        getSessionUserRole(session) === ADMIN_USER_ROLE ? '/admin' : '/'
       return NextResponse.redirect(new URL(redirectPath, request.url))
     }
   }

@@ -6,7 +6,6 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
 import { admin } from 'better-auth/plugins'
 
-import { getServerSession } from './auth-session'
 import { db } from './db'
 
 export const ADMIN_USER_ROLE = 'admin' as const
@@ -36,14 +35,3 @@ export const auth = betterAuth({
 })
 
 export type Auth = typeof auth
-
-// Check if it is an administrator
-export async function checkAdmin() {
-  const session = await getServerSession()
-
-  if (!session || session.user.role !== ADMIN_USER_ROLE) {
-    throw new Error('No permission to perform this operation')
-  }
-
-  return session
-}
