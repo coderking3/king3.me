@@ -1,20 +1,21 @@
 'use client'
 
 import type { ImageProps } from 'next/image'
-
-import process from 'node:process'
+import type { ReactNode } from 'react'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
-import { remoteCdnLoader } from '@/lib/image-loader'
+import { remoteCdnLoader } from '@/lib/image/loader'
+import { isRemoteCdn } from '@/lib/image/remote'
 import { cn } from '@/lib/utils'
 
 // Native next/image props allowed to pass through untouched.
 // Deprecated fields (priority/objectFit/objectPosition/layout/lazyBoundary/lazyRoot/onLoadingComplete)
 // are intentionally excluded so callers are forced to use the modern equivalents
-// (preload / Tailwind object-* utilities / etc).
+// (preload / Tailwind object-* utilities / etc). `preload` itself is NOT omitted,
+// so it flows through via nativeRest as-is.
 type NativeProps = Omit<
   ImageProps,
   | 'width'
@@ -22,8 +23,6 @@ type NativeProps = Omit<
   | 'fill'
   | 'sizes'
   | 'loader'
-  | 'placeholder'
-  | 'blurDataURL'
   | 'src'
   | 'alt'
   | 'className'
@@ -42,11 +41,12 @@ interface BaseProps extends NativeProps {
   src: ImageProps['src']
   alt: string
   className?: string
-  /** Sizing/layout classes go here (aspect-*, size-*, float-*, rounded-*, border, etc.), not on className */
-  wrapperClassName?: string
   showSkeleton?: boolean
   /** Turn off when src is already a fully-built CDN url, to avoid the loader double-appending params */
   cdnOptimize?: boolean
+  /** Content shown when the image fails to load. Defaults to a plain-text fallback — pass a
+   *  translated string/node if the surrounding page is localized. */
+  errorFallback?: ReactNode
   loader?: ImageProps['loader']
   onLoad?: ImageProps['onLoad']
   onError?: ImageProps['onError']
@@ -56,8 +56,6 @@ interface FillProps extends BaseProps {
   fill: true
   /** Required in fill mode — without it Next falls back to sizes="100vw" and over-fetches */
   sizes: string
-  /** Use when wrapperClassName can't express the ratio via aspect-* (e.g. a runtime-known ratio) */
-  aspectRatio?: number | string
 }
 
 interface FixedProps extends BaseProps {
@@ -66,6 +64,14 @@ interface FixedProps extends BaseProps {
   height: number
   /** Fixed pixel sizes usually don't need this — Next auto-generates a 1x/2x srcset */
   sizes?: string
+  /**
+   * Set to `false` to skip the sizing wrapper div entirely — e.g. when the
+   * caller already provides its own `position: relative` container, same
+   * contract as fill mode. Defaults to `true`.
+   */
+  wrapper?: boolean
+  /** Extra classes for the sizing wrapper. No-op when `wrapper` is false. */
+  wrapperClassName?: string
 }
 
 export type SmartImageProps = FillProps | FixedProps
@@ -78,23 +84,31 @@ type DestructurableProps = BaseProps & {
   sizes?: string
   width?: number
   height?: number
-  aspectRatio?: number | string
+  wrapper?: boolean
+  wrapperClassName?: string
 }
 
-const PROTOCOL_RE = /^https?:\/\//
-
-function isRemoteSrc(src: ImageProps['src']) {
-  return typeof src === 'string' && PROTOCOL_RE.test(src)
-}
-
+/**
+ * Thin wrapper around next/image: adds a skeleton-while-loading state and
+ * routes known CDN hosts through `remoteCdnLoader`.
+ *
+ * Fill mode renders NO wrapper of its own — every real usage in this codebase
+ * already provides a sized, `position: relative` container (aspect-*, rounded-*,
+ * framer-motion boxes, etc). Wrap `<SmartImage fill />` in that container
+ * yourself, exactly like you would a plain `<Image fill />`.
+ *
+ * Fixed mode (width/height) gets a small sizing wrapper by default, since
+ * standalone uses like avatars/icons usually don't have an external container
+ * to rely on. Pass `wrapper={false}` to opt out when you do have one.
+ */
 export function SmartImage(props: SmartImageProps) {
   const {
     src,
     alt,
     className,
-    wrapperClassName,
     showSkeleton = true,
     cdnOptimize = true,
+    errorFallback = 'Failed to load image',
     loader,
     onLoad,
     onError,
@@ -102,36 +116,26 @@ export function SmartImage(props: SmartImageProps) {
     sizes,
     width,
     height,
-    aspectRatio,
+    wrapper = true,
+    wrapperClassName,
     ...nativeRest
   } = props as DestructurableProps
 
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState(false)
-  const wrapperRef = useRef<HTMLDivElement>(null)
 
-  const remote = isRemoteSrc(src)
-  const resolvedLoader =
-    loader ?? (remote && cdnOptimize ? remoteCdnLoader : undefined)
-
-  // Dev-only safety net: in fill mode, a wrapper with no height collapses silently
-  // and the image just disappears with no error or warning from Next itself.
+  // Reset the loading/error state when the same instance is reused for a
+  // different image (e.g. swiping through a lightbox without unmounting).
   useEffect(() => {
-    if (process.env.NODE_ENV === 'production' || !fill) return
-    const el = wrapperRef.current
-    if (!el) return
+    setLoaded(false)
+    setError(false)
+  }, [src])
 
-    const observer = new ResizeObserver(([entry]) => {
-      if (entry.contentRect.height === 0) {
-        console.warn(
-          `[SmartImage] fill container has 0 height (src: ${typeof src === 'string' ? src : 'static import'}). ` +
-            `Give wrapperClassName a size (aspect-*/h-*/size-*) or pass aspectRatio.`
-        )
-      }
-    })
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [fill, src])
+  const resolvedLoader =
+    loader ??
+    (cdnOptimize && typeof src === 'string' && isRemoteCdn(src)
+      ? remoteCdnLoader
+      : undefined)
 
   const handleLoad: ImageProps['onLoad'] = (e) => {
     setLoaded(true)
@@ -149,58 +153,39 @@ export function SmartImage(props: SmartImageProps) {
     className
   )
 
-  const wrapperStyle = fill
-    ? aspectRatio
-      ? { aspectRatio: String(aspectRatio) }
-      : undefined
-    : { width, height }
+  const imageProps = {
+    src,
+    alt,
+    sizes,
+    loader: resolvedLoader,
+    onLoad: handleLoad,
+    onError: handleError,
+    className: imgClassName,
+    ...(fill ? { fill: true } : { width, height }),
+    ...nativeRest
+  }
 
-  return (
-    <div
-      ref={wrapperRef}
-      className={cn('relative overflow-hidden', wrapperClassName)}
-      style={wrapperStyle}
-    >
+  const content = (
+    <>
       {showSkeleton && !loaded && !error && (
         <Skeleton className="absolute inset-0 rounded-none" />
       )}
 
-      {!error && fill && (
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          loader={resolvedLoader}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={imgClassName}
-          {...nativeRest}
-        />
-      )}
-
-      {!error && !fill && (
-        // width/height are guaranteed by the FixedProps branch of the union;
-        // the non-null assertion only exists because destructuring widened the type.
-        <Image
-          src={src}
-          alt={alt}
-          width={width!}
-          height={height!}
-          sizes={sizes}
-          loader={resolvedLoader}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={imgClassName}
-          {...nativeRest}
-        />
-      )}
+      {!error && <Image {...imageProps} />}
 
       {error && (
         <div className="bg-muted text-muted-foreground absolute inset-0 flex items-center justify-center text-xs">
-          Failed to load image
+          {errorFallback}
         </div>
       )}
+    </>
+  )
+
+  if (fill || !wrapper) return content
+
+  return (
+    <div className={cn('relative overflow-hidden', wrapperClassName)}>
+      {content}
     </div>
   )
 }

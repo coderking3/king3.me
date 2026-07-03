@@ -3,10 +3,9 @@
 import type { Photo } from '@/types'
 
 import { motion } from 'framer-motion'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-import { Spinner } from '@/components/ui/spinner'
+import { SmartImage } from '@/components/common/SmartImage'
 import { formatLocalDate } from '@/lib/date'
 
 interface PhotoPreviewProps {
@@ -20,8 +19,6 @@ export default function PhotoPreview({
   lang,
   onClose
 }: PhotoPreviewProps) {
-  const [loaded, setLoaded] = useState(false)
-
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -44,28 +41,23 @@ export default function PhotoPreview({
     >
       {/* Image */}
       <motion.div
-        className="relative overflow-hidden rounded-lg"
+        className="relative max-h-[80dvh] max-w-[90dvw] overflow-hidden rounded-lg"
         style={{
-          width: '90dvw',
-          maxHeight: '80dvh',
-          aspectRatio: `${photo.width} / ${photo.height}`
+          aspectRatio: `${photo.width} / ${photo.height}`,
+          width: `min(${photo.width}px, 90dvw, calc(80dvh * ${photo.width / photo.height}))`,
+          height: 'auto'
         }}
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
       >
-        {!loaded && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center">
-            <Spinner className="size-8 text-white/50" />
-          </div>
-        )}
-        <Image
+        <SmartImage
           src={photo.url}
           alt={photo.name}
+          cdnOptimize={false}
           fill
           sizes="90dvw"
-          priority
-          onLoad={() => setLoaded(true)}
+          preload
           className="rounded-lg object-contain"
         />
       </motion.div>

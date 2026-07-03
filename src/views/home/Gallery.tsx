@@ -3,8 +3,9 @@
 
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
-import Image from 'next/image'
 import * as React from 'react'
+
+import { SmartImage } from '@/components/common/SmartImage'
 
 interface GalleryProps {
   images: string[]
@@ -51,7 +52,7 @@ function Gallery({ images }: GalleryProps) {
         {images.map((image, idx) => (
           <motion.div
             key={idx}
-            className="relative h-35 flex-none shrink-0 snap-start overflow-hidden rounded-xl bg-zinc-100 ring-2 ring-lime-800/20 md:h-72 md:rounded-3xl dark:bg-zinc-800 dark:ring-lime-300/10"
+            className="ring-border bg-muted relative h-35 flex-none shrink-0 snap-start overflow-hidden rounded-xl ring-2 md:h-72 md:rounded-3xl"
             animate={{
               width,
               opacity: isCompact ? 1 : 0.85,
@@ -71,14 +72,16 @@ function Gallery({ images }: GalleryProps) {
             }
             layout
           >
-            <Image
+            <SmartImage
               src={image}
               alt=""
               width={500}
               height={300}
               sizes="(min-width: 640px) 18rem, 11rem"
               className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
-              priority
+              wrapper={false}
+              cdnOptimize={false}
+              preload
             />
           </motion.div>
         ))}

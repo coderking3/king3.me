@@ -5,10 +5,10 @@ import type { Photo } from '@/types'
 import { AnimatePresence } from 'framer-motion'
 import { Grid2x2, LayoutGrid } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { useState } from 'react'
 
 import { Animated } from '@/components/common'
+import { SmartImage } from '@/components/common/SmartImage'
 import { cn } from '@/lib/utils'
 
 import PhotoPreview from './PhotoPreview'
@@ -72,13 +72,15 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
                 )}
                 onClick={() => setActivePhoto(photo)}
               >
-                <Image
-                  src={`${photo.url}@600w_1e_0c.webp`}
+                <SmartImage
+                  src={photo.url}
                   alt={photo.name}
+                  cdnOptimize={false}
                   fill
                   loading="lazy"
+                  sizes="(min-width: 1280px) 260px, (min-width: 1152px) 352px, (min-width: 1024px) calc(33vw - 32px), (min-width: 768px) calc(50vw - 40px), 100vw"
                   className={cn(
-                    'transition-transform duration-300 group-hover:scale-105',
+                    'transition-[opacity,transform,translate,scale,rotate] group-hover:scale-105',
                     isCover ? 'object-cover' : 'object-contain'
                   )}
                 />
