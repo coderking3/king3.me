@@ -77,6 +77,7 @@ function Gallery({ images }: GalleryProps) {
               alt=""
               width={500}
               height={300}
+              loading="eager"
               sizes="(min-width: 640px) 18rem, 11rem"
               className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
               wrapper={false}
