@@ -53,7 +53,7 @@
    - `BETTER_AUTH_URL` — Your app URL (e.g., `http://localhost:3060`)
    - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth app credentials
    - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google OAuth app credentials
-   - `SITE_URL` — Your deployed site URL, used for metadata, sitemap, `robots.txt`, and RSS feed (optional, defaults to `https://king3-me.vercel.app`)
+   - `SITE_URL` — Your deployed site URL, used for metadata, sitemap, `robots.txt`, and RSS feed (optional, defaults to `https://blog.king3.site`)
 
 4. **Set up the database**
 

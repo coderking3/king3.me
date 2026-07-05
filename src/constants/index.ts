@@ -7,7 +7,7 @@ import process from 'node:process'
 export const SITE_NAME = 'King3'
 
 export const SITE_URL = new URL(
-  process.env.SITE_URL ?? 'https://king3-me.vercel.app'
+  process.env.SITE_URL ?? 'https://blog.king3.site'
 )
 
 export const COPYRIGHT = `© 2025-present ${SITE_NAME}. All Rights Reserved.`

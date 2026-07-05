@@ -4,7 +4,7 @@ import type { ImageProps } from 'next/image'
 import type { ReactNode } from 'react'
 
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { remoteCdnLoader } from '@/lib/image/loader'
@@ -121,6 +121,7 @@ export function SmartImage(props: SmartImageProps) {
     ...nativeRest
   } = props as DestructurableProps
 
+  const imgRef = useRef<HTMLImageElement>(null)
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState(false)
 
@@ -129,6 +130,15 @@ export function SmartImage(props: SmartImageProps) {
   useEffect(() => {
     setLoaded(false)
     setError(false)
+
+    // Browsers don't reliably fire `load` for images already served from the
+    // HTTP cache (decoding finishes before/without dispatching the event),
+    // so `onLoad` below can simply never run. Check synchronously here as a
+    // fallback — by the time this effect runs, the ref points at the <img>
+    // for the current `src` and `.complete` already reflects cache hits.
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true)
+    }
   }, [src])
 
   const resolvedLoader =
@@ -171,7 +181,7 @@ export function SmartImage(props: SmartImageProps) {
         <Skeleton className="absolute inset-0 rounded-none" />
       )}
 
-      {!error && <Image {...imageProps} />}
+      {!error && <Image ref={imgRef} {...imageProps} />}
 
       {error && (
         <div className="bg-muted text-muted-foreground absolute inset-0 flex items-center justify-center text-xs">

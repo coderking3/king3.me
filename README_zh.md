@@ -53,7 +53,7 @@
    - `BETTER_AUTH_URL` — 应用 URL（例如 `http://localhost:3060`）
    - `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` — GitHub OAuth 应用凭证
    - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — Google OAuth 应用凭证
-   - `SITE_URL` — 部署站点 URL，用于元数据、站点地图、`robots.txt` 及 RSS（可选，默认 `https://king3-me.vercel.app`）
+   - `SITE_URL` — 部署站点 URL，用于元数据、站点地图、`robots.txt` 及 RSS（可选，默认 `https://blog.king3.sitep`）
 
 4. **初始化数据库**
 
