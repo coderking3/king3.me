@@ -58,13 +58,14 @@ const columns: ColumnConfig<UserWithRole>[] = [
         {record.image && (
           <AsyncImage
             src={getRemoteImageUrl(record.image, {
-              github: { size: 48 },
-              google: { size: 48 }
+              github: { size: 56 },
+              google: { size: 56 }
             })}
             alt={record.name}
             width={24}
             height={24}
-            wrapperClassName="rounded-full"
+            unoptimized
+            wrapperClassName="size-6 rounded-full"
           />
         )}
         <span className="text-sm font-medium">{record.name}</span>

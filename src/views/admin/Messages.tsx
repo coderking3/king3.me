@@ -71,7 +71,7 @@ const columns: ColumnConfig<MessageWithReplies>[] = [
             alt={record.userName}
             width={24}
             height={24}
-            wrapperClassName="rounded-full"
+            wrapperClassName="size-6 rounded-full"
           />
         )}
         <span className="text-sm font-medium">{record.userName}</span>

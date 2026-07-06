@@ -6,6 +6,8 @@ import { drizzleAdapter } from 'better-auth/adapters/drizzle'
 import { nextCookies } from 'better-auth/next-js'
 import { admin } from 'better-auth/plugins'
 
+import { invalidateUsers } from '@/data/users'
+
 import { db } from './db'
 
 export const ADMIN_USER_ROLE = 'admin' as const
@@ -28,6 +30,12 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       scopes: ['openid', 'email', 'profile']
+    }
+  },
+
+  databaseHooks: {
+    user: {
+      create: { after: async () => invalidateUsers() }
     }
   },
 

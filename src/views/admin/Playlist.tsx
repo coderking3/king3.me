@@ -68,13 +68,13 @@ const columns: ColumnConfig<Song>[] = [
     title: 'Cover',
     render: (_, record) => (
       <AsyncImage
-        src={getRemoteImageUrl(record.url, {
+        src={getRemoteImageUrl(record.cover, {
           netease: { size: 56 }
         })}
         alt={record.name}
         width={40}
         height={40}
-        wrapperClassName="rounded"
+        wrapperClassName="size-10 rounded"
       />
     )
   },

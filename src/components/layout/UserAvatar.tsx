@@ -3,6 +3,7 @@
 import { animated, useSpring } from '@react-spring/web'
 import { format } from 'date-fns'
 import { CalendarDays, LogOut, UserRoundPlus } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 import { useInteractive } from '@/components/icons/_internal/hooks'
 import {
@@ -43,6 +44,7 @@ const triggerClass = cn(
 )
 
 function UserAvatar({ user }: UserAvatarProps) {
+  const t = useTranslations('ui.account')
   const { isOpen, openModal, closeModal } = useAuthStore()
   const pathname = usePathname()
   const { isHovered, handlers } = useInteractive({ trigger: 'hover' })
@@ -68,7 +70,7 @@ function UserAvatar({ user }: UserAvatarProps) {
         <button
           type="button"
           className={triggerClass}
-          aria-label="Sign in"
+          aria-label={t('signIn')}
           onClick={openModal}
           {...handlers}
         >
@@ -120,14 +122,14 @@ function UserAvatar({ user }: UserAvatarProps) {
         <DropdownMenuGroup>
           <DropdownMenuItem disabled className="text-muted-foreground">
             <CalendarDays className="mr-2 size-4" />
-            Joined {format(user.createdAt, 'yyyy/MM/dd')}
+            {t('joined', { date: format(user.createdAt, 'yyyy/MM/dd') })}
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
             <LogOut className="mr-2 size-4" />
-            Sign Out
+            {t('signOut')}
           </DropdownMenuItem>
         </DropdownMenuGroup>
       </DropdownMenuContent>

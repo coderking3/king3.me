@@ -124,6 +124,7 @@ function DashboardPage({ data }: DashboardPageProps) {
                   alt={msg.userName}
                   width={32}
                   height={32}
+                  unoptimized
                   wrapperClassName="bg-muted flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium"
                 />
                 <div className="min-w-0 flex-1">
@@ -158,12 +159,13 @@ function DashboardPage({ data }: DashboardPageProps) {
                 {user.image ? (
                   <AsyncImage
                     src={getRemoteImageUrl(user.image, {
-                      github: { size: 56 },
-                      google: { size: 56 }
+                      google: { size: 56 },
+                      github: { size: 56 }
                     })}
                     alt={user.name}
                     width={32}
                     height={32}
+                    unoptimized
                     wrapperClassName="size-8 rounded-full"
                   />
                 ) : (

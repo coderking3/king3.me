@@ -68,6 +68,11 @@
       "shortcut": {
         "jump": "跳转页面"
       }
+    },
+    "account": {
+      "signIn": "登录",
+      "signOut": "退出登录",
+      "joined": "加入于 {date}"
     }
   },
 

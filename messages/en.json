@@ -72,6 +72,11 @@
       "shortcut": {
         "jump": "Go to Page"
       }
+    },
+    "account": {
+      "signIn": "Sign in",
+      "signOut": "Sign Out",
+      "joined": "Joined {date}"
     }
   },
 

@@ -11,7 +11,10 @@ const REMOTE_IMAGE_CDN_CONFIG = [
   { hostname: 'lh3.googleusercontent.com', type: 'google' } // Google
 ] as const satisfies readonly { hostname: string; type: CdnType }[]
 
-export const REMOTE_IMAGE_HOSTS = REMOTE_IMAGE_CDN_CONFIG.map((c) => c.hostname)
+export const REMOTE_IMAGE_HOSTS = [
+  ...REMOTE_IMAGE_CDN_CONFIG.map((c) => c.hostname)
+  // 'cdn.jsdelivr.net'
+]
 
 const HOST_CDN_TYPE: Record<string, CdnType> = Object.fromEntries(
   REMOTE_IMAGE_CDN_CONFIG.map((c) => [c.hostname, c.type])
@@ -100,8 +103,6 @@ export interface SizeOnlyParams {
   size?: number
 }
 
-const GOOGLE_SIZE_SUFFIX_RE = /=s\d.*$/
-
 function withSearchParam(src: string, key: string, value: string): string {
   const url = new URL(src)
   url.searchParams.set(key, value)
@@ -114,7 +115,7 @@ const SIZE_ONLY_HANDLERS: Record<
 > = {
   netease: (src, size) => withSearchParam(src, 'param', `${size}y${size}`),
   github: (src, size) => withSearchParam(src, 'size', String(size)),
-  google: (src, size) => src.replace(GOOGLE_SIZE_SUFFIX_RE, `=s${size}-c`)
+  google: (src, size) => `${src.split('=')[0]}=s${size}-c`
 }
 
 // ---------- entry point ----------

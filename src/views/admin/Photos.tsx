@@ -59,7 +59,7 @@ const columns: ColumnConfig<Photo>[] = [
         alt={record.name}
         width={40}
         height={40}
-        wrapperClassName="rounded"
+        wrapperClassName="size-10 rounded"
       />
     )
   },
