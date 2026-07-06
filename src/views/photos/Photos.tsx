@@ -74,7 +74,7 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
                     'group relative aspect-square cursor-zoom-in overflow-hidden',
                     isCover && 'rounded-lg'
                   )}
-                  onClick={() => setActivePhoto({ ...photo, url })}
+                  onClick={() => setActivePhoto(photo)}
                 >
                   <AsyncImage
                     src={url}

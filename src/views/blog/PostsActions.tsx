@@ -6,7 +6,8 @@ import { Check } from 'lucide-react'
 import { useState } from 'react'
 
 import { Back, ChevronUp, Link } from '@/components/icons'
-import { cn, copyToClipboard } from '@/lib/utils'
+import { useCopyToClipboard } from '@/hooks'
+import { cn } from '@/lib/utils'
 
 const actionButtonClass = [
   'group flex h-10 w-10 items-center justify-center rounded-lg',
@@ -16,7 +17,8 @@ const actionButtonClass = [
 
 function PostsActions() {
   const [showScrollTop, setShowScrollTop] = useState(false)
-  const [copied, setCopied] = useState(false)
+
+  const { copied, copy } = useCopyToClipboard()
 
   useScroll({
     onChange: ({ value: { scrollY } }) => {
@@ -26,14 +28,6 @@ function PostsActions() {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
-  const handleCopyLink = () => {
-    if (copied) return
-
-    copyToClipboard(window.location.href)
-    setCopied(true)
-    setTimeout(setCopied, 2000, false)
   }
 
   return (
@@ -46,7 +40,7 @@ function PostsActions() {
 
       {/* Copy link */}
       <div
-        onClick={handleCopyLink}
+        onClick={() => copy(window.location.href)}
         className={cn(
           ...actionButtonClass,
           'relative overflow-hidden',
