@@ -3,11 +3,11 @@
 import type { Message, MessageWithReplies } from '@/types'
 
 import { useLocale } from 'next-intl'
-import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
-import { Animated } from '@/components/common'
+import { Animated, AsyncImage } from '@/components/common'
 import { relativeTime } from '@/lib/date'
+import { getRemoteImageUrl } from '@/lib/image'
 
 function RelativeTime({ date, lang }: { date: string; lang: string }) {
   const [text, setText] = useState('')
@@ -51,12 +51,16 @@ function Reply({
 
       <div className="flex items-start gap-2">
         {reply.userImg ? (
-          <Image
-            src={reply.userImg}
-            alt=""
+          <AsyncImage
+            // src={reply.userImg}
+            src={getRemoteImageUrl(reply.userImg, {
+              github: { size: 128 },
+              google: { size: 128 }
+            })}
+            alt={reply.userName}
             width={24}
             height={24}
-            className="ring-background size-6 shrink-0 rounded-full ring-2"
+            wrapperClassName="ring-background size-6 shrink-0 rounded-full ring-2"
           />
         ) : (
           <div className="bg-muted ring-background flex size-6 shrink-0 items-center justify-center rounded-full text-[10px] font-medium ring-2">
@@ -105,9 +109,12 @@ function MessageItem({
       {/* Avatar + meta row */}
       <div className="relative flex items-start gap-3">
         {message.userImg ? (
-          <Image
-            src={message.userImg}
-            alt=""
+          <AsyncImage
+            src={getRemoteImageUrl(message.userImg, {
+              github: { size: 56 },
+              google: { size: 56 }
+            })}
+            alt={message.userName}
             width={40}
             height={40}
             className="ring-background size-10 shrink-0 rounded-full ring-2"

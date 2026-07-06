@@ -8,7 +8,6 @@ import type { PhotoInput } from '@/validations/photos'
 
 import { format } from 'date-fns'
 import { FileJson, Pencil, Plus, Trash2 } from 'lucide-react'
-import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -19,8 +18,16 @@ import {
   deletePhotoAction,
   updatePhotoAction
 } from '@/actions/photos'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
+import {
+  Animated,
+  AsyncImage,
+  Confirm,
+  DataTable,
+  Form,
+  Modal
+} from '@/components/common'
 import { Button, DialogClose, DialogFooter, Textarea } from '@/components/ui'
+import { getRemoteImageUrl } from '@/lib/image'
 import { photoSchema } from '@/validations/photos'
 
 // ──── Form Config ────
@@ -45,12 +52,14 @@ const columns: ColumnConfig<Photo>[] = [
     key: 'url',
     title: 'Preview',
     render: (_, record) => (
-      <Image
-        src={`${record.url}@80w_80h_1e_1c.webp`}
+      <AsyncImage
+        src={getRemoteImageUrl(record.url, {
+          bilibili: { size: 56, format: 'webp' }
+        })}
         alt={record.name}
         width={40}
         height={40}
-        className="rounded"
+        wrapperClassName="rounded"
       />
     )
   },

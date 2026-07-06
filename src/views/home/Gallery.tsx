@@ -1,14 +1,15 @@
-/* eslint-disable react/no-array-index-key */
 'use client'
+
+import type { GalleryItem } from '@/types'
 
 import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import * as React from 'react'
 
-import { SmartImage } from '@/components/common/SmartImage'
+import AsyncImage from '@/components/common/AsyncImage'
 
 interface GalleryProps {
-  images: string[]
+  images: GalleryItem[]
 }
 
 function Gallery({ images }: GalleryProps) {
@@ -49,8 +50,9 @@ function Gallery({ images }: GalleryProps) {
       }}
     >
       <div className="-my-4 flex w-full snap-x snap-proximity scroll-pl-4 scrollbar-none justify-start gap-4 overflow-x-auto px-4 py-4 sm:gap-6 md:justify-center md:overflow-x-hidden md:px-0">
-        {images.map((image, idx) => (
+        {images.map(({ url, name }, idx) => (
           <motion.div
+            // eslint-disable-next-line react/no-array-index-key
             key={idx}
             className="ring-border bg-muted relative h-35 flex-none shrink-0 snap-start overflow-hidden rounded-xl ring-2 md:h-72 md:rounded-3xl"
             animate={{
@@ -72,16 +74,15 @@ function Gallery({ images }: GalleryProps) {
             }
             layout
           >
-            <SmartImage
-              src={image}
-              alt=""
+            <AsyncImage
+              src={url}
+              alt={name}
               width={500}
               height={300}
               loading="eager"
               sizes="(min-width: 640px) 18rem, 11rem"
               className="pointer-events-none absolute inset-0 h-full w-full object-cover select-none"
               wrapper={false}
-              cdnOptimize={false}
               preload
             />
           </motion.div>

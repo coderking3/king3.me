@@ -3,12 +3,13 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { SendHorizontal } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize'
 import { toast } from 'sonner'
 
 import { sendMessageAction } from '@/actions/messages'
+import { AsyncImage } from '@/components/common'
+import { getRemoteImageUrl } from '@/lib/image'
 import { cn } from '@/lib/utils'
 
 const MAX_LENGTH = 600
@@ -60,12 +61,15 @@ function MessageInput({ user }: MessageInputProps) {
       <InputSvgBackground sending={sending} />
 
       {user.image ? (
-        <Image
-          src={user.image}
+        <AsyncImage
+          src={getRemoteImageUrl(user.image, {
+            github: { size: 128 },
+            google: { size: 128 }
+          })}
           alt="avatar"
           width={40}
           height={40}
-          className="size-8 shrink-0 rounded-full md:size-10"
+          wrapperClassName="size-8 shrink-0 rounded-full md:size-10"
         />
       ) : (
         <div className="bg-muted flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium md:size-10">

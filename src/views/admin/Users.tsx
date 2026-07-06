@@ -7,7 +7,6 @@ import type { UpdateUserInput } from '@/validations/users'
 
 import { format } from 'date-fns'
 import { Pencil, Shield, ShieldOff, Trash2, UserX } from 'lucide-react'
-import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -18,13 +17,21 @@ import {
   unbanUserAction,
   updateUserAction
 } from '@/actions/users'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
+import {
+  Animated,
+  AsyncImage,
+  Confirm,
+  DataTable,
+  Form,
+  Modal
+} from '@/components/common'
 import {
   AlertDialogAction,
   AlertDialogCancel,
   Badge,
   Input
 } from '@/components/ui'
+import { getRemoteImageUrl } from '@/lib/image'
 import { updateUserSchema } from '@/validations/users'
 
 // ──── Form Config ────
@@ -49,12 +56,15 @@ const columns: ColumnConfig<UserWithRole>[] = [
     render: (_, record) => (
       <div className="flex items-center gap-2">
         {record.image && (
-          <Image
-            src={record.image}
+          <AsyncImage
+            src={getRemoteImageUrl(record.image, {
+              github: { size: 48 },
+              google: { size: 48 }
+            })}
             alt={record.name}
             width={24}
             height={24}
-            className="rounded-full"
+            wrapperClassName="rounded-full"
           />
         )}
         <span className="text-sm font-medium">{record.name}</span>

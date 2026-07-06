@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import AsyncImage from '../../AsyncImage'
 
 export function CoverSpinner({
   src,
@@ -19,7 +19,13 @@ export function CoverSpinner({
           animationPlayState: isPlaying ? 'running' : 'paused'
         }}
       >
-        <Image src={src} alt={alt} fill className="object-cover" />
+        <AsyncImage
+          src={src}
+          alt={alt}
+          fill
+          sizes="4rem"
+          className="object-cover"
+        />
       </div>
       {!isPlaying && (
         <div className="absolute inset-0 bg-black/25 transition-opacity duration-300" />

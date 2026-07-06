@@ -1,13 +1,13 @@
 'use client'
 
 import { useLocale } from 'next-intl'
-import Image from 'next/image'
 
-import { Animated } from '@/components/common'
+import { Animated, AsyncImage } from '@/components/common'
 import { useInteractive } from '@/components/icons'
 import { ExternalLinkIcon } from '@/components/icons/ExternalLink'
 import { STAGGER } from '@/constants'
 import { Link } from '@/i18n/navigation'
+import { getRemoteImageUrl } from '@/lib/image'
 
 interface Project {
   name: string
@@ -50,13 +50,16 @@ function ProjectCard(props: ProjectCardProps) {
       {...handlers}
     >
       <div className="z-20">
-        <Image
-          className="size-12"
+        <AsyncImage
+          src={getRemoteImageUrl(project.icon, {
+            bilibili: { format: 'webp' }
+          })}
+          alt={project.name}
           width={ICON_SIZE}
           height={ICON_SIZE}
-          src={`${project.icon}@${ICON_SIZE}w_${ICON_SIZE}h_1e_1c.webp`}
-          alt={project.name}
-        ></Image>
+          skeletonClassName="rounded"
+          wrapperClassName="size-12"
+        />
 
         <h2 className="text-primary mt-3 text-base font-semibold md:mt-6">
           <Link href={project.link} target="_blank">

@@ -2,10 +2,10 @@ import type { Song } from '@/types'
 
 import { motion } from 'framer-motion'
 import { Maximize, X } from 'lucide-react'
-import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
 
+import AsyncImage from '../AsyncImage'
 import { PlayPauseIcon } from './components/PlayPauseIcon'
 
 const SPRING_SNAPPY = { type: 'spring', stiffness: 420, damping: 32 } as const
@@ -38,8 +38,8 @@ export function PlayerMini({
       >
         {/* Cover */}
         <div className="relative size-8 shrink-0 overflow-hidden rounded-full">
-          <Image
-            src={`${currentSong.cover}?param=64y64&type=webp`}
+          <AsyncImage
+            src={currentSong.cover}
             alt={currentSong.name}
             width={32}
             height={32}

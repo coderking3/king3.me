@@ -1,7 +1,6 @@
 import type { PostsMetadata } from '@/types'
 
-import Image from 'next/image'
-
+import { AsyncImage } from '@/components/common'
 import { Link } from '@/i18n/navigation'
 
 function PostsCard({ metadata }: { metadata: PostsMetadata }) {
@@ -12,10 +11,11 @@ function PostsCard({ metadata }: { metadata: PostsMetadata }) {
       <Link href={`/blog/${slug}`}>
         {/* Cover */}
         <div className="relative aspect-video w-full overflow-hidden rounded-t-2xl select-none sm:aspect-10/4">
-          <Image
+          <AsyncImage
             src={image}
             alt={title}
             fill
+            sizes=" (min-width: 1024px) 44rem, (min-width: 640px) calc(100vw - 64px), calc(100vw - 32px)"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         </div>

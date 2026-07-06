@@ -5,7 +5,7 @@ import type { Photo } from '@/types'
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 
-import { SmartImage } from '@/components/common/SmartImage'
+import AsyncImage from '@/components/common/AsyncImage'
 import { formatLocalDate } from '@/lib/date'
 
 interface PhotoPreviewProps {
@@ -51,10 +51,9 @@ export default function PhotoPreview({
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.2 }}
       >
-        <SmartImage
+        <AsyncImage
           src={photo.url}
           alt={photo.name}
-          cdnOptimize={false}
           fill
           sizes="90dvw"
           preload

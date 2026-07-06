@@ -7,8 +7,6 @@ import Image from 'next/image'
 import { useEffect, useRef, useState } from 'react'
 
 import { Skeleton } from '@/components/ui/skeleton'
-import { remoteCdnLoader } from '@/lib/image/loader'
-import { isRemoteCdn } from '@/lib/image/remote'
 import { cn } from '@/lib/utils'
 
 // Native next/image props allowed to pass through untouched.
@@ -41,13 +39,12 @@ interface BaseProps extends NativeProps {
   src: ImageProps['src']
   alt: string
   className?: string
-  showSkeleton?: boolean
-  /** Turn off when src is already a fully-built CDN url, to avoid the loader double-appending params */
-  cdnOptimize?: boolean
+  skeleton?: boolean
+  /** Extra classes for the skeleton. No-op when `skeleton` is false. */
+  skeletonClassName?: string
   /** Content shown when the image fails to load. Defaults to a plain-text fallback — pass a
    *  translated string/node if the surrounding page is localized. */
   errorFallback?: ReactNode
-  loader?: ImageProps['loader']
   onLoad?: ImageProps['onLoad']
   onError?: ImageProps['onError']
 }
@@ -74,7 +71,7 @@ interface FixedProps extends BaseProps {
   wrapperClassName?: string
 }
 
-export type SmartImageProps = FillProps | FixedProps
+export type AsyncImageProps = FillProps | FixedProps
 
 // Widened shape used only for destructuring. The runtime object always matches
 // one of the two union members above; this just lets TS pull every field out
@@ -89,27 +86,25 @@ type DestructurableProps = BaseProps & {
 }
 
 /**
- * Thin wrapper around next/image: adds a skeleton-while-loading state and
- * routes known CDN hosts through `remoteCdnLoader`.
+ * Thin wrapper around next/image that adds a skeleton-while-loading state.
  *
  * Fill mode renders NO wrapper of its own — every real usage in this codebase
  * already provides a sized, `position: relative` container (aspect-*, rounded-*,
- * framer-motion boxes, etc). Wrap `<SmartImage fill />` in that container
+ * framer-motion boxes, etc). Wrap `<AsyncImage fill />` in that container
  * yourself, exactly like you would a plain `<Image fill />`.
  *
  * Fixed mode (width/height) gets a small sizing wrapper by default, since
  * standalone uses like avatars/icons usually don't have an external container
  * to rely on. Pass `wrapper={false}` to opt out when you do have one.
  */
-export function SmartImage(props: SmartImageProps) {
+function AsyncImage(props: AsyncImageProps) {
   const {
     src,
     alt,
     className,
-    showSkeleton = true,
-    cdnOptimize = true,
+    skeleton = true,
+    skeletonClassName,
     errorFallback = 'Failed to load image',
-    loader,
     onLoad,
     onError,
     fill,
@@ -141,12 +136,6 @@ export function SmartImage(props: SmartImageProps) {
     }
   }, [src])
 
-  const resolvedLoader =
-    loader ??
-    (cdnOptimize && typeof src === 'string' && isRemoteCdn(src)
-      ? remoteCdnLoader
-      : undefined)
-
   const handleLoad: ImageProps['onLoad'] = (e) => {
     setLoaded(true)
     onLoad?.(e)
@@ -167,7 +156,6 @@ export function SmartImage(props: SmartImageProps) {
     src,
     alt,
     sizes,
-    loader: resolvedLoader,
     onLoad: handleLoad,
     onError: handleError,
     className: imgClassName,
@@ -177,8 +165,10 @@ export function SmartImage(props: SmartImageProps) {
 
   const content = (
     <>
-      {showSkeleton && !loaded && !error && (
-        <Skeleton className="absolute inset-0 rounded-none" />
+      {skeleton && !loaded && !error && (
+        <Skeleton
+          className={cn('absolute inset-0 rounded-none', skeletonClassName)}
+        />
       )}
 
       {!error && <Image ref={imgRef} {...imageProps} />}
@@ -199,3 +189,5 @@ export function SmartImage(props: SmartImageProps) {
     </div>
   )
 }
+
+export default AsyncImage

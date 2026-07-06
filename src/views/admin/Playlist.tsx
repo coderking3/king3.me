@@ -7,7 +7,6 @@ import type { Song } from '@/types'
 import type { SongFormInput } from '@/validations/playlist'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -17,8 +16,16 @@ import {
   deleteSongAction,
   updateSongAction
 } from '@/actions/playlist'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
+import {
+  Animated,
+  AsyncImage,
+  Confirm,
+  DataTable,
+  Form,
+  Modal
+} from '@/components/common'
 import { Button } from '@/components/ui'
+import { getRemoteImageUrl } from '@/lib/image'
 import { songFormSchema } from '@/validations/playlist'
 
 // ──── Form Config ────
@@ -60,12 +67,14 @@ const columns: ColumnConfig<Song>[] = [
     key: 'cover',
     title: 'Cover',
     render: (_, record) => (
-      <Image
-        src={`${record.cover}?waadw=40y40&type=webp`}
+      <AsyncImage
+        src={getRemoteImageUrl(record.url, {
+          netease: { size: 56 }
+        })}
         alt={record.name}
         width={40}
         height={40}
-        className="rounded"
+        wrapperClassName="rounded"
       />
     )
   },

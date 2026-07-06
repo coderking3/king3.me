@@ -8,9 +8,10 @@ import {
   Music,
   Users
 } from 'lucide-react'
-import Image from 'next/image'
 
+import { AsyncImage } from '@/components/common'
 import { Link } from '@/i18n/navigation'
+import { getRemoteImageUrl } from '@/lib/image'
 
 // ──── Stat Card ────
 
@@ -115,9 +116,16 @@ function DashboardPage({ data }: DashboardPageProps) {
             )}
             {recentMessages.map((msg) => (
               <div key={msg.id} className="flex items-start gap-3">
-                <div className="bg-muted flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium">
-                  {(msg.userName ?? 'U').slice(0, 2).toUpperCase()}
-                </div>
+                <AsyncImage
+                  src={getRemoteImageUrl(msg.userImg, {
+                    github: { size: 56 },
+                    google: { size: 56 }
+                  })}
+                  alt={msg.userName}
+                  width={32}
+                  height={32}
+                  wrapperClassName="bg-muted flex size-8 shrink-0 items-center justify-center rounded-full text-xs font-medium"
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium">
@@ -148,12 +156,15 @@ function DashboardPage({ data }: DashboardPageProps) {
             {recentUsers.map((user) => (
               <div key={user.id} className="flex items-center gap-3">
                 {user.image ? (
-                  <Image
-                    src={user.image}
+                  <AsyncImage
+                    src={getRemoteImageUrl(user.image, {
+                      github: { size: 56 },
+                      google: { size: 56 }
+                    })}
                     alt={user.name}
                     width={32}
                     height={32}
-                    className="size-8 rounded-full"
+                    wrapperClassName="size-8 rounded-full"
                   />
                 ) : (
                   <div className="bg-muted flex size-8 items-center justify-center rounded-full text-xs font-medium">
@@ -185,12 +196,14 @@ function DashboardPage({ data }: DashboardPageProps) {
             {projects.map((project) => (
               <div key={project.id} className="flex items-center gap-3">
                 {project.icon ? (
-                  <Image
-                    src={project.icon}
+                  <AsyncImage
+                    src={getRemoteImageUrl(project.icon, {
+                      bilibili: { size: 56, format: 'webp' }
+                    })}
                     alt={project.name}
-                    width={28}
-                    height={28}
-                    className="size-7 rounded"
+                    width={32}
+                    height={32}
+                    wrapperClassName="size-7 rounded"
                   />
                 ) : (
                   <div className="bg-muted flex size-7 items-center justify-center rounded">
@@ -218,12 +231,14 @@ function DashboardPage({ data }: DashboardPageProps) {
             {recentSongs.map((song) => (
               <div key={song.id} className="flex items-center gap-3">
                 {song.cover ? (
-                  <Image
-                    src={song.cover}
+                  <AsyncImage
+                    src={getRemoteImageUrl(song.cover, {
+                      netease: { size: 56 }
+                    })}
                     alt={song.name}
-                    width={28}
-                    height={28}
-                    className="size-7 rounded"
+                    width={32}
+                    height={32}
+                    wrapperClassName="size-7 rounded"
                   />
                 ) : (
                   <div className="bg-muted flex size-7 items-center justify-center rounded">

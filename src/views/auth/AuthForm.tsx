@@ -1,10 +1,10 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
+import { AsyncImage } from '@/components/common'
 import {
   ArrowRightIcon,
   GithubCircleIcon,
@@ -107,13 +107,13 @@ function AuthForm({ callbackURL = '/', onSuccess }: AuthFormProps) {
     <div className="w-full">
       {/* Logo */}
       <div className="mb-6 flex items-center gap-2">
-        <div className="bg-foreground relative flex h-7 w-7 items-center justify-center overflow-hidden rounded-md">
-          <Image
-            src="http://i0.hdslb.com/bfs/openplatform/7360364dd1b217628c0b00606eac1dc2b403a5ef.png"
-            alt="avatar"
-            fill
-          />
-        </div>
+        <AsyncImage
+          src="/images/avatar.png"
+          alt="avatar"
+          width={32}
+          height={32}
+          wrapperClassName="rounded-md overflow-hidden size-7"
+        />
         <span className="text-foreground text-sm font-semibold tracking-tight">
           king3.me
         </span>

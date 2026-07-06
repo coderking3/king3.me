@@ -8,7 +8,6 @@ import type { MessageInput, ReplyInput } from '@/validations/messages'
 
 import { format } from 'date-fns'
 import { Pencil, Plus, Reply, Trash2 } from 'lucide-react'
-import Image from 'next/image'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
 
@@ -19,8 +18,16 @@ import {
   replyToMessageAction,
   updateMessageAction
 } from '@/actions/messages'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
+import {
+  Animated,
+  AsyncImage,
+  Confirm,
+  DataTable,
+  Form,
+  Modal
+} from '@/components/common'
 import { Badge, Button } from '@/components/ui'
+import { getRemoteImageUrl } from '@/lib/image'
 import { messageSchema, replySchema } from '@/validations/messages'
 
 // ──── Form Config ────
@@ -56,12 +63,15 @@ const columns: ColumnConfig<MessageWithReplies>[] = [
     render: (_, record) => (
       <div className="flex items-center gap-2">
         {record.userImg && (
-          <Image
-            src={record.userImg}
+          <AsyncImage
+            src={getRemoteImageUrl(record.userImg, {
+              github: { size: 56 },
+              google: { size: 56 }
+            })}
             alt={record.userName}
             width={24}
             height={24}
-            className="rounded-full"
+            wrapperClassName="rounded-full"
           />
         )}
         <span className="text-sm font-medium">{record.userName}</span>

@@ -1,4 +1,5 @@
 export * from './Animated'
+export { default as AsyncImage } from './AsyncImage'
 export * from './Confirm'
 export * from './DataTable'
 export * from './Form'

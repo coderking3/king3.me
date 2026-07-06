@@ -7,8 +7,8 @@ import { Grid2x2, LayoutGrid } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useState } from 'react'
 
-import { Animated } from '@/components/common'
-import { SmartImage } from '@/components/common/SmartImage'
+import { Animated, AsyncImage } from '@/components/common'
+import { getRemoteImageUrl } from '@/lib/image'
 import { cn } from '@/lib/utils'
 
 import PhotoPreview from './PhotoPreview'
@@ -59,33 +59,37 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
           </Animated>
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {photos.map((photo, i) => (
-              <Animated
-                key={photo.id}
-                preset={{
-                  mode: 'fadeInUp',
-                  delay: Math.min(0.12 + i * 0.04, 0.56)
-                }}
-                className={cn(
-                  'group relative aspect-square cursor-zoom-in overflow-hidden',
-                  isCover && 'rounded-lg'
-                )}
-                onClick={() => setActivePhoto(photo)}
-              >
-                <SmartImage
-                  src={photo.url}
-                  alt={photo.name}
-                  cdnOptimize={false}
-                  fill
-                  loading="lazy"
-                  sizes="(min-width: 1280px) 260px, (min-width: 1152px) 352px, (min-width: 1024px) calc(33vw - 32px), (min-width: 768px) calc(50vw - 40px), 100vw"
+            {photos.map((photo, i) => {
+              const url = getRemoteImageUrl(photo.url, {
+                bilibili: { format: 'webp' }
+              })
+              return (
+                <Animated
+                  key={photo.id}
+                  preset={{
+                    mode: 'fadeInUp',
+                    delay: Math.min(0.12 + i * 0.04, 0.56)
+                  }}
                   className={cn(
-                    'transition-[opacity,transform,translate,scale,rotate] group-hover:scale-105',
-                    isCover ? 'object-cover' : 'object-contain'
+                    'group relative aspect-square cursor-zoom-in overflow-hidden',
+                    isCover && 'rounded-lg'
                   )}
-                />
-              </Animated>
-            ))}
+                  onClick={() => setActivePhoto({ ...photo, url })}
+                >
+                  <AsyncImage
+                    src={url}
+                    alt={photo.name}
+                    fill
+                    loading="lazy"
+                    sizes="(min-width: 1280px) 16.5rem, (min-width: 1152px) 22rem, (min-width: 1024px) calc(33vw - 2rem), (min-width: 768px) calc(50vw - 2.5rem), 100vw"
+                    className={cn(
+                      'transition-[opacity,transform,translate,scale,rotate] group-hover:scale-105',
+                      isCover ? 'object-cover' : 'object-contain'
+                    )}
+                  />
+                </Animated>
+              )
+            })}
           </div>
 
           {photos.length === 0 && (

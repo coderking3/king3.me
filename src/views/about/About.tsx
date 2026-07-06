@@ -1,9 +1,8 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
 
-import { Animated } from '@/components/common'
+import { Animated, AsyncImage } from '@/components/common'
 import {
   BrowserIcon,
   LogoIcon,
@@ -72,13 +71,17 @@ function AboutPage() {
 
         {/* ── Hero ─────────────────────────────────────────── */}
         <div className="text-muted-foreground text-base leading-[1.85] font-medium">
-          <Animated preset={{ mode: 'fadeInUp', delay: 0.08 }}>
-            <Image
+          <Animated
+            preset={{ mode: 'fadeInUp', delay: 0.08 }}
+            className="border-border/50 relative float-left mr-5 mb-2 size-40 overflow-hidden rounded-xl border sm:size-72"
+          >
+            <AsyncImage
               src="/images/avatar.png"
               alt="king3"
               width={160}
               height={160}
-              className="border-border/50 float-left mr-5 mb-2 size-40 rounded-xl border sm:size-72"
+              wrapper={false}
+              className="size-full object-cover"
             />
           </Animated>
 

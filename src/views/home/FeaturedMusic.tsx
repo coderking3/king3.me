@@ -4,16 +4,25 @@ import type { Song } from '@/types'
 
 import { Pause, Play } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
+import { AsyncImage } from '@/components/common'
 import { Equalizer, NetEaseMusicIcon } from '@/components/icons'
+import { getRemoteImageUrl } from '@/lib/image'
 import { getDailySeed, seededShuffle } from '@/lib/math'
 import { cn } from '@/lib/utils'
 import { usePlayerStore } from '@/stores/player'
 
-function FeaturedMusic({ songs }: { songs: Song[] }) {
+function FeaturedMusic({ songs: originalSongs }: { songs: Song[] }) {
   const t = useTranslations('page.home')
+
+  const songs = useMemo(() => {
+    return originalSongs.map((item) => ({
+      ...item,
+      cover: getRemoteImageUrl(item.cover, { netease: { size: 128 } })
+    }))
+  }, [originalSongs])
+
   const {
     setQueue,
     play,
@@ -80,10 +89,11 @@ function FeaturedMusic({ songs }: { songs: Song[] }) {
             >
               {/* Cover */}
               <div className="relative z-10 h-12 w-12 shrink-0 overflow-hidden rounded select-none">
-                <Image
-                  src={`${song.cover}?param=48y48&type=webp`}
+                <AsyncImage
+                  src={song.cover}
                   alt={song.name}
                   fill
+                  sizes="3rem"
                   className={cn(
                     'object-cover transition-all duration-300',
                     isActive ? 'brightness-50' : 'group-hover:brightness-50'

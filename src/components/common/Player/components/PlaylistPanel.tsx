@@ -1,9 +1,8 @@
 import type { Song } from '@/types'
 
-import Image from 'next/image'
-
 import { cn } from '@/lib/utils'
 
+import AsyncImage from '../../AsyncImage'
 import { BarVisualizer } from './BarVisualizer'
 
 export function PlaylistPanel({
@@ -33,10 +32,11 @@ export function PlaylistPanel({
             )}
           >
             <div className="relative size-8 shrink-0 overflow-hidden rounded">
-              <Image
+              <AsyncImage
                 src={`${song.cover}?param=32y32&type=webp`}
                 alt={song.name}
                 fill
+                sizes="2rem"
                 className="object-cover"
               />
             </div>

@@ -7,7 +7,6 @@ import type { Project } from '@/types'
 import type { ProjectInput } from '@/validations/projects'
 
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import Image from 'next/image'
 import { useEffect, useRef, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 
@@ -18,8 +17,16 @@ import {
   reorderProjectsAction,
   updateProjectAction
 } from '@/actions/projects'
-import { Animated, Confirm, DataTable, Form, Modal } from '@/components/common'
+import {
+  Animated,
+  AsyncImage,
+  Confirm,
+  DataTable,
+  Form,
+  Modal
+} from '@/components/common'
 import { Button } from '@/components/ui'
+import { getRemoteImageUrl } from '@/lib/image'
 import { projectSchema } from '@/validations/projects'
 
 // ──── Form Config ────
@@ -55,12 +62,14 @@ const columns: ColumnConfig<Project>[] = [
     key: 'icon',
     title: 'Icon',
     render: (_, record) => (
-      <Image
-        src={record.icon}
+      <AsyncImage
+        src={getRemoteImageUrl(record.icon, {
+          bilibili: { size: 48, format: 'webp' }
+        })}
         alt={record.name}
         width={32}
         height={32}
-        className="rounded"
+        wrapperClassName="rounded"
       />
     )
   },

@@ -1,12 +1,12 @@
 import type { Posts } from '@/types'
 
-import Image from 'next/image'
 import serialize from 'serialize-javascript'
 
-import { Animated } from '@/components/common'
+import { Animated, AsyncImage } from '@/components/common'
 import { evaluateMdx } from '@/components/mdx'
 import { SITE_NAME, SITE_URL } from '@/constants'
 import { formatLocalDate } from '@/lib/date'
+import { getRemoteImageUrl } from '@/lib/image'
 
 import PostsActions from './PostsActions'
 import PostsFloatingBar from './PostsFloatingBar'
@@ -42,6 +42,10 @@ async function PostsPage({ posts }: PostsPageProps) {
     }
   }
 
+  const coverImage = getRemoteImageUrl(metadata.image, {
+    bilibili: { format: 'webp' }
+  })
+
   return (
     <>
       <script
@@ -73,12 +77,13 @@ async function PostsPage({ posts }: PostsPageProps) {
               <header className="mb-8 sm:mb-12">
                 {metadata.image && (
                   <div className="relative mb-8 aspect-video w-full overflow-hidden rounded-2xl shadow-xl dark:shadow-white/5">
-                    <Image
-                      src={metadata.image}
+                    <AsyncImage
+                      src={coverImage}
                       alt={metadata.title}
                       fill
+                      sizes="(min-width: 1024px) 48rem, (min-width: 640px) calc(100vw - 64px), calc(100vw - 32px)"
                       className="object-cover"
-                      priority
+                      preload
                     />
                   </div>
                 )}
