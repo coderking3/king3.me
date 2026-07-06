@@ -46,7 +46,7 @@ const VARIANTS: Record<BarVisualizerSize, SizeVariant> = {
     ],
     restScale: 0.55,
     barWidth: 'w-1',
-    containerClassName: 'bg-muted/40 h-9 gap-[3px] rounded-full px-2.5 py-2'
+    containerClassName: 'h-9 gap-[3px] rounded-full px-2.5 py-2'
   }
 }
 
