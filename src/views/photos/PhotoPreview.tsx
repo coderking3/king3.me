@@ -11,7 +11,7 @@ import { useCopyToClipboard } from '@/hooks'
 import { formatLocalDate } from '@/lib/date'
 
 interface PhotoPreviewProps {
-  photo: Photo
+  photo: Photo & { originalUrl: string }
   lang: string
   onClose: () => void
 }
@@ -81,7 +81,7 @@ export default function PhotoPreview({
 
         {/* Copy button: Always on the right */}
         <button
-          onClick={() => copy(photo.url)}
+          onClick={() => copy(photo.originalUrl)}
           className="flex shrink-0 items-center justify-center rounded-full p-1.5 text-white/70 transition hover:bg-white/20 hover:text-white"
           title="Copy image url"
         >

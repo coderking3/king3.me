@@ -33,7 +33,7 @@ export function PlaylistPanel({
           >
             <div className="relative size-8 shrink-0 overflow-hidden rounded">
               <AsyncImage
-                src={`${song.cover}?param=32y32&type=webp`}
+                src={song.cover}
                 alt={song.name}
                 fill
                 sizes="2rem"

@@ -154,7 +154,7 @@ export function PlayerFull({
               {/* Cover slides together with text info */}
               <div className="ring-border ring-offset-background mx-1.5 size-[3.5rem] shrink-0 overflow-hidden rounded-full shadow-lg ring-2 ring-offset-2">
                 <CoverSpinner
-                  src={`${currentSong.cover}?param=112y112&type=webp`}
+                  src={currentSong.cover}
                   alt={currentSong.name}
                   isPlaying={isPlaying}
                 />
@@ -226,8 +226,6 @@ export function PlayerFull({
           onToggleMute={onToggleMute}
         />
       </div>
-
-      <div className="border-border border-t border-dashed" />
     </div>
   )
 }

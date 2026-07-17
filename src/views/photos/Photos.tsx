@@ -16,7 +16,9 @@ import PhotoPreview from './PhotoPreview'
 function PhotosPage({ photos }: { photos: Photo[] }) {
   const t = useTranslations('page.photos')
   const locale = useLocale()
-  const [activePhoto, setActivePhoto] = useState<Photo | null>(null)
+  const [activePhoto, setActivePhoto] = useState<
+    (Photo & { originalUrl: string }) | null
+  >(null)
   const [view, setView] = useState<'cover' | 'contain'>('cover')
   const isCover = view === 'cover'
 
@@ -74,7 +76,9 @@ function PhotosPage({ photos }: { photos: Photo[] }) {
                     'group relative aspect-square cursor-zoom-in overflow-hidden',
                     isCover && 'rounded-lg'
                   )}
-                  onClick={() => setActivePhoto(photo)}
+                  onClick={() =>
+                    setActivePhoto({ ...photo, url, originalUrl: photo.url })
+                  }
                 >
                   <AsyncImage
                     src={url}
