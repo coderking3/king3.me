@@ -1,7 +1,6 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useLocale } from 'next-intl'
 import { useEffect, useRef } from 'react'
 
 import { LocaleSwitcher, ThemeToggle } from '@/components/common'
@@ -25,7 +24,6 @@ const headerGlassCardClass =
 
 export function Header() {
   const { data: session } = useSession()
-  const locale = useLocale()
 
   const { openSearch } = useSearchStore()
   const isMobile = useIsMobile()
@@ -101,7 +99,7 @@ export function Header() {
       window.removeEventListener('scroll', updateStyles)
       window.removeEventListener('resize', updateStyles)
     }
-  }, [isMobile, locale])
+  }, [isMobile])
 
   return (
     <>
