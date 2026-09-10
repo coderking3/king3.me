@@ -1,10 +1,11 @@
-import { defineConfig } from '@king-3/eslint-config'
+import { defineConfig } from '@king3/eslint-config'
 
 export default defineConfig(
   {
     typescript: true,
     nextjs: true,
-    ignores: ['./docs/**/*.md']
+    ignores: ['./docs/**/*.md'],
+    pnpm: false
   },
   {
     name: 'custom-rules',

@@ -1,5 +1,5 @@
-import { defineConfig } from '@king-3/prettier-config'
+import { defineConfig } from '@king3/prettier-config'
 
 export default defineConfig({
-  plugins: ['@prettier/plugin-oxc', 'prettier-plugin-tailwindcss']
+  plugins: ['prettier-plugin-tailwindcss']
 })

@@ -25,7 +25,7 @@ export function useThemeToggle() {
 
     // flushSync ensures React commits DOM changes before View Transition captures the snapshot
     document.startViewTransition(() => {
-      // eslint-disable-next-line react-dom/no-flush-sync
+      // eslint-disable-next-line react/dom-no-flush-sync
       flushSync(() => {
         setTheme(newTheme)
       })

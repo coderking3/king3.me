@@ -1,4 +1,3 @@
-/* eslint-disable react/component-hook-factories */
 /* eslint-disable react/no-nested-component-definitions */
 'use client'
 

@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import { useLocale } from 'next-intl'
 import { useEffect, useRef } from 'react'
 
 import { LocaleSwitcher, ThemeToggle } from '@/components/common'
@@ -24,14 +25,17 @@ const headerGlassCardClass =
 
 export function Header() {
   const { data: session } = useSession()
+  const locale = useLocale()
 
   const { openSearch } = useSearchStore()
   const isMobile = useIsMobile()
-  // eslint-disable-next-line react-naming-convention/ref-name
+  // eslint-disable-next-line react/naming-convention-ref-name
   const isInitial = useRef(true)
   const headerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    isInitial.current = true
+
     const downDelay = isMobile ? 36 : 64
     const upDelay = isMobile ? 36 : 64
 
@@ -97,7 +101,7 @@ export function Header() {
       window.removeEventListener('scroll', updateStyles)
       window.removeEventListener('resize', updateStyles)
     }
-  }, [isMobile])
+  }, [isMobile, locale])
 
   return (
     <>

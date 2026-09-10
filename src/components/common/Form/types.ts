@@ -108,8 +108,7 @@ interface CustomControllerFieldConfig<
 }
 
 export type CustomFieldConfig<TFV extends FieldValues> =
-  | CustomControlFieldConfig<TFV>
-  | CustomControllerFieldConfig<TFV>
+  CustomControlFieldConfig<TFV> | CustomControllerFieldConfig<TFV>
 
 /* --- Field config union --- */
 

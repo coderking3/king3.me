@@ -190,7 +190,7 @@ function AboutPage() {
                     {chunks}
                   </Link>
                 ),
-                // eslint-disable-next-line react/no-unnecessary-use-prefix, react/component-hook-factories
+                // eslint-disable-next-line react/no-unnecessary-use-prefix
                 use: (chunks) => (
                   <Link href="/use" className={linkClass}>
                     {chunks}

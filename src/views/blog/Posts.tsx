@@ -50,7 +50,7 @@ async function PostsPage({ posts }: PostsPageProps) {
     <>
       <script
         type="application/ld+json"
-        // eslint-disable-next-line react-dom/no-dangerously-set-innerhtml
+        // eslint-disable-next-line react/dom-no-dangerously-set-innerhtml
         dangerouslySetInnerHTML={{
           __html: serialize(jsonLd, { isJSON: true })
         }}

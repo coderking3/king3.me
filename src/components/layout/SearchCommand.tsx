@@ -46,7 +46,7 @@ const PAGES = [
 ] as const
 
 const useSearchData = (open: boolean) => {
-  // eslint-disable-next-line react-naming-convention/ref-name
+  // eslint-disable-next-line react/naming-convention-ref-name
   const fetched = useRef(false)
   const [searchData, setSearchData] = useState<SearchData | null>(null)
 
@@ -55,11 +55,13 @@ const useSearchData = (open: boolean) => {
     if (!open || fetched.current) return
 
     fetched.current = true
-    fetch('/api/search')
+    const ctrl = new AbortController()
+    fetch('/api/search', { signal: ctrl.signal })
       .then((res) => res.json())
       .then(({ success, data }: ResponseResult) => {
         success && setSearchData(data)
       })
+    return () => ctrl.abort()
   }, [open])
 
   return { searchData }
