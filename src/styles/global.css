@@ -37,44 +37,6 @@
   font-display: swap;
 }
 
-/* --- Fonts: Wotfard --- */
-
-@font-face {
-  font-family: Wotfard;
-  font-style: normal;
-  font-weight: 600;
-  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-semibold.woff2')
-    format('woff2');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: Wotfard;
-  font-style: normal;
-  font-weight: 500;
-  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-medium.woff2')
-    format('woff2');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: Wotfard;
-  font-style: normal;
-  font-weight: 400;
-  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-regular.woff2')
-    format('woff2');
-  font-display: swap;
-}
-
-@font-face {
-  font-family: Wotfard;
-  font-style: italic;
-  font-weight: 400;
-  src: url('https://cdn.jsdelivr.net/gh/coderking3/static/fonts/wotfard-regular-italic.woff2')
-    format('woff2');
-  font-display: swap;
-}
-
 /* --- Fonts: FiraCode --- */
 
 @font-face {

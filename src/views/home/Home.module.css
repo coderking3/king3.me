@@ -1,0 +1,23 @@
+.root {
+  margin-top: -1.75rem;
+}
+
+:global(html[style*='--header-height']) .root {
+  margin-top: 3.5rem;
+}
+
+@media (min-width: 640px) {
+  .root {
+    margin-top: 0.75rem;
+  }
+
+  :global(html[style*='--header-height']) .root {
+    margin-top: 6rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .root {
+    margin-top: -1.25rem;
+  }
+}

@@ -4,7 +4,7 @@
 
 @theme inline {
   /* Fonts */
-  --font-sans: 'Wotfard', 'PingFang SC';
+  --font-sans: var(--font-wotfard), 'PingFang SC';
   --font-mono: var(--font-roboto-mono), 'PingFang SC';
   --font-logo: var(--font-audiowide);
   --font-code: 'FiraCode', 'PingFang SC';

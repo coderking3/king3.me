@@ -1,0 +1,37 @@
+.track {
+  --gallery-card-width: var(--gallery-card-width-wide);
+  --gallery-card-opacity: 0.85;
+  --gallery-card-filter: grayscale(0.1);
+}
+
+:global(.dark) .track {
+  --gallery-card-filter: grayscale(0.35);
+}
+
+.card {
+  width: var(--gallery-card-width);
+  opacity: var(--gallery-card-opacity);
+  filter: var(--gallery-card-filter);
+}
+
+.cardVisual {
+  height: 100%;
+  transform: rotate(var(--gallery-card-rotation));
+}
+
+.clockwise {
+  --gallery-card-rotation: 2deg;
+}
+
+.counterClockwise {
+  --gallery-card-rotation: -1deg;
+}
+
+@media (max-width: 639px) {
+  .track,
+  :global(.dark) .track {
+    --gallery-card-width: calc(50vw - 4rem);
+    --gallery-card-opacity: 1;
+    --gallery-card-filter: grayscale(0);
+  }
+}

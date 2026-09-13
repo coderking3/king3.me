@@ -4,12 +4,15 @@ import { PencilLine } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 
 import { GALLERYS } from '@/constants'
+import { PageEntranceProvider } from '@/hooks/usePageEntrance'
 
 import PostsCard from '../blog/PostsCard'
 import Explore from './Explore'
 import FeaturedMusic from './FeaturedMusic'
 import Gallery from './Gallery'
 import Hero from './Hero'
+
+import styles from './Home.module.css'
 
 async function HomePage({
   songs,
@@ -21,10 +24,12 @@ async function HomePage({
   const t = await getTranslations('page.home')
 
   return (
-    <div className="mt-14 sm:mt-24">
-      <Hero />
+    <div className={styles.root}>
+      <PageEntranceProvider>
+        <Hero />
 
-      <Gallery images={GALLERYS} />
+        <Gallery images={GALLERYS} />
+      </PageEntranceProvider>
 
       {/* Posts section */}
       <div className="relative mx-auto mt-16 flex max-w-6xl flex-col gap-10 px-4 sm:mt-24 sm:px-8 md:mt-28 lg:flex-row">

@@ -1,9 +1,9 @@
 import { getTranslations } from 'next-intl/server'
 
-import { Animated } from '@/components/common'
 import { BiliBili, Email, Feed, Github, X, Youtube } from '@/components/icons'
 import { PROFILE, SOCIAL_URLS } from '@/constants'
 
+import Animated from './HomeAnimated'
 import Typewriter from './Typewriter'
 
 const TOPICS: string[] = ['#SlowLife', '#OpenSource', '#Photography']

@@ -4,31 +4,16 @@ import type { ReactNode } from 'react'
 
 import { NextIntlClientProvider } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
-import { Roboto_Mono } from 'next/font/google'
-import localFont from 'next/font/local'
 
 import { ThemeProvider } from '@/components/common'
 import { Toaster } from '@/components/ui'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import { PROFILE, SITE_NAME, SITE_URL } from '@/constants'
 import { routing } from '@/i18n/routing'
+import { audioWide, robotoMono, wotfard } from '@/lib/fonts'
 import { cn } from '@/lib/utils'
 
 import '@/styles/global.css'
-
-const audioWide = localFont({
-  src: '../../../public/fonts/Audiowide-King3.woff2',
-  variable: '--font-audiowide',
-  weight: '400',
-  display: 'swap',
-  preload: true
-})
-
-const robotoMono = Roboto_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-roboto-mono'
-})
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -116,7 +101,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={cn(robotoMono.variable, audioWide.variable)}
+      className={cn(robotoMono.variable, audioWide.variable, wotfard.variable)}
     >
       <body className="min-h-screen">
         <NextIntlClientProvider>

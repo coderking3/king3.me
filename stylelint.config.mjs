@@ -67,6 +67,13 @@ export default {
         ]
       }
     ],
+    // Allow Tailwind utility lists in @apply preludes
+    'at-rule-prelude-no-invalid': [
+      true,
+      {
+        ignoreAtRules: ['apply']
+      }
+    ],
     // 允许使用 Tailwind 特有函数
     'function-no-unknown': [
       true,
