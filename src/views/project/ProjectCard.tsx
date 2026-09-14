@@ -58,7 +58,7 @@ function ProjectCard(props: ProjectCardProps) {
           width={ICON_SIZE}
           height={ICON_SIZE}
           skeletonClassName="rounded"
-          wrapperClassName="size-12"
+          wrapperClassName="size-18 -ml-2"
         />
 
         <h2 className="text-primary mt-3 text-base font-semibold md:mt-6">
